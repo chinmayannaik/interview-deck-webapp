@@ -21,7 +21,7 @@
     setTheme(v) { write("theme", v); },
 
     /* --- last tab --- */
-    getLastTab() { return read("lastTab", "all"); },
+    getLastTab() { return read("lastTab", "frontend"); },
     setLastTab(v) { write("lastTab", v); },
 
     /* --- bookmarks (array of ids) --- */

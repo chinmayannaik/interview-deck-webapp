@@ -12,7 +12,6 @@
 
   /* ---- category config (order + labels) ---- */
   const CATEGORIES = [
-    { key: "all", label: "All" },
     { key: "angular", label: "Angular" },
     { key: "ngcoding", label: "Angular Coding" },
     { key: "javascript", label: "JavaScript" },
@@ -30,7 +29,25 @@
     { key: "general", label: "General" },
     { key: "behavioral", label: "Behavioral" }
   ];
-  const labelOf = (k) => (CATEGORIES.find((c) => c.key === k) || { label: k }).label;
+  /* ---- top-level groups (the simplified tab bar) ---- */
+  const GROUPS = [
+    {
+      key: "frontend", label: "Frontend", color: "var(--cat-angular)",
+      cats: ["angular", "ngcoding", "javascript", "coding", "typescript", "html", "css", "rxjs", "ngrx", "testing", "general"]
+    },
+    { key: "backend", label: "Backend", color: "var(--cat-springboot)", cats: ["java", "springboot", "sql"] },
+    { key: "devops", label: "DevOps", color: "var(--cat-git)", cats: ["git"] },
+    { key: "hr", label: "Behavioral", color: "var(--cat-behavioral)", cats: ["behavioral"] }
+  ];
+  const groupOf = (catKey) => GROUPS.find((g) => g.cats.includes(catKey)) || null;
+  const isGroup = (key) => GROUPS.some((g) => g.key === key);
+  const catsFor = (key) => {
+    if (key === "all") return null; // no restriction
+    if (isGroup(key)) return GROUPS.find((g) => g.key === key).cats;
+    return [key]; // a single category
+  };
+  const labelOf = (k) =>
+    (CATEGORIES.find((c) => c.key === k) || GROUPS.find((g) => g.key === k) || { label: k }).label;
 
   /* ---- flatten all questions into one searchable index ---- */
   const ALL = [];
@@ -63,7 +80,7 @@
   let progress = store.getProgress();
 
   /* ---- element refs (created/queried in init) ---- */
-  let listEl, titleEl, tabsEl, sideEl, diffEl, searchEls = [], progFill, progLabel;
+  let listEl, titleEl, tabsEl, sideEl, subnavEl, diffEl, searchEls = [], progFill, progLabel;
   let renderState = { items: [], shown: 0, CHUNK: 30, observer: null };
 
   /* ========================================================
@@ -99,60 +116,107 @@
   function counts() {
     const map = { all: ALL.length };
     ALL.forEach((q) => { map[q.category] = (map[q.category] || 0) + 1; });
+    GROUPS.forEach((g) => { map[g.key] = g.cats.reduce((n, c) => n + (map[c] || 0), 0); });
     return map;
   }
 
   function buildTabs() {
     const c = counts();
     tabsEl.innerHTML = "";
-    CATEGORIES.forEach((cat) => {
-      const n = c[cat.key] || 0;
-      if (cat.key !== "all" && n === 0) return;
+    GROUPS.forEach((t) => {
+      const n = c[t.key] || 0;
+      if (n === 0) return;
       const tab = el("button", {
-        class: "tab", role: "tab", "data-cat": cat.key,
-        style: cat.key === "all" ? "" : `--tab-c: var(--cat-${cat.key})`,
-        onclick: () => setCategory(cat.key, true)
+        class: "tab", role: "tab", "data-cat": t.key,
+        style: `--tab-c: ${t.color}`,
+        onclick: () => setCategory(t.key, true)
       }, [
         el("span", { class: "dot" }),
-        document.createTextNode(cat.label),
+        document.createTextNode(t.label),
         el("span", { class: "tab-n", text: String(n) })
       ]);
       tabsEl.appendChild(tab);
     });
   }
 
-  function buildSidebar() {
-    const c = counts();
-    sideEl.innerHTML = "";
-    sideEl.appendChild(el("p", { class: "sidebar-title", text: "Categories" }));
-
-    // progress box
-    const box = el("div", { class: "progress-box" }, [
-      el("div", { class: "pl" }, [
-        el("span", { text: "Progress" }),
-        el("span", { id: "progress-label", text: "0 / " + ALL.length })
-      ]),
-      el("div", { class: "progress-track" }, [el("div", { class: "progress-fill", id: "progress-fill" })])
-    ]);
-    sideEl.appendChild(box);
-    sideEl.appendChild(el("div", { class: "side-sep" }));
-
-    CATEGORIES.forEach((cat) => {
-      const n = c[cat.key] || 0;
-      if (cat.key !== "all" && n === 0) return;
-      const link = el("button", {
-        class: "side-link", "data-cat": cat.key,
-        style: cat.key === "all" ? "" : `--side-c: var(--cat-${cat.key})`,
-        onclick: () => setCategory(cat.key, true)
-      }, [
-        el("span", { text: cat.label }),
-        el("span", { class: "s-count", text: String(n) })
-      ]);
-      sideEl.appendChild(link);
+  /* progress within a given set of categories */
+  function progressFor(cats) {
+    let total = 0, done = 0;
+    ALL.forEach((q) => {
+      if (cats.includes(q.category)) { total++; if (progress.has(q.id)) done++; }
     });
-    progFill = qs("#progress-fill");
-    progLabel = qs("#progress-label");
-    updateProgressBar();
+    return { done, total };
+  }
+
+  /* the sidebar is contextual: it shows ONLY the active group's categories,
+     plus a progress tracker scoped to the current selection */
+  function renderSidebar(key) {
+    const c = counts();
+    const groupKey = isGroup(key) ? key : (groupOf(key) ? groupOf(key).key : GROUPS[0].key);
+    const group = GROUPS.find((g) => g.key === groupKey);
+    sideEl.innerHTML = "";
+
+    // progress tracker for the current selection (a category, or the whole group)
+    const selCats = catsFor(key) || group.cats;
+    const { done, total } = progressFor(selCats);
+    const pct = total ? Math.round((done / total) * 100) : 0;
+    sideEl.appendChild(el("div", { class: "progress-box", style: `--side-c: ${group.color}` }, [
+      el("div", { class: "pl" }, [
+        el("span", { text: labelOf(key) + " progress" }),
+        el("span", { class: "prog-num", id: "progress-label", text: done + " / " + total })
+      ]),
+      el("div", { class: "progress-track" }, [
+        el("div", { class: "progress-fill", id: "progress-fill", style: "width:" + pct + "%" })
+      ])
+    ]));
+
+    // group header + "all of this group" link
+    sideEl.appendChild(el("p", { class: "sidebar-title", text: group.label }));
+    sideEl.appendChild(el("button", {
+      class: "side-link" + (key === group.key ? " active" : ""),
+      "data-cat": group.key, style: `--side-c: ${group.color}`,
+      onclick: () => setCategory(group.key, true)
+    }, [el("span", { text: "All " + group.label }), el("span", { class: "s-count", text: String(c[group.key]) })]));
+
+    // only this group's categories
+    group.cats.forEach((catKey) => {
+      const n = c[catKey] || 0;
+      if (n === 0) return;
+      sideEl.appendChild(el("button", {
+        class: "side-link side-sub" + (key === catKey ? " active" : ""),
+        "data-cat": catKey, style: `--side-c: var(--cat-${catKey})`,
+        onclick: () => setCategory(catKey, true)
+      }, [el("span", { text: labelOf(catKey) }), el("span", { class: "s-count", text: String(n) })]));
+    });
+  }
+
+  /* mobile/tablet topic selector — a scrollable chip row of the active
+     group's categories (the sidebar is hidden on small screens) */
+  function renderSubnav(key) {
+    if (!subnavEl) return;
+    const c = counts();
+    const groupKey = isGroup(key) ? key : (groupOf(key) ? groupOf(key).key : GROUPS[0].key);
+    const group = GROUPS.find((g) => g.key === groupKey);
+    subnavEl.innerHTML = "";
+
+    subnavEl.appendChild(el("button", {
+      class: "subchip" + (key === group.key ? " active" : ""),
+      "data-cat": group.key,
+      onclick: () => setCategory(group.key, true)
+    }, [document.createTextNode("All " + group.label)]));
+
+    group.cats.forEach((catKey) => {
+      const n = c[catKey] || 0;
+      if (n === 0) return;
+      subnavEl.appendChild(el("button", {
+        class: "subchip" + (key === catKey ? " active" : ""),
+        "data-cat": catKey, style: `--sc: var(--cat-${catKey})`,
+        onclick: () => setCategory(catKey, true)
+      }, [document.createTextNode(labelOf(catKey)), el("span", { class: "subchip-n", text: String(n) })]));
+    });
+
+    const active = qs(".subchip.active", subnavEl);
+    if (active) active.scrollIntoView({ inline: "center", block: "nearest" });
   }
 
   function buildDifficultyFilter() {
@@ -182,10 +246,16 @@
   function setCategory(key, updateHash) {
     state.category = key;
     store.setLastTab(key);
-    qsa(".tab", tabsEl).forEach((t) => t.classList.toggle("active", t.dataset.cat === key));
-    qsa(".side-link", sideEl).forEach((s) => s.classList.toggle("active", s.dataset.cat === key));
+
+    // light up the parent group tab (a category belongs to one group)
+    const parentGroup = isGroup(key) ? key : (groupOf(key) ? groupOf(key).key : GROUPS[0].key);
+    qsa(".tab", tabsEl).forEach((t) => t.classList.toggle("active", t.dataset.cat === parentGroup));
+
+    // rebuild the sidebar (desktop) and the mobile topic row for this group
+    renderSidebar(key);
+    renderSubnav(key);
+
     if (updateHash) history.replaceState(null, "", "#" + key);
-    // scroll active tab into view
     const activeTab = qs(".tab.active", tabsEl);
     if (activeTab) activeTab.scrollIntoView({ inline: "center", block: "nearest" });
     render();
@@ -196,8 +266,9 @@
      ======================================================== */
   function filtered() {
     const q = state.query.trim().toLowerCase();
+    const allowed = catsFor(state.category); // null = no category restriction
     return ALL.filter((item) => {
-      if (state.category !== "all" && item.category !== state.category) return false;
+      if (allowed && !allowed.includes(item.category)) return false;
       if (state.difficulty !== "all" && item.difficulty !== state.difficulty) return false;
       if (state.bookmarkedOnly && !bookmarks.has(item.id)) return false;
       if (q && !item._search.includes(q)) return false;
@@ -356,10 +427,13 @@
   }
   function markOpened(id) { store.setLastOpened(id); }
   function updateProgressBar() {
-    if (!progFill) return;
-    const pct = ALL.length ? Math.round((progress.size / ALL.length) * 100) : 0;
-    progFill.style.width = pct + "%";
-    if (progLabel) progLabel.textContent = progress.size + " / " + ALL.length;
+    const fill = qs("#progress-fill", sideEl);
+    const label = qs("#progress-label", sideEl);
+    if (!fill) return;
+    const selCats = catsFor(state.category) || GROUPS[0].cats;
+    const { done, total } = progressFor(selCats);
+    fill.style.width = (total ? Math.round((done / total) * 100) : 0) + "%";
+    if (label) label.textContent = done + " / " + total;
   }
 
   /* ========================================================
@@ -446,7 +520,7 @@
     const h = decodeURIComponent(location.hash.replace(/^#/, ""));
     if (!h) return;
     if (h.startsWith("q=")) { openQuestion(h.slice(2), true); return; }
-    if (CATEGORIES.some((c) => c.key === h)) setCategory(h, false);
+    if (isGroup(h) || CATEGORIES.some((c) => c.key === h)) setCategory(h, false);
   }
 
   function onKeydown(e) {
@@ -485,11 +559,11 @@
     titleEl = qs("#content-title");
     tabsEl = qs("#tabs");
     sideEl = qs("#sidebar-nav");
+    subnavEl = qs("#subnav");
     diffEl = qs("#difficulty-filter");
     searchEls = qsa(".js-search");
 
     buildTabs();
-    buildSidebar();
     buildDifficultyFilter();
 
     // wire search inputs
@@ -529,7 +603,8 @@
 
     // initial state: hash > last tab
     const startTab = store.getLastTab();
-    setCategory(CATEGORIES.some((c) => c.key === startTab) ? startTab : "all", false);
+    const validStart = isGroup(startTab) || CATEGORIES.some((c) => c.key === startTab);
+    setCategory(validStart ? startTab : GROUPS[0].key, false);
     parseHash();
 
     // register service worker (PWA) — only over http(s)
