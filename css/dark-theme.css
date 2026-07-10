@@ -1,0 +1,140 @@
+/* ============================================================
+   Dark theme. Applies via OS preference AND the manual toggle.
+   The [data-theme] selectors must win over the media query in
+   both directions, so light is re-declared too.
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #141118;
+    --surface: #1C1822;
+    --surface-2: #241F2B;
+    --surface-3: #2E2836;
+    --ink: #F1ECF2;
+    --ink-2: #C9C1CE;
+    --muted: #948B9C;
+    --border: #322B3A;
+    --border-strong: #453D4F;
+
+    --accent: #FF6079;
+    --accent-ink: #FF90A2;
+    --accent-soft: #2C1720;
+    --accent-contrast: #1A0E13;
+
+    --beginner: #46C783;
+    --beginner-soft: #16281F;
+    --intermediate: #E0A63B;
+    --intermediate-soft: #2A2213;
+    --advanced: #F0796C;
+    --advanced-soft: #2B1714;
+
+    --cat-angular: #FF5C77;
+    --cat-javascript: #E6C049;
+    --cat-typescript: #6BA6E0;
+    --cat-html: #F08050;
+    --cat-css: #B08CF0;
+    --cat-coding: #3FBBD1;
+    --cat-rxjs: #56C990;
+    --cat-ngrx: #8A8CF0;
+    --cat-java: #D0966B;
+    --cat-springboot: #86C860;
+    --cat-sql: #4FBAD1;
+    --cat-git: #F0795A;
+    --cat-general: #A6AEBF;
+    --cat-ngcoding: #F080A6;
+    --cat-testing: #E070C6;
+    --cat-behavioral: #90AEC2;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+    --shadow-md: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .3);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, .5);
+  }
+}
+
+/* explicit dark (toggle) — must override media query */
+:root[data-theme="dark"] {
+  --bg: #141118;
+  --surface: #1C1822;
+  --surface-2: #241F2B;
+  --surface-3: #2E2836;
+  --ink: #F1ECF2;
+  --ink-2: #C9C1CE;
+  --muted: #948B9C;
+  --border: #322B3A;
+  --border-strong: #453D4F;
+
+  --accent: #FF6079;
+  --accent-ink: #FF90A2;
+  --accent-soft: #2C1720;
+  --accent-contrast: #1A0E13;
+
+  --beginner: #46C783;
+  --beginner-soft: #16281F;
+  --intermediate: #E0A63B;
+  --intermediate-soft: #2A2213;
+  --advanced: #F0796C;
+  --advanced-soft: #2B1714;
+
+  --cat-angular: #FF5C77;
+  --cat-javascript: #E6C049;
+  --cat-typescript: #6BA6E0;
+  --cat-html: #F08050;
+  --cat-css: #B08CF0;
+  --cat-rxjs: #56C990;
+  --cat-ngrx: #8A8CF0;
+  --cat-java: #D0966B;
+  --cat-springboot: #86C860;
+  --cat-sql: #4FBAD1;
+  --cat-git: #F0795A;
+  --cat-general: #A6AEBF;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
+  --shadow-md: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .3);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, .5);
+}
+
+/* explicit light (toggle) — must override the dark media query */
+:root[data-theme="light"] {
+  --bg: #FBF9F8;
+  --surface: #FFFFFF;
+  --surface-2: #F5F0EF;
+  --surface-3: #EFE8E7;
+  --ink: #201A1C;
+  --ink-2: #4A4145;
+  --muted: #756A6E;
+  --border: #E9E1E0;
+  --border-strong: #D8CECD;
+
+  --accent: #C21836;
+  --accent-ink: #8E1128;
+  --accent-soft: #FBE9EC;
+  --accent-contrast: #FFFFFF;
+
+  --beginner: #1F9254;
+  --beginner-soft: #E3F5EB;
+  --intermediate: #B4690E;
+  --intermediate-soft: #FBEEDD;
+  --advanced: #C0392B;
+  --advanced-soft: #FBE6E3;
+
+  --cat-angular: #C3002F;
+  --cat-javascript: #B4820A;
+  --cat-typescript: #2F6FB0;
+  --cat-html: #D9531E;
+  --cat-css: #7A4FD6;
+  --cat-coding: #0B7285;
+  --cat-rxjs: #1E8E57;
+  --cat-ngrx: #4B4ECb;
+  --cat-java: #9A5B34;
+  --cat-springboot: #4E8B2C;
+  --cat-sql: #0E7C93;
+  --cat-git: #D9491F;
+  --cat-general: #667085;
+  --cat-ngcoding: #B0335F;
+  --cat-testing: #A83294;
+  --cat-behavioral: #5C7A8F;
+
+  --shadow-sm: 0 1px 2px rgba(32, 26, 28, .05);
+  --shadow-md: 0 1px 2px rgba(32, 26, 28, .04), 0 8px 24px rgba(32, 26, 28, .06);
+  --shadow-lg: 0 12px 40px rgba(32, 26, 28, .12);
+}

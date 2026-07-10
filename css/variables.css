@@ -1,0 +1,78 @@
+/* ============================================================
+   Design tokens. Light theme lives here on :root.
+   Dark overrides live in dark-theme.css (media query + [data-theme]).
+   ============================================================ */
+:root {
+  /* neutrals (warm bias toward the crimson accent) */
+  --bg: #FBF9F8;
+  --surface: #FFFFFF;
+  --surface-2: #F5F0EF;
+  --surface-3: #EFE8E7;
+  --ink: #201A1C;
+  --ink-2: #4A4145;
+  --muted: #756A6E;
+  --border: #E9E1E0;
+  --border-strong: #D8CECD;
+
+  /* brand accent */
+  --accent: #C21836;
+  --accent-ink: #8E1128;
+  --accent-soft: #FBE9EC;
+  --accent-contrast: #FFFFFF;
+
+  /* semantic (difficulty) */
+  --beginner: #1F9254;
+  --beginner-soft: #E3F5EB;
+  --intermediate: #B4690E;
+  --intermediate-soft: #FBEEDD;
+  --advanced: #C0392B;
+  --advanced-soft: #FBE6E3;
+
+  /* category colours */
+  --cat-angular: #C3002F;
+  --cat-javascript: #B4820A;
+  --cat-typescript: #2F6FB0;
+  --cat-html: #D9531E;
+  --cat-css: #7A4FD6;
+  --cat-coding: #0B7285;
+  --cat-rxjs: #1E8E57;
+  --cat-ngrx: #4B4ECb;
+  --cat-java: #9A5B34;
+  --cat-springboot: #4E8B2C;
+  --cat-sql: #0E7C93;
+  --cat-git: #D9491F;
+  --cat-general: #667085;
+  --cat-ngcoding: #B0335F;
+  --cat-testing: #A83294;
+  --cat-behavioral: #5C7A8F;
+
+  /* typography */
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+
+  /* scale */
+  --step--1: 0.82rem;
+  --step-0: 0.94rem;
+  --step-1: 1.12rem;
+  --step-2: 1.4rem;
+  --step-3: 1.9rem;
+  --step-4: clamp(2rem, 5vw, 3rem);
+
+  /* radii & shadow */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-pill: 100px;
+  --shadow-sm: 0 1px 2px rgba(32, 26, 28, .05);
+  --shadow-md: 0 1px 2px rgba(32, 26, 28, .04), 0 8px 24px rgba(32, 26, 28, .06);
+  --shadow-lg: 0 12px 40px rgba(32, 26, 28, .12);
+
+  /* layout */
+  --header-h: 60px;
+  --tabs-h: 54px;
+  --maxw: 1180px;
+  --sidebar-w: 210px;
+
+  --focus: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+  --trans: .18s ease;
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Interview Questions Bank",
+  "short_name": "IQ Bank",
+  "description": "Master Angular, JavaScript, TypeScript and Frontend interviews — a searchable question bank.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FBF9F8",
+  "theme_color": "#C21836",
+  "icons": [
+    { "src": "assets/favicon/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ],
+  "categories": ["education", "productivity"]
+}
