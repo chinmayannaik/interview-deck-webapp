@@ -382,6 +382,22 @@
       inner.appendChild(el("div", { class: "qa-tip", html: "<b>Tip</b>" + escapeText(q.tip) }));
     }
 
+    // optional in-depth study section
+    if (q.deep) {
+      const deepContent = el("div", { class: "qa-deep", hidden: "", html: q.deep });
+      const deepBtn = el("button", {
+        class: "qa-act deep-btn",
+        onclick: (e) => {
+          e.stopPropagation();
+          const hidden = deepContent.hasAttribute("hidden");
+          if (hidden) { deepContent.removeAttribute("hidden"); e.currentTarget.textContent = "📖 Hide deep dive"; markOpened(q.id); }
+          else { deepContent.setAttribute("hidden", ""); e.currentTarget.textContent = "📖 Study in depth"; }
+        }
+      }, "📖 Study in depth");
+      inner.appendChild(deepBtn);
+      inner.appendChild(deepContent);
+    }
+
     const doneBtn = el("button", {
       class: "qa-act" + (progress.has(q.id) ? " on" : ""),
       onclick: (e) => { e.stopPropagation(); toggleDone(q.id, doneBtn, card); }

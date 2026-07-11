@@ -34,7 +34,43 @@
         "</ul>",
       tip: "The constructor is for dependency injection only; the DOM and inputs aren't ready yet — do real work in ngOnInit.",
       code: "",
-      lang: ""
+      lang: "",
+      deep:
+        "<h4>The full sequence &amp; how often each runs</h4>" +
+        "<table><thead><tr><th>Hook</th><th>When</th><th>How often</th></tr></thead><tbody>" +
+        "<tr><td>constructor</td><td>class instantiated (DI only)</td><td>once</td></tr>" +
+        "<tr><td>ngOnChanges</td><td>a bound @Input changes</td><td>every input change</td></tr>" +
+        "<tr><td>ngOnInit</td><td>after first ngOnChanges — inputs set</td><td>once</td></tr>" +
+        "<tr><td>ngDoCheck</td><td>every change-detection run</td><td>frequently</td></tr>" +
+        "<tr><td>ngAfterContentInit</td><td>projected content (ng-content) ready</td><td>once</td></tr>" +
+        "<tr><td>ngAfterContentChecked</td><td>after projected content checked</td><td>frequently</td></tr>" +
+        "<tr><td>ngAfterViewInit</td><td>component's view + child views ready</td><td>once</td></tr>" +
+        "<tr><td>ngAfterViewChecked</td><td>after the view is checked</td><td>frequently</td></tr>" +
+        "<tr><td>ngOnDestroy</td><td>just before the component is destroyed</td><td>once</td></tr>" +
+        "</tbody></table>" +
+        "<h4>Why not just use the constructor?</h4>" +
+        "<p>The constructor runs before Angular has wired up inputs or rendered the view. At that point <code class=\"inline\">@Input</code> values are still <code class=\"inline\">undefined</code> and <code class=\"inline\">@ViewChild</code> refs don't exist. So the constructor is only for <strong>dependency injection</strong>; put initialization logic (data fetching, setup that needs inputs) in <code class=\"inline\">ngOnInit</code>.</p>" +
+        "<h4>ngAfterViewInit &amp; @ViewChild timing</h4>" +
+        "<p><code class=\"inline\">ngAfterViewInit</code> fires <strong>once</strong>, after the component's template (and its children's views) are rendered in the DOM. This is the earliest point a <code class=\"inline\">@ViewChild</code> / <code class=\"inline\">@ViewChildren</code> reference is reliably available — e.g. to init a chart or measure an element.</p>" +
+        "<p>If a <code class=\"inline\">@ViewChild</code> is inside an <code class=\"inline\">*ngIf</code>/<code class=\"inline\">@if</code>, it resolves later — use <code class=\"inline\">{ static: false }</code> (the default) and read it in <code class=\"inline\">ngAfterViewInit</code>, not <code class=\"inline\">ngOnInit</code>.</p>" +
+        "<h4>ngOnDestroy — the cleanup hook</h4>" +
+        "<p>Runs once, right before Angular destroys the component. It's <strong>crucial for preventing memory leaks</strong>. Use it to:</p>" +
+        "<ul>" +
+        "<li>Unsubscribe from long-lived RxJS streams (Subjects, <code class=\"inline\">valueChanges</code>, intervals).</li>" +
+        "<li>Detach manual event listeners you added.</li>" +
+        "<li>Clear <code class=\"inline\">setTimeout</code>/<code class=\"inline\">setInterval</code> timers.</li>" +
+        "</ul>" +
+        "<pre><code>private destroy$ = new Subject&lt;void&gt;();\n\nngOnInit() {\n  this.data$.pipe(takeUntil(this.destroy$)).subscribe(...);\n}\nngOnDestroy() {\n  this.destroy$.next();\n  this.destroy$.complete();\n}</code></pre>" +
+        "<p>(HTTP calls complete on their own, so they don't strictly need cleanup — but streams that never complete do.)</p>" +
+        "<h4>Common pitfalls</h4>" +
+        "<ul>" +
+        "<li>Doing DOM work in <code class=\"inline\">ngOnInit</code> — the view isn't ready; use <code class=\"inline\">ngAfterViewInit</code>.</li>" +
+        "<li>Heavy logic in <code class=\"inline\">ngDoCheck</code>/<code class=\"inline\">…Checked</code> hooks — they run on <em>every</em> cycle and will tank performance.</li>" +
+        "<li>Forgetting <code class=\"inline\">ngOnDestroy</code> cleanup — the #1 source of Angular memory leaks.</li>" +
+        "<li>Updating a value in <code class=\"inline\">ngAfterViewInit</code> that's shown in the same view → <em>ExpressionChangedAfterItHasBeenChecked</em> error (defer with a microtask or move to <code class=\"inline\">ngOnInit</code>).</li>" +
+        "</ul>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“The constructor is only for DI. I fetch data in <code class=\"inline\">ngOnInit</code> once inputs are set, react to input changes in <code class=\"inline\">ngOnChanges</code>, touch the rendered DOM / <code class=\"inline\">@ViewChild</code> in <code class=\"inline\">ngAfterViewInit</code>, and always clean up subscriptions and timers in <code class=\"inline\">ngOnDestroy</code> to avoid leaks.”</p>"
     },
     {
       id: "ng-binding",
@@ -686,6 +722,147 @@
       tip: "updateOn: 'blur' is a simple way to stop async validators firing on every keystroke.",
       code: "new FormControl('', { updateOn: 'blur', validators: [Validators.required] });",
       lang: "ts"
+    },
+    {
+      id: "ng-selector",
+      category: "angular",
+      difficulty: "beginner",
+      tags: ["component", "selector", "decorator"],
+      question: "What is a selector in Angular and why use it?",
+      answer:
+        "<p>The <code class=\"inline\">selector</code> is a property in the <code class=\"inline\">@Component</code> decorator that defines how the component is identified in a template. It acts like a custom HTML tag, so Angular knows where to render the component.</p>" +
+        "<p>Selectors can be an element (<code class=\"inline\">app-user</code>), an attribute (<code class=\"inline\">[appHighlight]</code>), or a class.</p>",
+      tip: "Prefix your selectors (app-…) so they never clash with real or future HTML elements.",
+      code: "@Component({ selector: 'app-user', templateUrl: './user.html' })\n// used as: <app-user></app-user>",
+      lang: "ts"
+    },
+    {
+      id: "ng-entry-point",
+      category: "angular",
+      difficulty: "beginner",
+      tags: ["bootstrap", "main.ts", "architecture"],
+      question: "What is the entry point of an Angular application?",
+      answer:
+        "<p><code class=\"inline\">main.ts</code> is the entry point. It <strong>bootstraps</strong> the app — historically <code class=\"inline\">platformBrowserDynamic().bootstrapModule(AppModule)</code>, and in modern standalone Angular <code class=\"inline\">bootstrapApplication(AppComponent)</code>. This initialises the root and renders the app into the browser.</p>",
+      tip: "Bootstrapping = 'start the app and render the root component'. Know both the module and standalone forms.",
+      code: "// modern standalone bootstrap\nbootstrapApplication(AppComponent, { providers: [provideRouter(routes)] });",
+      lang: "ts"
+    },
+    {
+      id: "ng-router-outlet",
+      category: "angular",
+      difficulty: "beginner",
+      tags: ["routing", "router-outlet"],
+      question: "What is the use of <router-outlet>?",
+      answer:
+        "<p><code class=\"inline\">&lt;router-outlet&gt;</code> is a placeholder in a template where the router renders the component that matches the current route. As the URL changes, Angular swaps the component shown at that outlet. You can also have named/nested outlets.</p>",
+      tip: "Think of router-outlet as the 'stage' where routed components are displayed.",
+      code: "<nav>…</nav>\n<router-outlet></router-outlet> <!-- routed component renders here -->",
+      lang: "html"
+    },
+    {
+      id: "ng-httpclient",
+      category: "angular",
+      difficulty: "intermediate",
+      tags: ["http", "httpclient", "rest", "service"],
+      question: "How do you call a REST API in Angular?",
+      answer:
+        "<p>Use the <code class=\"inline\">HttpClient</code> service (provide it with <code class=\"inline\">provideHttpClient()</code>). Wrap the calls in a dedicated <strong>service</strong> that returns Observables, and handle the HTTP verbs (GET/POST/PUT/DELETE) with proper error handling via <code class=\"inline\">catchError</code>. Components subscribe (ideally through the <code class=\"inline\">async</code> pipe).</p>",
+      tip: "Keep API calls in a service, not the component — it's reusable, testable, and mockable.",
+      code: "@Injectable({ providedIn: 'root' })\nexport class UserService {\n  constructor(private http: HttpClient) {}\n  getUsers() { return this.http.get<User[]>('/api/users'); }\n  create(u: User) { return this.http.post<User>('/api/users', u); }\n}",
+      lang: "ts"
+    },
+    {
+      id: "ng-dependent-calls",
+      category: "angular",
+      difficulty: "advanced",
+      tags: ["http", "rxjs", "switchMap"],
+      question: "How do you make an API call that depends on another call's response?",
+      answer:
+        "<p>Chain them with <code class=\"inline\">switchMap</code> so the second request uses the first's result (and stale first-calls are cancelled). For independent parallel calls use <code class=\"inline\">forkJoin</code>; for ordered writes use <code class=\"inline\">concatMap</code>.</p>",
+      tip: "Dependent = switchMap/concatMap; independent-parallel = forkJoin.",
+      code: "this.api.getUser(id).pipe(\n  switchMap(user => this.api.getOrders(user.id))\n).subscribe(orders => this.orders = orders);",
+      lang: "ts"
+    },
+    {
+      id: "ng-component-vs-directive",
+      category: "angular",
+      difficulty: "beginner",
+      tags: ["component", "directive", "basics"],
+      question: "What is the difference between a component and a directive?",
+      answer:
+        "<p>A <strong>component</strong> is a directive <em>with a template</em> — it controls a view. A <strong>directive</strong> has <em>no template</em>; it adds behaviour or changes the appearance/structure of existing elements (attribute directives like <code class=\"inline\">ngClass</code>, structural directives like <code class=\"inline\">*ngIf</code>).</p>",
+      tip: "One-liner: 'A component is a directive with a template.'",
+      code: "",
+      lang: ""
+    },
+    {
+      id: "ng-why-services",
+      category: "angular",
+      difficulty: "beginner",
+      tags: ["services", "architecture", "di"],
+      question: "Why do we use services in Angular?",
+      answer:
+        "<ul>" +
+        "<li>Encapsulate <strong>reusable business logic</strong> and API calls.</li>" +
+        "<li><strong>Share data/state</strong> between components (often via a BehaviorSubject).</li>" +
+        "<li>Provide a <strong>single instance</strong> (singleton) through dependency injection.</li>" +
+        "<li>Enforce <strong>separation of concerns</strong> — keep components focused on the view.</li>" +
+        "</ul>",
+      tip: "Components render; services do the work. Keep logic out of components.",
+      code: "",
+      lang: ""
+    },
+    {
+      id: "ng-guard-types",
+      category: "angular",
+      difficulty: "intermediate",
+      tags: ["routing", "guards"],
+      question: "What are Angular route guards and their types?",
+      answer:
+        "<p>Guards control access to and navigation between routes.</p>" +
+        "<ul>" +
+        "<li><strong>CanActivate</strong> — allow/deny entering a route (auth).</li>" +
+        "<li><strong>CanDeactivate</strong> — confirm leaving (e.g. unsaved-changes prompt).</li>" +
+        "<li><strong>Resolve</strong> — pre-fetch data before the route activates.</li>" +
+        "<li><strong>CanMatch / CanLoad</strong> — control whether a lazy route is even loaded.</li>" +
+        "</ul>",
+      tip: "For auth, a CanActivate guard returning a UrlTree is the clean redirect-to-login pattern.",
+      code: "export const authGuard: CanActivateFn = () =>\n  inject(AuthService).isLoggedIn() || inject(Router).createUrlTree(['/login']);",
+      lang: "ts"
+    },
+    {
+      id: "ng-debug-undefined",
+      category: "angular",
+      difficulty: "intermediate",
+      tags: ["debugging", "errors", "practical"],
+      question: "How would you debug \"Cannot read properties of undefined\" in Angular?",
+      answer:
+        "<p>It means you accessed a property on something that isn't ready/loaded yet (often async data rendered before it arrives). Fixes:</p>" +
+        "<ul>" +
+        "<li>Guard the template with <code class=\"inline\">*ngIf=\"data\"</code> or the <strong>safe-navigation operator</strong> <code class=\"inline\">data?.name</code>.</li>" +
+        "<li>Initialise the variable before use; check the async flow with the <code class=\"inline\">async</code> pipe.</li>" +
+        "<li>Use the browser devtools/stack trace to find the exact line and inspect the value.</li>" +
+        "</ul>",
+      tip: "The template safe-navigation operator (?.) prevents this for async data that hasn't loaded yet.",
+      code: "<div>{{ user?.profile?.name }}</div>\n<div *ngIf=\"user as u\">{{ u.name }}</div>",
+      lang: "html"
+    },
+    {
+      id: "ng-state-management",
+      category: "angular",
+      difficulty: "intermediate",
+      tags: ["state", "ngrx", "architecture"],
+      question: "What are the options for state management in Angular?",
+      answer:
+        "<ul>" +
+        "<li><strong>Service + BehaviorSubject</strong> — simple shared state for small/medium apps.</li>" +
+        "<li><strong>Signals</strong> — modern, fine-grained local/shared state.</li>" +
+        "<li><strong>NgRx / NgRx SignalStore</strong> — structured Redux-style store for large apps needing traceability and DevTools.</li>" +
+        "</ul>",
+      tip: "Match the tool to the app size — don't reach for NgRx on a small app.",
+      code: "",
+      lang: ""
     }
   ];
 })();

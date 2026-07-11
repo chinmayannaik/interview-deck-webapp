@@ -471,6 +471,188 @@
       tip: "Reducers in Redux/NgRx must be pure — that's what enables time-travel debugging.",
       code: "const add = (a, b) => a + b;            // pure\nlet total = 0; const addTo = n => total += n; // impure",
       lang: "js"
+    },
+    {
+      id: "js-data-types",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["types", "primitives"],
+      question: "What are the data types in JavaScript?",
+      answer:
+        "<p><strong>Primitive</strong> (immutable, copied by value): <code class=\"inline\">string</code>, <code class=\"inline\">number</code>, <code class=\"inline\">boolean</code>, <code class=\"inline\">bigint</code>, <code class=\"inline\">symbol</code>, <code class=\"inline\">undefined</code>, <code class=\"inline\">null</code>.</p>" +
+        "<p><strong>Non-primitive</strong> (reference type): <code class=\"inline\">object</code> — which includes arrays, functions, and dates.</p>",
+      tip: "Primitives are compared/copied by value; objects by reference — a very common gotcha.",
+      code: "typeof 'a';     // 'string'\ntypeof 10n;     // 'bigint'\ntypeof null;    // 'object' (historical bug)\ntypeof [];      // 'object'",
+      lang: "js"
+    },
+    {
+      id: "js-type-conversion",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["conversion", "numbers", "strings"],
+      question: "How do you convert between strings and numbers?",
+      answer:
+        "<p><strong>Number → string</strong>: <code class=\"inline\">String(n)</code>, <code class=\"inline\">n.toString()</code>, or a template literal <code class=\"inline\">`${n}`</code>.</p>" +
+        "<p><strong>String → number</strong>: <code class=\"inline\">Number(s)</code>, <code class=\"inline\">parseInt(s)</code> (integer), <code class=\"inline\">parseFloat(s)</code> (decimal), or the unary <code class=\"inline\">+s</code>.</p>",
+      tip: "parseInt('123px') = 123 (stops at non-digits); Number('123px') = NaN (strict).",
+      code: "Number('123');      // 123\nparseInt('123.45');  // 123\nparseFloat('123.45');// 123.45\n+'123';              // 123\n(123).toString();    // '123'",
+      lang: "js"
+    },
+    {
+      id: "js-sync-async",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["async", "concurrency"],
+      question: "Synchronous vs asynchronous programming.",
+      answer:
+        "<p><strong>Synchronous</strong> code runs line by line — each task blocks the next until it finishes. <strong>Asynchronous</strong> code lets long-running work (network, timers, I/O) happen in the background and continue later via callbacks/promises/async-await, keeping the single UI thread responsive.</p>",
+      tip: "JS is single-threaded, so async is how it stays responsive during I/O.",
+      code: "",
+      lang: ""
+    },
+    {
+      id: "js-single-threaded",
+      category: "javascript",
+      difficulty: "intermediate",
+      tags: ["event-loop", "concurrency", "threads"],
+      question: "Is JavaScript single-threaded or multi-threaded?",
+      answer:
+        "<p>JavaScript is <strong>single-threaded</strong> — one call stack, one thing at a time. It <em>feels</em> concurrent because of the <strong>event loop</strong>: async work is offloaded to the browser/Node APIs and their callbacks are queued back onto the stack when it's free. (Web Workers add real parallel threads, but they don't share the main thread.)</p>",
+      tip: "One thread + event loop = the mental model for all async behaviour in JS.",
+      code: "",
+      lang: ""
+    },
+    {
+      id: "js-event-listener",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["dom", "events"],
+      question: "What is an event listener?",
+      answer:
+        "<p>A function registered to run when a specific event (click, input, mouseover, …) fires on a DOM element, via <code class=\"inline\">addEventListener</code>. Remove it with <code class=\"inline\">removeEventListener</code> to avoid leaks.</p>",
+      tip: "Use addEventListener (not onclick=) so you can attach multiple handlers and remove them.",
+      code: "const btn = document.getElementById('save');\nbtn.addEventListener('click', () => console.log('clicked'));",
+      lang: "js"
+    },
+    {
+      id: "js-slice-splice",
+      category: "javascript",
+      difficulty: "intermediate",
+      tags: ["arrays", "methods"],
+      question: "slice() vs splice().",
+      answer:
+        "<p><strong>slice(start, end)</strong> returns a <em>copy</em> of a portion — it does <strong>not</strong> mutate the original. <strong>splice(start, count, …items)</strong> <em>mutates</em> the array, removing and/or inserting elements, and returns the removed ones.</p>",
+      tip: "slice = safe copy; splice = in-place edit. Easy to mix up — remember 'p' for 'mutate in place'.",
+      code: "const a = ['a', 'b', 'c', 'd'];\na.slice(1, 3);      // ['b','c']  (a unchanged)\na.splice(1, 2);     // removes ['b','c']  (a is now ['a','d'])",
+      lang: "js"
+    },
+    {
+      id: "js-call-apply-bind",
+      category: "javascript",
+      difficulty: "intermediate",
+      tags: ["this", "functions", "binding"],
+      question: "call() vs apply() vs bind().",
+      answer:
+        "<p>All set <code class=\"inline\">this</code> explicitly. <strong>call</strong> invokes immediately with arguments listed individually; <strong>apply</strong> invokes immediately with arguments as an array; <strong>bind</strong> returns a <em>new</em> function with <code class=\"inline\">this</code> permanently bound (call it later).</p>",
+      tip: "call/apply invoke now; bind returns a function to invoke later. apply takes an Array.",
+      code: "greet.call(obj, 'hi', '!');\ngreet.apply(obj, ['hi', '!']);\nconst bound = greet.bind(obj); bound('hi', '!');",
+      lang: "js"
+    },
+    {
+      id: "js-template-literals",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["es6", "strings"],
+      question: "What are template literals?",
+      answer:
+        "<p>Strings written in backticks that support <strong>interpolation</strong> (<code class=\"inline\">${expr}</code>) and multi-line text without concatenation. <em>Tagged</em> template literals let a function process the parts (used for i18n, styled-components, safe HTML).</p>",
+      tip: "Backticks + ${} replace clunky string concatenation and allow multi-line strings.",
+      code: "const name = 'Chi';\nconst msg = `Hello ${name}, ${1 + 1} new alerts`;",
+      lang: "js"
+    },
+    {
+      id: "js-garbage-collection",
+      category: "javascript",
+      difficulty: "advanced",
+      tags: ["memory", "gc"],
+      question: "How does garbage collection work in JavaScript?",
+      answer:
+        "<p>The engine automatically frees memory for objects that are no longer <strong>reachable</strong> from a root (global, current call stack). The main algorithm is <strong>mark-and-sweep</strong>. Leaks still happen via lingering references — forgotten timers, detached DOM nodes, or global variables.</p>",
+      tip: "You can't force GC; you prevent leaks by clearing references, timers, and listeners.",
+      code: "",
+      lang: ""
+    },
+    {
+      id: "js-add-props",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["objects"],
+      question: "How do you add or access properties dynamically on an object?",
+      answer:
+        "<p>Use <strong>bracket notation</strong> when the key is dynamic or not a valid identifier: <code class=\"inline\">obj[key] = value</code>. Dot notation (<code class=\"inline\">obj.key</code>) only works for fixed, valid names.</p>",
+      tip: "Bracket notation is how you set a property whose name is in a variable.",
+      code: "const student = { name: 'A' };\nconst field = 'rollNumber';\nstudent[field] = 42;   // { name: 'A', rollNumber: 42 }",
+      lang: "js"
+    },
+    {
+      id: "js-for-of-in",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["loops", "iteration"],
+      question: "for...of vs for...in.",
+      answer:
+        "<p><strong>for…of</strong> iterates the <em>values</em> of an iterable (arrays, strings, Maps, Sets). <strong>for…in</strong> iterates the <em>keys</em> (property names) of an object — and can pick up inherited enumerable keys, so it's not ideal for arrays.</p>",
+      tip: "for…of for arrays/values, for…in for object keys. Don't loop arrays with for…in.",
+      code: "for (const v of ['a', 'b']) {}        // 'a', 'b'\nfor (const k in { x: 1, y: 2 }) {}     // 'x', 'y'",
+      lang: "js"
+    },
+    {
+      id: "js-settimeout-interval",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["timers", "async"],
+      question: "setTimeout() vs setInterval().",
+      answer:
+        "<p><strong>setTimeout</strong> runs a callback <em>once</em> after a delay. <strong>setInterval</strong> runs it <em>repeatedly</em> at a fixed interval. Both return an id you clear with <code class=\"inline\">clearTimeout</code>/<code class=\"inline\">clearInterval</code>.</p>",
+      tip: "Always clear intervals (e.g. in cleanup) or they run forever and leak.",
+      code: "const t = setTimeout(fn, 1000);   clearTimeout(t);\nconst i = setInterval(fn, 1000);  clearInterval(i);",
+      lang: "js"
+    },
+    {
+      id: "js-shadowing",
+      category: "javascript",
+      difficulty: "intermediate",
+      tags: ["scope", "shadowing"],
+      question: "What is variable shadowing?",
+      answer:
+        "<p>When a variable declared in an inner scope has the <strong>same name</strong> as one in an outer scope, the inner one <em>shadows</em> (hides) the outer within that block. Common with function parameters and block-scoped <code class=\"inline\">let</code>/<code class=\"inline\">const</code>.</p>",
+      tip: "Illegal shadowing: you can't shadow a let with a var in the same scope.",
+      code: "let x = 1;\nfunction f() { let x = 2; return x; } // inner x shadows outer\nf(); // 2, outer x still 1",
+      lang: "js"
+    },
+    {
+      id: "js-generator-vs-normal",
+      category: "javascript",
+      difficulty: "advanced",
+      tags: ["generators", "functions"],
+      question: "Generator function vs normal function.",
+      answer:
+        "<p>A <strong>normal function</strong> runs to completion and returns once. A <strong>generator</strong> (<code class=\"inline\">function*</code>) can <strong>pause</strong> at each <code class=\"inline\">yield</code> and resume later, returning an <em>iterator</em>. It's lazy — values are produced on demand, enabling infinite sequences and custom iteration.</p>",
+      tip: "Generators return an iterator you drive with .next(); normal functions just return a value.",
+      code: "function* gen() { yield 1; yield 2; }\nconst it = gen();\nit.next(); // { value: 1, done: false }",
+      lang: "js"
+    },
+    {
+      id: "js-mutable-immutable",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["immutability", "types"],
+      question: "Mutable vs immutable in JavaScript.",
+      answer:
+        "<p><strong>Primitives</strong> (string, number, boolean…) are <strong>immutable</strong> — operations produce new values, never change the original. <strong>Objects and arrays</strong> are <strong>mutable</strong> — their contents can change in place. Freeze an object with <code class=\"inline\">Object.freeze</code> to prevent top-level mutation.</p>",
+      tip: "String methods return NEW strings — the original never changes.",
+      code: "let s = 'abc'; s.toUpperCase(); // 'ABC' but s is still 'abc'\nconst a = [1]; a.push(2);       // a mutated to [1, 2]",
+      lang: "js"
     }
   ];
 })();

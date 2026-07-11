@@ -218,6 +218,31 @@
 .qa-tip { font-size: var(--step--1); color: var(--ink-2); border-left: 3px solid var(--cat, var(--accent)); padding: 4px 0 4px 12px; margin-top: 12px; background: color-mix(in srgb, var(--cat, var(--accent)) 5%, transparent); border-radius: 0 6px 6px 0; }
 .qa-tip b { color: var(--cat, var(--accent)); font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; margin-right: 6px; }
 
+/* in-depth study panel */
+.deep-btn { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)) !important; color: var(--cat, var(--accent)) !important; }
+.qa-deep {
+  margin-top: 12px; padding: 16px 18px; border-radius: var(--r-sm);
+  border: 1px solid var(--border); border-left: 3px solid var(--cat, var(--accent));
+  background: color-mix(in srgb, var(--cat, var(--accent)) 5%, var(--surface));
+  font-size: var(--step-0); color: var(--ink-2);
+}
+.qa-deep h4 {
+  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--cat, var(--accent)); margin: 16px 0 8px; font-weight: 700;
+}
+.qa-deep h4:first-child { margin-top: 0; }
+.qa-deep p { margin-bottom: 10px; }
+.qa-deep ul, .qa-deep ol { padding-left: 20px; margin-bottom: 10px; }
+.qa-deep li { margin: 5px 0; list-style: disc; }
+.qa-deep ol li { list-style: decimal; }
+.qa-deep strong { color: var(--ink); }
+.qa-deep :is(code, .inline) { font-family: var(--mono); font-size: .85em; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--border); color: var(--accent-ink); }
+.qa-deep pre { font-family: var(--mono); font-size: 12.5px; line-height: 1.55; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 13px 15px; overflow-x: auto; margin: 4px 0 12px; }
+.qa-deep pre code { background: none; border: none; padding: 0; color: var(--ink); }
+.qa-deep table { width: 100%; border-collapse: collapse; margin: 4px 0 12px; font-size: var(--step--1); }
+.qa-deep th, .qa-deep td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; }
+.qa-deep th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+
 .qa-body-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
 .qa-act { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: var(--step--1); padding: 6px 11px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans); }
 .qa-act:hover { border-color: var(--accent); color: var(--accent); }

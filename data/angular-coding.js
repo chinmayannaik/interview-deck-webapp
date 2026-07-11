@@ -123,6 +123,66 @@
       tip: "FormArray is the canonical answer to 'add/remove fields at runtime'.",
       code: "form = this.fb.group({ items: this.fb.array([]) });\nget items() { return this.form.get('items') as FormArray; }\nadd() { this.items.push(this.fb.control('', Validators.required)); }\nremove(i: number) { this.items.removeAt(i); }",
       lang: "ts"
+    },
+    {
+      id: "ngc-radio-divs",
+      category: "ngcoding",
+      difficulty: "beginner",
+      tags: ["forms", "ngmodel", "conditional"],
+      question: "Show a different block based on a radio-button selection.",
+      answer:
+        "<p>Bind the radios to a single property with <code class=\"inline\">[(ngModel)]</code>, then use <code class=\"inline\">@if</code> / <code class=\"inline\">*ngIf</code> (or <code class=\"inline\">@switch</code>) to render the matching block.</p>",
+      tip: "One model property drives both the radios and the conditional blocks.",
+      code: "<input type=\"radio\" name=\"opt\" value=\"A\" [(ngModel)]=\"selected\"> Option A\n<input type=\"radio\" name=\"opt\" value=\"B\" [(ngModel)]=\"selected\"> Option B\n\n<div *ngIf=\"selected === 'A'\">Div A</div>\n<div *ngIf=\"selected === 'B'\">Div B</div>",
+      lang: "html"
+    },
+    {
+      id: "ngc-transform-list",
+      category: "ngcoding",
+      difficulty: "intermediate",
+      tags: ["rxjs", "map", "transform"],
+      question: "Transform a list of employee objects to only { id, name } using RxJS.",
+      answer:
+        "<p>Use the RxJS <code class=\"inline\">map</code> operator on the stream, and <code class=\"inline\">Array.map</code> inside it to reshape each object.</p>",
+      tip: "Two maps: the RxJS map transforms the stream, the array map transforms each item.",
+      code: "this.employee$.pipe(\n  map(emps => emps.map(e => ({ id: e.id, name: e.name })))\n).subscribe(list => this.people = list);",
+      lang: "ts"
+    },
+    {
+      id: "ngc-dependent-api",
+      category: "ngcoding",
+      difficulty: "advanced",
+      tags: ["rxjs", "switchMap", "http"],
+      question: "Chain two API calls where the second depends on the first.",
+      answer:
+        "<p>Use <code class=\"inline\">switchMap</code> so the second call runs with the first response, and any in-flight first call is cancelled if a new one starts.</p>",
+      tip: "switchMap for dependent calls; concatMap if order matters and none should cancel.",
+      code: "this.api1().pipe(\n  switchMap(res1 => this.api2(res1.id))\n).subscribe(finalRes => console.log(finalRes));",
+      lang: "ts"
+    },
+    {
+      id: "ngc-forkjoin",
+      category: "ngcoding",
+      difficulty: "intermediate",
+      tags: ["rxjs", "forkJoin", "parallel"],
+      question: "Run several API calls in parallel and act once all complete.",
+      answer:
+        "<p>Use <code class=\"inline\">forkJoin</code> to fire independent calls concurrently; it emits once, with all results, after every call completes (like <code class=\"inline\">Promise.all</code>).</p>",
+      tip: "forkJoin waits for all to COMPLETE — great for parallel GETs before rendering a page.",
+      code: "forkJoin([this.api1$, this.api2$]).subscribe(([data1, data2]) => {\n  this.combined = { ...data1, ...data2 };\n});",
+      lang: "ts"
+    },
+    {
+      id: "ngc-shared-service",
+      category: "ngcoding",
+      difficulty: "advanced",
+      tags: ["service", "behaviorsubject", "caching", "share"],
+      question: "Share one API result across 3 components without repeating the call.",
+      answer:
+        "<p>Put the data in a <strong>shared service</strong>: fetch once, cache it in a <code class=\"inline\">BehaviorSubject</code> (or <code class=\"inline\">shareReplay(1)</code>), and let all components subscribe to the same stream. The HTTP call runs a single time.</p>",
+      tip: "BehaviorSubject holds the latest value so late-subscribing components get it instantly.",
+      code: "@Injectable({ providedIn: 'root' })\nexport class DataService {\n  private data$ = new BehaviorSubject<Data | null>(null);\n  readonly value$ = this.data$.asObservable();\n  load() {\n    if (this.data$.value) return;           // already fetched\n    this.http.get<Data>('/api/data').subscribe(d => this.data$.next(d));\n  }\n}",
+      lang: "ts"
     }
   ];
 })();
