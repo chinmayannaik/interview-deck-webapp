@@ -99,6 +99,11 @@
 
 /* ---------- main grid: sidebar + content ---------- */
 .main { max-width: var(--maxw); margin: 0 auto; width: 100%; display: grid; grid-template-columns: var(--sidebar-w) 1fr; gap: 30px; padding: 26px clamp(14px, 3vw, 28px) 80px; }
+/* grid/flex items default to min-width:auto (= min-content), which lets a card's
+   content refuse to shrink and blow the 1fr column past the viewport — that
+   horizontal overflow makes phones zoom out and render the desktop layout.
+   Forcing min-width:0 lets the column shrink; long code blocks scroll inside <pre>. */
+.main > * { min-width: 0; }
 
 .sidebar { position: sticky; top: calc(var(--header-h) + var(--tabs-h) + 6px); align-self: start; height: fit-content; }
 .sidebar-title { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 4px 0 10px 12px; }
@@ -194,6 +199,13 @@
 .qa-tags { display: flex; flex-wrap: wrap; gap: 6px; }
 .qa-tag { font-family: var(--mono); font-size: 11px; color: var(--muted); }
 .qa-tag::before { content: "#"; opacity: .55; }
+/* "V.Imp" flag — a high-priority marker that stands out from ordinary #tags */
+.qa-tag.vimp {
+  color: var(--accent); font-weight: 700; letter-spacing: .02em;
+  background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+  padding: 1px 7px; border-radius: var(--r-pill);
+}
+.qa-tag.vimp::before { content: "★ "; opacity: 1; }
 .qa-toggle { margin-left: auto; font-family: var(--mono); font-size: 19px; line-height: 1; color: var(--muted); transition: transform var(--trans), color var(--trans); }
 .qa-card.open .qa-toggle { transform: rotate(45deg); color: var(--cat, var(--accent)); }
 
@@ -282,11 +294,36 @@
   .sidebar { display: none; }
   .header-search { display: none; }
   .mobile-search { display: block; }
+  /* replace the space-hungry chip rows with compact dropdowns */
+  .mobile-controls { display: flex; }
+  .tabs-wrap { display: none; }
+  .subnav { display: none; }
+  #difficulty-filter { display: none; }
 }
-@media (min-width: 901px) { .mobile-search { display: none; } }
+@media (min-width: 901px) { .mobile-search, .mobile-controls { display: none; } }
 
 .mobile-search { padding: 14px clamp(14px, 3vw, 28px) 0; max-width: var(--maxw); margin: 0 auto; }
 .mobile-search .header-search { width: 100%; display: block; }
+
+/* ---------- mobile controls (native-select dropdowns) ---------- */
+.mobile-controls {
+  flex-wrap: wrap; gap: 8px;
+  padding: 12px clamp(14px, 3vw, 28px) 2px; max-width: var(--maxw); margin: 0 auto;
+}
+.m-field { position: relative; flex: 1 1 30%; min-width: 0; }
+.m-field::after {
+  content: "▾"; position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
+  pointer-events: none; color: var(--muted); font-size: 12px;
+}
+.m-select {
+  width: 100%; appearance: none; -webkit-appearance: none;
+  font-family: var(--mono); font-size: var(--step--1); line-height: 1.2;
+  padding: 9px 26px 9px 12px; border-radius: var(--r-pill);
+  border: 1px solid var(--border); background: var(--surface); color: var(--ink);
+  text-overflow: ellipsis; cursor: pointer; transition: var(--trans);
+}
+.m-select:hover { border-color: var(--border-strong); }
+.m-select:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
 
 @media (max-width: 560px) {
   .hero-stats { gap: 18px; }

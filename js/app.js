@@ -81,6 +81,7 @@
 
   /* ---- element refs (created/queried in init) ---- */
   let listEl, titleEl, tabsEl, sideEl, subnavEl, diffEl, searchEls = [], progFill, progLabel;
+  let mCatEl, mTopicEl, mDiffEl; // mobile dropdowns (section / topic / level)
   let renderState = { items: [], shown: 0, CHUNK: 30, observer: null };
 
   /* ========================================================
@@ -231,13 +232,55 @@
       diffEl.appendChild(el("button", {
         class: "chip-filter" + (state.difficulty === o.k ? " active" : ""),
         "data-diff": o.k,
-        onclick: () => { state.difficulty = o.k; syncFilterChips(); render(); }
+        onclick: () => setDifficulty(o.k)
       }, o.label));
     });
   }
   function syncFilterChips() {
     qsa("[data-diff]", diffEl).forEach((b) =>
       b.classList.toggle("active", b.dataset.diff === state.difficulty));
+    if (mDiffEl) mDiffEl.value = state.difficulty;
+  }
+  function setDifficulty(k) { state.difficulty = k; syncFilterChips(); render(); }
+
+  /* ---- mobile dropdowns: native <select>s that replace the tab / topic /
+     level chip rows on small screens (built once; kept in sync on change) ---- */
+  function buildMobileControls() {
+    if (!mCatEl) return;
+    const c = counts();
+
+    // section (top-level groups)
+    mCatEl.innerHTML = "";
+    GROUPS.forEach((g) => {
+      const n = c[g.key] || 0;
+      if (n === 0) return;
+      mCatEl.appendChild(el("option", { value: g.key, text: g.label + " (" + n + ")" }));
+    });
+    mCatEl.addEventListener("change", () => setCategory(mCatEl.value, true));
+
+    // level
+    mDiffEl.innerHTML = "";
+    [["all", "All Levels"], ["beginner", "Beginner"], ["intermediate", "Intermediate"], ["advanced", "Advanced"]]
+      .forEach(([k, label]) => mDiffEl.appendChild(el("option", { value: k, text: label })));
+    mDiffEl.addEventListener("change", () => setDifficulty(mDiffEl.value));
+
+    // topic (options rebuilt per active group in renderMobileTopic)
+    mTopicEl.addEventListener("change", () => setCategory(mTopicEl.value, true));
+  }
+
+  function renderMobileTopic(key) {
+    if (!mTopicEl) return;
+    const c = counts();
+    const groupKey = isGroup(key) ? key : (groupOf(key) ? groupOf(key).key : GROUPS[0].key);
+    const group = GROUPS.find((g) => g.key === groupKey);
+    mTopicEl.innerHTML = "";
+    mTopicEl.appendChild(el("option", { value: group.key, text: "All " + group.label }));
+    group.cats.forEach((catKey) => {
+      const n = c[catKey] || 0;
+      if (n === 0) return;
+      mTopicEl.appendChild(el("option", { value: catKey, text: labelOf(catKey) + " (" + n + ")" }));
+    });
+    mTopicEl.value = isGroup(key) ? group.key : key;
   }
 
   /* ========================================================
@@ -254,6 +297,10 @@
     // rebuild the sidebar (desktop) and the mobile topic row for this group
     renderSidebar(key);
     renderSubnav(key);
+
+    // keep the mobile dropdowns in sync
+    if (mCatEl) mCatEl.value = parentGroup;
+    renderMobileTopic(key);
 
     if (updateHash) history.replaceState(null, "", "#" + key);
     const activeTab = qs(".tab.active", tabsEl);
@@ -351,7 +398,8 @@
     const question = el("div", { class: "qa-question", html: q.question });
 
     const tags = el("div", { class: "qa-tags" },
-      (q.tags || []).slice(0, 5).map((t) => el("span", { class: "qa-tag", text: t })));
+      (q.tags || []).slice(0, 5).map((t) =>
+        el("span", { class: "qa-tag" + (/^v\.?imp$/i.test(t) ? " vimp" : ""), text: t })));
     const foot = el("div", { class: "qa-foot" }, [tags, el("span", { class: "qa-toggle", text: "+" })]);
 
     const head = el("div", {
@@ -577,10 +625,14 @@
     sideEl = qs("#sidebar-nav");
     subnavEl = qs("#subnav");
     diffEl = qs("#difficulty-filter");
+    mCatEl = qs("#m-category");
+    mTopicEl = qs("#m-topic");
+    mDiffEl = qs("#m-difficulty");
     searchEls = qsa(".js-search");
 
     buildTabs();
     buildDifficultyFilter();
+    buildMobileControls();
 
     // wire search inputs
     searchEls.forEach((s) => s.addEventListener("input", (e) => onSearchInput(e.target.value)));

@@ -15,7 +15,23 @@
         "<p>Give a tight 60–90 second pitch, not your life story. Structure: <strong>present</strong> (current role + core stack) → <strong>past</strong> (one or two relevant achievements with impact) → <strong>future</strong> (why this role fits your next step).</p>",
       tip: "End on why you're excited about THIS role — it sets the tone and invites follow-ups you want.",
       code: "",
-      lang: ""
+      lang: "",
+      deep:
+        "<h4>My pitch (fill in name, company &amp; team)</h4>" +
+        "<p>“I'm <strong>______</strong>, a Frontend Developer with 3.5 years of experience, mainly in Angular. I currently work on a <strong>______</strong> team at <strong>______</strong>, where we build customer-specific solutions and present them as demos to win projects. My focus is developing UI screens from Figma using our in-house frontend libraries and integrating them with REST and GraphQL APIs. I'm now looking for a role where I can grow further and take on more challenging frontend work.”</p>" +
+        "<h4>Stronger closing options</h4>" +
+        "<ul>" +
+        "<li>“…take on more challenging frontend work and <strong>deepen my Angular expertise</strong>.”</li>" +
+        "<li>“…where I can work on <strong>larger-scale products</strong> and keep growing as a frontend engineer.”</li>" +
+        "</ul>" +
+        "<h4>Add one concrete win (optional)</h4>" +
+        "<p>Drop a single specific example in the middle to be memorable — e.g. “For instance, I recently built a reusable type-ahead search component used across several demo screens.”</p>" +
+        "<h4>Delivery notes</h4>" +
+        "<ul>" +
+        "<li>Keep it ~30–40 seconds — present → what you do → forward-looking close.</li>" +
+        "<li>Name your company clearly the first time, so “our in-house libraries” makes sense later.</li>" +
+        "<li>End on intent (the role you want), not just “improve my skills”.</li>" +
+        "</ul>"
     },
     {
       id: "bhv-star",

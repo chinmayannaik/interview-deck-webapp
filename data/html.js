@@ -294,6 +294,35 @@
       tip: "Wrap a search-results count in aria-live=\"polite\" so it's announced as it updates.",
       code: "<div aria-live=\"polite\">12 results found</div>",
       lang: "html"
+    },
+    {
+      id: "html-dom",
+      category: "html",
+      difficulty: "beginner",
+      tags: ["dom", "basics"],
+      question: "What is the DOM?",
+      answer:
+        "<p>The <strong>Document Object Model</strong> is the browser's in-memory, tree-shaped representation of your HTML. Each tag becomes a <em>node</em>, and JavaScript can read and change these nodes (<code class=\"inline\">querySelector</code>, <code class=\"inline\">textContent</code>, <code class=\"inline\">createElement</code>) to update the page dynamically.</p>" +
+        "<p>The DOM is a <em>live</em> API, not the original HTML source — frameworks like Angular/React manipulate it (often via a virtual DOM or their own diffing) instead of you touching it by hand.</p>",
+      tip: "HTML is the source text; the DOM is the live object tree the browser builds from it.",
+      code: "document.querySelector('h1').textContent = 'Hi';\nconst li = document.createElement('li');\ndocument.body.appendChild(li);",
+      lang: "js"
+    },
+    {
+      id: "html-get-post",
+      category: "html",
+      difficulty: "beginner",
+      tags: ["forms", "http"],
+      question: "Form method GET vs POST — what's the difference?",
+      answer:
+        "<ul>" +
+        "<li><strong>GET</strong> — appends form data to the URL as query params. Visible, bookmarkable, cached, length-limited. Use for <em>searches/filters</em> (idempotent reads).</li>" +
+        "<li><strong>POST</strong> — sends data in the request body. Not in the URL, not cached, no size limit. Use for <em>creating/changing</em> data (logins, submissions).</li>" +
+        "</ul>" +
+        "<p>Never send passwords or sensitive data with GET — it lands in URLs, history, and server logs.</p>",
+      tip: "GET = read/idempotent (safe to repeat); POST = write (changes server state).",
+      code: "<form method=\"get\" action=\"/search\">...</form>\n<form method=\"post\" action=\"/login\">...</form>",
+      lang: "html"
     }
   ];
 })();

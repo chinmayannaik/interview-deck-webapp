@@ -55,9 +55,8 @@
     <header class="site-header">
       <a class="brand" href="#frontend" aria-label="Interview Questions Bank home">
         <span class="brand-mark">IQ</span>
-        <span class="brand-name">Interview <span>Bank</span></span>
+        <span class="brand-name">Interview <span>Questions</span></span>
       </a>
-      <span class="header-count" id="header-count-slot" aria-hidden="true">Frontend &amp; more</span>
       <div class="header-spacer"></div>
 
       <label class="header-search" aria-label="Search questions">
@@ -75,6 +74,13 @@
         <span class="s-icon" aria-hidden="true">⌕</span>
         <input class="js-search" type="search" placeholder="Search questions" autocomplete="off" />
       </label>
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
     </div>
 
     <!-- ===== hero ===== -->

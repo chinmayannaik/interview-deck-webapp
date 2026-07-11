@@ -15,7 +15,28 @@
         "<p><code class=\"inline\">box-sizing: border-box</code> makes width include padding and border — far more predictable, which is why most resets set it globally.</p>",
       tip: "* { box-sizing: border-box } is the first line of almost every CSS reset.",
       code: "* { box-sizing: border-box; }",
-      lang: "css"
+      lang: "css",
+      deep:
+        "<h4>The four layers, inside out</h4>" +
+        "<ul>" +
+        "<li><strong>Content</strong> — the text/image; its size is <code class=\"inline\">width</code> × <code class=\"inline\">height</code>.</li>" +
+        "<li><strong>Padding</strong> — space inside the border, takes the background.</li>" +
+        "<li><strong>Border</strong> — the edge around the padding.</li>" +
+        "<li><strong>Margin</strong> — transparent space <em>outside</em>, separating this box from others.</li>" +
+        "</ul>" +
+        "<h4>content-box vs border-box — the whole point</h4>" +
+        "<pre><code>.a { box-sizing: content-box; width: 200px; padding: 20px; border: 5px solid; }\n/* rendered width = 200 + 20*2 + 5*2 = 250px  😖 */\n\n.b { box-sizing: border-box; width: 200px; padding: 20px; border: 5px solid; }\n/* rendered width = 200px  ✅ padding &amp; border fit INSIDE */</code></pre>" +
+        "<p>With the default <code class=\"inline\">content-box</code>, padding and border are <em>added</em> to your declared width, so a \"200px\" box is actually wider. <code class=\"inline\">border-box</code> makes <code class=\"inline\">width</code> the final rendered width — which is why nearly every reset sets it globally.</p>" +
+        "<pre><code>*, *::before, *::after { box-sizing: border-box; }</code></pre>" +
+        "<h4>Margin doesn't count toward width — and it collapses</h4>" +
+        "<p>Margin is always outside the box and never part of <code class=\"inline\">width</code>. Vertical margins between block elements also <strong>collapse</strong>: adjacent 20px and 30px margins produce a 30px gap, not 50px (padding and border never collapse).</p>" +
+        "<h4>Handy diagnostics</h4>" +
+        "<ul>" +
+        "<li><code class=\"inline\">outline</code> draws like a border but takes <em>no</em> space — great for debugging layout.</li>" +
+        "<li>DevTools' box-model panel shows the four layers with live numbers.</li>" +
+        "</ul>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“Every element is a box of content, padding, border, and margin. By default <code class=\"inline\">width</code> only sizes the content, so padding and border add to the total — I set <code class=\"inline\">box-sizing: border-box</code> globally so <code class=\"inline\">width</code> is the actual rendered width. Margin stays outside the box and collapses vertically.”</p>"
     },
     {
       id: "css-flex-grid",
@@ -200,7 +221,35 @@
         "<p><code class=\"inline\">flex: 1</code> = <code class=\"inline\">1 1 0</code> (grow equally from zero).</p>",
       tip: "flex: 1 on children makes them share the row equally — the most-used flex value.",
       code: ".col { flex: 1 1 200px; } /* grow, shrink, basis */",
-      lang: "css"
+      lang: "css",
+      deep:
+        "<h4>Two axes: main and cross</h4>" +
+        "<p>Flexbox is <strong>one-dimensional</strong>. <code class=\"inline\">flex-direction</code> sets the <em>main axis</em> (<code class=\"inline\">row</code> = horizontal, <code class=\"inline\">column</code> = vertical); the <em>cross axis</em> is perpendicular. All the alignment properties are defined relative to these axes, which is the thing to get straight first.</p>" +
+        "<table><thead><tr><th>Property</th><th>Axis</th><th>Does</th></tr></thead><tbody>" +
+        "<tr><td><code class=\"inline\">justify-content</code></td><td>main</td><td>distributes items along the main axis</td></tr>" +
+        "<tr><td><code class=\"inline\">align-items</code></td><td>cross</td><td>aligns items on the cross axis</td></tr>" +
+        "<tr><td><code class=\"inline\">align-content</code></td><td>cross</td><td>spaces multiple <em>lines</em> (when wrapped)</td></tr>" +
+        "<tr><td><code class=\"inline\">align-self</code></td><td>cross</td><td>overrides align-items for one item</td></tr>" +
+        "</tbody></table>" +
+        "<h4>The three flex-item properties</h4>" +
+        "<ul>" +
+        "<li><strong><code class=\"inline\">flex-grow</code></strong> — a unitless ratio of how leftover free space is shared. <code class=\"inline\">0</code> = don't grow. Two items at <code class=\"inline\">1</code> and <code class=\"inline\">2</code> split extra space 1:2.</li>" +
+        "<li><strong><code class=\"inline\">flex-shrink</code></strong> — ratio for how items give up space when the container is too small. <code class=\"inline\">0</code> = never shrink (can overflow).</li>" +
+        "<li><strong><code class=\"inline\">flex-basis</code></strong> — the item's size along the main axis <em>before</em> grow/shrink. <code class=\"inline\">auto</code> uses the content/width; <code class=\"inline\">0</code> ignores it.</li>" +
+        "</ul>" +
+        "<h4>Reading the flex shorthand</h4>" +
+        "<pre><code>flex: 1;        /* 1 1 0   — grow &amp; shrink from zero, equal columns */\nflex: auto;     /* 1 1 auto — grow/shrink from content size */\nflex: none;     /* 0 0 auto — fixed, never grow or shrink */\nflex: 0 0 200px;/* fixed 200px track */</code></pre>" +
+        "<p><strong>Key nuance:</strong> <code class=\"inline\">flex: 1</code> uses basis <code class=\"inline\">0</code>, so items become truly equal regardless of content. <code class=\"inline\">flex: auto</code> uses basis <code class=\"inline\">auto</code>, so bigger content starts bigger. That difference trips people up constantly.</p>" +
+        "<h4>Common patterns</h4>" +
+        "<pre><code>/* perfect centering */\n.center { display: flex; justify-content: center; align-items: center; }\n\n/* push last item to the right (nav bar) */\n.nav { display: flex; gap: 12px; }\n.nav .spacer { margin-left: auto; }\n\n/* responsive wrap */\n.cards { display: flex; flex-wrap: wrap; gap: 16px; }\n.cards > * { flex: 1 1 240px; } /* grow, but never below ~240px */</code></pre>" +
+        "<h4>Gotchas</h4>" +
+        "<ul>" +
+        "<li>Items overflow instead of shrinking? A child's <code class=\"inline\">min-width</code> defaults to <code class=\"inline\">auto</code> (min-content) — set <code class=\"inline\">min-width: 0</code> to let it shrink.</li>" +
+        "<li><code class=\"inline\">margin: auto</code> on a flex item absorbs free space — handy for pushing items apart.</li>" +
+        "<li>Use <code class=\"inline\">gap</code> for spacing, not margins — it's cleaner and doesn't add edge gaps.</li>" +
+        "</ul>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“Flexbox lays items along a main axis set by <code class=\"inline\">flex-direction</code>; <code class=\"inline\">justify-content</code> aligns on the main axis and <code class=\"inline\">align-items</code> on the cross axis. On items, <code class=\"inline\">flex-grow</code>/<code class=\"inline\">shrink</code> are ratios for sharing or giving up space and <code class=\"inline\">flex-basis</code> is the starting size — <code class=\"inline\">flex: 1</code> means grow and shrink from a zero basis, giving equal columns.”</p>"
     },
     {
       id: "css-grid-areas",
@@ -308,6 +357,51 @@
         "<p><code class=\"inline\">will-change</code> hints the browser to promote an element to its own GPU layer ahead of an animation, reducing jank. But overusing it wastes memory and can hurt performance — apply it sparingly, ideally just before animating, and remove it after.</p>",
       tip: "Don't slap will-change on everything — it's a targeted hint, not a global optimisation.",
       code: ".modal { will-change: transform, opacity; }",
+      lang: "css",
+    },
+    {
+      id: "css-hide-elements",
+      category: "css",
+      difficulty: "beginner",
+      tags: ["V.Imp", "display", "visibility"],
+      question: "display:none vs visibility:hidden vs opacity:0 — how do they differ?",
+      answer:
+        "<table><thead><tr><th></th><th>Takes space?</th><th>Clickable?</th><th>Screen readers?</th></tr></thead><tbody>" +
+        "<tr><td><code class=\"inline\">display:none</code></td><td>no (removed from layout)</td><td>no</td><td>no</td></tr>" +
+        "<tr><td><code class=\"inline\">visibility:hidden</code></td><td>yes (space reserved)</td><td>no</td><td>no</td></tr>" +
+        "<tr><td><code class=\"inline\">opacity:0</code></td><td>yes</td><td><strong>yes</strong> (still there)</td><td>yes</td></tr>" +
+        "</tbody></table>",
+      tip: "opacity:0 is invisible but still clickable — a common source of 'ghost' click bugs.",
+      code: ".gone   { display: none; }      /* no space, not rendered */\n.hidden { visibility: hidden; } /* space kept, invisible */\n.faded  { opacity: 0; }         /* space kept, still interactive */",
+      lang: "css",
+      deep:
+        "<h4>The three are not interchangeable</h4>" +
+        "<ul>" +
+        "<li><strong><code class=\"inline\">display:none</code></strong> — the element is gone from the layout entirely. No box, no space, not focusable, ignored by screen readers. Toggling it reflows the page.</li>" +
+        "<li><strong><code class=\"inline\">visibility:hidden</code></strong> — the element is invisible but still occupies its space (a hole in the layout). Not clickable, not read by AT.</li>" +
+        "<li><strong><code class=\"inline\">opacity:0</code></strong> — fully transparent but <em>fully present</em>: it takes space, is still clickable/focusable, and is announced by screen readers. Only opacity is animatable of the three.</li>" +
+        "</ul>" +
+        "<h4>Which to use</h4>" +
+        "<ul>" +
+        "<li>Remove from flow (menus, tabs): <code class=\"inline\">display:none</code>.</li>" +
+        "<li>Reserve space to avoid layout shift: <code class=\"inline\">visibility:hidden</code>.</li>" +
+        "<li>Fade in/out with a transition: animate <code class=\"inline\">opacity</code> (add <code class=\"inline\">pointer-events:none</code> so the invisible element isn't clickable).</li>" +
+        "</ul>" +
+        "<pre><code>.fade { opacity: 0; pointer-events: none; transition: opacity .2s; }\n.fade.show { opacity: 1; pointer-events: auto; }</code></pre>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“<code class=\"inline\">display:none</code> removes the element and its space; <code class=\"inline\">visibility:hidden</code> hides it but keeps the space; <code class=\"inline\">opacity:0</code> makes it transparent while still taking space and staying interactive — so I add <code class=\"inline\">pointer-events:none</code> and use opacity when I want to animate a fade.”</p>"
+    },
+    {
+      id: "css-float-clearfix",
+      category: "css",
+      difficulty: "intermediate",
+      tags: ["float", "layout", "clearfix"],
+      question: "What is float, and what problem does clearfix solve?",
+      answer:
+        "<p><code class=\"inline\">float</code> pulls an element to the left/right and lets text/inline content wrap around it — its original purpose (e.g. an image inside a paragraph). Floated elements are taken out of normal flow, so a parent containing only floats <strong>collapses to zero height</strong>.</p>" +
+        "<p><strong>clearfix</strong> forces the parent to contain its floats. The modern one-liner is <code class=\"inline\">display: flow-root</code>; the old trick is a clearing pseudo-element.</p>",
+      tip: "For layout, use Flexbox/Grid — float is now mainly for wrapping text around an image.",
+      code: "/* modern */ .parent { display: flow-root; }\n/* legacy  */ .clearfix::after { content: ''; display: block; clear: both; }",
       lang: "css"
     }
   ];

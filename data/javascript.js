@@ -8,20 +8,40 @@
       id: "js-closure",
       category: "javascript",
       difficulty: "intermediate",
-      tags: ["closure", "scope"],
+      tags: ["V.Imp", "closure", "scope"],
       question: "What is a closure? Give a real use.",
       answer:
         "<p>A <strong>closure</strong> is a function that keeps access to variables from its outer (lexical) scope even after the outer function has returned. The inner function \"remembers\" the environment it was created in.</p>" +
         "<p>Uses: <strong>data privacy</strong> (private variables), function factories, and holding state in callbacks — e.g. a <code class=\"inline\">debounce</code> keeps its timer id in a closure.</p>",
       tip: "Closures are the answer to 'how do you make a private variable in JavaScript'.",
       code: "function counter() { let n = 0; return () => ++n; }\nconst next = counter();\nnext(); // 1  → n survives but stays private",
-      lang: "js"
+      lang: "js",
+      deep:
+        "<h4>The definition, precisely</h4>" +
+        "<p>A closure is the combination of a function and the <strong>lexical environment</strong> it was defined in. When you create a function inside another function, the inner one keeps a live reference to the outer one's variables — even after the outer function has returned and its call is gone from the stack.</p>" +
+        "<h4>Why it works</h4>" +
+        "<p>Scope in JS is <em>lexical</em> (decided by where code is written, not how it's called). The inner function's scope chain still points at the outer variables, so the garbage collector keeps them alive as long as the closure exists.</p>" +
+        "<pre><code>function makeCounter() {\n  let n = 0;              // private, lives on\n  return {\n    inc() { return ++n; },\n    reset() { n = 0; }\n  };\n}\nconst c = makeCounter();\nc.inc(); // 1\nc.inc(); // 2   — n is shared &amp; hidden</code></pre>" +
+        "<h4>Real-world uses</h4>" +
+        "<ul>" +
+        "<li><strong>Data privacy / encapsulation</strong> — <code class=\"inline\">n</code> above can't be touched from outside.</li>" +
+        "<li><strong>Function factories</strong> — <code class=\"inline\">const add5 = makeAdder(5)</code>.</li>" +
+        "<li><strong>Stateful callbacks</strong> — <code class=\"inline\">debounce</code>/<code class=\"inline\">throttle</code> keep their timer id in a closure.</li>" +
+        "<li><strong>Memoization</strong> — cache stored in the enclosing scope.</li>" +
+        "<li><strong>Event handlers</strong> — remember data from when they were attached.</li>" +
+        "</ul>" +
+        "<pre><code>function makeAdder(x) { return y =&gt; x + y; }\nconst add5 = makeAdder(5);\nadd5(2); // 7</code></pre>" +
+        "<h4>The classic gotcha (loop + var)</h4>" +
+        "<pre><code>for (var i = 0; i &lt; 3; i++) {\n  setTimeout(() =&gt; console.log(i), 0); // 3, 3, 3\n}\n// fix: use let (new binding per iteration) → 0, 1, 2</code></pre>" +
+        "<p>All three callbacks close over the <em>same</em> <code class=\"inline\">var i</code>; by the time they run, the loop finished and <code class=\"inline\">i</code> is 3. <code class=\"inline\">let</code> creates a fresh binding each iteration.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“A closure is a function that remembers the variables from the scope where it was created, even after that scope has exited. It’s how JavaScript does private state — I use it for factories, memoization, and keeping state like a debounce timer.”</p>"
     },
     {
       id: "js-var-let-const",
       category: "javascript",
       difficulty: "beginner",
-      tags: ["scope", "hoisting", "variables"],
+      tags: ["V.Imp", "scope", "hoisting", "variables"],
       question: "var vs let vs const, and what is hoisting?",
       answer:
         "<ul>" +
@@ -32,13 +52,35 @@
         "<p><strong>Hoisting</strong>: declarations are moved to the top of their scope at compile time. <code class=\"inline\">var</code> and function declarations are usable early; <code class=\"inline\">let/const</code> are not.</p>",
       tip: "Default to const, use let when you must reassign, avoid var.",
       code: "",
-      lang: ""
+      lang: "",
+      deep:
+        "<h4>Side-by-side</h4>" +
+        "<table><thead><tr><th></th><th>var</th><th>let</th><th>const</th></tr></thead><tbody>" +
+        "<tr><td>Scope</td><td>function</td><td>block</td><td>block</td></tr>" +
+        "<tr><td>Hoisted</td><td>yes → <code class=\"inline\">undefined</code></td><td>yes → TDZ</td><td>yes → TDZ</td></tr>" +
+        "<tr><td>Re-declare</td><td>allowed</td><td>no</td><td>no</td></tr>" +
+        "<tr><td>Re-assign</td><td>yes</td><td>yes</td><td>no</td></tr>" +
+        "<tr><td>Global prop</td><td>adds to <code class=\"inline\">window</code></td><td>no</td><td>no</td></tr>" +
+        "</tbody></table>" +
+        "<h4>What hoisting actually is</h4>" +
+        "<p>At compile time the engine scans a scope and registers its declarations before running any line. So the <em>declaration</em> is “moved up,” but the <em>assignment</em> stays put.</p>" +
+        "<pre><code>console.log(a); // undefined (declaration hoisted, value not)\nvar a = 5;\n\nconsole.log(b); // ReferenceError (TDZ)\nlet b = 5;</code></pre>" +
+        "<p><code class=\"inline\">var</code> is initialised to <code class=\"inline\">undefined</code> when hoisted; <code class=\"inline\">let</code>/<code class=\"inline\">const</code> are hoisted but left <em>uninitialised</em> — reading them before the declaration line throws (the Temporal Dead Zone).</p>" +
+        "<h4>Block scope matters</h4>" +
+        "<pre><code>if (true) { var x = 1; let y = 2; }\nconsole.log(x); // 1  — var leaks out of the block\nconsole.log(y); // ReferenceError — let is block-scoped</code></pre>" +
+        "<h4>const is not \"immutable\"</h4>" +
+        "<p><code class=\"inline\">const</code> freezes the <em>binding</em>, not the value. You can still mutate the contents of a const object/array — use <code class=\"inline\">Object.freeze()</code> for shallow immutability.</p>" +
+        "<pre><code>const arr = [1];\narr.push(2);   // ✅ allowed — same reference\narr = [];      // ❌ TypeError — reassigning the binding</code></pre>" +
+        "<h4>Function declarations vs expressions</h4>" +
+        "<p>Function <em>declarations</em> are fully hoisted (callable before their line). Function <em>expressions</em> assigned to <code class=\"inline\">var</code>/<code class=\"inline\">let</code> follow the variable's hoisting rules.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“Use <code class=\"inline\">const</code> by default, <code class=\"inline\">let</code> when you must reassign, and avoid <code class=\"inline\">var</code> because it’s function-scoped and leaks. Hoisting means declarations are processed before execution — <code class=\"inline\">var</code> becomes <code class=\"inline\">undefined</code>, while <code class=\"inline\">let</code>/<code class=\"inline\">const</code> sit in the TDZ and throw if used early.”</p>"
     },
     {
       id: "js-event-loop",
       category: "javascript",
       difficulty: "advanced",
-      tags: ["event-loop", "async", "microtask"],
+      tags: ["V.Imp", "event-loop", "async", "microtask"],
       question: "Explain the event loop, microtasks vs macrotasks.",
       answer:
         "<p>JS is single-threaded. The <strong>call stack</strong> runs synchronous code. Async callbacks wait in queues and the <strong>event loop</strong> pushes them onto the stack when it's empty.</p>" +
@@ -49,7 +91,27 @@
         "<p>Microtasks always run before the next macrotask.</p>",
       tip: "Classic trick question: a resolved Promise's .then logs before a setTimeout(…, 0).",
       code: "console.log(1);\nsetTimeout(() => console.log(2), 0);\nPromise.resolve().then(() => console.log(3));\nconsole.log(4);\n// → 1, 4, 3, 2",
-      lang: "js"
+      lang: "js",
+      deep:
+        "<h4>The pieces</h4>" +
+        "<ul>" +
+        "<li><strong>Call stack</strong> — where synchronous code runs, one frame at a time.</li>" +
+        "<li><strong>Web/Node APIs</strong> — timers, fetch, DOM events run <em>outside</em> the engine and hand back callbacks when done.</li>" +
+        "<li><strong>Macrotask (task) queue</strong> — <code class=\"inline\">setTimeout</code>, <code class=\"inline\">setInterval</code>, I/O, UI events.</li>" +
+        "<li><strong>Microtask queue</strong> — Promise <code class=\"inline\">.then/.catch/.finally</code>, <code class=\"inline\">await</code> continuations, <code class=\"inline\">queueMicrotask</code>.</li>" +
+        "</ul>" +
+        "<h4>The golden rule</h4>" +
+        "<p>After each macrotask (and after the initial synchronous run), the engine <strong>drains the entire microtask queue</strong> before rendering or picking up the next macrotask. Microtasks always beat macrotasks.</p>" +
+        "<pre><code>console.log('A');\nsetTimeout(() =&gt; console.log('B'), 0);   // macrotask\nPromise.resolve().then(() =&gt; console.log('C')); // microtask\nconsole.log('D');\n// A, D, C, B</code></pre>" +
+        "<p>Order: sync <code class=\"inline\">A</code>, <code class=\"inline\">D</code> run first; the stack empties; microtask <code class=\"inline\">C</code> drains before the timer; macrotask <code class=\"inline\">B</code> last.</p>" +
+        "<h4>Microtasks can starve the queue</h4>" +
+        "<pre><code>Promise.resolve().then(function loop() {\n  Promise.resolve().then(loop); // keeps adding microtasks\n});\nsetTimeout(() =&gt; console.log('never soon'), 0);</code></pre>" +
+        "<p>Because the microtask queue must fully drain first, an endless chain of microtasks blocks timers and rendering.</p>" +
+        "<h4>await is just Promise scheduling</h4>" +
+        "<pre><code>async function f() {\n  console.log(1);\n  await null;          // pause; rest becomes a microtask\n  console.log(3);\n}\nconsole.log(0); f(); console.log(2);\n// 0, 1, 2, 3</code></pre>" +
+        "<p>Everything after an <code class=\"inline\">await</code> is scheduled as a microtask — the synchronous code around the call runs first.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“JS runs on one thread with a call stack. Async callbacks wait in queues; the event loop moves them onto the stack when it’s empty. Microtasks — Promise callbacks and <code class=\"inline\">await</code> continuations — are fully drained after each task, so a resolved Promise’s <code class=\"inline\">.then</code> always runs before a <code class=\"inline\">setTimeout(0)</code>.”</p>"
     },
     {
       id: "js-equality",
@@ -80,7 +142,28 @@
         "</ul>",
       tip: "Arrow functions are why callbacks 'just work' inside classes — they keep the outer this.",
       code: "const obj = {\n  name: 'A',\n  greet() { setTimeout(() => console.log(this.name), 0); }\n};\nobj.greet(); // 'A' — arrow keeps this",
-      lang: "js"
+      lang: "js",
+      deep:
+        "<h4>The one rule: it's decided at call time</h4>" +
+        "<p>For a normal function, <code class=\"inline\">this</code> is <em>not</em> set by where it's defined — it's set by <strong>how it's called</strong>. Work through these binding rules in order:</p>" +
+        "<table><thead><tr><th>Call form</th><th><code class=\"inline\">this</code> is</th></tr></thead><tbody>" +
+        "<tr><td><code class=\"inline\">new Fn()</code></td><td>the brand-new object</td></tr>" +
+        "<tr><td><code class=\"inline\">fn.call/apply/bind(o)</code></td><td><code class=\"inline\">o</code> (explicit)</td></tr>" +
+        "<tr><td><code class=\"inline\">obj.fn()</code></td><td><code class=\"inline\">obj</code> (the receiver)</td></tr>" +
+        "<tr><td><code class=\"inline\">fn()</code> alone</td><td><code class=\"inline\">undefined</code> (strict) / global (sloppy)</td></tr>" +
+        "<tr><td>arrow function</td><td>inherited from enclosing scope</td></tr>" +
+        "</tbody></table>" +
+        "<h4>The \"lost this\" bug</h4>" +
+        "<pre><code>const obj = {\n  name: 'A',\n  greet() { return this.name; }\n};\nconst g = obj.greet;\ng();          // undefined — called plain, no receiver\nobj.greet();  // 'A'</code></pre>" +
+        "<p>Detaching a method drops its receiver. Fixes: <code class=\"inline\">obj.greet.bind(obj)</code>, wrap in an arrow, or define the method as a class field arrow.</p>" +
+        "<h4>Why arrow functions fix callbacks</h4>" +
+        "<p>Arrows have <strong>no own <code class=\"inline\">this</code></strong> — they capture it lexically from where they're written. That's why a <code class=\"inline\">setTimeout</code> or array callback inside a method keeps the right <code class=\"inline\">this</code>:</p>" +
+        "<pre><code>class Timer {\n  seconds = 0;\n  start() { setInterval(() =&gt; this.seconds++, 1000); } // arrow keeps `this`\n}</code></pre>" +
+        "<p>A normal <code class=\"inline\">function() { this.seconds++ }</code> here would break — its <code class=\"inline\">this</code> would be the timer/global, not the instance.</p>" +
+        "<h4>Don't use arrows for object methods</h4>" +
+        "<pre><code>const o = { v: 1, get() =&gt; this.v };\no.get(); // undefined — arrow's this is the outer scope, not o</code></pre>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“<code class=\"inline\">this</code> depends on how a function is called, not where it’s defined: <code class=\"inline\">new</code> → the new object, <code class=\"inline\">call/apply/bind</code> → explicit, <code class=\"inline\">obj.fn()</code> → the object, a bare call → undefined in strict mode. Arrow functions have no own <code class=\"inline\">this</code>; they inherit it — which is exactly why they’re great for callbacks and wrong for object methods.”</p>"
     },
     {
       id: "js-promise-async",
@@ -93,7 +176,26 @@
         "<p>Errors: <code class=\"inline\">.catch()</code> on a chain, or <code class=\"inline\">try/catch</code> around <code class=\"inline\">await</code>. Use <code class=\"inline\">Promise.all</code> for parallel and <code class=\"inline\">Promise.allSettled</code> when you need every result regardless of failures.</p>",
       tip: "await inside a loop is sequential — use Promise.all to parallelise independent calls.",
       code: "async function load() {\n  try {\n    const res = await fetch('/api/user');\n    return await res.json();\n  } catch (e) { /* handle */ }\n}",
-      lang: "js"
+      lang: "js",
+      deep:
+        "<h4>A Promise's three states</h4>" +
+        "<p><strong>pending</strong> → then either <strong>fulfilled</strong> (has a value) or <strong>rejected</strong> (has a reason). It settles once and never changes again.</p>" +
+        "<h4>async/await is sugar over Promises</h4>" +
+        "<p>An <code class=\"inline\">async</code> function always returns a Promise. <code class=\"inline\">await</code> pauses the function until the awaited Promise settles, unwrapping the value (or throwing the rejection). It reads top-to-bottom but is still non-blocking.</p>" +
+        "<pre><code>// chain\nfetch('/user').then(r =&gt; r.json()).then(use).catch(handle);\n// same thing, flatter\nasync function load() {\n  try { const r = await fetch('/user'); use(await r.json()); }\n  catch (e) { handle(e); }\n}</code></pre>" +
+        "<h4>Error handling — the four traps</h4>" +
+        "<ul>" +
+        "<li><code class=\"inline\">try/catch</code> around <code class=\"inline\">await</code>, or <code class=\"inline\">.catch()</code> on a chain.</li>" +
+        "<li><strong><code class=\"inline\">fetch</code> doesn't reject on HTTP errors</strong> — a 404/500 still fulfils. Check <code class=\"inline\">res.ok</code> yourself.</li>" +
+        "<li>A missing <code class=\"inline\">catch</code> → an <em>unhandled promise rejection</em>.</li>" +
+        "<li>Forgetting <code class=\"inline\">await</code> → you handle the Promise object, not the value, and the <code class=\"inline\">try/catch</code> won't catch its rejection.</li>" +
+        "</ul>" +
+        "<pre><code>const res = await fetch(url);\nif (!res.ok) throw new Error(`HTTP ${res.status}`);</code></pre>" +
+        "<h4>Sequential vs parallel</h4>" +
+        "<pre><code>// ❌ sequential — waits ~2x\nconst a = await getA();\nconst b = await getB();\n\n// ✅ parallel — independent calls at once\nconst [a, b] = await Promise.all([getA(), getB()]);</code></pre>" +
+        "<p><code class=\"inline\">await</code> inside a <code class=\"inline\">for</code> loop runs one at a time. For independent work, kick them all off and <code class=\"inline\">Promise.all</code> — or <code class=\"inline\">allSettled</code> when you need every result even if some fail.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“A Promise is a future value; <code class=\"inline\">async/await</code> is syntax sugar that makes it read synchronously. I handle errors with <code class=\"inline\">try/catch</code> around <code class=\"inline\">await</code> — remembering <code class=\"inline\">fetch</code> doesn’t reject on 4xx/5xx so I check <code class=\"inline\">res.ok</code> — and I use <code class=\"inline\">Promise.all</code> to parallelise independent calls instead of awaiting them in sequence.”</p>"
     },
     {
       id: "js-debounce-throttle",
@@ -156,7 +258,21 @@
         "<p>The span between entering a scope and the point where a <code class=\"inline\">let</code>/<code class=\"inline\">const</code> variable is declared. The binding is hoisted but not initialised, so accessing it in that window throws a <code class=\"inline\">ReferenceError</code>.</p>",
       tip: "TDZ is why let/const 'feel' un-hoisted even though they technically are hoisted.",
       code: "console.log(x); // ReferenceError (TDZ)\nlet x = 5;",
-      lang: "js"
+      lang: "js",
+      deep:
+        "<h4>What it is</h4>" +
+        "<p>The TDZ is the region of a scope from its start up to the line that <em>declares</em> a <code class=\"inline\">let</code>/<code class=\"inline\">const</code> (or <code class=\"inline\">class</code>). The binding exists (it was hoisted) but is <strong>uninitialised</strong>, so any read or write in that window throws a <code class=\"inline\">ReferenceError</code>.</p>" +
+        "<pre><code>{\n  // TDZ for x starts here\n  console.log(x); // ❌ ReferenceError\n  let x = 5;      // TDZ ends — x initialised\n  console.log(x); // ✅ 5\n}</code></pre>" +
+        "<h4>Hoisted but not initialised</h4>" +
+        "<p>People say <code class=\"inline\">let</code>/<code class=\"inline\">const</code> \"aren't hoisted\" — technically they are, but unlike <code class=\"inline\">var</code> (which is pre-set to <code class=\"inline\">undefined</code>) they get <em>no</em> value until execution reaches the declaration. The TDZ is what enforces that.</p>" +
+        "<h4>Why it exists</h4>" +
+        "<p>It turns \"using a variable before you declare it\" into a loud error instead of a silent <code class=\"inline\">undefined</code> — catching real bugs, and making <code class=\"inline\">const</code> meaningful (a const can't be observed before it's assigned).</p>" +
+        "<h4>A subtle trap</h4>" +
+        "<pre><code>let y = 1;\nfunction f() {\n  console.log(y); // ❌ ReferenceError, not 1\n  let y = 2;      // this y shadows the outer one — whole fn is its TDZ\n}</code></pre>" +
+        "<p>The inner <code class=\"inline\">let y</code> shadows the outer, so the reference resolves to the inner binding, which is still in its TDZ.</p>" +
+        "<pre><code>typeof a;       // ❌ ReferenceError if a is a let in TDZ\ntypeof undeclared; // ✅ 'undefined' (never declared)</code></pre>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“The Temporal Dead Zone is the gap between entering a scope and the <code class=\"inline\">let</code>/<code class=\"inline\">const</code> declaration line. The binding is hoisted but uninitialised, so touching it there throws a ReferenceError — that’s why <code class=\"inline\">let</code> feels un-hoisted and why it catches use-before-declare bugs.”</p>"
     },
     {
       id: "js-spread-rest",
@@ -224,14 +340,41 @@
       id: "js-bubbling-capturing",
       category: "javascript",
       difficulty: "intermediate",
-      tags: ["dom", "events"],
+      tags: ["V.Imp", "dom", "events"],
       question: "Event bubbling vs capturing.",
       answer:
         "<p>When an event fires, it travels <strong>capturing</strong> phase (top → target) then <strong>bubbling</strong> phase (target → top). Listeners run in the bubbling phase by default; pass <code class=\"inline\">{ capture: true }</code> for the capture phase.</p>" +
         "<p><code class=\"inline\">stopPropagation()</code> halts travel; <code class=\"inline\">preventDefault()</code> cancels the default action.</p>",
       tip: "stopPropagation and preventDefault do different things — don't confuse them.",
       code: "",
-      lang: ""
+      lang: "",
+      deep:
+        "<h4>The three phases of event flow</h4>" +
+        "<p>Click a nested element and the event travels the DOM in order:</p>" +
+        "<ol>" +
+        "<li><strong>Capturing</strong> — <code class=\"inline\">window</code> → down toward the target.</li>" +
+        "<li><strong>Target</strong> — reaches the element you interacted with.</li>" +
+        "<li><strong>Bubbling</strong> — target → back up to <code class=\"inline\">window</code>.</li>" +
+        "</ol>" +
+        "<p>By default listeners fire in the <strong>bubbling</strong> phase. Pass <code class=\"inline\">{ capture: true }</code> (or <code class=\"inline\">true</code> as the 3rd arg) to fire in the capturing phase instead.</p>" +
+        "<pre><code>el.addEventListener('click', fn);                 // bubbling\nel.addEventListener('click', fn, { capture: true }); // capturing</code></pre>" +
+        "<h4>Event delegation — the big payoff</h4>" +
+        "<p>Because events bubble, you can put <em>one</em> listener on a parent instead of many on children — great for lists and dynamically added items:</p>" +
+        "<pre><code>list.addEventListener('click', (e) =&gt; {\n  const li = e.target.closest('li');\n  if (li) select(li.dataset.id);\n});</code></pre>" +
+        "<h4>target vs currentTarget</h4>" +
+        "<ul>" +
+        "<li><code class=\"inline\">e.target</code> — the element that actually triggered the event (deepest).</li>" +
+        "<li><code class=\"inline\">e.currentTarget</code> — the element whose listener is running (where you attached it).</li>" +
+        "</ul>" +
+        "<h4>stopPropagation vs preventDefault — not the same</h4>" +
+        "<table><thead><tr><th>Method</th><th>Does</th></tr></thead><tbody>" +
+        "<tr><td><code class=\"inline\">stopPropagation()</code></td><td>stops the event travelling further (no more bubbling/capturing)</td></tr>" +
+        "<tr><td><code class=\"inline\">stopImmediatePropagation()</code></td><td>that, plus skips other listeners on the same element</td></tr>" +
+        "<tr><td><code class=\"inline\">preventDefault()</code></td><td>cancels the browser's default action (link nav, form submit) — travel continues</td></tr>" +
+        "</tbody></table>" +
+        "<p>Non-bubbling events exist too — <code class=\"inline\">focus</code>, <code class=\"inline\">blur</code>, <code class=\"inline\">mouseenter</code> (use <code class=\"inline\">focusin</code>/<code class=\"inline\">mouseover</code> if you need delegation).</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“An event captures down from the root to the target, then bubbles back up; listeners run on the bubbling phase unless I set <code class=\"inline\">capture: true</code>. I lean on bubbling for event delegation — one listener on a parent. <code class=\"inline\">stopPropagation</code> halts the travel, while <code class=\"inline\">preventDefault</code> cancels the default action — different jobs.”</p>"
     },
     {
       id: "js-callback-hell",
@@ -520,7 +663,23 @@
         "<p>JavaScript is <strong>single-threaded</strong> — one call stack, one thing at a time. It <em>feels</em> concurrent because of the <strong>event loop</strong>: async work is offloaded to the browser/Node APIs and their callbacks are queued back onto the stack when it's free. (Web Workers add real parallel threads, but they don't share the main thread.)</p>",
       tip: "One thread + event loop = the mental model for all async behaviour in JS.",
       code: "",
-      lang: ""
+      lang: "",
+      deep:
+        "<h4>Single-threaded, but concurrent</h4>" +
+        "<p>JavaScript has <strong>one call stack</strong> — it executes one statement at a time and can't run two pieces of JS in parallel on the main thread. What makes it <em>feel</em> concurrent is that slow work (timers, network, file I/O) is handed off to the host (browser or Node), which runs it elsewhere and queues a callback back when it's done.</p>" +
+        "<h4>Who does the async work?</h4>" +
+        "<p>The engine (V8) is single-threaded, but the <strong>runtime around it</strong> isn't. The browser provides Web APIs and a thread pool; Node uses libuv with its own worker threads. Your JS callback still runs back on the one main thread via the event loop.</p>" +
+        "<pre><code>console.log('start');\nsetTimeout(() =&gt; console.log('later'), 0); // offloaded to timer API\nconsole.log('end');\n// start, end, later</code></pre>" +
+        "<h4>Why single-threaded is a deliberate choice</h4>" +
+        "<p>No shared-memory threads on the main thread means <strong>no data races or locks</strong> in your app code — simpler and safe for DOM manipulation. The cost: a long synchronous loop <em>blocks everything</em> (UI freezes), so you must keep the main thread free.</p>" +
+        "<h4>Getting real parallelism</h4>" +
+        "<ul>" +
+        "<li><strong>Web Workers</strong> — separate threads for CPU-heavy work; communicate by messages, no shared DOM.</li>" +
+        "<li><strong>Node worker_threads</strong> — the Node equivalent.</li>" +
+        "<li><strong>SharedArrayBuffer / Atomics</strong> — actual shared memory between workers (advanced).</li>" +
+        "</ul>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“JavaScript itself is single-threaded — one call stack. It handles async work by offloading it to the browser or Node runtime and queuing the callbacks, which the event loop runs back on that single thread. For true parallelism I’d use Web Workers, which run on separate threads and communicate via messages.”</p>"
     },
     {
       id: "js-event-listener",
@@ -556,7 +715,28 @@
         "<p>All set <code class=\"inline\">this</code> explicitly. <strong>call</strong> invokes immediately with arguments listed individually; <strong>apply</strong> invokes immediately with arguments as an array; <strong>bind</strong> returns a <em>new</em> function with <code class=\"inline\">this</code> permanently bound (call it later).</p>",
       tip: "call/apply invoke now; bind returns a function to invoke later. apply takes an Array.",
       code: "greet.call(obj, 'hi', '!');\ngreet.apply(obj, ['hi', '!']);\nconst bound = greet.bind(obj); bound('hi', '!');",
-      lang: "js"
+      lang: "js",
+      deep:
+        "<h4>All three set <code class=\"inline\">this</code> — they differ in <em>when</em> and <em>how args are passed</em></h4>" +
+        "<table><thead><tr><th>Method</th><th>Invokes</th><th>Arguments</th></tr></thead><tbody>" +
+        "<tr><td><code class=\"inline\">call</code></td><td>immediately</td><td>listed individually</td></tr>" +
+        "<tr><td><code class=\"inline\">apply</code></td><td>immediately</td><td>as one array</td></tr>" +
+        "<tr><td><code class=\"inline\">bind</code></td><td>later (returns a new fn)</td><td>listed; can pre-fill some</td></tr>" +
+        "</tbody></table>" +
+        "<pre><code>function greet(g, p) { return `${g}, ${this.name}${p}`; }\nconst user = { name: 'Asha' };\n\ngreet.call(user, 'Hi', '!');       // 'Hi, Asha!'\ngreet.apply(user, ['Hi', '!']);    // 'Hi, Asha!'\nconst g = greet.bind(user);        // new function\ng('Hi', '!');                      // 'Hi, Asha!'</code></pre>" +
+        "<p>Mnemonic: <strong>A</strong>pply = <strong>A</strong>rray. Call = comma-separated. Bind = build-for-later.</p>" +
+        "<h4>bind also does partial application</h4>" +
+        "<pre><code>function multiply(a, b) { return a * b; }\nconst double = multiply.bind(null, 2);\ndouble(5); // 10  — first arg pre-filled</code></pre>" +
+        "<h4>Real uses</h4>" +
+        "<ul>" +
+        "<li><strong>Fix a lost <code class=\"inline\">this</code></strong> when passing a method as a callback: <code class=\"inline\">btn.addEventListener('click', this.handle.bind(this))</code>.</li>" +
+        "<li><strong>Borrow methods</strong>: <code class=\"inline\">Array.prototype.slice.call(arguments)</code> to arrayify array-likes.</li>" +
+        "<li><strong>Spread into a variadic fn</strong>: <code class=\"inline\">Math.max.apply(null, nums)</code> (modern: <code class=\"inline\">Math.max(...nums)</code>).</li>" +
+        "</ul>" +
+        "<h4>Caveats</h4>" +
+        "<p>You can't rebind an arrow function's <code class=\"inline\">this</code> (it has none). And <code class=\"inline\">bind</code> is permanent — binding an already-bound function again has no effect.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“All three explicitly set <code class=\"inline\">this</code>. <code class=\"inline\">call</code> and <code class=\"inline\">apply</code> invoke immediately — <code class=\"inline\">call</code> takes comma-separated args, <code class=\"inline\">apply</code> takes an array. <code class=\"inline\">bind</code> returns a new function with <code class=\"inline\">this</code> permanently fixed to call later, and can pre-fill arguments for partial application.”</p>"
     },
     {
       id: "js-template-literals",
@@ -628,7 +808,24 @@
         "<p>When a variable declared in an inner scope has the <strong>same name</strong> as one in an outer scope, the inner one <em>shadows</em> (hides) the outer within that block. Common with function parameters and block-scoped <code class=\"inline\">let</code>/<code class=\"inline\">const</code>.</p>",
       tip: "Illegal shadowing: you can't shadow a let with a var in the same scope.",
       code: "let x = 1;\nfunction f() { let x = 2; return x; } // inner x shadows outer\nf(); // 2, outer x still 1",
-      lang: "js"
+      lang: "js",
+      deep:
+        "<h4>What it is</h4>" +
+        "<p>Shadowing happens when a variable in an inner scope has the <strong>same name</strong> as one in an enclosing scope. Inside the inner scope, the name resolves to the inner variable — the outer one is hidden (not overwritten).</p>" +
+        "<pre><code>let x = 1;\nfunction f() {\n  let x = 2;   // shadows the outer x\n  return x;    // 2\n}\nf();           // 2\nx;             // 1 — outer untouched</code></pre>" +
+        "<h4>It follows the scope chain</h4>" +
+        "<p>JS resolves a name by walking outward: current block → enclosing function → … → global. The <em>nearest</em> declaration wins, so the inner one shadows the rest.</p>" +
+        "<pre><code>const v = 'global';\n{\n  const v = 'block';\n  console.log(v); // 'block'\n}\nconsole.log(v);   // 'global'</code></pre>" +
+        "<h4>Illegal shadowing</h4>" +
+        "<p>You can shadow across nested scopes, but you can't create a conflicting redeclaration in the <em>same</em> scope — mixing <code class=\"inline\">let</code> and <code class=\"inline\">var</code> for the same name throws:</p>" +
+        "<pre><code>function bad() {\n  let a = 1;\n  { var a = 2; } // ❌ SyntaxError: 'a' already declared\n}</code></pre>" +
+        "<h4>The loop-variable case</h4>" +
+        "<pre><code>for (let i = 0; i &lt; 3; i++) { /* each iteration: a fresh i */ }</code></pre>" +
+        "<p><code class=\"inline\">let</code> in a loop head effectively creates a new binding per iteration — a form of scoping that shadows across iterations and fixes the classic closure-in-loop bug.</p>" +
+        "<h4>Should you do it?</h4>" +
+        "<p>Deliberate shadowing (e.g. narrowing a param inside a block) is fine and common. <em>Accidental</em> shadowing hides bugs — a linter rule (<code class=\"inline\">no-shadow</code>) catches unintended cases.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“Shadowing is when an inner-scope variable reuses an outer variable’s name and hides it within that scope — name resolution picks the nearest one. The outer value is untouched. It’s legal across nested scopes but not as a conflicting redeclaration in the same scope.”</p>"
     },
     {
       id: "js-generator-vs-normal",
@@ -652,6 +849,61 @@
         "<p><strong>Primitives</strong> (string, number, boolean…) are <strong>immutable</strong> — operations produce new values, never change the original. <strong>Objects and arrays</strong> are <strong>mutable</strong> — their contents can change in place. Freeze an object with <code class=\"inline\">Object.freeze</code> to prevent top-level mutation.</p>",
       tip: "String methods return NEW strings — the original never changes.",
       code: "let s = 'abc'; s.toUpperCase(); // 'ABC' but s is still 'abc'\nconst a = [1]; a.push(2);       // a mutated to [1, 2]",
+      lang: "js"
+    },
+    {
+      id: "js-truthy-falsy",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["V.Imp", "coercion", "basics"],
+      question: "What are truthy and falsy values?",
+      answer:
+        "<p>In a boolean context (<code class=\"inline\">if</code>, <code class=\"inline\">&amp;&amp;</code>, <code class=\"inline\">!</code>), every value coerces to <code class=\"inline\">true</code> or <code class=\"inline\">false</code>. There are exactly <strong>8 falsy values</strong>: <code class=\"inline\">false</code>, <code class=\"inline\">0</code>, <code class=\"inline\">-0</code>, <code class=\"inline\">0n</code>, <code class=\"inline\">\"\"</code>, <code class=\"inline\">null</code>, <code class=\"inline\">undefined</code>, and <code class=\"inline\">NaN</code>. <strong>Everything else is truthy</strong> — including <code class=\"inline\">\"0\"</code>, <code class=\"inline\">\"false\"</code>, <code class=\"inline\">[]</code>, and <code class=\"inline\">{}</code>.</p>",
+      tip: "Empty array [] and empty object {} are TRUTHY — the classic gotcha.",
+      code: "if ([]) console.log('runs');   // [] is truthy!\nBoolean('0');  // true\nBoolean(0);    // false\nBoolean(NaN);  // false",
+      lang: "js",
+      deep:
+        "<h4>The 8 falsy values (memorise these)</h4>" +
+        "<pre><code>false\n0    -0    0n        // zero, incl. BigInt\n\"\"                  // empty string\nnull\nundefined\nNaN</code></pre>" +
+        "<p>Anything not in that list is truthy. The surprising ones: <code class=\"inline\">\"0\"</code>, <code class=\"inline\">\" \"</code>, <code class=\"inline\">\"false\"</code>, <code class=\"inline\">[]</code>, <code class=\"inline\">{}</code>, and any function are all <strong>truthy</strong>.</p>" +
+        "<h4>Where it bites</h4>" +
+        "<pre><code>if (arr.length) { }        // ✅ 0 is falsy, so empty array skips\nif (arr) { }               // ❌ [] is truthy, always runs\n\nif (count) { }             // ❌ skips when count === 0 (valid!)\nif (count != null) { }     // ✅ only skips null/undefined</code></pre>" +
+        "<h4>Short-circuiting uses this</h4>" +
+        "<pre><code>const name = input || 'Guest';   // '' is falsy → 'Guest'\nconst n = value ?? 0;            // ?? only catches null/undefined, keeps 0/''</code></pre>" +
+        "<p>Prefer <code class=\"inline\">??</code> over <code class=\"inline\">||</code> when <code class=\"inline\">0</code> or <code class=\"inline\">\"\"</code> are valid values you don't want replaced.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“There are exactly eight falsy values — <code class=\"inline\">false</code>, <code class=\"inline\">0</code>, <code class=\"inline\">-0</code>, <code class=\"inline\">0n</code>, <code class=\"inline\">\"\"</code>, <code class=\"inline\">null</code>, <code class=\"inline\">undefined</code>, <code class=\"inline\">NaN</code> — and everything else is truthy, including empty arrays and objects. So I check <code class=\"inline\">arr.length</code>, not the array itself.”</p>"
+    },
+    {
+      id: "js-use-strict",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["strict-mode", "basics"],
+      question: "What does \"use strict\" do?",
+      answer:
+        "<p>Strict mode (<code class=\"inline\">'use strict';</code> at the top of a file or function) opts into a stricter JS variant that catches common mistakes as errors: it forbids undeclared globals, makes silent failures throw, disallows duplicate parameter names, and sets <code class=\"inline\">this</code> to <code class=\"inline\">undefined</code> in plain function calls (instead of the global object).</p>" +
+        "<p>ES modules and class bodies are <strong>always</strong> strict, so you rarely write it by hand anymore.</p>",
+      tip: "Inside a module or a class, you're already in strict mode — no directive needed.",
+      code: "'use strict';\nx = 10; // ReferenceError: x is not defined (no accidental global)",
+      lang: "js"
+    },
+    {
+      id: "js-array-search",
+      category: "javascript",
+      difficulty: "beginner",
+      tags: ["array", "methods"],
+      question: "find, filter, some, every, includes — what do they do?",
+      answer:
+        "<ul>" +
+        "<li><strong>filter</strong> — returns a <em>new array</em> of all items passing a test.</li>" +
+        "<li><strong>find</strong> — returns the <em>first</em> matching item (or <code class=\"inline\">undefined</code>).</li>" +
+        "<li><strong>findIndex</strong> — the index of the first match (or <code class=\"inline\">-1</code>).</li>" +
+        "<li><strong>some</strong> — <code class=\"inline\">true</code> if <em>at least one</em> item passes.</li>" +
+        "<li><strong>every</strong> — <code class=\"inline\">true</code> if <em>all</em> items pass.</li>" +
+        "<li><strong>includes</strong> — <code class=\"inline\">true</code> if the array contains a value (uses <code class=\"inline\">===</code>).</li>" +
+        "</ul>",
+      tip: "find returns the item; filter returns an array. Use find when you expect one result.",
+      code: "const nums = [1, 2, 3, 4];\nnums.filter(n => n % 2 === 0); // [2, 4]\nnums.find(n => n > 2);        // 3\nnums.some(n => n > 3);        // true\nnums.every(n => n > 0);       // true\nnums.includes(2);             // true",
       lang: "js"
     }
   ];

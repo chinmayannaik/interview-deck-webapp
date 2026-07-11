@@ -87,7 +87,27 @@
         "</ul>",
       tip: "Two-way binding is just property + event binding combined under the hood.",
       code: "",
-      lang: ""
+      lang: "",
+      deep:
+        "<h4>The four bindings and their direction</h4>" +
+        "<table><thead><tr><th>Binding</th><th>Syntax</th><th>Direction</th></tr></thead><tbody>" +
+        "<tr><td>Interpolation</td><td>{{ value }}</td><td>class → view</td></tr>" +
+        "<tr><td>Property</td><td>[prop]=\"value\"</td><td>class → view</td></tr>" +
+        "<tr><td>Event</td><td>(event)=\"fn($event)\"</td><td>view → class</td></tr>" +
+        "<tr><td>Two-way</td><td>[(ngModel)]=\"value\"</td><td>both</td></tr>" +
+        "</tbody></table>" +
+        "<h4>Interpolation vs property binding</h4>" +
+        "<p>Interpolation is a string shortcut — <code class=\"inline\">{{ x }}</code> is coerced to text. Property binding sets the <em>actual DOM property</em> with the evaluated type, so use it whenever the value isn't a string:</p>" +
+        "<pre><code>&lt;!-- string attribute --&gt;\n&lt;img src=\"{{ url }}\"&gt;\n&lt;!-- real property, keeps type --&gt;\n&lt;img [src]=\"url\"&gt;\n&lt;input [disabled]=\"isLocked\"&gt;  &lt;!-- boolean, not the string \"false\" --&gt;</code></pre>" +
+        "<p>A common bug: <code class=\"inline\">disabled=\"{{ false }}\"</code> renders <code class=\"inline\">disabled=\"false\"</code> which the DOM still treats as disabled. <code class=\"inline\">[disabled]=\"false\"</code> works correctly.</p>" +
+        "<h4>How two-way binding really works</h4>" +
+        "<p>The \"banana in a box\" <code class=\"inline\">[()]</code> is pure syntax sugar for a property binding + an event binding. Angular expands:</p>" +
+        "<pre><code>&lt;input [(ngModel)]=\"name\"&gt;\n&lt;!-- is exactly --&gt;\n&lt;input [ngModel]=\"name\" (ngModelChange)=\"name = $event\"&gt;</code></pre>" +
+        "<p>Any input paired with an output named <code class=\"inline\">&lt;input&gt;Change</code> becomes two-way bindable — that's how you build your own (see the custom two-way binding question).</p>" +
+        "<h4>Attribute vs property binding</h4>" +
+        "<p>Most bindings target DOM <em>properties</em>. A few things only exist as HTML <em>attributes</em> (ARIA, <code class=\"inline\">colspan</code>, SVG) — for those use <code class=\"inline\">[attr.aria-label]=\"...\"</code>. Similar helpers: <code class=\"inline\">[class.active]</code>, <code class=\"inline\">[style.width.px]</code>.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“There are four: interpolation and property binding push data to the view, event binding sends events back, and two-way binding combines a property and an event binding — it’s literally <code class=\"inline\">[x]</code> plus <code class=\"inline\">(xChange)</code> under the hood.”</p>"
     },
     {
       id: "ng-directives",
@@ -139,14 +159,39 @@
       id: "ng-forms",
       category: "angular",
       difficulty: "intermediate",
-      tags: ["forms", "reactive", "template-driven"],
+      tags: ["V.Imp", "forms", "reactive", "template-driven"],
       question: "Template-driven vs Reactive forms — which and why?",
       answer:
         "<p><strong>Template-driven</strong> — logic lives in the template via <code class=\"inline\">ngModel</code>; quick, good for simple forms.</p>" +
         "<p><strong>Reactive</strong> — the form model is defined in the TS class (<code class=\"inline\">FormGroup</code>, <code class=\"inline\">FormControl</code>, <code class=\"inline\">FormBuilder</code>); explicit, testable, and better for complex or dynamic validation.</p>",
       tip: "For anything non-trivial, reach for Reactive forms — they're easier to unit test.",
       code: "form = this.fb.group({\n  email: ['', [Validators.required, Validators.email]],\n});",
-      lang: "ts"
+      lang: "ts",
+      deep:
+        "<h4>Side-by-side</h4>" +
+        "<table><thead><tr><th></th><th>Template-driven</th><th>Reactive</th></tr></thead><tbody>" +
+        "<tr><td>Model lives in</td><td>the template (<code class=\"inline\">ngModel</code>)</td><td>the TS class (<code class=\"inline\">FormGroup</code>)</td></tr>" +
+        "<tr><td>Module</td><td><code class=\"inline\">FormsModule</code></td><td><code class=\"inline\">ReactiveFormsModule</code></td></tr>" +
+        "<tr><td>Data flow</td><td>async (two-way)</td><td>synchronous &amp; explicit</td></tr>" +
+        "<tr><td>Validation</td><td>directives in template</td><td>functions in class</td></tr>" +
+        "<tr><td>Dynamic controls</td><td>hard</td><td>easy (<code class=\"inline\">FormArray</code>)</td></tr>" +
+        "<tr><td>Unit testing</td><td>needs the DOM</td><td>test the model directly</td></tr>" +
+        "<tr><td>Best for</td><td>simple, small forms</td><td>complex / dynamic forms</td></tr>" +
+        "</tbody></table>" +
+        "<h4>Template-driven — quick and declarative</h4>" +
+        "<pre><code>&lt;form #f=\"ngForm\" (ngSubmit)=\"save(f.value)\"&gt;\n  &lt;input name=\"email\" ngModel required email&gt;\n&lt;/form&gt;</code></pre>" +
+        "<p>Angular builds the <code class=\"inline\">FormGroup</code> for you behind the scenes, one <code class=\"inline\">FormControl</code> per <code class=\"inline\">ngModel</code>. Validation is added as attribute directives.</p>" +
+        "<h4>Reactive — explicit and testable</h4>" +
+        "<pre><code>form = this.fb.group({\n  email: ['', [Validators.required, Validators.email]],\n  password: ['', Validators.minLength(8)],\n});\n\nsave() {\n  if (this.form.invalid) return;\n  this.api.login(this.form.value);\n}</code></pre>" +
+        "<p>You hold the source of truth. You can <code class=\"inline\">valueChanges.pipe(debounceTime(300))</code>, add/remove controls at runtime, and unit-test without rendering anything.</p>" +
+        "<h4>Which and why (the answer they want)</h4>" +
+        "<p>“I default to <strong>Reactive forms</strong> for anything beyond a trivial form: the model is in TypeScript so it’s type-safe, testable, and supports dynamic controls and reactive validation. I only use template-driven for a quick, small form like a single search box.”</p>" +
+        "<h4>Common pitfalls</h4>" +
+        "<ul>" +
+        "<li>Mixing <code class=\"inline\">ngModel</code> with a reactive <code class=\"inline\">formControlName</code> on the same field — pick one.</li>" +
+        "<li>Forgetting to import the right module (<code class=\"inline\">ReactiveFormsModule</code> vs <code class=\"inline\">FormsModule</code>).</li>" +
+        "<li>Reading <code class=\"inline\">form.value</code> and expecting disabled controls — they’re excluded; use <code class=\"inline\">getRawValue()</code>.</li>" +
+        "</ul>"
     },
     {
       id: "ng-routing",
@@ -188,7 +233,23 @@
         "<p><strong>@ViewChild</strong> references an element/component in <em>this</em> template; <strong>@ContentChild</strong> references projected content. They're ready in <code class=\"inline\">ngAfterViewInit</code> and <code class=\"inline\">ngAfterContentInit</code> respectively.</p>",
       tip: "Use multi-slot projection with select: <ng-content select=\"[header]\">.",
       code: "",
-      lang: ""
+      lang: "",
+      deep:
+        "<h4>Content projection = slots</h4>" +
+        "<p><code class=\"inline\">ng-content</code> lets a parent pass markup <em>into</em> a child, so the child owns the shell and the parent owns the content. This is how you build reusable <code class=\"inline\">&lt;app-card&gt;</code>, modals, and layout wrappers.</p>" +
+        "<pre><code>&lt;!-- card.component.html --&gt;\n&lt;div class=\"card\"&gt;\n  &lt;header&gt;&lt;ng-content select=\"[card-title]\"&gt;&lt;/ng-content&gt;&lt;/header&gt;\n  &lt;div class=\"body\"&gt;&lt;ng-content&gt;&lt;/ng-content&gt;&lt;/div&gt;\n&lt;/div&gt;\n\n&lt;!-- usage --&gt;\n&lt;app-card&gt;\n  &lt;h2 card-title&gt;Title&lt;/h2&gt;\n  &lt;p&gt;Any body markup here.&lt;/p&gt;\n&lt;/app-card&gt;</code></pre>" +
+        "<p>The first <code class=\"inline\">select</code>ed slot catches matching elements; the plain <code class=\"inline\">&lt;ng-content&gt;</code> catches everything else.</p>" +
+        "<h4>ViewChild vs ContentChild — the key difference</h4>" +
+        "<table><thead><tr><th></th><th>@ViewChild</th><th>@ContentChild</th></tr></thead><tbody>" +
+        "<tr><td>Queries</td><td>elements in <em>this</em> component's own template</td><td>elements <em>projected in</em> via ng-content</td></tr>" +
+        "<tr><td>Ready in</td><td><code class=\"inline\">ngAfterViewInit</code></td><td><code class=\"inline\">ngAfterContentInit</code></td></tr>" +
+        "</tbody></table>" +
+        "<p>Mnemonic: <strong>View</strong> = what you wrote in your template; <strong>Content</strong> = what someone else handed you through the slot.</p>" +
+        "<pre><code>@ViewChild('input') input!: ElementRef;      // in my template\n@ContentChild(TabComponent) tab!: TabComponent; // projected in\n\nngAfterViewInit()    { this.input.nativeElement.focus(); }\nngAfterContentInit() { /* this.tab is available here */ }</code></pre>" +
+        "<h4>Why the timing matters</h4>" +
+        "<p>Reading a <code class=\"inline\">@ViewChild</code> in <code class=\"inline\">ngOnInit</code> often returns <code class=\"inline\">undefined</code> because the view isn't rendered yet — read it in <code class=\"inline\">ngAfterViewInit</code>. Same for <code class=\"inline\">@ContentChild</code> and <code class=\"inline\">ngAfterContentInit</code>. (Signal queries in v17+ remove much of this timing pain.)</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“<code class=\"inline\">ng-content</code> projects a parent’s markup into a reusable child, like slots. <code class=\"inline\">@ViewChild</code> grabs something from my own template and is ready in <code class=\"inline\">ngAfterViewInit</code>; <code class=\"inline\">@ContentChild</code> grabs projected content and is ready in <code class=\"inline\">ngAfterContentInit</code>.”</p>"
     },
     {
       id: "ng-cd",
@@ -201,7 +262,30 @@
         "<p><strong>OnPush</strong> only re-checks a component when: an <code class=\"inline\">@Input</code> reference changes, an event fires inside it, or an <code class=\"inline\">async</code> pipe emits. Combined with <strong>immutable data</strong> it drastically cuts re-renders. (Signals push toward zone-less change detection.)</p>",
       tip: "OnPush + immutable data is the highest-impact perf change you can describe in an interview.",
       code: "@Component({ changeDetection: ChangeDetectionStrategy.OnPush })",
-      lang: "ts"
+      lang: "ts",
+      deep:
+        "<h4>What actually triggers change detection</h4>" +
+        "<p><code class=\"inline\">zone.js</code> monkey-patches async browser APIs — <code class=\"inline\">setTimeout</code>, <code class=\"inline\">addEventListener</code>, <code class=\"inline\">Promise</code>, XHR/fetch. When any of them fires, Zone tells Angular “something might have changed,” and Angular runs change detection over the component tree, top to bottom.</p>" +
+        "<p>Each pass re-evaluates every template binding and compares the new value to the previous one; if it differs, the DOM is updated.</p>" +
+        "<h4>Default vs OnPush</h4>" +
+        "<table><thead><tr><th></th><th>Default</th><th>OnPush</th></tr></thead><tbody>" +
+        "<tr><td>When checked</td><td>every component, every cycle</td><td>only when a trigger applies</td></tr>" +
+        "<tr><td>Triggers</td><td>any async event anywhere</td><td>@Input <em>reference</em> change, event inside the component, async pipe emit, or manual <code class=\"inline\">markForCheck()</code></td></tr>" +
+        "<tr><td>Cost</td><td>higher</td><td>much lower in big trees</td></tr>" +
+        "</tbody></table>" +
+        "<h4>Why OnPush needs immutable data</h4>" +
+        "<p>OnPush compares <code class=\"inline\">@Input</code> by <strong>reference</strong>. If you mutate an object/array in place, the reference is unchanged and the view won't update:</p>" +
+        "<pre><code>// ❌ mutation — same reference, OnPush won't see it\nthis.items.push(newItem);\n\n// ✅ new reference — OnPush updates\nthis.items = [...this.items, newItem];</code></pre>" +
+        "<h4>Forcing a check when you must</h4>" +
+        "<ul>" +
+        "<li><code class=\"inline\">ChangeDetectorRef.markForCheck()</code> — mark this component + ancestors to be checked next cycle (the OnPush-friendly one).</li>" +
+        "<li><code class=\"inline\">detectChanges()</code> — run detection synchronously now, on this subtree.</li>" +
+        "<li><code class=\"inline\">detach()</code> / <code class=\"inline\">reattach()</code> — take a component out of the tree entirely for manual control.</li>" +
+        "</ul>" +
+        "<h4>Where Signals fit</h4>" +
+        "<p>Signals give Angular <em>fine-grained</em> reactivity — it knows exactly which template expressions depend on which signal, so it can update just those without walking the whole tree. This is the path to <strong>zoneless</strong> apps (drop zone.js entirely), which the framework is moving toward.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“zone.js notifies Angular after async events and Default checks the whole tree. I switch hot components to <strong>OnPush</strong>, which only re-checks on input-reference changes, internal events, or async-pipe emissions — so I keep data immutable. Signals push this further toward zoneless, per-binding updates.”</p>"
     },
     {
       id: "ng-perf",
@@ -233,7 +317,26 @@
         "<p><strong>Pure</strong> (default) — recomputes only when the input reference changes; cheap. <strong>Impure</strong> — runs every change-detection cycle (e.g. <code class=\"inline\">async</code>, or a filter over a mutating array); powerful but costly, use sparingly.</p>",
       tip: "The async pipe is impure by necessity — it must react to new emissions.",
       code: "@Pipe({ name: 'myFilter', pure: false })",
-      lang: "ts"
+      lang: "ts",
+      deep:
+        "<h4>What a pipe is</h4>" +
+        "<p>A pipe is a small class that <strong>transforms a value for display</strong> in a template, without changing the underlying data. You chain them with <code class=\"inline\">|</code> and pass arguments after <code class=\"inline\">:</code>.</p>" +
+        "<pre><code>{{ price | currency:'INR' }}\n{{ date | date:'mediumDate' }}\n{{ name | uppercase }}\n{{ items | slice:0:5 }}</code></pre>" +
+        "<h4>Pure vs impure</h4>" +
+        "<table><thead><tr><th></th><th>Pure (default)</th><th>Impure</th></tr></thead><tbody>" +
+        "<tr><td>Runs when</td><td>input <em>reference</em> changes</td><td>every change-detection cycle</td></tr>" +
+        "<tr><td>Cost</td><td>cheap</td><td>expensive</td></tr>" +
+        "<tr><td>Examples</td><td><code class=\"inline\">date</code>, <code class=\"inline\">currency</code>, <code class=\"inline\">uppercase</code></td><td><code class=\"inline\">async</code>, a live filter/sort</td></tr>" +
+        "</tbody></table>" +
+        "<h4>The mutation trap</h4>" +
+        "<p>A pure pipe won't re-run if you mutate its input in place, because the reference didn't change:</p>" +
+        "<pre><code>this.items.push(x);       // ❌ pure filter pipe won't re-run\nthis.items = [...this.items, x]; // ✅ new reference, re-runs</code></pre>" +
+        "<p>Making the pipe impure (<code class=\"inline\">pure: false</code>) fixes display but runs it on <em>every</em> cycle — a performance risk on large lists.</p>" +
+        "<h4>Don't filter/sort with pipes on big lists</h4>" +
+        "<p>The Angular team explicitly advises against <code class=\"inline\">filter</code>/<code class=\"inline\">orderBy</code> pipes (that's why they were removed from Angular). Prefer computing the filtered list in the component (or a <code class=\"inline\">computed()</code> signal) so it only recalculates when inputs actually change.</p>" +
+        "<pre><code>@Pipe({ name: 'initials', standalone: true })\nexport class InitialsPipe implements PipeTransform {\n  transform(name: string): string {\n    return name.split(' ').map(w =&gt; w[0]).join('');\n  }\n}</code></pre>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“A pipe transforms a value for display. Pure pipes — the default — only recompute when the input reference changes, so they’re cheap; impure pipes run every cycle. The <code class=\"inline\">async</code> pipe is impure because it has to react to new emissions. I avoid filtering big lists in a pipe and do it in the component or a computed signal.”</p>"
     },
     {
       id: "ng-signals",
@@ -246,7 +349,31 @@
         "<p><strong>vs RxJS:</strong> signals are synchronous, always hold a current value, and are ideal for <em>local component state</em>. RxJS is for <em>streams / async events over time</em>. They interoperate via <code class=\"inline\">toSignal</code> / <code class=\"inline\">toObservable</code>.</p>",
       tip: "Mention Signals even for older-Angular roles — it signals you keep up with the framework.",
       code: "count = signal(0);\ndouble = computed(() => this.count() * 2);\neffect(() => console.log(this.count()));\nthis.count.set(1); // or .update(v => v + 1)",
-      lang: "ts"
+      lang: "ts",
+      deep:
+        "<h4>The three primitives</h4>" +
+        "<ul>" +
+        "<li><code class=\"inline\">signal(v)</code> — a writable box holding a value; read with <code class=\"inline\">count()</code>, write with <code class=\"inline\">.set()</code> / <code class=\"inline\">.update()</code>.</li>" +
+        "<li><code class=\"inline\">computed(fn)</code> — a derived, read-only signal that recalculates <em>only</em> when a signal it reads changes (memoized).</li>" +
+        "<li><code class=\"inline\">effect(fn)</code> — runs a side effect whenever any signal it reads changes (logging, syncing to storage).</li>" +
+        "</ul>" +
+        "<pre><code>count = signal(0);\ndouble = computed(() =&gt; this.count() * 2);\n\nthis.count.set(5);      // double() is now 10\nthis.count.update(n =&gt; n + 1);</code></pre>" +
+        "<h4>Signals vs RxJS</h4>" +
+        "<table><thead><tr><th></th><th>Signal</th><th>Observable (RxJS)</th></tr></thead><tbody>" +
+        "<tr><td>Has a current value</td><td>always (pull)</td><td>no — values arrive over time (push)</td></tr>" +
+        "<tr><td>Sync/async</td><td>synchronous</td><td>can be async</td></tr>" +
+        "<tr><td>Best for</td><td>local/UI state</td><td>events, streams, HTTP, debounce</td></tr>" +
+        "<tr><td>Operators</td><td>few (computed/effect)</td><td>hundreds (map, switchMap…)</td></tr>" +
+        "<tr><td>Subscription</td><td>none to manage</td><td>must subscribe/unsubscribe</td></tr>" +
+        "</tbody></table>" +
+        "<h4>The mental model</h4>" +
+        "<p>A signal answers <em>“what is the value right now?”</em>. An observable answers <em>“notify me each time a new value happens over time.”</em> Use signals for state you render; use RxJS for asynchronous event pipelines.</p>" +
+        "<h4>They interoperate</h4>" +
+        "<pre><code>// stream → signal (for templates)\nuser = toSignal(this.userService.user$, { initialValue: null });\n\n// signal → stream (to use RxJS operators)\nquery$ = toObservable(this.query).pipe(debounceTime(300));</code></pre>" +
+        "<h4>Why they matter</h4>" +
+        "<p>Signals enable <strong>fine-grained, zone-less change detection</strong>: Angular updates exactly the bindings that read a changed signal instead of re-checking the whole tree. That's the framework's direction going forward.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“Signals are a synchronous reactivity primitive that always holds a current value — perfect for local component state and fine-grained change detection. RxJS is for asynchronous streams of values over time. They’re complementary, and <code class=\"inline\">toSignal</code>/<code class=\"inline\">toObservable</code> bridge them.”</p>"
     },
     {
       id: "ng-standalone",
@@ -276,7 +403,29 @@
         "</ul>",
       tip: "Use ::ng-deep sparingly to pierce encapsulation — it's deprecated and leaks globally.",
       code: "@Component({ encapsulation: ViewEncapsulation.Emulated })",
-      lang: "ts"
+      lang: "ts",
+      deep:
+        "<h4>The problem it solves</h4>" +
+        "<p>Normally CSS is global — a <code class=\"inline\">.title</code> rule in one component would style every <code class=\"inline\">.title</code> on the page. View Encapsulation scopes a component's styles so they only apply to that component's own template.</p>" +
+        "<h4>The three modes</h4>" +
+        "<table><thead><tr><th>Mode</th><th>How</th><th>Isolation</th></tr></thead><tbody>" +
+        "<tr><td>Emulated (default)</td><td>Angular rewrites selectors and adds a unique attribute (<code class=\"inline\">_ngcontent-xyz</code>) to each element</td><td>scoped, but no real DOM boundary</td></tr>" +
+        "<tr><td>ShadowDom</td><td>renders the component in a native Shadow DOM tree</td><td>true, browser-enforced isolation</td></tr>" +
+        "<tr><td>None</td><td>styles are injected globally, untouched</td><td>none — leaks everywhere</td></tr>" +
+        "</tbody></table>" +
+        "<h4>What Emulated actually generates</h4>" +
+        "<pre><code>/* you write */\nh1 { color: red; }\n\n/* Angular emits */\nh1[_ngcontent-abc] { color: red; }\n&lt;h1 _ngcontent-abc&gt;...&lt;/h1&gt;</code></pre>" +
+        "<p>So the rule can only match elements Angular tagged for this component — that's the \"emulation\" of scoping, done with plain attribute selectors (no Shadow DOM needed, works everywhere).</p>" +
+        "<h4>Piercing encapsulation</h4>" +
+        "<ul>" +
+        "<li><code class=\"inline\">:host</code> — style the component's own host element.</li>" +
+        "<li><code class=\"inline\">:host-context(.dark)</code> — style based on an ancestor's class.</li>" +
+        "<li><code class=\"inline\">::ng-deep</code> — force a style into child components. <strong>Deprecated</strong> and effectively global — prefer restructuring or a shared style.</li>" +
+        "</ul>" +
+        "<h4>ShadowDom caveats</h4>" +
+        "<p>Real isolation also means global styles <em>don't</em> reach in, and events like <code class=\"inline\">focus</code> retarget at the boundary. Great for true web-component reuse; overkill for a normal app.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“By default Angular uses <strong>Emulated</strong> encapsulation — it adds a unique attribute to each element and rewrites my selectors so styles stay scoped without real Shadow DOM. <strong>ShadowDom</strong> gives true browser isolation, and <strong>None</strong> makes styles global. I avoid <code class=\"inline\">::ng-deep</code> since it’s deprecated and leaks.”</p>"
     },
     {
       id: "ng-aot",
@@ -753,7 +902,7 @@
       category: "angular",
       difficulty: "beginner",
       tags: ["routing", "router-outlet"],
-      question: "What is the use of <router-outlet>?",
+      question: "What is the use of router-outlet?",
       answer:
         "<p><code class=\"inline\">&lt;router-outlet&gt;</code> is a placeholder in a template where the router renders the component that matches the current route. As the URL changes, Angular swaps the component shown at that outlet. You can also have named/nested outlets.</p>",
       tip: "Think of router-outlet as the 'stage' where routed components are displayed.",
@@ -794,7 +943,23 @@
         "<p>A <strong>component</strong> is a directive <em>with a template</em> — it controls a view. A <strong>directive</strong> has <em>no template</em>; it adds behaviour or changes the appearance/structure of existing elements (attribute directives like <code class=\"inline\">ngClass</code>, structural directives like <code class=\"inline\">*ngIf</code>).</p>",
       tip: "One-liner: 'A component is a directive with a template.'",
       code: "",
-      lang: ""
+      lang: "",
+      deep:
+        "<h4>The relationship</h4>" +
+        "<p>All three are directives — a component is just the special case that owns a view:</p>" +
+        "<table><thead><tr><th>Type</th><th>Template?</th><th>Purpose</th></tr></thead><tbody>" +
+        "<tr><td>Component</td><td>yes</td><td>controls a piece of UI (view + logic)</td></tr>" +
+        "<tr><td>Attribute directive</td><td>no</td><td>changes appearance/behaviour of an existing element</td></tr>" +
+        "<tr><td>Structural directive</td><td>no</td><td>adds/removes elements from the DOM</td></tr>" +
+        "</tbody></table>" +
+        "<h4>Component</h4>" +
+        "<pre><code>@Component({ selector: 'app-user', template: '&lt;h2&gt;{{ name }}&lt;/h2&gt;' })\nexport class UserComponent { name = 'Asha'; }</code></pre>" +
+        "<h4>Attribute directive — behaviour, no template</h4>" +
+        "<pre><code>@Directive({ selector: '[appHighlight]' })\nexport class HighlightDirective {\n  constructor(el: ElementRef) { el.nativeElement.style.background = 'yellow'; }\n}\n// &lt;p appHighlight&gt;...&lt;/p&gt;</code></pre>" +
+        "<h4>Structural directive — changes DOM layout</h4>" +
+        "<p><code class=\"inline\">*ngIf</code>, <code class=\"inline\">*ngFor</code> (and the v17 <code class=\"inline\">@if</code>/<code class=\"inline\">@for</code>) add or remove elements. The <code class=\"inline\">*</code> is sugar for wrapping the element in an <code class=\"inline\">&lt;ng-template&gt;</code>.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“A component is a directive <em>with a template</em> — it renders a view. A directive has no template; attribute directives change how an existing element looks or behaves, and structural directives add or remove elements. Every component is a directive, but not every directive is a component.”</p>"
     },
     {
       id: "ng-why-services",
@@ -817,7 +982,7 @@
       id: "ng-guard-types",
       category: "angular",
       difficulty: "intermediate",
-      tags: ["routing", "guards"],
+      tags: ["V.Imp", "routing", "guards"],
       question: "What are Angular route guards and their types?",
       answer:
         "<p>Guards control access to and navigation between routes.</p>" +
@@ -829,7 +994,27 @@
         "</ul>",
       tip: "For auth, a CanActivate guard returning a UrlTree is the clean redirect-to-login pattern.",
       code: "export const authGuard: CanActivateFn = () =>\n  inject(AuthService).isLoggedIn() || inject(Router).createUrlTree(['/login']);",
-      lang: "ts"
+      lang: "ts",
+      deep:
+        "<h4>The guard types</h4>" +
+        "<table><thead><tr><th>Guard</th><th>Runs</th><th>Typical use</th></tr></thead><tbody>" +
+        "<tr><td><code class=\"inline\">CanActivate</code></td><td>before entering a route</td><td>auth / role check</td></tr>" +
+        "<tr><td><code class=\"inline\">CanActivateChild</code></td><td>before entering any child route</td><td>protect a whole feature area</td></tr>" +
+        "<tr><td><code class=\"inline\">CanDeactivate</code></td><td>before leaving a route</td><td>“You have unsaved changes” prompt</td></tr>" +
+        "<tr><td><code class=\"inline\">CanMatch</code></td><td>before a route is even matched</td><td>feature flags, role-based route swapping, block lazy load</td></tr>" +
+        "<tr><td><code class=\"inline\">Resolve</code></td><td>after activation is allowed, before render</td><td>pre-fetch data</td></tr>" +
+        "</tbody></table>" +
+        "<p><em>Note:</em> <code class=\"inline\">CanLoad</code> is deprecated in favour of <code class=\"inline\">CanMatch</code>, which also blocks the lazy chunk from loading.</p>" +
+        "<h4>Return types</h4>" +
+        "<p>A guard returns <code class=\"inline\">boolean</code>, a <code class=\"inline\">UrlTree</code> (redirect), or an <code class=\"inline\">Observable</code>/<code class=\"inline\">Promise</code> of those. Returning a <code class=\"inline\">UrlTree</code> is the clean way to redirect:</p>" +
+        "<pre><code>export const authGuard: CanActivateFn = (route, state) =&gt; {\n  const auth = inject(AuthService);\n  const router = inject(Router);\n  return auth.isLoggedIn()\n    ? true\n    : router.createUrlTree(['/login'], { queryParams: { returnUrl: state.url } });\n};</code></pre>" +
+        "<h4>Functional guards (modern) vs class guards (legacy)</h4>" +
+        "<p>Since v14, guards are plain functions (<code class=\"inline\">CanActivateFn</code>) using <code class=\"inline\">inject()</code> — less boilerplate than the old class-based <code class=\"inline\">implements CanActivate</code>. Wire them in the route config:</p>" +
+        "<pre><code>{ path: 'admin', canActivate: [authGuard], loadComponent: ... }\n{ path: 'edit', canDeactivate: [unsavedChangesGuard] }</code></pre>" +
+        "<h4>CanDeactivate pattern</h4>" +
+        "<pre><code>export const unsavedChangesGuard: CanDeactivateFn&lt;EditComponent&gt; =\n  (component) =&gt; component.form.pristine || confirm('Discard changes?');</code></pre>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“Guards gate navigation. <code class=\"inline\">CanActivate</code>/<code class=\"inline\">CanActivateChild</code> protect entering routes, <code class=\"inline\">CanDeactivate</code> confirms leaving, <code class=\"inline\">CanMatch</code> decides whether a route (including its lazy bundle) is used at all, and <code class=\"inline\">Resolve</code> pre-fetches data. Modern guards are functions using <code class=\"inline\">inject()</code>, and returning a <code class=\"inline\">UrlTree</code> is the idiomatic redirect.”</p>"
     },
     {
       id: "ng-debug-undefined",
@@ -862,7 +1047,141 @@
         "</ul>",
       tip: "Match the tool to the app size — don't reach for NgRx on a small app.",
       code: "",
-      lang: ""
+      lang: "",
+      deep:
+        "<h4>The spectrum, smallest to largest</h4>" +
+        "<table><thead><tr><th>Option</th><th>Good for</th><th>Trade-off</th></tr></thead><tbody>" +
+        "<tr><td>Component state / <code class=\"inline\">@Input</code></td><td>local, single component</td><td>doesn't scale to shared state</td></tr>" +
+        "<tr><td>Service + <code class=\"inline\">BehaviorSubject</code></td><td>small–medium shared state</td><td>manual, boilerplate for complex flows</td></tr>" +
+        "<tr><td>Service + Signals</td><td>modern shared/local state</td><td>newer; async still needs RxJS</td></tr>" +
+        "<tr><td>NgRx SignalStore</td><td>structured store, less boilerplate than classic NgRx</td><td>learning curve</td></tr>" +
+        "<tr><td>NgRx (Store/Effects)</td><td>large apps needing traceability, DevTools, time-travel</td><td>most boilerplate</td></tr>" +
+        "</tbody></table>" +
+        "<h4>Service + BehaviorSubject — the workhorse</h4>" +
+        "<pre><code>@Injectable({ providedIn: 'root' })\nexport class CartService {\n  private items$ = new BehaviorSubject&lt;Item[]&gt;([]);\n  readonly items = this.items$.asObservable();\n  add(i: Item) { this.items$.next([...this.items$.value, i]); }\n}</code></pre>" +
+        "<p>Expose a read-only stream, mutate through methods. This covers a surprising amount of real-world apps.</p>" +
+        "<h4>Signal-based store</h4>" +
+        "<pre><code>@Injectable({ providedIn: 'root' })\nexport class CounterStore {\n  private _count = signal(0);\n  count = this._count.asReadonly();\n  double = computed(() =&gt; this._count() * 2);\n  inc() { this._count.update(n =&gt; n + 1); }\n}</code></pre>" +
+        "<h4>When NgRx earns its keep</h4>" +
+        "<p>Reach for NgRx when many components share complex state, you need an audit trail of <em>how</em> state changed (actions), time-travel debugging, or well-defined side-effect handling (Effects). Its cost is boilerplate — actions, reducers, selectors, effects — so it's overkill for small apps.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“I scale the tool to the app. Local state stays in the component; shared state goes in a service with a <code class=\"inline\">BehaviorSubject</code> or signals. I only introduce NgRx (or SignalStore) when the app is large enough to need structured actions, traceability, and DevTools — otherwise it’s just boilerplate.”</p>"
+    },
+    {
+      id: "ng-constructor-vs-ngoninit",
+      category: "angular",
+      difficulty: "beginner",
+      tags: ["V.Imp", "lifecycle", "constructor"],
+      question: "constructor vs ngOnInit — what's the difference?",
+      answer:
+        "<p>The <strong>constructor</strong> is a TypeScript/JS class feature that runs when the class is instantiated — Angular uses it only to <strong>inject dependencies</strong>. <strong>ngOnInit</strong> is an Angular lifecycle hook that runs <em>after</em> the first change detection, once <code class=\"inline\">@Input</code> values are set.</p>" +
+        "<p>Rule of thumb: <strong>inject in the constructor, initialise in ngOnInit</strong> (data fetching, setup that needs inputs).</p>",
+      tip: "@Input values are undefined in the constructor — that alone is why real init belongs in ngOnInit.",
+      code: "constructor(private api: ApiService) {}   // DI only\nngOnInit() { this.user = this.api.getUser(this.id); } // id is ready here",
+      lang: "ts",
+      deep:
+        "<h4>Why two places at all?</h4>" +
+        "<p>The constructor fires the instant Angular creates the component object — before it has wired up bindings or rendered anything. So <code class=\"inline\">@Input</code> properties are still <code class=\"inline\">undefined</code> and the DOM/<code class=\"inline\">@ViewChild</code> don't exist yet. <code class=\"inline\">ngOnInit</code> runs a beat later, after the first <code class=\"inline\">ngOnChanges</code>, so inputs are populated.</p>" +
+        "<table><thead><tr><th></th><th>constructor</th><th>ngOnInit</th></tr></thead><tbody>" +
+        "<tr><td>Belongs to</td><td>the class (TS)</td><td>Angular lifecycle</td></tr>" +
+        "<tr><td>Runs</td><td>on instantiation</td><td>after first ngOnChanges</td></tr>" +
+        "<tr><td>@Input ready?</td><td>no</td><td>yes</td></tr>" +
+        "<tr><td>Use for</td><td>dependency injection</td><td>init logic, data fetch</td></tr>" +
+        "</tbody></table>" +
+        "<pre><code>@Input() id!: string;\nconstructor(private api: ApiService) {\n  console.log(this.id); // undefined 😖\n}\nngOnInit() {\n  console.log(this.id); // 'abc' ✅\n  this.api.getUser(this.id).subscribe(u =&gt; this.user = u);\n}</code></pre>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“The constructor is a class feature Angular uses for dependency injection — inputs aren’t set yet. <code class=\"inline\">ngOnInit</code> runs after the first change detection when inputs are available, so I do initialization and data fetching there.”</p>"
+    },
+    {
+      id: "ng-trackby",
+      category: "angular",
+      difficulty: "intermediate",
+      tags: ["performance", "ngfor", "trackby"],
+      question: "What is trackBy in *ngFor and why use it?",
+      answer:
+        "<p>By default <code class=\"inline\">*ngFor</code> tracks list items by object identity, so if the array reference changes (e.g. after an HTTP refresh) Angular destroys and recreates <em>every</em> DOM node. A <strong>trackBy</strong> function tells Angular how to identify an item (usually by <code class=\"inline\">id</code>), so it only re-renders the rows that actually changed.</p>",
+      tip: "trackBy is the fix for a list that flickers or loses input focus when the data reloads.",
+      code: "<li *ngFor=\"let u of users; trackBy: trackById\">{{ u.name }}</li>\n\ntrackById(index: number, u: User) { return u.id; }\n// v17 control flow: @for (u of users; track u.id) { ... }",
+      lang: "ts",
+      deep:
+        "<h4>The problem it solves</h4>" +
+        "<p>When you reassign a list (<code class=\"inline\">this.users = [...fresh]</code>), the new objects have new references. Without <code class=\"inline\">trackBy</code>, Angular can't tell they represent the same rows, so it tears down and rebuilds the whole list — expensive, and it drops DOM state like scroll position, focus, or CSS animations.</p>" +
+        "<h4>How trackBy fixes it</h4>" +
+        "<p>Return a stable unique key per item. Angular then diffs by that key and touches only added/removed/changed rows.</p>" +
+        "<pre><code>trackById(index: number, item: User): number {\n  return item.id;\n}</code></pre>" +
+        "<p>In the v17+ control flow, <code class=\"inline\">track</code> is <strong>mandatory</strong>: <code class=\"inline\">@for (u of users; track u.id) { }</code>.</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“<code class=\"inline\">trackBy</code> gives each item a stable identity so <code class=\"inline\">*ngFor</code> reuses DOM nodes instead of rebuilding the whole list when the array reference changes — a big win for large or frequently-refreshed lists.”</p>"
+    },
+    {
+      id: "ng-forroot-forchild",
+      category: "angular",
+      difficulty: "intermediate",
+      tags: ["modules", "routing", "providers"],
+      question: "forRoot() vs forChild() — what's the difference?",
+      answer:
+        "<p>A pattern for modules that provide services. <strong>forRoot()</strong> is called <em>once</em> in the root/app module and registers the module's providers (singletons). <strong>forChild()</strong> is called in feature modules and registers routes/components <em>without</em> re-creating those providers.</p>" +
+        "<p>Classic example: <code class=\"inline\">RouterModule.forRoot(routes)</code> at the app root, <code class=\"inline\">RouterModule.forChild(routes)</code> in each lazy feature.</p>",
+      tip: "Calling forRoot() twice can create duplicate service instances — that's exactly the bug the pattern prevents.",
+      code: "// app: RouterModule.forRoot(appRoutes)\n// feature: RouterModule.forChild(featureRoutes)",
+      lang: "ts"
+    },
+    {
+      id: "ng-expression-changed",
+      category: "angular",
+      difficulty: "advanced",
+      tags: ["change-detection", "errors", "debugging"],
+      question: "What causes ExpressionChangedAfterItHasBeenCheckedError?",
+      answer:
+        "<p>In dev mode Angular runs change detection twice and compares. If a bound value <strong>changed between the two passes</strong> — usually because you mutated it in a lifecycle hook like <code class=\"inline\">ngAfterViewInit</code> that runs after the view was already checked — it throws this error to warn of an inconsistent view.</p>",
+      tip: "It only appears in dev mode — but it signals a real bug: your view and model briefly disagreed.",
+      code: "// Fixes:\n// 1) move the update earlier (ngOnInit)\n// 2) defer it: setTimeout(() => this.value = x) or a microtask\n// 3) cdRef.detectChanges() after the change",
+      lang: "ts",
+      deep:
+        "<h4>Why it happens</h4>" +
+        "<p>To guarantee the rendered DOM matches the model, dev-mode Angular does a second change-detection pass right after the first and checks that nothing changed. If a value updated in between, the two passes disagree and Angular throws — because in production (single pass) the user would see a stale value.</p>" +
+        "<h4>Typical trigger</h4>" +
+        "<pre><code>@ViewChild('box') box!: ElementRef;\nngAfterViewInit() {\n  this.height = this.box.nativeElement.offsetHeight; // bound in the template\n} // ❌ view was already checked this cycle</code></pre>" +
+        "<h4>Fixes</h4>" +
+        "<ul>" +
+        "<li>Move the change to an earlier hook (<code class=\"inline\">ngOnInit</code>) if possible.</li>" +
+        "<li>Defer it to the next tick: <code class=\"inline\">setTimeout(() =&gt; this.height = h)</code> or <code class=\"inline\">Promise.resolve().then(...)</code>.</li>" +
+        "<li>Force a re-check: inject <code class=\"inline\">ChangeDetectorRef</code> and call <code class=\"inline\">detectChanges()</code> after updating.</li>" +
+        "</ul>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“It’s a dev-mode guard: Angular checks the view twice and a bound value changed after the first check — usually from updating state in <code class=\"inline\">ngAfterViewInit</code>. I fix it by moving the update earlier, deferring it a tick, or calling <code class=\"inline\">detectChanges()</code>.”</p>"
+    },
+    {
+      id: "ng-observable-vs-promise",
+      category: "angular",
+      difficulty: "intermediate",
+      tags: ["V.Imp", "rxjs", "async"],
+      question: "Observable vs Promise — what's the difference?",
+      answer:
+        "<ul>" +
+        "<li><strong>Promise</strong> — a single future value; eager (runs immediately); not cancellable; no operators.</li>" +
+        "<li><strong>Observable</strong> — a stream of 0..∞ values over time; lazy (runs only on <code class=\"inline\">subscribe</code>); cancellable via <code class=\"inline\">unsubscribe</code>; rich operators (<code class=\"inline\">map</code>, <code class=\"inline\">switchMap</code>, <code class=\"inline\">debounceTime</code>).</li>" +
+        "</ul>" +
+        "<p>Angular's <code class=\"inline\">HttpClient</code> returns Observables, which is why they dominate Angular apps.</p>",
+      tip: "Say the three big wins: multiple values, lazy, and cancellable — plus operators.",
+      code: "// promise: fires now, one value\nfetch('/api').then(r => r.json());\n// observable: fires on subscribe, cancellable\nthis.http.get('/api').subscribe(data => ...);",
+      lang: "ts",
+      deep:
+        "<h4>Side-by-side</h4>" +
+        "<table><thead><tr><th></th><th>Promise</th><th>Observable</th></tr></thead><tbody>" +
+        "<tr><td>Values</td><td>exactly one</td><td>zero to many, over time</td></tr>" +
+        "<tr><td>Eager/lazy</td><td>eager (runs on creation)</td><td>lazy (runs on subscribe)</td></tr>" +
+        "<tr><td>Cancel</td><td>no</td><td>yes (unsubscribe)</td></tr>" +
+        "<tr><td>Operators</td><td>none</td><td>map, filter, switchMap…</td></tr>" +
+        "<tr><td>Retry</td><td>manual</td><td><code class=\"inline\">retry()</code> operator</td></tr>" +
+        "</tbody></table>" +
+        "<h4>Lazy matters</h4>" +
+        "<p>A Promise starts its work the moment it's created. An Observable does nothing until something subscribes — so an unsubscribed HTTP Observable never even fires the request. That laziness is what enables cancellation and operators like <code class=\"inline\">switchMap</code> (cancel the previous request when a new one starts).</p>" +
+        "<pre><code>// typeahead: cancel stale requests automatically\nthis.query$.pipe(\n  debounceTime(300),\n  switchMap(q =&gt; this.http.get(`/search?q=${q}`))\n).subscribe(...);</code></pre>" +
+        "<h4>Interop</h4>" +
+        "<p>Convert with <code class=\"inline\">firstValueFrom(obs)</code> (Observable→Promise) or <code class=\"inline\">from(promise)</code> (Promise→Observable).</p>" +
+        "<h4>How to say it in an interview</h4>" +
+        "<p>“A Promise resolves once, eagerly, and can’t be cancelled. An Observable is a lazy, cancellable stream of many values with a big operator library — which is why Angular’s HttpClient and reactive forms use Observables.”</p>"
     }
   ];
 })();
