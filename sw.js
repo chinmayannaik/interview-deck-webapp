@@ -43,20 +43,21 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-/* stale-while-revalidate for same-origin GET:
-   serve cache instantly (offline-friendly) but always refresh it in the
-   background, so updated CSS/JS propagate on the next load without a version bump. */
+/* network-first for same-origin GET:
+   always try the network so readers get the LATEST deploy every time they're
+   online (new questions show up immediately, no version bump needed), and fall
+   back to the cached copy only when offline. Each successful fetch refreshes the
+   cache so the offline fallback stays current. */
 self.addEventListener("fetch", (e) => {
   const req = e.request;
   if (req.method !== "GET" || new URL(req.url).origin !== location.origin) return;
   e.respondWith(
-    caches.match(req).then((cached) => {
-      const network = fetch(req).then((res) => {
+    fetch(req)
+      .then((res) => {
         const copy = res.clone();
         caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
         return res;
-      }).catch(() => cached);
-      return cached || network;
-    })
+      })
+      .catch(() => caches.match(req))
   );
 });
