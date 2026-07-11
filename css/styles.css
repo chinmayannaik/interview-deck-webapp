@@ -52,6 +52,7 @@
   font-size: 16px; transition: var(--trans); flex: 0 0 auto;
 }
 .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+.icon-btn.signed-in { border-color: var(--accent); color: var(--accent); font-weight: 800; }
 
 /* ---------- hero ---------- */
 .hero { padding: clamp(30px, 6vw, 60px) clamp(14px, 3vw, 28px) clamp(22px, 3vw, 34px); border-bottom: 1px solid var(--border); }

@@ -12,6 +12,7 @@ const CORE = [
   "./js/utils.js",
   "./js/storage.js",
   "./js/app.js",
+  "./js/sync.js",
   "./data/angular.js",
   "./data/javascript.js",
   "./data/typescript.js",

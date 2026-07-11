@@ -483,15 +483,30 @@
     if (bookmarks.has(id)) { bookmarks.delete(id); btn.classList.remove("on"); btn.textContent = "☆"; }
     else { bookmarks.add(id); btn.classList.add("on"); btn.textContent = "★"; }
     store.saveBookmarks(bookmarks);
+    syncPush();
     if (state.bookmarkedOnly) render();
   }
   function toggleDone(id, btn, card) {
     if (progress.has(id)) { progress.delete(id); btn.classList.remove("on"); btn.textContent = "○ Mark as done"; card.classList.remove("done"); }
     else { progress.add(id); btn.classList.add("on"); btn.textContent = "✓ Completed"; card.classList.add("done"); }
     store.saveProgress(progress);
+    syncPush();
     updateProgressBar();
   }
   function markOpened(id) { store.setLastOpened(id); }
+
+  /* ---- bridge for the optional cloud-sync module (js/sync.js) ---- */
+  function syncPush() { if (window.IQB.sync) window.IQB.sync.pushSoon(); }
+  function getSyncData() {
+    return { progress: Array.from(progress), bookmarks: Array.from(bookmarks) };
+  }
+  function setSyncData(data) {
+    if (data && Array.isArray(data.progress)) { progress = new Set(data.progress); store.saveProgress(progress); }
+    if (data && Array.isArray(data.bookmarks)) { bookmarks = new Set(data.bookmarks); store.saveBookmarks(bookmarks); }
+    render();
+    updateProgressBar();
+  }
+  IQB.app = { getData: getSyncData, setData: setSyncData };
   function updateProgressBar() {
     const fill = qs("#progress-fill", sideEl);
     const label = qs("#progress-label", sideEl);
