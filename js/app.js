@@ -395,7 +395,9 @@
       star
     ]);
 
-    const question = el("div", { class: "qa-question", html: q.question });
+    // question is plain text — use text (not html) so literal tags like
+    // "<!DOCTYPE html>" or "<router-outlet>" render instead of being parsed away
+    const question = el("div", { class: "qa-question", text: q.question });
 
     const tags = el("div", { class: "qa-tags" },
       (q.tags || []).slice(0, 5).map((t) =>
