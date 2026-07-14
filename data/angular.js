@@ -35,6 +35,7 @@
       tip: "The constructor is for dependency injection only; the DOM and inputs aren't ready yet — do real work in ngOnInit.",
       code: "",
       lang: "",
+      youtube: "https://youtu.be/jFk9-zV27BE",
       deep:
         "<h4>The full sequence &amp; how often each runs</h4>" +
         "<table><thead><tr><th>Hook</th><th>When</th><th>How often</th></tr></thead><tbody>" +
@@ -208,6 +209,7 @@
       tip: "Lazy loading is the single biggest lever for initial load performance in large apps.",
       code: "{ path: 'admin', loadComponent: () =>\n  import('./admin.component').then(m => m.AdminComponent) }",
       lang: "ts",
+      youtube: "https://youtu.be/nVUUSGYLYPI"
     },
     {
       id: "ng-interceptor",

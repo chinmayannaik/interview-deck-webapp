@@ -453,7 +453,20 @@
       onclick: (e) => { e.stopPropagation(); copyText(location.origin + location.pathname + "#q=" + q.id, e.currentTarget, "Link copied"); }
     }, "🔗 Copy link");
 
-    inner.appendChild(el("div", { class: "qa-body-actions" }, [doneBtn, linkBtn]));
+    const actions = [doneBtn, linkBtn];
+    if (q.youtube && q.youtube.trim()) {
+      const ytBtn = el("a", {
+        class: "qa-act",
+        href: q.youtube,
+        target: "_blank",
+        rel: "noopener noreferrer",
+        onclick: (e) => { e.stopPropagation(); }
+      });
+      ytBtn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="#FF0000" style="flex-shrink: 0;"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>Learn More`;
+      actions.push(ytBtn);
+    }
+
+    inner.appendChild(el("div", { class: "qa-body-actions" }, actions));
 
     const body = el("div", { class: "qa-body" }, [inner]);
 

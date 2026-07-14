@@ -208,7 +208,7 @@
     p.setAttribute("aria-label", "Sign in to save your progress");
     p.innerHTML =
       '<button class="lp-close" id="lp-close" type="button" aria-label="Dismiss">✕</button>' +
-      '<div class="lp-title">💾 Save your progress</div>' +
+      '<div class="lp-title">Save your progress</div>' +
       '<div class="lp-text">Sign in with Google to sync your completed questions and bookmarks across all your devices. It’s optional — you can keep using the site without it.</div>' +
       '<div class="lp-actions">' +
         '<button class="lp-signin" id="lp-signin" type="button">Sign in with Google</button>' +
