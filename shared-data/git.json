@@ -1,0 +1,142 @@
+[
+  {
+    "id": "git-merge-rebase",
+    "category": "git",
+    "difficulty": "intermediate",
+    "tags": [
+      "merge",
+      "rebase",
+      "history"
+    ],
+    "question": "Merge vs rebase.",
+    "answer": "<p><strong>Merge</strong> combines branches with a merge commit — preserves the true history, non-destructive.</p><p><strong>Rebase</strong> replays your commits on top of another branch — a linear, clean history, but rewrites commits. Never rebase branches others have pulled.</p>",
+    "tip": "Golden rule: don't rebase shared/public branches.",
+    "code": "git rebase main   # replay feature commits onto main",
+    "lang": "bash"
+  },
+  {
+    "id": "git-fetch-pull",
+    "category": "git",
+    "difficulty": "beginner",
+    "tags": [
+      "fetch",
+      "pull"
+    ],
+    "question": "git fetch vs git pull.",
+    "answer": "<p><strong>fetch</strong> downloads remote changes but doesn't touch your working branch — you can inspect first. <strong>pull</strong> = fetch + merge (or rebase) into your current branch in one step.</p>",
+    "tip": "Use fetch + review before merging when you want to see what changed.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "git-reset-revert",
+    "category": "git",
+    "difficulty": "advanced",
+    "tags": [
+      "reset",
+      "revert",
+      "undo"
+    ],
+    "question": "reset vs revert vs checkout.",
+    "answer": "<ul><li><strong>revert</strong> — creates a new commit that undoes a previous one; safe on shared branches.</li><li><strong>reset</strong> — moves the branch pointer (soft/mixed/hard); rewrites history, use locally.</li><li><strong>checkout / switch / restore</strong> — move between branches or restore files.</li></ul>",
+    "tip": "On a shared branch, undo with revert (safe), not reset (rewrites history).",
+    "code": "git revert <hash>   # safe undo\ngit reset --hard HEAD~1  # local-only",
+    "lang": "bash"
+  },
+  {
+    "id": "git-stash",
+    "category": "git",
+    "difficulty": "beginner",
+    "tags": [
+      "stash"
+    ],
+    "question": "What does git stash do?",
+    "answer": "<p>Temporarily shelves uncommitted changes so you can switch context (e.g. fix an urgent bug on another branch), then reapply them with <code class=\"inline\">git stash pop</code>.</p>",
+    "tip": "git stash pop applies and drops; git stash apply keeps the stash.",
+    "code": "git stash\ngit switch main\n# ... later ...\ngit switch feature && git stash pop",
+    "lang": "bash"
+  },
+  {
+    "id": "git-cherry-pick",
+    "category": "git",
+    "difficulty": "intermediate",
+    "tags": [
+      "cherry-pick"
+    ],
+    "question": "What is git cherry-pick?",
+    "answer": "<p>Applies a single specific commit from one branch onto another — useful for hotfixes you need on multiple branches without merging everything.</p>",
+    "tip": "Great for porting one bug-fix commit to a release branch.",
+    "code": "git cherry-pick <hash>",
+    "lang": "bash"
+  },
+  {
+    "id": "git-gitflow",
+    "category": "git",
+    "difficulty": "intermediate",
+    "tags": [
+      "workflow",
+      "gitflow",
+      "branching"
+    ],
+    "question": "Describe a common branching strategy.",
+    "answer": "<p><strong>GitFlow</strong> — long-lived <code class=\"inline\">main</code> and <code class=\"inline\">develop</code>, plus <code class=\"inline\">feature/*</code>, <code class=\"inline\">release/*</code>, and <code class=\"inline\">hotfix/*</code> branches. Simpler alternative: <strong>trunk-based</strong> / <strong>GitHub Flow</strong> — short-lived feature branches merged to main via pull requests.</p>",
+    "tip": "Most modern teams favour short-lived branches + PRs over full GitFlow.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "git-conflict",
+    "category": "git",
+    "difficulty": "intermediate",
+    "tags": [
+      "merge-conflict"
+    ],
+    "question": "How do you resolve a merge conflict?",
+    "answer": "<p>Git marks conflicting regions with <code class=\"inline\">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> / <code class=\"inline\">=======</code> / <code class=\"inline\">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>. Edit to the desired result, remove the markers, <code class=\"inline\">git add</code> the files, then commit (or <code class=\"inline\">git rebase --continue</code>).</p>",
+    "tip": "Pull/rebase frequently to keep conflicts small and manageable.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "git-reflog",
+    "category": "git",
+    "difficulty": "advanced",
+    "tags": [
+      "reflog",
+      "recovery"
+    ],
+    "question": "How do you recover a 'lost' commit?",
+    "answer": "<p><code class=\"inline\">git reflog</code> logs where HEAD has been, including commits orphaned by a reset/rebase. Find the hash and <code class=\"inline\">git checkout</code> or <code class=\"inline\">git reset</code> back to it.</p>",
+    "tip": "reflog is the safety net after a bad reset — commits aren't truly gone immediately.",
+    "code": "git reflog\ngit reset --hard <hash>",
+    "lang": "bash"
+  },
+  {
+    "id": "git-squash",
+    "category": "git",
+    "difficulty": "intermediate",
+    "tags": [
+      "squash",
+      "history"
+    ],
+    "question": "What is squashing and why do it?",
+    "answer": "<p>Combining several commits into one (via interactive rebase or a squash-merge) to keep the main branch history clean — one logical change = one commit.</p>",
+    "tip": "Squash-merge on PRs keeps main's history readable without losing branch detail.",
+    "code": "git rebase -i HEAD~3   # mark commits as 'squash'",
+    "lang": "bash"
+  },
+  {
+    "id": "git-head",
+    "category": "git",
+    "difficulty": "beginner",
+    "tags": [
+      "head",
+      "detached"
+    ],
+    "question": "What is HEAD and a detached HEAD?",
+    "answer": "<p><strong>HEAD</strong> points to your current commit/branch. A <strong>detached HEAD</strong> means you've checked out a specific commit rather than a branch — new commits there aren't on any branch and can be lost unless you create one.</p>",
+    "tip": "If you commit in detached HEAD, make a branch before switching away.",
+    "code": "git switch -c new-branch  # save detached-HEAD work",
+    "lang": "bash"
+  }
+]

@@ -1,7 +1,7 @@
 {
-  "name": "Interview Questions Bank",
-  "short_name": "IQ Bank",
-  "description": "Master Angular, JavaScript, TypeScript and Frontend interviews — a searchable question bank.",
+  "name": "Interview Helper: Coding & Interview Questions",
+  "short_name": "Interview Helper",
+  "description": "A searchable bank of coding and interview questions with practice mode, bookmarks and progress tracking.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,7 +9,8 @@
   "background_color": "#FBF9F8",
   "theme_color": "#C21836",
   "icons": [
-    { "src": "assets/favicon/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "assets/favicon/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/favicon/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ],
   "categories": ["education", "productivity"]
 }

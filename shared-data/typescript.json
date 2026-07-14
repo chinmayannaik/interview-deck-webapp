@@ -1,0 +1,337 @@
+[
+  {
+    "id": "ts-interface-type",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "types",
+      "interface"
+    ],
+    "question": "interface vs type — what's the difference?",
+    "answer": "<p>Both describe shapes. <strong>interface</strong> can be re-opened/merged (declaration merging) and is the idiom for object/class contracts. <strong>type</strong> is more flexible — it can be a union, intersection, tuple, or alias a primitive.</p><p>Rule of thumb: <code class=\"inline\">interface</code> for public object shapes, <code class=\"inline\">type</code> for unions and utility compositions.</p>",
+    "tip": "Only type can express a union like 'a' | 'b'.",
+    "code": "type Status = 'active' | 'inactive';\ninterface User { id: number; name: string; }",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-any-unknown-never",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "types",
+      "any",
+      "unknown",
+      "never"
+    ],
+    "question": "any vs unknown vs never.",
+    "answer": "<ul><li><strong>any</strong> — turns off type checking (avoid).</li><li><strong>unknown</strong> — a safe any; you must narrow it before use.</li><li><strong>never</strong> — a value that can't exist (a function that always throws, or an exhausted union).</li></ul>",
+    "tip": "Prefer unknown over any for untyped input like JSON.parse results.",
+    "code": "let val: unknown = JSON.parse(str);\nif (typeof val === 'string') val.toUpperCase(); // narrowed",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-generics",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "generics"
+    ],
+    "question": "What are generics?",
+    "answer": "<p>Generics let a function/class/interface work over a type supplied by the caller while keeping type safety. The type flows through instead of being fixed or <code class=\"inline\">any</code>.</p>",
+    "tip": "Constrain generics with extends to require certain shapes: <T extends { id: number }>.",
+    "code": "function first<T>(arr: T[]): T { return arr[0]; }\nfirst<string>(['a', 'b']); // returns string",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-utility-types",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "utility-types"
+    ],
+    "question": "Name some built-in utility types.",
+    "answer": "<ul><li><code class=\"inline\">Partial&lt;T&gt;</code> — all props optional (patch/update DTOs).</li><li><code class=\"inline\">Required&lt;T&gt;</code> — all props required.</li><li><code class=\"inline\">Pick&lt;T,K&gt;</code> / <code class=\"inline\">Omit&lt;T,K&gt;</code> — select or exclude keys.</li><li><code class=\"inline\">Record&lt;K,V&gt;</code> — a map/dictionary type.</li><li><code class=\"inline\">Readonly&lt;T&gt;</code> — immutable props.</li></ul>",
+    "tip": "Partial<T> is perfect for update payloads where only some fields change.",
+    "code": "type UserPatch = Partial<User>;\ntype Roles = Record<string, boolean>;",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-enums",
+    "category": "typescript",
+    "difficulty": "beginner",
+    "tags": [
+      "enums"
+    ],
+    "question": "What are enums, and what's a union alternative?",
+    "answer": "<p><strong>enum</strong> defines a set of named constants. Numeric enums generate reverse mappings; string enums are more readable in logs.</p><p>Many teams prefer a <strong>string literal union</strong> (<code class=\"inline\">type Size = 'sm' | 'md' | 'lg'</code>) — it's lighter and tree-shakable, with no runtime object.</p>",
+    "tip": "const enums and string-literal unions avoid emitting runtime code.",
+    "code": "enum Role { Admin = 'ADMIN', User = 'USER' }",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-access-modifiers",
+    "category": "typescript",
+    "difficulty": "beginner",
+    "tags": [
+      "oop",
+      "modifiers"
+    ],
+    "question": "Explain public, private, protected, readonly.",
+    "answer": "<ul><li><strong>public</strong> (default) — accessible anywhere.</li><li><strong>private</strong> — only within the class.</li><li><strong>protected</strong> — within the class and subclasses.</li><li><strong>readonly</strong> — assignable once (in declaration or constructor).</li></ul>",
+    "tip": "Parameter properties let you declare + assign in the constructor in one line.",
+    "code": "constructor(private http: HttpClient, readonly id: string) {}",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-type-narrowing",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "narrowing",
+      "guards"
+    ],
+    "question": "What is type narrowing / type guards?",
+    "answer": "<p>Refining a broad type to a specific one within a block using checks like <code class=\"inline\">typeof</code>, <code class=\"inline\">instanceof</code>, <code class=\"inline\">in</code>, or a custom <strong>type predicate</strong> (<code class=\"inline\">x is Cat</code>). TypeScript then knows the precise type inside that branch.</p>",
+    "tip": "Custom guards return 'param is Type' to teach the compiler.",
+    "code": "function isCat(a: Animal): a is Cat { return 'meow' in a; }",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-unknown-vs-any-return",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "union",
+      "intersection"
+    ],
+    "question": "Union vs intersection types.",
+    "answer": "<p><strong>Union</strong> (<code class=\"inline\">A | B</code>) — the value is one of the types. <strong>Intersection</strong> (<code class=\"inline\">A &amp; B</code>) — the value has all properties of both.</p>",
+    "tip": "Union = OR, intersection = AND.",
+    "code": "type Id = string | number;      // union\ntype Employee = Person & Staff;  // intersection",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-optional-vs-undefined",
+    "category": "typescript",
+    "difficulty": "beginner",
+    "tags": [
+      "optional",
+      "strict"
+    ],
+    "question": "What does strictNullChecks do?",
+    "answer": "<p>With <code class=\"inline\">strictNullChecks</code> on, <code class=\"inline\">null</code> and <code class=\"inline\">undefined</code> are not assignable to other types unless explicitly included — the compiler forces you to handle empty values, preventing a whole class of runtime errors.</p>",
+    "tip": "It's part of the recommended strict: true preset — always enable it.",
+    "code": "let name: string | null = null; // only allowed because of the union",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-mapped-types",
+    "category": "typescript",
+    "difficulty": "advanced",
+    "tags": [
+      "mapped-types"
+    ],
+    "question": "What are mapped types?",
+    "answer": "<p>Types that transform each property of another type. Utility types like <code class=\"inline\">Partial</code> and <code class=\"inline\">Readonly</code> are mapped types under the hood.</p>",
+    "tip": "Combine with keyof to iterate a type's keys.",
+    "code": "type Optional<T> = { [K in keyof T]?: T[K] };",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-keyof-typeof",
+    "category": "typescript",
+    "difficulty": "advanced",
+    "tags": [
+      "keyof",
+      "typeof"
+    ],
+    "question": "What do keyof and typeof do at the type level?",
+    "answer": "<p><code class=\"inline\">keyof T</code> produces a union of a type's property names. Type-level <code class=\"inline\">typeof value</code> captures the type of an existing value/const so you can derive types from data.</p>",
+    "tip": "typeof + keyof lets you build types from a constant config object.",
+    "code": "const config = { host: '', port: 0 };\ntype ConfigKey = keyof typeof config; // 'host' | 'port'",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-decorators",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "decorators",
+      "angular"
+    ],
+    "question": "What are decorators (as used in Angular)?",
+    "answer": "<p>Decorators are functions that add metadata/behaviour to classes, methods, properties, or parameters. Angular relies on them heavily: <code class=\"inline\">@Component</code>, <code class=\"inline\">@Injectable</code>, <code class=\"inline\">@Input</code>, <code class=\"inline\">@Output</code>.</p>",
+    "tip": "They require experimentalDecorators / emitDecoratorMetadata in tsconfig (Angular sets this up).",
+    "code": "@Input() label = '';\n@Output() change = new EventEmitter();",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-as-const",
+    "category": "typescript",
+    "difficulty": "advanced",
+    "tags": [
+      "as-const",
+      "literal"
+    ],
+    "question": "What does 'as const' do?",
+    "answer": "<p>A <strong>const assertion</strong> makes a value deeply readonly and narrows it to its literal types instead of the widened primitive — useful for building precise union types from arrays/objects.</p>",
+    "tip": "Great for turning a list of strings into a literal union type.",
+    "code": "const sizes = ['sm', 'md', 'lg'] as const;\ntype Size = typeof sizes[number]; // 'sm' | 'md' | 'lg'",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-non-null",
+    "category": "typescript",
+    "difficulty": "beginner",
+    "tags": [
+      "operators",
+      "non-null"
+    ],
+    "question": "What is the non-null assertion operator (!)?",
+    "answer": "<p>The postfix <code class=\"inline\">!</code> tells the compiler 'this value is definitely not null/undefined here'. It removes the check but does <em>not</em> add a runtime guard — use it only when you're certain.</p>",
+    "tip": "Overusing ! defeats strictNullChecks — narrow properly when you can.",
+    "code": "@ViewChild('el') el!: ElementRef; // asserted, assigned by Angular later",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-discriminated-union",
+    "category": "typescript",
+    "difficulty": "advanced",
+    "tags": [
+      "union",
+      "discriminated",
+      "narrowing"
+    ],
+    "question": "What is a discriminated (tagged) union?",
+    "answer": "<p>A union of object types that share a common literal <em>tag</em> field. Switching on that tag lets TypeScript narrow to the exact member, giving type-safe, exhaustive handling — great for state machines and Redux/NgRx actions.</p>",
+    "tip": "Add a `never` default case so the compiler errors if you forget a variant.",
+    "code": "type Shape =\n  | { kind: 'circle'; r: number }\n  | { kind: 'square'; side: number };\nfunction area(s: Shape) {\n  switch (s.kind) {\n    case 'circle': return Math.PI * s.r ** 2;\n    case 'square': return s.side ** 2;\n  }\n}",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-conditional-types",
+    "category": "typescript",
+    "difficulty": "advanced",
+    "tags": [
+      "conditional-types",
+      "generics"
+    ],
+    "question": "What are conditional types?",
+    "answer": "<p>Types that branch based on a condition: <code class=\"inline\">T extends U ? X : Y</code>. They power much of the standard library (e.g. <code class=\"inline\">Exclude</code>, <code class=\"inline\">ReturnType</code>) and let generic types adapt to their inputs.</p>",
+    "tip": "Combine with `infer` to extract a type from within another.",
+    "code": "type NonNull<T> = T extends null | undefined ? never : T;\ntype A = NonNull<string | null>; // string",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-infer",
+    "category": "typescript",
+    "difficulty": "advanced",
+    "tags": [
+      "infer",
+      "conditional-types"
+    ],
+    "question": "What does the infer keyword do?",
+    "answer": "<p>Inside a conditional type, <code class=\"inline\">infer</code> captures a type from a position so you can reuse it — e.g. extract a function's return type or an array's element type.</p>",
+    "tip": "infer is how ReturnType<T> and Parameters<T> are implemented.",
+    "code": "type Return<T> = T extends (...args: any[]) => infer R ? R : never;\ntype R = Return<() => number>; // number",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-index-signature",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "index-signature",
+      "records"
+    ],
+    "question": "What is an index signature?",
+    "answer": "<p>Declares that an object can have arbitrary keys of a given type: <code class=\"inline\">{ [key: string]: number }</code>. Useful for dictionaries when keys aren't known ahead of time. <code class=\"inline\">Record&lt;K, V&gt;</code> is the shorthand.</p>",
+    "tip": "Prefer Record<string, T> for readability over a raw index signature.",
+    "code": "interface Scores { [player: string]: number; }\nconst s: Scores = { alice: 10, bob: 7 };",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-tuple",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "tuple",
+      "types"
+    ],
+    "question": "What are tuple types?",
+    "answer": "<p>Fixed-length arrays with a known type per position — <code class=\"inline\">[string, number]</code>. Support optional and rest elements, and labels for readability. React's <code class=\"inline\">useState</code> return is a tuple.</p>",
+    "tip": "Tuples are how you type a function that returns a pair, like [value, setter].",
+    "code": "type Result = [ok: boolean, message: string];\nconst r: Result = [true, 'saved'];",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-function-overload",
+    "category": "typescript",
+    "difficulty": "advanced",
+    "tags": [
+      "overloads",
+      "functions"
+    ],
+    "question": "What are function overloads?",
+    "answer": "<p>Multiple type signatures for one implementation, so callers get precise return types based on their arguments. Declare the overload signatures, then one compatible implementation signature.</p>",
+    "tip": "Prefer a union or generic if overloads get unwieldy — they're a last resort.",
+    "code": "function get(id: number): User;\nfunction get(ids: number[]): User[];\nfunction get(x: number | number[]) { /* impl */ }",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-abstract-class",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "oop",
+      "abstract"
+    ],
+    "question": "Abstract class vs interface in TypeScript.",
+    "answer": "<p>An <strong>abstract class</strong> can't be instantiated and may provide shared implementation plus <code class=\"inline\">abstract</code> members subclasses must implement. An <strong>interface</strong> is purely a compile-time contract with no implementation and vanishes at runtime.</p>",
+    "tip": "Use an abstract class to share base logic; an interface just to enforce a shape.",
+    "code": "abstract class Base { abstract load(): void; log() {} }",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-satisfies",
+    "category": "typescript",
+    "difficulty": "advanced",
+    "tags": [
+      "satisfies",
+      "inference"
+    ],
+    "question": "What does the satisfies operator do?",
+    "answer": "<p>(TS 4.9+) <code class=\"inline\">satisfies</code> checks that a value matches a type <strong>without widening</strong> it — you keep the precise inferred literal types while still validating the shape. Best of both worlds vs a plain annotation.</p>",
+    "tip": "Use satisfies for config objects so keys/values keep their literal types.",
+    "code": "const routes = { home: '/', about: '/about' } satisfies Record<string, string>;\n// routes.home is '/', not just string",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-template-literal-type",
+    "category": "typescript",
+    "difficulty": "advanced",
+    "tags": [
+      "template-literal-types"
+    ],
+    "question": "What are template literal types?",
+    "answer": "<p>Types built from string literals using template syntax, enabling precise string unions derived from other types — e.g. event names or CSS units.</p>",
+    "tip": "Great for typing things like `on${Capitalize<Event>}` handler names.",
+    "code": "type Size = 'sm' | 'lg';\ntype Class = `btn-${Size}`; // 'btn-sm' | 'btn-lg'",
+    "lang": "ts"
+  },
+  {
+    "id": "ts-generic-constraint",
+    "category": "typescript",
+    "difficulty": "intermediate",
+    "tags": [
+      "generics",
+      "constraints",
+      "keyof"
+    ],
+    "question": "How do you constrain generics (extends, keyof)?",
+    "answer": "<p>Use <code class=\"inline\">extends</code> to require a shape, and <code class=\"inline\">keyof</code> to restrict a parameter to an object's keys — enabling type-safe property access helpers.</p>",
+    "tip": "The typed getProp helper is a classic generics + keyof interview example.",
+    "code": "function getProp<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}\ngetProp({ a: 1 }, 'a'); // number",
+    "lang": "ts"
+  }
+]

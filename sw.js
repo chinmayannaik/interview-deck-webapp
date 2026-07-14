@@ -1,6 +1,14 @@
-/* Service worker — offline-first caching for the Interview Questions Bank.
-   Bump CACHE version when you change core files to force an update. */
-const CACHE = "iqb-v3";
+/* Service worker — offline-first caching for Interview Helper.
+   Bump CACHE version when you change core files to force an update.
+
+   Questions are served from the shared content repo via the jsDelivr CDN
+   (cross-origin), so they're handled by a dedicated runtime rule below. */
+const CACHE = "iqb-v6";
+
+/* the git-hosted single source of truth (same repo the Flutter app reads) */
+const CONTENT_HOST = "cdn.jsdelivr.net";
+const CONTENT_PATH = "/gh/chinmayanaik123/interview-helper-question-bank@";
+
 const CORE = [
   "./",
   "./index.html",
@@ -11,24 +19,9 @@ const CORE = [
   "./css/dark-theme.css",
   "./js/utils.js",
   "./js/storage.js",
+  "./js/data-loader.js",
   "./js/app.js",
   "./js/sync.js",
-  "./data/angular.js",
-  "./data/javascript.js",
-  "./data/typescript.js",
-  "./data/html.js",
-  "./data/css.js",
-  "./data/rxjs.js",
-  "./data/ngrx.js",
-  "./data/java.js",
-  "./data/springboot.js",
-  "./data/sql.js",
-  "./data/git.js",
-  "./data/general.js",
-  "./data/coding.js",
-  "./data/angular-coding.js",
-  "./data/testing.js",
-  "./data/behavioral.js",
   "./assets/favicon/favicon.svg",
   "./assets/favicon/icon.svg"
 ];
@@ -44,14 +37,20 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-/* network-first for same-origin GET:
-   always try the network so readers get the LATEST deploy every time they're
-   online (new questions show up immediately, no version bump needed), and fall
-   back to the cached copy only when offline. Each successful fetch refreshes the
-   cache so the offline fallback stays current. */
+/* network-first with a cache fallback — for BOTH same-origin app files and the
+   cross-origin CDN content. Always try the network so online visitors get the
+   latest content immediately; each success refreshes the cache so the offline
+   fallback stays current. */
 self.addEventListener("fetch", (e) => {
   const req = e.request;
-  if (req.method !== "GET" || new URL(req.url).origin !== location.origin) return;
+  if (req.method !== "GET") return;
+  const url = new URL(req.url);
+
+  const isContent =
+    url.hostname === CONTENT_HOST && url.pathname.includes(CONTENT_PATH);
+  const isSameOrigin = url.origin === location.origin;
+  if (!isContent && !isSameOrigin) return; // ignore other cross-origin (Firebase, fonts…)
+
   e.respondWith(
     fetch(req)
       .then((res) => {

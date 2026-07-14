@@ -1,12 +1,10 @@
 /* ============================================================
    Optional cloud sync — Google sign-in + Firestore.
 
-   Until you paste a real Firebase config below, sync stays OFF and the
-   app behaves exactly as before (progress saved locally per device).
-   Once configured: click the sign-in button, and your completed +
-   bookmarked questions sync across every device you sign in on.
-
-   Setup steps are in README / the message that shipped this file.
+   Signed out: a small dismissible prompt offers sign-in (skippable —
+   progress still saves locally). Signed in: the header avatar opens an
+   account dropdown with a live progress summary, and completed/bookmarked
+   questions sync across devices in real time.
    ============================================================ */
 (function () {
   window.IQB = window.IQB || {};
@@ -24,29 +22,32 @@
 
   const SDK_VERSION = "10.12.2";
   const CONFIGURED = !!firebaseConfig.apiKey && firebaseConfig.apiKey.indexOf("PASTE") === -1;
+  const PROMPT_KEY = "iqb:loginPromptDismissed";
 
   const btn = document.getElementById("auth-btn");
+  if (!CONFIGURED) return; // dormant: app stays local-only
 
-  // Not configured yet → keep the button hidden and do nothing.
-  if (!CONFIGURED) return;
-
-  let fb = null;       // resolved Firebase fns/handles
-  let user = null;     // current signed-in user
-  let unsub = null;    // Firestore snapshot unsubscribe
-  let pushTimer = null;
+  let fb = null, user = null, unsub = null, pushTimer = null;
+  let menuEl = null, promptEl = null;
 
   if (btn) {
     btn.hidden = false;
+    btn.setAttribute("aria-haspopup", "menu");
+    btn.setAttribute("aria-expanded", "false");
     setButton("signed-out");
     btn.addEventListener("click", onButtonClick);
   }
-
-  // expose the one method app.js calls after a local change
   IQB.sync = { pushSoon: pushSoon };
 
-  loadFirebase().then(startAuth).catch((e) => console.warn("[sync] disabled:", e));
+  // close the account menu on outside click / Escape
+  document.addEventListener("click", function (e) {
+    if (menuEl && !menuEl.hidden && !menuEl.contains(e.target) && e.target !== btn && !btn.contains(e.target)) closeMenu();
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
 
-  /* ---- load the modular Firebase SDK straight from the CDN ---- */
+  loadFirebase().then(startAuth).catch(function (e) { console.warn("[sync] disabled:", e); });
+
+  /* ---------- Firebase ---------- */
   async function loadFirebase() {
     const base = "https://www.gstatic.com/firebasejs/" + SDK_VERSION + "/";
     const appMod = await import(base + "firebase-app.js");
@@ -67,26 +68,169 @@
   function startAuth() {
     fb.onAuthStateChanged(fb.auth, function (u) {
       user = u || null;
-      if (user) { setButton("signed-in", user); subscribe(user); }
-      else { setButton("signed-out"); if (unsub) { unsub(); unsub = null; } }
+      if (user) {
+        setButton("signed-in", user);
+        hidePrompt();
+        subscribe(user);
+      } else {
+        setButton("signed-out");
+        if (unsub) { unsub(); unsub = null; }
+        maybeShowPrompt();
+      }
     });
   }
 
-  function onButtonClick() {
+  function signIn() {
     if (!fb) return;
-    if (user) {
-      if (confirm("Sign out of sync?\nYour progress stays saved on this device.")) fb.signOut(fb.auth);
+    fb.signInWithPopup(fb.auth, fb.provider).catch(function (e) {
+      console.warn("[sync] sign-in failed:", e && e.code);
+    });
+  }
+
+  /* ---------- header avatar button ---------- */
+  function onButtonClick(e) {
+    e.stopPropagation();
+    if (user) toggleMenu();
+    else signIn();
+  }
+
+  function setButton(state, u) {
+    if (!btn) return;
+    if (state === "signed-in" && u) {
+      btn.textContent = initialOf(u);
+      btn.classList.add("signed-in");
+      btn.setAttribute("aria-label", "Account — " + (u.email || initialOf(u)));
+      btn.title = "Account & progress";
     } else {
-      fb.signInWithPopup(fb.auth, fb.provider).catch(function (e) {
-        console.warn("[sync] sign-in failed:", e && e.code);
-      });
+      btn.textContent = "Sign In"; // 
+      btn.classList.remove("signed-in");
+      btn.setAttribute("aria-label", "Sign in with Google to sync across devices");
+      btn.title = "Sign in to sync across devices";
+      closeMenu();
     }
   }
 
+  /* ---------- account dropdown ---------- */
+  function toggleMenu() { (menuEl && !menuEl.hidden) ? closeMenu() : openMenu(); }
+
+  function openMenu() {
+    if (!user) return;
+    if (!menuEl) menuEl = buildMenu();
+    renderMenu();
+    menuEl.hidden = false;
+    positionMenu();
+    btn.setAttribute("aria-expanded", "true");
+  }
+  function closeMenu() {
+    if (menuEl) menuEl.hidden = true;
+    if (btn) btn.setAttribute("aria-expanded", "false");
+  }
+  function positionMenu() {
+    const r = btn.getBoundingClientRect();
+    menuEl.style.top = Math.round(r.bottom + 8) + "px";
+    menuEl.style.right = Math.round(window.innerWidth - r.right) + "px";
+  }
+
+  function buildMenu() {
+    const m = document.createElement("div");
+    m.className = "auth-menu";
+    m.id = "auth-menu";
+    m.hidden = true;
+    m.setAttribute("role", "menu");
+    m.innerHTML =
+      '<div class="auth-head">' +
+        '<div class="auth-avatar" id="auth-avatar"></div>' +
+        '<div class="auth-id"><div class="auth-name" id="auth-name"></div>' +
+        '<div class="auth-email" id="auth-email"></div></div>' +
+      '</div>' +
+      '<div class="auth-progress">' +
+        '<div class="auth-progress-title">✓ Learning progress</div>' +
+        '<div class="auth-total"><span>Total completed</span><strong id="auth-total-n">0</strong></div>' +
+        '<div class="auth-rows" id="auth-rows"></div>' +
+      '</div>' +
+      '<button class="auth-signout" id="auth-signout" type="button">⏻ Sign out</button>';
+    document.body.appendChild(m);
+    m.querySelector("#auth-signout").addEventListener("click", function () {
+      closeMenu();
+      if (fb) fb.signOut(fb.auth);
+    });
+    return m;
+  }
+
+  function renderMenu() {
+    if (!menuEl || !user) return;
+    const avatar = menuEl.querySelector("#auth-avatar");
+    if (user.photoURL) {
+      avatar.innerHTML = '<img src="' + user.photoURL + '" alt="" referrerpolicy="no-referrer">';
+      avatar.classList.add("has-img");
+    } else {
+      avatar.textContent = initialOf(user);
+      avatar.classList.remove("has-img");
+    }
+    menuEl.querySelector("#auth-name").textContent = user.displayName || "Signed in";
+    menuEl.querySelector("#auth-email").textContent = user.email || "";
+
+    const sum = (IQB.app && IQB.app.getProgressSummary) ? IQB.app.getProgressSummary() : { totalCompleted: 0, groups: [] };
+    menuEl.querySelector("#auth-total-n").textContent = String(sum.totalCompleted);
+    const rows = menuEl.querySelector("#auth-rows");
+    rows.innerHTML = "";
+    sum.groups.forEach(function (g) {
+      const pct = g.total ? Math.round((g.done / g.total) * 100) : 0;
+      const row = document.createElement("div");
+      row.className = "auth-row";
+      row.innerHTML =
+        '<div class="auth-row-top">' +
+          '<span class="auth-dot" style="background:' + g.color + '"></span>' +
+          '<span class="auth-row-label">' + g.label + '</span>' +
+          '<span class="auth-row-n">' + g.done + " / " + g.total + '</span>' +
+        '</div>' +
+        '<div class="auth-bar"><div class="auth-bar-fill" style="width:' + pct + '%;background:' + g.color + '"></div></div>';
+      rows.appendChild(row);
+    });
+  }
+
+  /* ---------- sign-in prompt (dismissible, skippable) ---------- */
+  function maybeShowPrompt() {
+    if (localStorage.getItem(PROMPT_KEY) === "1") return;
+    setTimeout(function () {
+      if (user) return;                    // signed in meanwhile
+      if (localStorage.getItem(PROMPT_KEY) === "1") return;
+      showPrompt();
+    }, 1400);
+  }
+
+  function showPrompt() {
+    if (promptEl) { promptEl.hidden = false; requestAnimationFrame(function () { promptEl.classList.add("show"); }); return; }
+    const p = document.createElement("div");
+    p.className = "login-prompt";
+    p.id = "login-prompt";
+    p.setAttribute("role", "dialog");
+    p.setAttribute("aria-label", "Sign in to save your progress");
+    p.innerHTML =
+      '<button class="lp-close" id="lp-close" type="button" aria-label="Dismiss">✕</button>' +
+      '<div class="lp-title">💾 Save your progress</div>' +
+      '<div class="lp-text">Sign in with Google to sync your completed questions and bookmarks across all your devices. It’s optional — you can keep using the site without it.</div>' +
+      '<div class="lp-actions">' +
+        '<button class="lp-signin" id="lp-signin" type="button">Sign in with Google</button>' +
+        '<button class="lp-later" id="lp-later" type="button">Not now</button>' +
+      '</div>';
+    document.body.appendChild(p);
+    promptEl = p;
+    p.querySelector("#lp-signin").addEventListener("click", function () { signIn(); });
+    p.querySelector("#lp-later").addEventListener("click", dismissPrompt);
+    p.querySelector("#lp-close").addEventListener("click", dismissPrompt);
+    requestAnimationFrame(function () { p.classList.add("show"); });
+  }
+
+  function hidePrompt() { if (promptEl) { promptEl.classList.remove("show"); promptEl.hidden = true; } }
+  function dismissPrompt() {
+    try { localStorage.setItem(PROMPT_KEY, "1"); } catch (e) { /* ignore */ }
+    hidePrompt();
+  }
+
+  /* ---------- Firestore sync ---------- */
   function docRef(uid) { return fb.doc(fb.db, "users", uid); }
 
-  /* On sign-in: merge local + cloud once (union, so nothing is lost),
-     write it back, then listen for live changes from other devices. */
   async function subscribe(u) {
     const ref = docRef(u.uid);
     try {
@@ -103,10 +247,10 @@
     } catch (e) { console.warn("[sync] initial merge failed:", e); }
 
     unsub = fb.onSnapshot(ref, function (snap) {
-      // ignore our own not-yet-committed writes to avoid echo loops
       if (!snap.exists() || snap.metadata.hasPendingWrites) return;
       const d = snap.data();
       IQB.app.setData({ progress: d.progress || [], bookmarks: d.bookmarks || [] });
+      if (menuEl && !menuEl.hidden) renderMenu();
     });
   }
 
@@ -114,8 +258,8 @@
     if (!user || !fb) return;
     clearTimeout(pushTimer);
     pushTimer = setTimeout(push, 700);
+    if (menuEl && !menuEl.hidden) renderMenu();
   }
-
   function push() {
     if (!user || !fb) return;
     const data = IQB.app.getData();
@@ -124,21 +268,7 @@
     }, { merge: true }).catch(function (e) { console.warn("[sync] push failed:", e); });
   }
 
+  /* ---------- helpers ---------- */
   function union(a, b) { return Array.from(new Set([].concat(a || [], b || []))); }
-
-  function setButton(state, u) {
-    if (!btn) return;
-    if (state === "signed-in" && u) {
-      const label = (u.displayName || u.email || "U").trim();
-      btn.textContent = label.charAt(0).toUpperCase();
-      btn.classList.add("signed-in");
-      btn.setAttribute("aria-label", "Synced as " + (u.email || label) + " — click to sign out");
-      btn.title = "Synced: " + (u.email || label);
-    } else {
-      btn.textContent = "⇆"; // ⇆
-      btn.classList.remove("signed-in");
-      btn.setAttribute("aria-label", "Sign in with Google to sync across devices");
-      btn.title = "Sign in to sync across devices";
-    }
-  }
+  function initialOf(u) { return (u.displayName || u.email || "U").trim().charAt(0).toUpperCase(); }
 })();

@@ -1,0 +1,530 @@
+[
+  {
+    "id": "ngrx-flow",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "store",
+      "action",
+      "reducer",
+      "selector",
+      "effect"
+    ],
+    "question": "Explain the NgRx flow: store, action, reducer, selector, effect.",
+    "answer": "<p>A Redux pattern with <strong>one-way data flow</strong>:</p><ul><li><strong>Store</strong> — single immutable source of truth.</li><li><strong>Action</strong> — a plain event describing what happened.</li><li><strong>Reducer</strong> — pure function <code class=\"inline\">(state, action) → new state</code>, no side effects.</li><li><strong>Selector</strong> — memoised query to read a slice of state.</li><li><strong>Effect</strong> — handles side effects (API calls); listens for an action, does async work, dispatches success/failure.</li></ul><p>Component dispatches → effect calls API → dispatches success → reducer updates store → selector pushes the new value to the component.</p>",
+    "tip": "Draw the loop on the whiteboard — dispatch → effect → reducer → selector.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "ngrx-when-not",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "architecture",
+      "tradeoffs"
+    ],
+    "question": "When would you NOT use NgRx?",
+    "answer": "<p>NgRx adds boilerplate. Skip it for small apps or local state — a simple <strong>service with a BehaviorSubject</strong> (or Signals) is enough. Reach for NgRx when state is <strong>large, shared across many features, and needs traceability / undo / debugging</strong>.</p>",
+    "tip": "The senior answer is 'right tool for the size of the app', not 'always use NgRx'.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "ngrx-reducer-pure",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "reducer",
+      "immutability",
+      "pure"
+    ],
+    "question": "Why must reducers be pure and immutable?",
+    "answer": "<p>Purity (same input → same output, no side effects) makes state <strong>predictable, testable, and time-travel debuggable</strong>. Immutability (return a new object, never mutate) lets the store and OnPush components detect changes by reference, keeping change detection fast.</p>",
+    "tip": "Use the spread operator or an entity adapter — never push/splice existing state.",
+    "code": "on(loadSuccess, (state, { items }) => ({ ...state, items, loading: false }))",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-selectors",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "selector",
+      "memoization"
+    ],
+    "question": "What are selectors and why are they memoised?",
+    "answer": "<p>Selectors are pure functions that read and derive data from the store. <code class=\"inline\">createSelector</code> <strong>memoises</strong> the result — it recomputes only when its inputs change, avoiding needless recalculation and re-renders.</p>",
+    "tip": "Compose selectors from smaller ones for reuse and better memoization.",
+    "code": "export const selectActiveUsers = createSelector(\n  selectUsers,\n  users => users.filter(u => u.active)\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-effects",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "effects",
+      "side-effects"
+    ],
+    "question": "What are Effects and why not call APIs in reducers?",
+    "answer": "<p><strong>Effects</strong> isolate side effects (HTTP, routing, storage) from reducers. An effect listens to an action stream, runs async work, and maps it to a new action. Reducers must stay pure, so any I/O belongs in effects.</p>",
+    "tip": "Use switchMap in effects for cancel-on-new (loads) and concatMap for ordered writes.",
+    "code": "load$ = createEffect(() => this.actions$.pipe(\n  ofType(load),\n  switchMap(() => this.api.get().pipe(\n    map(items => loadSuccess({ items })),\n    catchError(err => of(loadFailure({ err })))\n  ))\n));",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-vs-service",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "service",
+      "behaviorsubject",
+      "comparison"
+    ],
+    "question": "NgRx store vs a service with BehaviorSubject.",
+    "answer": "<p>A <strong>service + BehaviorSubject</strong> is simple shared state — great for small/medium apps. <strong>NgRx</strong> adds structure: strict unidirectional flow, DevTools time-travel, effects, and clear conventions that scale to large teams — at the cost of boilerplate.</p>",
+    "tip": "Signals-based stores (NgRx SignalStore, or a plain signal service) are the modern lightweight middle ground.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "ngrx-entity",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "entity",
+      "adapter"
+    ],
+    "question": "What is @ngrx/entity?",
+    "answer": "<p>A helper that stores collections in a normalised <code class=\"inline\">{ ids: [], entities: {} }</code> shape and provides an <strong>adapter</strong> with CRUD helpers (<code class=\"inline\">addOne</code>, <code class=\"inline\">updateOne</code>, <code class=\"inline\">removeOne</code>) plus ready-made selectors — removing hand-written immutable array logic.</p>",
+    "tip": "Normalising by id makes lookups O(1) and updates immutable-friendly.",
+    "code": "const adapter = createEntityAdapter<User>();\nconst initialState = adapter.getInitialState();",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-devtools",
+    "category": "ngrx",
+    "difficulty": "beginner",
+    "tags": [
+      "devtools",
+      "debugging"
+    ],
+    "question": "What do the Redux DevTools give you with NgRx?",
+    "answer": "<p>A visual log of every action, the state before/after, and <strong>time-travel debugging</strong> — you can replay actions and jump to any past state. This traceability is a core reason to adopt NgRx on large apps.</p>",
+    "tip": "Mention time-travel debugging — it's the standout benefit interviewers look for.",
+    "code": "StoreDevtoolsModule.instrument({ maxAge: 25 })",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-action-hygiene",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "actions",
+      "best-practices"
+    ],
+    "question": "What's a good convention for naming actions?",
+    "answer": "<p>Use the pattern <code class=\"inline\">[Source] Event</code> — describe <em>what happened</em>, not what to do. Group by feature and event (e.g. <code class=\"inline\">[Auth API] Login Success</code>). Prefer many specific, descriptive actions over a few generic setters.</p>",
+    "tip": "Actions are events, not commands — name them in the past tense.",
+    "code": "export const loginSuccess = createAction(\n  '[Auth API] Login Success',\n  props<{ user: User }>()\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-actions-createaction",
+    "category": "ngrx",
+    "difficulty": "beginner",
+    "tags": [
+      "actions",
+      "createAction",
+      "props",
+      "V.Imp"
+    ],
+    "question": "What are Actions in NgRx? How do you create them using createAction()?",
+    "answer": "<p><strong>Actions</strong> are plain objects that describe <strong>what happened</strong> in the application. They are the only way to change the store's state. Modern NgRx uses <code class=\"inline\">createAction()</code> to define actions, optionally with <code class=\"inline\">props()</code> to carry data.</p>",
+    "tip": "Remember: Actions describe events, not commands. Use names like <code class=\"inline\">[User API] Load Success</code> instead of <code class=\"inline\">SetUsers</code>.",
+    "code": "export const loadUsers = createAction('[Users Page] Load Users');\n\nexport const loadUsersSuccess = createAction(\n  '[Users API] Load Success',\n  props<{ users: User[] }>()\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-props",
+    "category": "ngrx",
+    "difficulty": "beginner",
+    "tags": [
+      "actions",
+      "props",
+      "payload",
+      "V.Imp"
+    ],
+    "question": "What is props() in NgRx?",
+    "answer": "<p><code class=\"inline\">props()</code> defines the payload carried by an action. Instead of manually creating an object, it provides strongly typed data that reducers and effects can safely access.</p>",
+    "tip": "Think of <code class=\"inline\">props()</code> as the parameters passed along with an action.",
+    "code": "export const updateUser = createAction(\n  '[User Page] Update User',\n  props<{ id: number; name: string }>()\n);\n\nthis.store.dispatch(updateUser({\n  id: 1,\n  name: 'John'\n}));",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-createreducer-vs-switch",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "reducers",
+      "createReducer",
+      "switch",
+      "V.Imp"
+    ],
+    "question": "Why is createReducer() preferred over the old switch statement?",
+    "answer": "<p><code class=\"inline\">createReducer()</code> is more readable, type-safe and easier to maintain. It avoids long switch statements and works seamlessly with <code class=\"inline\">on()</code> handlers. It also provides better TypeScript support and cleaner code.</p>",
+    "tip": "Modern NgRx applications should always prefer <code class=\"inline\">createReducer()</code>.",
+    "code": "export const userReducer = createReducer(\n  initialState,\n  on(loadUsersSuccess, (state, { users }) => ({\n    ...state,\n    users\n  }))\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-on-function",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "reducers",
+      "on",
+      "createReducer",
+      "V.Imp"
+    ],
+    "question": "What is the on() function inside createReducer()?",
+    "answer": "<p><code class=\"inline\">on()</code> connects one or more actions to a reducer function. Whenever one of those actions is dispatched, the reducer executes and returns a new immutable state.</p>",
+    "tip": "Think of <code class=\"inline\">on()</code> as the replacement for each <code class=\"inline\">case</code> inside a switch statement.",
+    "code": "export const reducer = createReducer(\n  initialState,\n  on(loadUsersSuccess, (state, { users }) => ({\n    ...state,\n    users,\n    loading: false\n  }))\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-effect-mapping-operators",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "effects",
+      "rxjs",
+      "switchMap",
+      "mergeMap",
+      "concatMap",
+      "exhaustMap",
+      "V.Imp"
+    ],
+    "question": "When should you use switchMap(), mergeMap(), concatMap() and exhaustMap() inside NgRx Effects?",
+    "answer": "<p>Each RxJS mapping operator has a different behavior:</p><ul><li><strong>switchMap()</strong> — Cancels the previous request and keeps only the latest one. Best for Search or Auto Complete.</li><li><strong>mergeMap()</strong> — Runs all requests in parallel. Best when every request must complete independently.</li><li><strong>concatMap()</strong> — Executes requests one after another in order. Best for sequential updates.</li><li><strong>exhaustMap()</strong> — Ignores new requests while one is already running. Best for Login or Submit buttons to prevent duplicate requests.</li></ul>",
+    "tip": "Interviewers almost always ask which operator you'd use for Search, Login and Save APIs.",
+    "code": "// Search API\nswitchMap(() => this.api.search())\n\n// Multiple parallel uploads\nmergeMap(() => this.api.upload())\n\n// Save records sequentially\nconcatMap(() => this.api.save())\n\n// Prevent double login click\nexhaustMap(() => this.api.login())",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-api-success-failure",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "effects",
+      "actions",
+      "error-handling",
+      "V.Imp"
+    ],
+    "question": "How do you handle API Success and Failure in NgRx?",
+    "answer": "<p>Follow a three-action pattern: <strong>Load</strong>, <strong>Load Success</strong>, and <strong>Load Failure</strong>. The component dispatches the Load action, the Effect calls the API, then dispatches either Success or Failure. The Reducer updates the store accordingly.</p>",
+    "tip": "Almost every API call in NgRx follows the pattern: Request → Success → Failure.",
+    "code": "export const loadUsers = createAction('[Users] Load');\n\nexport const loadUsersSuccess = createAction(\n  '[Users API] Load Success',\n  props<{ users: User[] }>()\n);\n\nexport const loadUsersFailure = createAction(\n  '[Users API] Load Failure',\n  props<{ error: any }>()\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-feature-store",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "store",
+      "feature-store",
+      "architecture",
+      "V.Imp"
+    ],
+    "question": "What is the difference between the Root Store and a Feature Store?",
+    "answer": "<p>The <strong>Root Store</strong> contains global application state (authentication, user, settings). A <strong>Feature Store</strong> contains state for a specific feature or module (Products, Orders, Dashboard). Feature stores are registered independently and keep the application modular.</p>",
+    "tip": "Global state belongs in the Root Store. Feature-specific state belongs in a Feature Store.",
+    "code": "StoreModule.forRoot({ auth: authReducer });\n\nStoreModule.forFeature('products', productReducer);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-lazy-loaded-store",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "lazy-loading",
+      "feature-store",
+      "architecture"
+    ],
+    "question": "How does NgRx work with Lazy Loaded Modules?",
+    "answer": "<p>Each lazy-loaded module can register its own reducer and effects using <code class=\"inline\">StoreModule.forFeature()</code> and <code class=\"inline\">EffectsModule.forFeature()</code>. The feature state is loaded only when the module is visited, improving startup performance.</p>",
+    "tip": "Use forFeature() inside lazy modules instead of forRoot().",
+    "code": "@NgModule({\n  imports: [\n    StoreModule.forFeature('orders', orderReducer),\n    EffectsModule.forFeature([OrderEffects])\n  ]\n})\nexport class OrdersModule {}",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-create-feature-selector",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "selector",
+      "feature-selector",
+      "V.Imp"
+    ],
+    "question": "What is createFeatureSelector() and why is it used?",
+    "answer": "<p><code class=\"inline\">createFeatureSelector()</code> selects an entire feature state from the store. Other selectors are then composed from it using <code class=\"inline\">createSelector()</code>. This improves code organization and reusability.</p>",
+    "tip": "Always create one Feature Selector first, then derive all other selectors from it.",
+    "code": "export const selectUserState = createFeatureSelector<UserState>('users');\n\nexport const selectUsers = createSelector(\n  selectUserState,\n  state => state.users\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-selector-vs-feature-selector",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "selector",
+      "feature-selector",
+      "comparison"
+    ],
+    "question": "What is the difference between createFeatureSelector() and createSelector()?",
+    "answer": "<p><strong>createFeatureSelector()</strong> selects an entire feature slice from the store. <strong>createSelector()</strong> derives or computes smaller pieces of data from one or more selectors. In practice, you usually create one feature selector first, then build multiple selectors on top of it.</p>",
+    "tip": "Feature Selector gets the feature. Selector gets the data inside the feature.",
+    "code": "const selectProductState = createFeatureSelector<ProductState>('products');\n\nconst selectProducts = createSelector(\n  selectProductState,\n  state => state.products\n);\n\nconst selectProductCount = createSelector(\n  selectProducts,\n  products => products.length\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-reset-state-logout",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "logout",
+      "store",
+      "reset",
+      "V.Imp"
+    ],
+    "question": "How do you reset the NgRx Store when a user logs out?",
+    "answer": "<p>Dispatch a <code class=\"inline\">logout</code> action and reset the state inside the root reducer (or a meta reducer) by returning the <code class=\"inline\">initialState</code>. This clears all user-specific data from the store.</p>",
+    "tip": "Clearing the store on logout prevents the next user from seeing stale data.",
+    "code": "export const logout = createAction('[Auth] Logout');\n\nexport const reducer = createReducer(\n  initialState,\n  on(logout, () => initialState)\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-persist-state",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "localstorage",
+      "meta-reducer",
+      "persistence",
+      "V.Imp"
+    ],
+    "question": "How do you persist the NgRx Store after a page refresh?",
+    "answer": "<p>NgRx Store lives in memory, so refreshing the page clears it. To persist state, save selected store slices to <strong>localStorage</strong> (or sessionStorage) using a <strong>Meta Reducer</strong> or libraries like <code class=\"inline\">ngrx-store-localstorage</code>, then restore them when the application starts.</p>",
+    "tip": "Persist only required data like user preferences or auth information—not the entire store.",
+    "code": "StoreModule.forRoot(reducers, {\n  metaReducers: [localStorageSyncReducer]\n});",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-meta-reducers",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "meta-reducer",
+      "middleware",
+      "V.Imp"
+    ],
+    "question": "What are Meta Reducers in NgRx?",
+    "answer": "<p>Meta Reducers are higher-order reducers that wrap normal reducers. They execute before or after every reducer call and are commonly used for logging, state persistence, resetting state, or debugging.</p>",
+    "tip": "Think of Meta Reducers as middleware for reducers.",
+    "code": "export function logger(reducer: ActionReducer<any>): ActionReducer<any> {\n  return (state, action) => {\n    console.log(action.type);\n    return reducer(state, action);\n  };\n}",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-runtime-checks",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "runtime-checks",
+      "immutability",
+      "best-practices",
+      "V.Imp"
+    ],
+    "question": "What are Runtime Checks in NgRx?",
+    "answer": "<p>Runtime Checks help detect common mistakes such as mutating state, mutating actions, or storing non-serializable objects. They improve application reliability during development by throwing errors when NgRx best practices are violated.</p>",
+    "tip": "Enable Runtime Checks in development to catch accidental state mutations early.",
+    "code": "StoreModule.forRoot(reducers, {\n  runtimeChecks: {\n    strictStateImmutability: true,\n    strictActionImmutability: true,\n    strictStateSerializability: true,\n    strictActionSerializability: true\n  }\n});",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-facade-pattern",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "facade",
+      "architecture",
+      "best-practices",
+      "V.Imp"
+    ],
+    "question": "What is the Facade Pattern in NgRx and why is it used?",
+    "answer": "<p>A Facade is an Angular service that hides NgRx implementation details from components. Components interact only with the Facade instead of directly dispatching actions or selecting state. This reduces coupling, simplifies testing, and makes it easier to replace NgRx later if needed.</p>",
+    "tip": "Components should know about business operations, not NgRx APIs.",
+    "code": "@Injectable({ providedIn: 'root' })\nexport class UserFacade {\n  users$ = this.store.select(selectUsers);\n\n  constructor(private store: Store) {}\n\n  loadUsers() {\n    this.store.dispatch(loadUsers());\n  }\n}",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-component-store-access",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "store",
+      "components",
+      "best-practices",
+      "V.Imp"
+    ],
+    "question": "Should Angular components access the Store directly?",
+    "answer": "<p>Yes, but only for simple applications. In medium or large projects, components should communicate through a <strong>Facade Service</strong> instead of directly using the Store. This reduces coupling, improves testability, and makes it easier to change the state management implementation later.</p>",
+    "tip": "Large enterprise applications usually place a Facade between the Component and the Store.",
+    "code": "export class UserComponent {\n  users$ = this.userFacade.users$;\n\n  constructor(private userFacade: UserFacade) {}\n\n  ngOnInit() {\n    this.userFacade.loadUsers();\n  }\n}",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-multiple-actions",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "effects",
+      "actions",
+      "best-practices",
+      "V.Imp"
+    ],
+    "question": "Should a component dispatch multiple NgRx actions?",
+    "answer": "<p>Generally no. Components should dispatch a single business action such as <code class=\"inline\">loadUsers()</code>. If multiple actions are needed, they should be dispatched from an Effect. This keeps components simple and business logic centralized.</p>",
+    "tip": "Keep components 'dumb' and move orchestration into Effects.",
+    "code": "// Component\nthis.store.dispatch(loadUsers());\n\n// Effect\nloadUsers$ = createEffect(() =>\n  this.actions$.pipe(\n    ofType(loadUsers),\n    switchMap(() => this.api.getUsers().pipe(\n      map(users => loadUsersSuccess({ users }))\n    ))\n  )\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-smart-vs-dumb-components",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "components",
+      "architecture",
+      "V.Imp"
+    ],
+    "question": "What is the difference between Smart and Dumb Components in NgRx?",
+    "answer": "<p><strong>Smart Components</strong> interact with the Store (or Facade), dispatch actions, and manage business logic. <strong>Dumb Components</strong> receive data through <code class=\"inline\">@Input()</code> and emit events using <code class=\"inline\">@Output()</code>. They contain little or no business logic and are highly reusable.</p>",
+    "tip": "Keep presentation components reusable by avoiding Store dependencies.",
+    "code": "// Smart Component\n<app-user-list\n  [users]=\"users$ | async\"\n  (delete)=\"deleteUser($event)\">\n</app-user-list>",
+    "lang": "html"
+  },
+  {
+    "id": "ngrx-store-vs-component-state",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "store",
+      "component-state",
+      "comparison",
+      "V.Imp"
+    ],
+    "question": "When should you use NgRx Store instead of Component State?",
+    "answer": "<p>Use <strong>Component State</strong> for local UI state like dialog visibility, selected tab, or input values. Use the <strong>NgRx Store</strong> for shared, long-lived application state such as logged-in user, products, orders, or shopping cart data.</p>",
+    "tip": "Ask yourself: 'Does another feature need this data?' If yes, it probably belongs in the Store.",
+    "code": "// Component State\nisDialogOpen = false;\nselectedTab = 1;\n\n// Store State\nusers$ = this.store.select(selectUsers);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-multiple-reducers",
+    "category": "ngrx",
+    "difficulty": "intermediate",
+    "tags": [
+      "reducers",
+      "feature-store",
+      "architecture"
+    ],
+    "question": "How do multiple Reducers work in an NgRx application?",
+    "answer": "<p>Each feature has its own reducer responsible for managing only its own slice of state. NgRx combines all reducers into a single Root Store. This keeps features independent, modular, and easier to maintain.</p>",
+    "tip": "Think of each reducer as managing one feature, not the whole application.",
+    "code": "StoreModule.forRoot({\n  auth: authReducer,\n  users: userReducer,\n  products: productReducer,\n  orders: orderReducer\n});",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-optimistic-vs-pessimistic",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "effects",
+      "optimistic-update",
+      "pessimistic-update",
+      "V.Imp"
+    ],
+    "question": "What is the difference between Optimistic Updates and Pessimistic Updates in NgRx?",
+    "answer": "<p><strong>Optimistic Update</strong> updates the UI immediately before the API responds, assuming success. If the API fails, the state is rolled back. <strong>Pessimistic Update</strong> waits for the API response before updating the Store, ensuring consistency but with a slower UI experience.</p>",
+    "tip": "Optimistic = Faster UI. Pessimistic = Safer data.",
+    "code": "// Optimistic\nthis.store.dispatch(updateUser({ user }));\n\n// API call happens in Effect\n// Rollback on failure\n\n// Pessimistic\n// Wait for API success\n// Then dispatch updateSuccess()",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-router-store",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "router-store",
+      "routing",
+      "V.Imp"
+    ],
+    "question": "What is @ngrx/router-store and why is it used?",
+    "answer": "<p><strong>@ngrx/router-store</strong> synchronizes Angular Router state with the NgRx Store. It allows selectors, reducers, and effects to access the current route, query parameters, and navigation events without directly injecting the Router.</p>",
+    "tip": "Router state becomes just another slice of your Store.",
+    "code": "StoreRouterConnectingModule.forRoot();\n\nthis.store.select(selectRouteParams);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-entity-crud",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "entity",
+      "adapter",
+      "crud",
+      "V.Imp"
+    ],
+    "question": "What CRUD methods does the NgRx Entity Adapter provide?",
+    "answer": "<p>The Entity Adapter provides helper methods like <code class=\"inline\">addOne()</code>, <code class=\"inline\">addMany()</code>, <code class=\"inline\">setAll()</code>, <code class=\"inline\">updateOne()</code>, <code class=\"inline\">upsertOne()</code>, <code class=\"inline\">removeOne()</code>, and <code class=\"inline\">removeMany()</code>. These methods perform immutable updates automatically.</p>",
+    "tip": "Using Entity Adapter removes the need to manually update arrays immutably.",
+    "code": "export const reducer = createReducer(\n  initialState,\n  on(loadUsersSuccess, (state, { users }) =>\n    adapter.setAll(users, state)\n  ),\n  on(addUserSuccess, (state, { user }) =>\n    adapter.addOne(user, state)\n  )\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-withlatestfrom-vs-combinelatest",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "rxjs",
+      "effects",
+      "withLatestFrom",
+      "combineLatest",
+      "V.Imp"
+    ],
+    "question": "What is the difference between withLatestFrom() and combineLatest() inside NgRx Effects?",
+    "answer": "<p><code class=\"inline\">withLatestFrom()</code> emits only when the source Observable emits, combining it with the latest values from other Observables. <code class=\"inline\">combineLatest()</code> emits whenever any input Observable emits after all have emitted once. In Effects, <code class=\"inline\">withLatestFrom()</code> is usually preferred to combine an Action with Store data.</p>",
+    "tip": "Effects usually start from an Action, so withLatestFrom() is the better choice.",
+    "code": "loadUsers$ = createEffect(() =>\n  this.actions$.pipe(\n    ofType(loadUsers),\n    withLatestFrom(this.store.select(selectFilters)),\n    switchMap(([action, filters]) =>\n      this.api.getUsers(filters)\n    )\n  )\n);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngrx-dispatch-false",
+    "category": "ngrx",
+    "difficulty": "advanced",
+    "tags": [
+      "effects",
+      "dispatch-false",
+      "side-effects",
+      "V.Imp"
+    ],
+    "question": "What is dispatch: false in NgRx Effects and when should you use it?",
+    "answer": "<p>By default, every Effect dispatches a new Action. Setting <code class=\"inline\">dispatch: false</code> tells NgRx that the Effect performs only a side effect (such as navigation, logging, or showing a toast) and should not dispatch another Action.</p>",
+    "tip": "Use <code class=\"inline\">dispatch: false</code> only when you don't need to update the Store.",
+    "code": "navigateAfterLogin$ = createEffect(() =>\n  this.actions$.pipe(\n    ofType(loginSuccess),\n    tap(() => this.router.navigate(['/dashboard']))\n  ),\n  { dispatch: false }\n);",
+    "lang": "ts"
+  }
+]

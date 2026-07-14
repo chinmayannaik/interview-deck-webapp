@@ -1,0 +1,321 @@
+[
+  {
+    "id": "ngc-debounced-search",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "rxjs",
+      "search",
+      "forms"
+    ],
+    "question": "Build a debounced type-ahead search box.",
+    "answer": "<p>Bind an input to a <code class=\"inline\">FormControl</code>, listen to <code class=\"inline\">valueChanges</code>, then <code class=\"inline\">debounceTime</code> + <code class=\"inline\">distinctUntilChanged</code> + <code class=\"inline\">switchMap</code> to the API so stale requests are cancelled. Render results with the <code class=\"inline\">async</code> pipe.</p>",
+    "tip": "switchMap is the key — it cancels the in-flight request when the user keeps typing.",
+    "code": "search = new FormControl('');\nresults$ = this.search.valueChanges.pipe(\n  debounceTime(300),\n  distinctUntilChanged(),\n  switchMap(term => this.api.search(term ?? ''))\n);\n// template: <input [formControl]=\"search\">\n//           <li *ngFor=\"let r of results$ | async\">{{ r.name }}</li>",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-pagination",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "pagination",
+      "list"
+    ],
+    "question": "Build a client-side pagination component.",
+    "answer": "<p>Keep <code class=\"inline\">page</code> and <code class=\"inline\">pageSize</code> in state; derive the current slice with a getter (or computed signal). Render page buttons from <code class=\"inline\">Math.ceil(total / pageSize)</code> and guard prev/next at the bounds.</p>",
+    "tip": "Derive the visible slice — never mutate the source array when paginating.",
+    "code": "page = 1; size = 10;\nget paged() {\n  const start = (this.page - 1) * this.size;\n  return this.items.slice(start, start + this.size);\n}\nget pages() { return Math.ceil(this.items.length / this.size); }",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-infinite-scroll",
+    "category": "ngcoding",
+    "difficulty": "advanced",
+    "tags": [
+      "infinite-scroll",
+      "intersectionobserver"
+    ],
+    "question": "Implement infinite scroll.",
+    "answer": "<p>Place a sentinel element at the list's end and observe it with <code class=\"inline\">IntersectionObserver</code> (or the CDK scrolling module). When it enters the viewport, load and append the next page. Clean up the observer in <code class=\"inline\">ngOnDestroy</code>.</p>",
+    "tip": "IntersectionObserver beats a scroll-event listener — no throttling needed, less jank.",
+    "code": "ngAfterViewInit() {\n  this.io = new IntersectionObserver(([e]) => {\n    if (e.isIntersecting) this.loadMore();\n  });\n  this.io.observe(this.sentinel.nativeElement);\n}\nngOnDestroy() { this.io.disconnect(); }",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-star-rating",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "component",
+      "input",
+      "output",
+      "cva"
+    ],
+    "question": "Build a reusable star-rating component.",
+    "answer": "<p>Render N stars from an array; fill up to <code class=\"inline\">value</code>, track a <code class=\"inline\">hover</code> index for preview, and emit the chosen value. For form integration, implement <code class=\"inline\">ControlValueAccessor</code> so it works with <code class=\"inline\">[(ngModel)]</code>/reactive forms.</p>",
+    "tip": "Implementing ControlValueAccessor turns any widget into a first-class form control.",
+    "code": "@Input() value = 0;\n@Output() valueChange = new EventEmitter<number>();\nstars = [1, 2, 3, 4, 5];\nset(n: number) { this.value = n; this.valueChange.emit(n); }\n// template: <span *ngFor=\"let s of stars\" (click)=\"set(s)\"\n//             [class.filled]=\"s <= value\">★</span>",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-modal",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "modal",
+      "content-projection"
+    ],
+    "question": "Build a reusable modal/dialog component.",
+    "answer": "<p>Use <code class=\"inline\">*ngIf</code> (or the native <code class=\"inline\">&lt;dialog&gt;</code>) with <code class=\"inline\">ng-content</code> to project arbitrary content. Emit a close event, close on backdrop click and <code class=\"inline\">Esc</code> (<code class=\"inline\">@HostListener</code>), and trap focus for accessibility.</p>",
+    "tip": "Bonus points for focus trapping and Esc-to-close — that's the accessibility part interviewers watch for.",
+    "code": "@Input() open = false;\n@Output() closed = new EventEmitter<void>();\n@HostListener('document:keydown.escape') onEsc() { this.close(); }\nclose() { this.open = false; this.closed.emit(); }\n// template: <div class=\"backdrop\" *ngIf=\"open\" (click)=\"close()\">\n//             <div class=\"panel\" (click)=\"$event.stopPropagation()\"><ng-content/></div></div>",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-todo",
+    "category": "ngcoding",
+    "difficulty": "beginner",
+    "tags": [
+      "crud",
+      "list",
+      "state"
+    ],
+    "question": "Build a todo list (add / toggle / delete / filter).",
+    "answer": "<p>Hold an array of <code class=\"inline\">{ id, text, done }</code>. Add with an incrementing id, toggle by mapping immutably, delete by filtering, and derive the filtered view (all/active/done) with a getter. Keep updates immutable for OnPush.</p>",
+    "tip": "Update immutably (map/filter returning new arrays) so it plays well with OnPush.",
+    "code": "add(text: string) { this.todos = [...this.todos, { id: ++this.seq, text, done: false }]; }\ntoggle(id: number) { this.todos = this.todos.map(t => t.id === id ? { ...t, done: !t.done } : t); }\nremove(id: number) { this.todos = this.todos.filter(t => t.id !== id); }",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-data-table",
+    "category": "ngcoding",
+    "difficulty": "advanced",
+    "tags": [
+      "table",
+      "sorting",
+      "generics"
+    ],
+    "question": "Build a reusable sortable data table.",
+    "answer": "<p>Accept <code class=\"inline\">columns</code> and <code class=\"inline\">rows</code> as inputs; use <code class=\"inline\">ng-template</code> with <code class=\"inline\">ngTemplateOutlet</code> for custom cell rendering. Sort by a clicked column, toggling asc/desc, on an immutable copy. Add <code class=\"inline\">trackBy</code> for performance.</p>",
+    "tip": "Generic inputs + a template for cells is what makes a table truly reusable.",
+    "code": "sort(col: string) {\n  this.dir = this.sortKey === col && this.dir === 'asc' ? 'desc' : 'asc';\n  this.sortKey = col;\n  this.rows = [...this.rows].sort((a, b) =>\n    (a[col] > b[col] ? 1 : -1) * (this.dir === 'asc' ? 1 : -1));\n}",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-tabs",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "tabs",
+      "content-projection",
+      "contentchildren"
+    ],
+    "question": "Build a tabs component with content projection.",
+    "answer": "<p>Create a <code class=\"inline\">TabComponent</code> (with a title input and a projected body) and a <code class=\"inline\">TabsComponent</code> that collects them via <code class=\"inline\">@ContentChildren</code>. Render the tab headers, track the active one, and show only its content.</p>",
+    "tip": "@ContentChildren(TabComponent) is the pattern that powers Material tabs.",
+    "code": "@ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;\nngAfterContentInit() { this.select(this.tabs.first); }\nselect(tab: TabComponent) { this.tabs.forEach(t => (t.active = t === tab)); }",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-countdown",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "rxjs",
+      "timer"
+    ],
+    "question": "Build a countdown timer.",
+    "answer": "<p>Use RxJS <code class=\"inline\">timer(0, 1000)</code> to tick each second, map to the remaining time, <code class=\"inline\">takeWhile</code> until zero, and render via the <code class=\"inline\">async</code> pipe (auto-unsubscribes). Avoids manual <code class=\"inline\">setInterval</code> cleanup.</p>",
+    "tip": "The async pipe + takeWhile means zero manual subscription management.",
+    "code": "remaining$ = timer(0, 1000).pipe(\n  map(i => this.duration - i),\n  takeWhile(v => v >= 0)\n);\n// template: {{ remaining$ | async }}s",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-dynamic-form",
+    "category": "ngcoding",
+    "difficulty": "advanced",
+    "tags": [
+      "forms",
+      "formarray",
+      "dynamic"
+    ],
+    "question": "Build a form with a dynamic list of fields.",
+    "answer": "<p>Use a <code class=\"inline\">FormArray</code> of controls/groups. Provide <code class=\"inline\">add()</code> (push a new control) and <code class=\"inline\">remove(i)</code> (<code class=\"inline\">removeAt</code>), and iterate <code class=\"inline\">controls</code> in the template with the array's <code class=\"inline\">formArrayName</code>.</p>",
+    "tip": "FormArray is the canonical answer to 'add/remove fields at runtime'.",
+    "code": "form = this.fb.group({ items: this.fb.array([]) });\nget items() { return this.form.get('items') as FormArray; }\nadd() { this.items.push(this.fb.control('', Validators.required)); }\nremove(i: number) { this.items.removeAt(i); }",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-radio-divs",
+    "category": "ngcoding",
+    "difficulty": "beginner",
+    "tags": [
+      "forms",
+      "ngmodel",
+      "conditional"
+    ],
+    "question": "Show a different block based on a radio-button selection.",
+    "answer": "<p>Bind the radios to a single property with <code class=\"inline\">[(ngModel)]</code>, then use <code class=\"inline\">@if</code> / <code class=\"inline\">*ngIf</code> (or <code class=\"inline\">@switch</code>) to render the matching block.</p>",
+    "tip": "One model property drives both the radios and the conditional blocks.",
+    "code": "<input type=\"radio\" name=\"opt\" value=\"A\" [(ngModel)]=\"selected\"> Option A\n<input type=\"radio\" name=\"opt\" value=\"B\" [(ngModel)]=\"selected\"> Option B\n\n<div *ngIf=\"selected === 'A'\">Div A</div>\n<div *ngIf=\"selected === 'B'\">Div B</div>",
+    "lang": "html"
+  },
+  {
+    "id": "ngc-transform-list",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "rxjs",
+      "map",
+      "transform"
+    ],
+    "question": "Transform a list of employee objects to only { id, name } using RxJS.",
+    "answer": "<p>Use the RxJS <code class=\"inline\">map</code> operator on the stream, and <code class=\"inline\">Array.map</code> inside it to reshape each object.</p>",
+    "tip": "Two maps: the RxJS map transforms the stream, the array map transforms each item.",
+    "code": "this.employee$.pipe(\n  map(emps => emps.map(e => ({ id: e.id, name: e.name })))\n).subscribe(list => this.people = list);",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-dependent-api",
+    "category": "ngcoding",
+    "difficulty": "advanced",
+    "tags": [
+      "rxjs",
+      "switchMap",
+      "http"
+    ],
+    "question": "Chain two API calls where the second depends on the first.",
+    "answer": "<p>Use <code class=\"inline\">switchMap</code> so the second call runs with the first response, and any in-flight first call is cancelled if a new one starts.</p>",
+    "tip": "switchMap for dependent calls; concatMap if order matters and none should cancel.",
+    "code": "this.api1().pipe(\n  switchMap(res1 => this.api2(res1.id))\n).subscribe(finalRes => console.log(finalRes));",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-forkjoin",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "rxjs",
+      "forkJoin",
+      "parallel"
+    ],
+    "question": "Run several API calls in parallel and act once all complete.",
+    "answer": "<p>Use <code class=\"inline\">forkJoin</code> to fire independent calls concurrently; it emits once, with all results, after every call completes (like <code class=\"inline\">Promise.all</code>).</p>",
+    "tip": "forkJoin waits for all to COMPLETE — great for parallel GETs before rendering a page.",
+    "code": "forkJoin([this.api1$, this.api2$]).subscribe(([data1, data2]) => {\n  this.combined = { ...data1, ...data2 };\n});",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-shared-service",
+    "category": "ngcoding",
+    "difficulty": "advanced",
+    "tags": [
+      "service",
+      "behaviorsubject",
+      "caching",
+      "share"
+    ],
+    "question": "Share one API result across 3 components without repeating the call.",
+    "answer": "<p>Put the data in a <strong>shared service</strong>: fetch once, cache it in a <code class=\"inline\">BehaviorSubject</code> (or <code class=\"inline\">shareReplay(1)</code>), and let all components subscribe to the same stream. The HTTP call runs a single time.</p>",
+    "tip": "BehaviorSubject holds the latest value so late-subscribing components get it instantly.",
+    "code": "@Injectable({ providedIn: 'root' })\nexport class DataService {\n  private data$ = new BehaviorSubject<Data | null>(null);\n  readonly value$ = this.data$.asObservable();\n  load() {\n    if (this.data$.value) return;           // already fetched\n    this.http.get<Data>('/api/data').subscribe(d => this.data$.next(d));\n  }\n}",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-custom-autocomplete",
+    "category": "ngcoding",
+    "difficulty": "advanced",
+    "tags": [
+      "V.Imp",
+      "rxjs",
+      "autocomplete",
+      "debounce",
+      "forms"
+    ],
+    "question": "Build a custom Autocomplete component (without Angular Material).",
+    "answer": "<p>Use a <code class=\"inline\">FormControl</code> and subscribe to <code class=\"inline\">valueChanges</code>. Apply <code class=\"inline\">debounceTime</code>, <code class=\"inline\">distinctUntilChanged</code>, and <code class=\"inline\">switchMap</code> to fetch suggestions. Show a dropdown below the input and hide it when an option is selected or focus is lost.</p>",
+    "tip": "Interviewers mainly look for debounce, switchMap and dropdown handling.",
+    "code": "search = new FormControl('');\noptions$ = this.search.valueChanges.pipe(\n  debounceTime(300),\n  distinctUntilChanged(),\n  switchMap(text => this.api.search(text || ''))\n);\n\n// HTML\n<input [formControl]=\"search\">\n<ul *ngIf=\"options$ | async as options\">\n  <li *ngFor=\"let option of options\" (click)=\"select(option)\">{{ option.name }}</li>\n</ul>",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-drag-drop",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "angular-cdk",
+      "drag-drop"
+    ],
+    "question": "Implement Drag & Drop using Angular CDK.",
+    "answer": "<p>Use Angular CDK's <code class=\"inline\">cdkDropList</code> and <code class=\"inline\">cdkDrag</code>. Handle the <code class=\"inline\">cdkDropListDropped</code> event and reorder items using <code class=\"inline\">moveItemInArray()</code>.</p>",
+    "tip": "Angular CDK Drag & Drop is asked much more frequently than writing drag logic manually.",
+    "code": "drop(event: CdkDragDrop<string[]>) {\n  moveItemInArray(this.items, event.previousIndex, event.currentIndex);\n}\n\n<div cdkDropList (cdkDropListDropped)=\"drop($event)\">\n  <div *ngFor=\"let item of items\" cdkDrag>{{ item }}</div>\n</div>",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-tree-view",
+    "category": "ngcoding",
+    "difficulty": "advanced",
+    "tags": [
+      "V.Imp",
+      "tree",
+      "recursion",
+      "component"
+    ],
+    "question": "Build a Nested Comments / Tree View component.",
+    "answer": "<p>Create a recursive component that accepts a node with children. Display the current node and recursively render its child nodes using the same component.</p>",
+    "tip": "Recursive components are the standard solution for tree structures.",
+    "code": "@Input() node!: Comment;\n\n<ul>\n  <li>\n    {{ node.text }}\n    <app-comment\n      *ngFor=\"let child of node.children\"\n      [node]=\"child\">\n    </app-comment>\n  </li>\n</ul>",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-kanban-board",
+    "category": "ngcoding",
+    "difficulty": "advanced",
+    "tags": [
+      "V.Imp",
+      "angular-cdk",
+      "drag-drop",
+      "state"
+    ],
+    "question": "Build a Kanban Board with draggable cards.",
+    "answer": "<p>Create multiple <code class=\"inline\">cdkDropList</code> containers (Todo, In Progress, Done). Enable moving cards between lists using <code class=\"inline\">transferArrayItem()</code>.</p>",
+    "tip": "This combines Drag & Drop, component communication and state management.",
+    "code": "drop(event: CdkDragDrop<any[]>) {\n  if (event.previousContainer === event.container) {\n    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);\n  } else {\n    transferArrayItem(\n      event.previousContainer.data,\n      event.container.data,\n      event.previousIndex,\n      event.currentIndex\n    );\n  }\n}",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-theme-switcher",
+    "category": "ngcoding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "theme",
+      "dark-mode",
+      "localstorage"
+    ],
+    "question": "Build a Light / Dark Theme Switcher.",
+    "answer": "<p>Maintain the selected theme in a service. Toggle a CSS class on the document body and persist the user's preference using <code class=\"inline\">localStorage</code>.</p>",
+    "tip": "Remember to restore the saved theme during application startup.",
+    "code": "toggleTheme() {\n  const dark = document.body.classList.toggle('dark-theme');\n  localStorage.setItem('theme', dark ? 'dark' : 'light');\n}\n\nngOnInit() {\n  if (localStorage.getItem('theme') === 'dark') {\n    document.body.classList.add('dark-theme');\n  }\n}",
+    "lang": "ts"
+  },
+  {
+    "id": "ngc-login-form",
+    "category": "ngcoding",
+    "difficulty": "beginner",
+    "tags": [
+      "V.Imp",
+      "forms",
+      "reactive-forms",
+      "validation"
+    ],
+    "question": "Build a Login Page with username and password validation.",
+    "answer": "<p>Create a Reactive Form with username and password controls. Apply required, minimum length and email validators where appropriate. Show validation messages only after the field is touched or the form is submitted.</p>",
+    "tip": "Most Angular interviews expect Reactive Forms instead of Template Driven Forms.",
+    "code": "loginForm = this.fb.group({\n  username: ['', [Validators.required]],\n  password: ['', [Validators.required, Validators.minLength(6)]]\n});\n\nsubmit() {\n  if (this.loginForm.valid) {\n    console.log(this.loginForm.value);\n  }\n}\n\n<form [formGroup]=\"loginForm\" (ngSubmit)=\"submit()\">\n  <input formControlName=\"username\">\n  <input type=\"password\" formControlName=\"password\">\n  <button type=\"submit\">Login</button>\n</form>",
+    "lang": "ts"
+  }
+]

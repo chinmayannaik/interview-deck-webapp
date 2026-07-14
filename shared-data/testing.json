@@ -1,0 +1,260 @@
+[
+  {
+    "id": "test-pyramid",
+    "category": "testing",
+    "difficulty": "beginner",
+    "tags": [
+      "strategy",
+      "pyramid"
+    ],
+    "question": "Unit vs integration vs e2e tests (the testing pyramid).",
+    "answer": "<ul><li><strong>Unit</strong> — one class/function in isolation, dependencies mocked. Fast, many.</li><li><strong>Integration</strong> — several units together (a component + its template + a real child).</li><li><strong>E2E</strong> — the whole app in a browser, simulating a real user. Slow, few.</li></ul><p>The pyramid: lots of unit tests, fewer integration, fewest e2e.</p>",
+    "tip": "Test behaviour, not implementation — so tests survive refactors.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "test-jasmine",
+    "category": "testing",
+    "difficulty": "beginner",
+    "tags": [
+      "jasmine",
+      "karma",
+      "tooling"
+    ],
+    "question": "What are Jasmine and Karma in Angular?",
+    "answer": "<p><strong>Jasmine</strong> is the testing framework — <code class=\"inline\">describe</code>/<code class=\"inline\">it</code>/<code class=\"inline\">expect</code> with matchers and spies. <strong>Karma</strong> is the test runner that launches real browsers and reports results. (Newer Angular is moving to <strong>Jest</strong>/<strong>Vitest</strong> + web-test-runner.)</p>",
+    "tip": "Structure tests AAA: Arrange, Act, Assert.",
+    "code": "describe('MathUtil', () => {\n  it('adds', () => { expect(add(2, 3)).toBe(5); });\n});",
+    "lang": "ts"
+  },
+  {
+    "id": "test-testbed",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "testbed",
+      "angular"
+    ],
+    "question": "What is TestBed and configureTestingModule?",
+    "answer": "<p><code class=\"inline\">TestBed</code> creates an Angular testing module — a mini environment where you declare/import the component under test and provide (usually mocked) dependencies. <code class=\"inline\">TestBed.createComponent()</code> then gives you a <code class=\"inline\">ComponentFixture</code>.</p>",
+    "tip": "Override real services with mocks in the providers array here.",
+    "code": "await TestBed.configureTestingModule({\n  imports: [MyComponent],\n  providers: [{ provide: DataService, useValue: mockData }]\n}).compileComponents();",
+    "lang": "ts"
+  },
+  {
+    "id": "test-fixture",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "fixture",
+      "detectchanges",
+      "debugelement"
+    ],
+    "question": "ComponentFixture — detectChanges, nativeElement, debugElement?",
+    "answer": "<p>The fixture wraps the component + its DOM. <code class=\"inline\">detectChanges()</code> runs change detection (nothing renders until you call it). <code class=\"inline\">nativeElement</code> is the raw DOM; <code class=\"inline\">debugElement</code> is Angular's wrapper with <code class=\"inline\">query(By.css())</code> for finding elements.</p>",
+    "tip": "Forgetting fixture.detectChanges() is the #1 reason a template assertion fails.",
+    "code": "const fixture = TestBed.createComponent(MyComponent);\nfixture.detectChanges();\nconst h1 = fixture.debugElement.query(By.css('h1')).nativeElement;\nexpect(h1.textContent).toContain('Hello');",
+    "lang": "ts"
+  },
+  {
+    "id": "test-spies",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "spies",
+      "mocking",
+      "jasmine"
+    ],
+    "question": "How do spies work (spyOn, createSpy, returnValue)?",
+    "answer": "<p>A <strong>spy</strong> records calls and can fake return values. <code class=\"inline\">spyOn(obj, 'method')</code> replaces a real method; <code class=\"inline\">jasmine.createSpyObj</code> builds a whole mock. Assert with <code class=\"inline\">toHaveBeenCalledWith</code>.</p>",
+    "tip": "createSpyObj is the clean way to mock a service with several methods.",
+    "code": "const svc = jasmine.createSpyObj('DataService', ['load']);\nsvc.load.and.returnValue(of([1, 2]));\nexpect(svc.load).toHaveBeenCalledWith(42);",
+    "lang": "ts"
+  },
+  {
+    "id": "test-http",
+    "category": "testing",
+    "difficulty": "advanced",
+    "tags": [
+      "http",
+      "httptestingcontroller"
+    ],
+    "question": "How do you test HttpClient calls?",
+    "answer": "<p>Import <code class=\"inline\">HttpClientTestingModule</code> and inject <code class=\"inline\">HttpTestingController</code>. It intercepts requests so no real network happens: <code class=\"inline\">expectOne(url)</code> asserts the request, <code class=\"inline\">flush(data)</code> returns a fake response, and <code class=\"inline\">verify()</code> ensures nothing is outstanding.</p>",
+    "tip": "Call httpMock.verify() in afterEach to catch unexpected or missing requests.",
+    "code": "service.getUsers().subscribe(u => expect(u.length).toBe(2));\nconst req = httpMock.expectOne('/api/users');\nexpect(req.request.method).toBe('GET');\nreq.flush([{ id: 1 }, { id: 2 }]);",
+    "lang": "ts"
+  },
+  {
+    "id": "test-fakeasync",
+    "category": "testing",
+    "difficulty": "advanced",
+    "tags": [
+      "fakeasync",
+      "tick",
+      "async"
+    ],
+    "question": "fakeAsync + tick vs async + whenStable.",
+    "answer": "<p><strong>fakeAsync</strong> runs a test in a virtual time zone; <code class=\"inline\">tick(ms)</code> advances timers synchronously and <code class=\"inline\">flush()</code> drains all pending ones — ideal for <code class=\"inline\">setTimeout</code>/debounce. <strong>async/whenStable</strong> waits for real async tasks (promises) to settle.</p>",
+    "tip": "Use fakeAsync + tick to test debounced search without real waiting.",
+    "code": "it('debounces', fakeAsync(() => {\n  component.onType('a');\n  tick(300);\n  expect(component.results.length).toBe(1);\n}));",
+    "lang": "ts"
+  },
+  {
+    "id": "test-observable",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "observables",
+      "rxjs"
+    ],
+    "question": "How do you test an observable?",
+    "answer": "<p>Subscribe and assert inside the callback. For synchronous streams (<code class=\"inline\">of</code>) assertions run immediately; for async use <code class=\"inline\">fakeAsync</code>/<code class=\"inline\">done</code>. Verify emitted values and completion.</p>",
+    "tip": "For simple cases, subscribe and assert; for timing, reach for marble tests.",
+    "code": "service.data$.subscribe(v => {\n  expect(v).toEqual([1, 2, 3]);\n});",
+    "lang": "ts"
+  },
+  {
+    "id": "test-marble",
+    "category": "testing",
+    "difficulty": "advanced",
+    "tags": [
+      "marble",
+      "rxjs",
+      "testscheduler"
+    ],
+    "question": "What is marble testing?",
+    "answer": "<p>A way to test RxJS timing using ASCII 'marble diagrams' with the <code class=\"inline\">TestScheduler</code>. Characters represent virtual time: <code class=\"inline\">-</code> a frame, letters emissions, <code class=\"inline\">|</code> complete, <code class=\"inline\">#</code> error. Great for operators like <code class=\"inline\">debounceTime</code> and <code class=\"inline\">switchMap</code>.</p>",
+    "tip": "Marble tests make time-based operator behaviour precise and readable.",
+    "code": "testScheduler.run(({ cold, expectObservable }) => {\n  const source$ = cold('-a-b-c|');\n  expectObservable(source$.pipe(map(x => x.toUpperCase())))\n    .toBe('-A-B-C|');\n});",
+    "lang": "ts"
+  },
+  {
+    "id": "test-service",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "service",
+      "unit"
+    ],
+    "question": "How do you unit-test a service?",
+    "answer": "<p>Services are plain classes — instantiate directly or via <code class=\"inline\">TestBed.inject()</code>, mock their dependencies, call methods, and assert results/side effects. No fixture/DOM needed unless the service touches HTTP.</p>",
+    "tip": "Services are the easiest and highest-ROI things to unit-test — start there.",
+    "code": "const service = TestBed.inject(CalcService);\nexpect(service.total([1, 2, 3])).toBe(6);",
+    "lang": "ts"
+  },
+  {
+    "id": "test-pipe",
+    "category": "testing",
+    "difficulty": "beginner",
+    "tags": [
+      "pipe",
+      "unit"
+    ],
+    "question": "How do you test a pipe?",
+    "answer": "<p>Pipes are pure functions — instantiate the class and assert <code class=\"inline\">transform()</code> output for various inputs. No TestBed required.</p>",
+    "tip": "Pipe tests are trivial — just new the pipe and check transform().",
+    "code": "const pipe = new TruncatePipe();\nexpect(pipe.transform('hello world', 5)).toBe('hello…');",
+    "lang": "ts"
+  },
+  {
+    "id": "test-directive",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "directive",
+      "host-component"
+    ],
+    "question": "How do you test a directive?",
+    "answer": "<p>Create a tiny <strong>host component</strong> whose template uses the directive, render it via TestBed, then assert the directive's effect on the host element (classes, styles, events).</p>",
+    "tip": "The host-component pattern is the standard way to test attribute directives.",
+    "code": "@Component({ template: `<div appHighlight></div>` })\nclass HostComponent {}",
+    "lang": "ts"
+  },
+  {
+    "id": "test-input-output",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "input",
+      "output",
+      "component"
+    ],
+    "question": "How do you test @Input and @Output?",
+    "answer": "<p><strong>Input</strong>: set the property on <code class=\"inline\">component</code>, call <code class=\"inline\">detectChanges()</code>, assert the rendered result. <strong>Output</strong>: subscribe to the EventEmitter (or spy on it), trigger the action, and assert it emitted the expected payload.</p>",
+    "tip": "Trigger a click via debugElement.triggerEventHandler to test outputs realistically.",
+    "code": "let emitted;\ncomponent.saved.subscribe(v => (emitted = v));\ncomponent.onSave();\nexpect(emitted).toEqual(expectedItem);",
+    "lang": "ts"
+  },
+  {
+    "id": "test-harness",
+    "category": "testing",
+    "difficulty": "advanced",
+    "tags": [
+      "cdk",
+      "component-harness"
+    ],
+    "question": "What are CDK Component Harnesses?",
+    "answer": "<p>From <code class=\"inline\">@angular/cdk/testing</code>: a harness is a reusable API for interacting with a component in tests without depending on its DOM structure — so tests don't break when internal markup changes. Angular Material ships harnesses for its components.</p>",
+    "tip": "Harnesses decouple tests from DOM internals — more robust than querying CSS.",
+    "code": "const loader = TestbedHarnessEnvironment.loader(fixture);\nconst button = await loader.getHarness(MatButtonHarness);\nawait button.click();",
+    "lang": "ts"
+  },
+  {
+    "id": "test-router",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "router",
+      "navigation"
+    ],
+    "question": "How do you test routing/navigation?",
+    "answer": "<p>Provide the router in test mode (<code class=\"inline\">RouterTestingModule</code> or <code class=\"inline\">provideRouter([])</code>), spy on <code class=\"inline\">Router.navigate</code>, or use a <code class=\"inline\">RouterTestingHarness</code> to drive real navigation and assert the activated component.</p>",
+    "tip": "Spying on router.navigate is the quick way to assert a guard/redirect fired.",
+    "code": "const router = TestBed.inject(Router);\nconst spy = spyOn(router, 'navigate');\ncomponent.logout();\nexpect(spy).toHaveBeenCalledWith(['/login']);",
+    "lang": "ts"
+  },
+  {
+    "id": "test-coverage",
+    "category": "testing",
+    "difficulty": "beginner",
+    "tags": [
+      "coverage",
+      "metrics"
+    ],
+    "question": "What is code coverage and is 100% the goal?",
+    "answer": "<p>Coverage measures which lines/branches your tests execute (<code class=\"inline\">ng test --code-coverage</code>). It shows <em>untested</em> code but not test <em>quality</em> — 100% coverage of trivial getters proves little. Aim for meaningful coverage of logic and edge cases, not a vanity number.</p>",
+    "tip": "High coverage of the wrong things is a false sense of safety — prioritise critical paths.",
+    "code": "ng test --code-coverage",
+    "lang": "bash"
+  },
+  {
+    "id": "test-e2e",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "e2e",
+      "cypress",
+      "playwright"
+    ],
+    "question": "E2E options: Cypress / Playwright vs Protractor.",
+    "answer": "<p><strong>Protractor</strong> was Angular's original e2e tool — now <strong>deprecated</strong>. Modern choices are <strong>Cypress</strong> (great DX, time-travel debugging) and <strong>Playwright</strong> (multi-browser, fast, auto-wait). They drive the real app and assert user-visible behaviour.</p>",
+    "tip": "Mention that Protractor is deprecated — recommend Cypress or Playwright.",
+    "code": "// Cypress\ncy.visit('/login');\ncy.get('[data-cy=email]').type('a@b.com');\ncy.contains('Sign in').click();",
+    "lang": "js"
+  },
+  {
+    "id": "test-best-practices",
+    "category": "testing",
+    "difficulty": "intermediate",
+    "tags": [
+      "best-practices"
+    ],
+    "question": "What makes a good unit test?",
+    "answer": "<ul><li>Tests <strong>behaviour</strong>, not implementation details.</li><li>Fast, isolated, and deterministic (no real network/time).</li><li>One logical assertion/concept per test; descriptive names.</li><li>Arrange-Act-Assert structure; mock external dependencies.</li></ul>",
+    "tip": "If a refactor that keeps behaviour identical breaks your test, the test was too coupled.",
+    "code": "",
+    "lang": ""
+  }
+]

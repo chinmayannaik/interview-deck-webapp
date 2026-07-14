@@ -1,0 +1,170 @@
+[
+  {
+    "id": "sql-joins",
+    "category": "sql",
+    "difficulty": "intermediate",
+    "tags": [
+      "joins"
+    ],
+    "question": "Explain INNER, LEFT, RIGHT, and FULL JOIN.",
+    "answer": "<ul><li><strong>INNER JOIN</strong> — only rows matching in both tables.</li><li><strong>LEFT JOIN</strong> — all left rows + matches (NULLs where none).</li><li><strong>RIGHT JOIN</strong> — all right rows + matches.</li><li><strong>FULL JOIN</strong> — all rows from both, matched where possible.</li></ul>",
+    "tip": "'Find records with no match' = LEFT JOIN ... WHERE right.id IS NULL.",
+    "code": "SELECT u.name, o.total\nFROM users u\nLEFT JOIN orders o ON o.user_id = u.id;",
+    "lang": "sql"
+  },
+  {
+    "id": "sql-where-having",
+    "category": "sql",
+    "difficulty": "intermediate",
+    "tags": [
+      "group-by",
+      "having",
+      "where"
+    ],
+    "question": "WHERE vs HAVING.",
+    "answer": "<p><strong>WHERE</strong> filters rows <em>before</em> grouping/aggregation. <strong>HAVING</strong> filters <em>after</em> <code class=\"inline\">GROUP BY</code>, so it can use aggregate functions like <code class=\"inline\">COUNT()</code>.</p>",
+    "tip": "You can't use an aggregate in WHERE — that's what HAVING is for.",
+    "code": "SELECT dept, COUNT(*)\nFROM emp GROUP BY dept HAVING COUNT(*) > 5;",
+    "lang": "sql"
+  },
+  {
+    "id": "sql-index",
+    "category": "sql",
+    "difficulty": "advanced",
+    "tags": [
+      "index",
+      "performance"
+    ],
+    "question": "What is an index and what's the tradeoff?",
+    "answer": "<p>An index (usually a B-tree) speeds up reads by letting the DB find rows without a full scan. Tradeoff: it consumes storage and slows down <strong>writes</strong> (every insert/update maintains the index). Index columns used in WHERE/JOIN/ORDER BY, not everything.</p>",
+    "tip": "A composite index's column order matters — it helps queries that filter on the leftmost columns.",
+    "code": "CREATE INDEX idx_user_email ON users(email);",
+    "lang": "sql"
+  },
+  {
+    "id": "sql-normalization",
+    "category": "sql",
+    "difficulty": "intermediate",
+    "tags": [
+      "normalization",
+      "design"
+    ],
+    "question": "What is normalization?",
+    "answer": "<p>Organising tables to reduce redundancy and anomalies. <strong>1NF</strong> — atomic columns; <strong>2NF</strong> — no partial dependency on part of a composite key; <strong>3NF</strong> — no transitive dependencies. Denormalise selectively for read performance.</p>",
+    "tip": "Normalise for integrity, denormalise for read speed — know when to trade.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "sql-aggregate",
+    "category": "sql",
+    "difficulty": "beginner",
+    "tags": [
+      "aggregate",
+      "group-by"
+    ],
+    "question": "Name the aggregate functions and GROUP BY.",
+    "answer": "<p><code class=\"inline\">COUNT</code>, <code class=\"inline\">SUM</code>, <code class=\"inline\">AVG</code>, <code class=\"inline\">MIN</code>, <code class=\"inline\">MAX</code> collapse rows into a summary. <code class=\"inline\">GROUP BY</code> defines the buckets they summarise.</p>",
+    "tip": "Every non-aggregated column in SELECT must appear in GROUP BY.",
+    "code": "SELECT status, COUNT(*) FROM orders GROUP BY status;",
+    "lang": "sql"
+  },
+  {
+    "id": "sql-subquery",
+    "category": "sql",
+    "difficulty": "intermediate",
+    "tags": [
+      "subquery",
+      "cte"
+    ],
+    "question": "Subquery vs CTE (WITH).",
+    "answer": "<p>Both nest a query. A <strong>CTE</strong> (<code class=\"inline\">WITH name AS (...)</code>) is named, more readable, can be referenced multiple times, and supports recursion — generally preferred for complex logic over deeply nested subqueries.</p>",
+    "tip": "Reach for a CTE when a subquery gets hard to read or is reused.",
+    "code": "WITH active AS (SELECT * FROM users WHERE active = true)\nSELECT * FROM active WHERE country = 'IN';",
+    "lang": "sql"
+  },
+  {
+    "id": "sql-transaction",
+    "category": "sql",
+    "difficulty": "advanced",
+    "tags": [
+      "transaction",
+      "acid"
+    ],
+    "question": "What does ACID mean?",
+    "answer": "<ul><li><strong>Atomicity</strong> — all or nothing.</li><li><strong>Consistency</strong> — valid state to valid state.</li><li><strong>Isolation</strong> — concurrent transactions don't corrupt each other.</li><li><strong>Durability</strong> — committed data survives crashes.</li></ul>",
+    "tip": "Isolation levels (read committed, serializable...) trade consistency against concurrency.",
+    "code": "BEGIN; UPDATE acct SET bal = bal - 100 WHERE id = 1; UPDATE acct SET bal = bal + 100 WHERE id = 2; COMMIT;",
+    "lang": "sql"
+  },
+  {
+    "id": "sql-delete-truncate",
+    "category": "sql",
+    "difficulty": "beginner",
+    "tags": [
+      "ddl",
+      "dml"
+    ],
+    "question": "DELETE vs TRUNCATE vs DROP.",
+    "answer": "<ul><li><strong>DELETE</strong> — removes rows (can use WHERE), logged, can roll back.</li><li><strong>TRUNCATE</strong> — empties the whole table fast, minimal logging, resets identity.</li><li><strong>DROP</strong> — removes the table structure entirely.</li></ul>",
+    "tip": "TRUNCATE can't be filtered and usually can't be rolled back — be careful.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "sql-primary-foreign",
+    "category": "sql",
+    "difficulty": "beginner",
+    "tags": [
+      "keys",
+      "constraints"
+    ],
+    "question": "Primary key vs foreign key vs unique.",
+    "answer": "<p><strong>Primary key</strong> — uniquely identifies a row, not null, one per table. <strong>Foreign key</strong> — references a primary key in another table, enforcing referential integrity. <strong>Unique</strong> — no duplicates, but allows a null.</p>",
+    "tip": "A foreign key is how you enforce that an order must belong to a real user.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "sql-window",
+    "category": "sql",
+    "difficulty": "advanced",
+    "tags": [
+      "window-functions",
+      "analytics"
+    ],
+    "question": "What are window functions?",
+    "answer": "<p>They compute across a set of rows related to the current row <em>without</em> collapsing them (unlike GROUP BY). Examples: <code class=\"inline\">ROW_NUMBER()</code>, <code class=\"inline\">RANK()</code>, running totals with <code class=\"inline\">SUM() OVER (...)</code>.</p>",
+    "tip": "ROW_NUMBER() OVER (PARTITION BY ...) is the classic 'top N per group' pattern.",
+    "code": "SELECT name, ROW_NUMBER() OVER (PARTITION BY dept ORDER BY salary DESC) rn\nFROM emp;",
+    "lang": "sql"
+  },
+  {
+    "id": "sql-distinct-nulls",
+    "category": "sql",
+    "difficulty": "beginner",
+    "tags": [
+      "null",
+      "distinct"
+    ],
+    "question": "How does NULL behave in comparisons?",
+    "answer": "<p>NULL means 'unknown', so <code class=\"inline\">NULL = NULL</code> is <em>not</em> true — use <code class=\"inline\">IS NULL</code> / <code class=\"inline\">IS NOT NULL</code>. Aggregates like <code class=\"inline\">COUNT(col)</code> skip NULLs, and <code class=\"inline\">COALESCE</code> substitutes a default.</p>",
+    "tip": "WHERE col != 'x' silently drops NULL rows — add OR col IS NULL if you want them.",
+    "code": "SELECT COALESCE(nickname, name) FROM users;",
+    "lang": "sql"
+  },
+  {
+    "id": "sql-injection",
+    "category": "sql",
+    "difficulty": "intermediate",
+    "tags": [
+      "security",
+      "injection"
+    ],
+    "question": "What is SQL injection and how do you prevent it?",
+    "answer": "<p>An attack where user input is concatenated into a query, letting an attacker alter it. Prevent it with <strong>parameterized queries / prepared statements</strong> (never string concatenation), least-privilege DB accounts, and input validation.</p>",
+    "tip": "Parameterized queries are the fix — the ORM/JDBC binds values safely.",
+    "code": "-- safe (bound parameter):\nSELECT * FROM users WHERE email = ?;",
+    "lang": "sql"
+  }
+]

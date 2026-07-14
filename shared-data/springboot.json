@@ -1,0 +1,159 @@
+[
+  {
+    "id": "sb-what-is",
+    "category": "springboot",
+    "difficulty": "beginner",
+    "tags": [
+      "basics",
+      "auto-configuration"
+    ],
+    "question": "What is Spring Boot and how does it differ from Spring?",
+    "answer": "<p>Spring Boot is an opinionated layer on top of the Spring framework that removes boilerplate: <strong>auto-configuration</strong>, <strong>starter dependencies</strong>, an <strong>embedded server</strong> (Tomcat), and production-ready features (Actuator). You get a runnable app with minimal XML/config.</p>",
+    "tip": "Key phrase: 'convention over configuration' with auto-configuration.",
+    "code": "@SpringBootApplication\npublic class App { public static void main(String[] a){ SpringApplication.run(App.class, a); } }",
+    "lang": "java"
+  },
+  {
+    "id": "sb-annotations",
+    "category": "springboot",
+    "difficulty": "beginner",
+    "tags": [
+      "annotations",
+      "stereotypes"
+    ],
+    "question": "Explain the core stereotype annotations.",
+    "answer": "<ul><li><code class=\"inline\">@RestController</code> — REST endpoints returning JSON.</li><li><code class=\"inline\">@Service</code> — business logic layer.</li><li><code class=\"inline\">@Repository</code> — data access (JPA), with exception translation.</li><li><code class=\"inline\">@Component</code> — a generic Spring-managed bean.</li><li><code class=\"inline\">@Configuration</code> — a class that defines beans.</li></ul>",
+    "tip": "@RestController = @Controller + @ResponseBody.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "sb-di",
+    "category": "springboot",
+    "difficulty": "intermediate",
+    "tags": [
+      "dependency-injection",
+      "ioc",
+      "autowired"
+    ],
+    "question": "How does dependency injection work in Spring?",
+    "answer": "<p>The <strong>IoC container</strong> creates and wires beans. Prefer <strong>constructor injection</strong> (immutable, testable, no <code class=\"inline\">@Autowired</code> needed on a single constructor) over field injection.</p>",
+    "tip": "Constructor injection is the recommended style — field injection hides dependencies and hurts testing.",
+    "code": "@Service\npublic class UserService {\n  private final UserRepo repo;\n  public UserService(UserRepo repo) { this.repo = repo; }\n}",
+    "lang": "java"
+  },
+  {
+    "id": "sb-rest-mapping",
+    "category": "springboot",
+    "difficulty": "beginner",
+    "tags": [
+      "rest",
+      "mapping"
+    ],
+    "question": "How do you build a REST endpoint?",
+    "answer": "<p>Use <code class=\"inline\">@RestController</code> with mapping annotations: <code class=\"inline\">@GetMapping</code>, <code class=\"inline\">@PostMapping</code>, etc. Bind inputs with <code class=\"inline\">@PathVariable</code>, <code class=\"inline\">@RequestParam</code>, and <code class=\"inline\">@RequestBody</code>.</p>",
+    "tip": "Return ResponseEntity when you need to control the status code and headers.",
+    "code": "@GetMapping(\"/users/{id}\")\npublic User get(@PathVariable Long id) { return service.find(id); }",
+    "lang": "java"
+  },
+  {
+    "id": "sb-jpa",
+    "category": "springboot",
+    "difficulty": "intermediate",
+    "tags": [
+      "jpa",
+      "data",
+      "repository"
+    ],
+    "question": "What is Spring Data JPA?",
+    "answer": "<p>It generates repository implementations from interfaces. Extend <code class=\"inline\">JpaRepository&lt;Entity, Id&gt;</code> and you get CRUD plus derived query methods from method names (<code class=\"inline\">findByEmail</code>) — no boilerplate SQL.</p>",
+    "tip": "Method-name queries are auto-derived; use @Query for anything complex.",
+    "code": "interface UserRepo extends JpaRepository<User, Long> {\n  Optional<User> findByEmail(String email);\n}",
+    "lang": "java"
+  },
+  {
+    "id": "sb-exception-handling",
+    "category": "springboot",
+    "difficulty": "intermediate",
+    "tags": [
+      "exceptions",
+      "error-handling"
+    ],
+    "question": "How do you handle exceptions globally?",
+    "answer": "<p>Use <code class=\"inline\">@RestControllerAdvice</code> with <code class=\"inline\">@ExceptionHandler</code> methods to translate exceptions into consistent JSON error responses and status codes across all controllers.</p>",
+    "tip": "Centralised error handling keeps controllers clean and responses consistent.",
+    "code": "@RestControllerAdvice\nclass ApiExceptionHandler {\n  @ExceptionHandler(NotFoundException.class)\n  ResponseEntity<?> handle(NotFoundException e){ return ResponseEntity.status(404).body(e.getMessage()); }\n}",
+    "lang": "java"
+  },
+  {
+    "id": "sb-profiles",
+    "category": "springboot",
+    "difficulty": "intermediate",
+    "tags": [
+      "profiles",
+      "config"
+    ],
+    "question": "What are Spring profiles?",
+    "answer": "<p>Profiles let you keep environment-specific config (dev, test, prod) in separate files (<code class=\"inline\">application-dev.yml</code>) and activate one at runtime, so the same build behaves differently per environment.</p>",
+    "tip": "Activate with spring.profiles.active or an env variable — never hardcode prod secrets.",
+    "code": "spring.profiles.active=prod",
+    "lang": ""
+  },
+  {
+    "id": "sb-actuator",
+    "category": "springboot",
+    "difficulty": "beginner",
+    "tags": [
+      "actuator",
+      "monitoring"
+    ],
+    "question": "What does Spring Boot Actuator provide?",
+    "answer": "<p>Production-ready endpoints for monitoring: <code class=\"inline\">/health</code>, <code class=\"inline\">/metrics</code>, <code class=\"inline\">/info</code>, and more — used by load balancers and observability tools to check app status.</p>",
+    "tip": "Lock down actuator endpoints in prod — some expose sensitive info.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "sb-cors",
+    "category": "springboot",
+    "difficulty": "intermediate",
+    "tags": [
+      "cors",
+      "security"
+    ],
+    "question": "How do you enable CORS for an Angular frontend?",
+    "answer": "<p>Allow the frontend origin either per-controller with <code class=\"inline\">@CrossOrigin</code> or globally via a <code class=\"inline\">WebMvcConfigurer</code> / Spring Security CORS config, specifying allowed origins, methods, and headers.</p>",
+    "tip": "Never use allowedOrigins(\"*\") together with credentials — the browser blocks it.",
+    "code": "@CrossOrigin(origins = \"https://app.example.com\")\n@RestController\nclass UserController {}",
+    "lang": "java"
+  },
+  {
+    "id": "sb-security-jwt",
+    "category": "springboot",
+    "difficulty": "advanced",
+    "tags": [
+      "security",
+      "jwt",
+      "auth"
+    ],
+    "question": "How does JWT auth work with Spring Security?",
+    "answer": "<p>On login the server issues a signed <strong>JWT</strong>. A security filter validates the token's signature and expiry on each request and sets the authentication context. The Angular client stores the token and an HTTP interceptor sends it as <code class=\"inline\">Authorization: Bearer …</code>.</p>",
+    "tip": "JWTs are stateless — the server doesn't store sessions, which scales well.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "sb-transactional",
+    "category": "springboot",
+    "difficulty": "intermediate",
+    "tags": [
+      "transactions",
+      "jpa"
+    ],
+    "question": "What does @Transactional do?",
+    "answer": "<p>Wraps a method in a database transaction — all operations commit together or roll back on a runtime exception. It manages the transaction boundary declaratively via a proxy.</p>",
+    "tip": "By default it rolls back on unchecked exceptions only — configure rollbackFor for checked ones.",
+    "code": "@Transactional\npublic void transfer(Long from, Long to, BigDecimal amt) { /* ... */ }",
+    "lang": "java"
+  }
+]

@@ -1,0 +1,814 @@
+[
+  {
+    "id": "code-reverse-string",
+    "category": "coding",
+    "difficulty": "beginner",
+    "tags": [
+      "string",
+      "basics"
+    ],
+    "question": "Reverse a string without using .reverse().",
+    "answer": "<p>Walk the string from the end to the start and build a new one, or convert to an array and back. Time O(n), space O(n).</p>",
+    "tip": "The one-liner [...str].reverse().join('') is fine too — but interviewers often want the manual loop.",
+    "code": "function reverse(str) {\n  let out = '';\n  for (let i = str.length - 1; i >= 0; i--) out += str[i];\n  return out;\n}\nreverse('hello'); // 'olleh'",
+    "lang": "js"
+  },
+  {
+    "id": "code-palindrome",
+    "category": "coding",
+    "difficulty": "beginner",
+    "tags": [
+      "string",
+      "two-pointer"
+    ],
+    "question": "Check whether a string is a palindrome.",
+    "answer": "<p>A palindrome reads the same forward and backward (e.g. <strong>madam</strong>, <strong>racecar</strong>). The optimal solution uses the <strong>Two Pointer</strong> approach. Keep one pointer at the beginning and another at the end. Compare both characters. If they match, move both pointers toward the center. If any pair doesn't match, return <code class=\"inline\">false</code>.</p>",
+    "tip": "Start with one pointer at the beginning and another at the end. Compare and move inward until both pointers meet.",
+    "code": "function isPalindrome(str) {\n  let left = 0;\n  let right = str.length - 1;\n\n  while (left < right) {\n    if (str[left] ! == str[right]) {\n      return false;\n    }\n\n    left++;\n    right--;\n  }\n\n  return true;\n}\n\nconsole.log(isPalindrome('madam'));    // true\nconsole.log(isPalindrome('racecar'));  // true\nconsole.log(isPalindrome('hello'));    // false",
+    "lang": "js",
+    "deep": "<h4>Example</h4><p>Input: <code class=\"inline\">madam</code></p><table><thead><tr><th>Left</th><th>Right</th><th>Comparison</th></tr></thead><tbody><tr><td>m</td><td>m</td><td>✓ Match</td></tr><tr><td>a</td><td>a</td><td>✓ Match</td></tr><tr><td>d</td><td>d</td><td>Pointers meet</td></tr></tbody></table><h4>Algorithm</h4><ol><li>Create two pointers: one at the beginning and one at the end.</li><li>Compare both characters.</li><li>If they don't match, return <code class=\"inline\">false</code>.</li><li>If they match, move both pointers toward the center.</li><li>Repeat until the pointers meet.</li><li>If no mismatch is found, return <code class=\"inline\">true</code>.</li></ol><h4>Dry Run</h4><pre><code>Input = \"racecar\"\n\nleft = 0 (r)\nright = 6 (r) ✓\n\nleft = 1 (a)\nright = 5 (a) ✓\n\nleft = 2 (c)\nright = 4 (c) ✓\n\nleft = 3 (e)\nright = 3 (e)\n\nLoop ends → return true</code></pre><h4>Follow-up (Very Common)</h4><p>The interviewer may ask you to ignore spaces, punctuation and uppercase letters.</p><pre><code>// Convert to lowercase\nstr = str.toLowerCase();\n\n// Remove spaces & special characters\nstr = str.replace(/[^a-z0-9]/g, '');</code></pre><p><strong>Regex Explanation:</strong></p><table><thead><tr><th>Part</th><th>Meaning</th></tr></thead><tbody><tr><td><code class=\"inline\">a-z</code></td><td>Letters</td></tr><tr><td><code class=\"inline\">0-9</code></td><td>Numbers</td></tr><tr><td><code class=\"inline\">^</code></td><td>NOT these characters</td></tr><tr><td><code class=\"inline\">g</code></td><td>Replace all occurrences</td></tr></tbody></table><p>Example:</p><pre><code>Input:\n\"A man, a plan, a canal: Panama\"\n\nAfter preprocessing:\n\"amanaplanacanalpanama\"</code></pre><h4>Complexity</h4><ul><li><strong>Time:</strong> O(n)</li><li><strong>Space:</strong> O(1) (excluding optional preprocessing)</li></ul><h4>Interview Answer</h4><p>\"I'll solve the basic palindrome first using the Two Pointer approach. If the interviewer wants to ignore spaces or special characters, I'll preprocess the string by converting it to lowercase and removing non-alphanumeric characters before applying the same algorithm.\"</p>"
+  },
+  {
+    "id": "code-fizzbuzz",
+    "category": "coding",
+    "difficulty": "beginner",
+    "tags": [
+      "logic",
+      "loops",
+      "modulus",
+      "classic"
+    ],
+    "question": "Implement FizzBuzz for numbers from 1 to n.",
+    "answer": "<p>Loop from <code class=\"inline\">1</code> to <code class=\"inline\">n</code>. For each number:</p><ul><li>If divisible by both <strong>3</strong> and <strong>5</strong>, print <strong>FizzBuzz</strong>.</li><li>Else if divisible by <strong>3</strong>, print <strong>Fizz</strong>.</li><li>Else if divisible by <strong>5</strong>, print <strong>Buzz</strong>.</li><li>Otherwise, print the number itself.</li></ul>",
+    "tip": "Always check divisibility by both 3 and 5 first, otherwise 15 will match only the first condition.",
+    "code": "function fizzBuzz(n) {\n  for (let i = 1; i <= n; i++) {\n    if (i % 3 === 0 && i % 5 === 0) {\n      console.log('FizzBuzz');\n    } else if (i % 3 === 0) {\n      console.log('Fizz');\n    } else if (i % 5 === 0) {\n      console.log('Buzz');\n    } else {\n      console.log(i);\n    }\n  }\n}\n\nfizzBuzz(15);",
+    "lang": "js",
+    "deep": "<h4>What does 'divisible' mean?</h4><p>A number is divisible by another number if the remainder is <code class=\"inline\">0</code>. We use the modulus (<code class=\"inline\">%</code>) operator to check this.</p><pre><code>6 % 3 = 0   ✓ Divisible by 3\n10 % 5 = 0  ✓ Divisible by 5\n7 % 3 = 1   ✗ Not divisible by 3</code></pre><h4>Example (n = 15)</h4><table><thead><tr><th>Number</th><th>Output</th><th>Reason</th></tr></thead><tbody><tr><td>1</td><td>1</td><td>Not divisible by 3 or 5</td></tr><tr><td>2</td><td>2</td><td>Not divisible by 3 or 5</td></tr><tr><td>3</td><td>Fizz</td><td>Divisible by 3</td></tr><tr><td>4</td><td>4</td><td>Not divisible by 3 or 5</td></tr><tr><td>5</td><td>Buzz</td><td>Divisible by 5</td></tr><tr><td>6</td><td>Fizz</td><td>Divisible by 3</td></tr><tr><td>9</td><td>Fizz</td><td>Divisible by 3</td></tr><tr><td>10</td><td>Buzz</td><td>Divisible by 5</td></tr><tr><td>12</td><td>Fizz</td><td>Divisible by 3</td></tr><tr><td>15</td><td>FizzBuzz</td><td>Divisible by both 3 and 5</td></tr></tbody></table><h4>Step-by-Step Algorithm</h4><ol><li>Start a loop from 1 to n.</li><li>Check if the number is divisible by both 3 and 5.</li><li>If yes, print <strong>FizzBuzz</strong>.</li><li>Otherwise, check if divisible by 3.</li><li>If yes, print <strong>Fizz</strong>.</li><li>Otherwise, check if divisible by 5.</li><li>If yes, print <strong>Buzz</strong>.</li><li>Otherwise, print the number.</li></ol><h4>Dry Run (i = 15)</h4><pre><code>15 % 3 == 0 ✓\n15 % 5 == 0 ✓\n\nBoth conditions are true\nOutput → FizzBuzz</code></pre><h4>Common Mistake</h4><pre><code>// Wrong\nif (i % 3 === 0)\nelse if (i % 5 === 0)\nelse if (i % 3 === 0 && i % 5 === 0)</code></pre><p>This will never print <strong>FizzBuzz</strong> because <code class=\"inline\">15</code> already satisfies the first condition (<code class=\"inline\">i % 3 === 0</code>).</p><h4>Complexity</h4><ul><li><strong>Time:</strong> O(n)</li><li><strong>Space:</strong> O(1)</li></ul><h4>Interview Tip</h4><p>After writing the basic solution, you can mention that it can be simplified by building the output string (<code class=\"inline\">'Fizz'</code> + <code class=\"inline\">'Buzz'</code>) to avoid checking the divisible-by-15 case separately. However, the if-else version is clearer and easier to explain in interviews.</p>"
+  },
+  {
+    "id": "code-two-sum",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "array",
+      "hashmap",
+      "V.Imp"
+    ],
+    "question": "Two Sum - Given an array of integers and a target, return the indices of the two numbers whose sum equals the target.",
+    "answer": "<p>The brute-force solution uses two nested loops and checks every pair, resulting in <strong>O(n²)</strong> time complexity.</p><p>A better approach is to use a <strong>HashMap (Map)</strong>. As we iterate through the array, we calculate the number we need (<code class=\"inline\">target - currentNumber</code>). If that number already exists in the Map, we've found the answer. Otherwise, store the current number and its index in the Map.</p>",
+    "tip": "Think 'What number do I need to reach the target?' instead of checking every pair.",
+    "code": "function twoSum(nums, target) {\n  const seen = new Map();\n\n  for (let i = 0; i < nums.length; i++) {\n    const current = nums[i];\n    const need = target - current;\n\n    // Have we already seen the required number?\n    if (seen.has(need)) {\n      return [seen.get(need), i];\n    }\n\n    // Store current number and its index\n    seen.set(current, i);\n  }\n}\n\nconsole.log(twoSum([2, 7, 11, 15], 9)); // [0, 1]",
+    "lang": "js",
+    "deep": "<h4>Example</h4><p><strong>Input:</strong></p><pre><code>nums = [2, 7, 11, 15]\ntarget = 9</code></pre><h4>Expected Output</h4><pre><code>[0, 1]</code></pre><p>Because <strong>nums[0] + nums[1] = 2 + 7 = 9</strong>.</p><h4>Algorithm</h4><ol><li>Create an empty <strong>Map</strong>.</li><li>Loop through the array.</li><li>For each number, calculate <code class=\"inline\">need = target - current</code>.</li><li>If <code class=\"inline\">need</code> already exists in the Map, return both indices.</li><li>Otherwise, store the current number and its index in the Map.</li><li>Continue until a match is found.</li></ol><h4>Dry Run</h4><table><thead><tr><th>Current</th><th>Need</th><th>Map</th><th>Action</th></tr></thead><tbody><tr><td>2</td><td>7</td><td>{ }</td><td>Store 2 → 0</td></tr><tr><td>7</td><td>2</td><td>{2:0}</td><td>Found 2 ✓ Return [0,1]</td></tr></tbody></table><h4>Why HashMap?</h4><p>Searching an array takes <strong>O(n)</strong> time, but looking up a value in a <strong>Map</strong> takes approximately <strong>O(1)</strong>. This reduces the overall solution from <strong>O(n²)</strong> to <strong>O(n)</strong>.</p><h4>Complexity</h4><ul><li><strong>Time:</strong> O(n)</li><li><strong>Space:</strong> O(n) (for the HashMap)</li></ul><h4>Interview Answer</h4><p>\"Instead of checking every pair, I iterate through the array once. For each element, I calculate the complement (<code class=\"inline\">target - current</code>). If the complement already exists in a HashMap, I've found the answer. Otherwise, I store the current number and continue. This gives an O(n) solution.\"</p>"
+  },
+  {
+    "id": "code-group-anagrams",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "array",
+      "string",
+      "hashmap",
+      "sorting"
+    ],
+    "question": "Group Anagrams — group strings that are anagrams together.",
+    "answer": "<p>Sort each word alphabetically and use the sorted string as the key inside a <code class=\"inline\">Map</code>. Words with the same sorted characters belong to the same group.</p>",
+    "tip": "Whenever multiple strings can be represented by a common signature, use that signature as a Map key.",
+    "code": "function groupAnagrams(strs) {\n  const map = new Map();\n\n  for (const word of strs) {\n    const key = word.split('').sort().join('');\n\n    if (!map.has(key)) {\n      map.set(key, []);\n    }\n\n    map.get(key).push(word);\n  }\n\n  return [...map.values()];\n}\n\nconsole.log(groupAnagrams(['eat','tea','tan','ate','nat','bat']));",
+    "lang": "js"
+  },
+  {
+    "id": "code-top-k-frequent",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "array",
+      "hashmap",
+      "sorting"
+    ],
+    "question": "Top K Frequent Elements — return the K most frequent elements.",
+    "answer": "<p>Count the frequency of every number using a <code class=\"inline\">Map</code>, sort by frequency in descending order, then return the first K elements.</p>",
+    "tip": "Interviewers often ask how to improve this solution to O(n) using Bucket Sort.",
+    "code": "function topKFrequent(nums, k) {\n  const freq = new Map();\n\n  for (const num of nums) {\n    freq.set(num, (freq.get(num) || 0) + 1);\n  }\n\n  return [...freq.entries()]\n    .sort((a, b) => b[1] - a[1])\n    .slice(0, k)\n    .map(item => item[0]);\n}\n\nconsole.log(topKFrequent([1,1,1,2,2,3],2));",
+    "lang": "js"
+  },
+  {
+    "id": "code-product-except-self",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "array",
+      "prefix",
+      "suffix"
+    ],
+    "question": "Product of Array Except Self — return the product of all elements except itself.",
+    "answer": "<p>Build prefix products from the left and suffix products from the right. Multiply both values to get the answer for each index without using division.</p>",
+    "tip": "Prefix & Suffix is one of the most common interview patterns for arrays.",
+    "code": "function productExceptSelf(nums) {\n  const result = Array(nums.length).fill(1);\n\n  let prefix = 1;\n  for (let i = 0; i < nums.length; i++) {\n    result[i] = prefix;\n    prefix *= nums[i];\n  }\n\n  let suffix = 1;\n  for (let i = nums.length - 1; i >= 0; i--) {\n    result[i] *= suffix;\n    suffix *= nums[i];\n  }\n\n  return result;\n}\n\nconsole.log(productExceptSelf([1,2,3,4]));",
+    "lang": "js"
+  },
+  {
+    "id": "code-longest-consecutive-sequence",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "array",
+      "set"
+    ],
+    "question": "Longest Consecutive Sequence — find the length of the longest consecutive sequence.",
+    "answer": "<p>Store all numbers inside a <code class=\"inline\">Set</code>. Only start counting when the current number is the beginning of a sequence (its previous number doesn't exist). This guarantees O(n) time.</p>",
+    "tip": "The key trick is checking <code class=\"inline\">num - 1</code>. If it exists, skip because the sequence has already been counted.",
+    "code": "function longestConsecutive(nums) {\n  const set = new Set(nums);\n  let longest = 0;\n\n  for (const num of set) {\n    if (!set.has(num - 1)) {\n      let current = num;\n      let length = 1;\n\n      while (set.has(current + 1)) {\n        current++;\n        length++;\n      }\n\n      longest = Math.max(longest, length);\n    }\n  }\n\n  return longest;\n}\n\nconsole.log(longestConsecutive([100,4,200,1,3,2])); // 4",
+    "lang": "js"
+  },
+  {
+    "id": "code-three-sum",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "array",
+      "two-pointers",
+      "sorting"
+    ],
+    "question": "3Sum — find all unique triplets whose sum is zero.",
+    "answer": "<p>Sort the array first. Fix one number and use two pointers (<code class=\"inline\">left</code> and <code class=\"inline\">right</code>) to find the remaining two numbers. Skip duplicate values to avoid duplicate triplets.</p>",
+    "tip": "Whenever a question asks for pairs or triplets in a sorted array, think Two Pointers.",
+    "code": "function threeSum(nums) {\n  nums.sort((a,b)=>a-b);\n  const result = [];\n\n  for(let i=0;i<nums.length-2;i++){\n    if(i>0 && nums[i]===nums[i-1]) continue;\n\n    let left=i+1;\n    let right=nums.length-1;\n\n    while(left<right){\n      const sum=nums[i]+nums[left]+nums[right];\n\n      if(sum===0){\n        result.push([nums[i],nums[left],nums[right]]);\n        while(left<right && nums[left]===nums[left+1]) left++;\n        while(left<right && nums[right]===nums[right-1]) right--;\n        left++;\n        right--;\n      }else if(sum<0){\n        left++;\n      }else{\n        right--;\n      }\n    }\n  }\n\n  return result;\n}\n\nconsole.log(threeSum([-1,0,1,2,-1,-4]));",
+    "lang": "js"
+  },
+  {
+    "id": "code-container-most-water",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "array",
+      "two-pointers"
+    ],
+    "question": "Container With Most Water — find the maximum amount of water a container can store.",
+    "answer": "<p>Use two pointers at both ends of the array. Calculate the area and move the pointer with the smaller height inward because moving the taller one cannot increase the area.</p>",
+    "tip": "Move the smaller height pointer, never the taller one.",
+    "code": "function maxArea(height) {\n  let left=0;\n  let right=height.length-1;\n  let max=0;\n\n  while(left<right){\n    const area=Math.min(height[left],height[right])*(right-left);\n    max=Math.max(max,area);\n\n    if(height[left]<height[right]) left++;\n    else right--;\n  }\n\n  return max;\n}\n\nconsole.log(maxArea([1,8,6,2,5,4,8,3,7]));",
+    "lang": "js"
+  },
+  {
+    "id": "code-longest-substring-without-repeating",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "string",
+      "sliding-window",
+      "hashmap"
+    ],
+    "question": "Longest Substring Without Repeating Characters.",
+    "answer": "<p>Maintain a sliding window using two pointers. Store the latest index of every character inside a Map. Whenever a duplicate appears, move the left pointer accordingly.</p>",
+    "tip": "Sliding Window + HashMap is one of the most common interview patterns.",
+    "code": "function lengthOfLongestSubstring(s){\n  const map=new Map();\n  let left=0;\n  let max=0;\n\n  for(let right=0;right<s.length;right++){\n    if(map.has(s[right])){\n      left=Math.max(left,map.get(s[right])+1);\n    }\n\n    map.set(s[right],right);\n    max=Math.max(max,right-left+1);\n  }\n\n  return max;\n}\n\nconsole.log(lengthOfLongestSubstring('abcabcbb'));",
+    "lang": "js"
+  },
+  {
+    "id": "code-longest-palindromic-substring",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "string",
+      "two-pointers"
+    ],
+    "question": "Longest Palindromic Substring.",
+    "answer": "<p>Expand around every character (and every gap between characters) as the center of a palindrome. Keep track of the longest palindrome found.</p>",
+    "tip": "Every palindrome grows outward from its center.",
+    "code": "function longestPalindrome(s){\n  let start=0,end=0;\n\n  function expand(left,right){\n    while(left>=0 && right<s.length && s[left]===s[right]){\n      left--;\n      right++;\n    }\n    return [left+1,right-1];\n  }\n\n  for(let i=0;i<s.length;i++){\n    const odd=expand(i,i);\n    const even=expand(i,i+1);\n\n    const longer=(odd[1]-odd[0])>(even[1]-even[0])?odd:even;\n\n    if(longer[1]-longer[0]>end-start){\n      start=longer[0];\n      end=longer[1];\n    }\n  }\n\n  return s.substring(start,end+1);\n}\n\nconsole.log(longestPalindrome('babad'));",
+    "lang": "js"
+  },
+  {
+    "id": "code-valid-parentheses",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "stack",
+      "string"
+    ],
+    "question": "Valid Parentheses — determine whether the parentheses are valid.",
+    "answer": "<p>Use a Stack. Push every opening bracket. Whenever a closing bracket appears, verify it matches the top of the stack. At the end, the stack must be empty.</p>",
+    "tip": "Whenever matching pairs appear, Stack should be your first thought.",
+    "code": "function isValid(s){\n  const stack=[];\n  const map={')':'(',']':'[','}':'{'};\n\n  for(const ch of s){\n    if(ch==='('||ch==='['||ch==='{'){\n      stack.push(ch);\n    }else{\n      if(stack.pop()!==map[ch]){\n        return false;\n      }\n    }\n  }\n\n  return stack.length===0;\n}\n\nconsole.log(isValid('()[]{}'));",
+    "lang": "js"
+  },
+  {
+    "id": "code-generate-parentheses",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "backtracking",
+      "recursion",
+      "string"
+    ],
+    "question": "Generate Parentheses — generate all combinations of well-formed parentheses.",
+    "answer": "<p>Use backtracking. Keep adding '(' until the limit is reached, then add ')' only when it won't make the string invalid. Backtrack after each recursive call.</p>",
+    "tip": "Backtracking is about making a choice, exploring it, then undoing that choice.",
+    "code": "function generateParenthesis(n) {\n  const result = [];\n\n  function backtrack(str, open, close) {\n    if (str.length === n * 2) {\n      result.push(str);\n      return;\n    }\n\n    if (open < n) {\n      backtrack(str + '(', open + 1, close);\n    }\n\n    if (close < open) {\n      backtrack(str + ')', open, close + 1);\n    }\n  }\n\n  backtrack('', 0, 0);\n  return result;\n}\n\nconsole.log(generateParenthesis(3));",
+    "lang": "js"
+  },
+  {
+    "id": "code-daily-temperatures",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "stack",
+      "monotonic-stack",
+      "array"
+    ],
+    "question": "Daily Temperatures — return how many days until a warmer temperature.",
+    "answer": "<p>Maintain a monotonic decreasing stack of indices. Whenever the current temperature is higher than the top of the stack, calculate the waiting days and pop it.</p>",
+    "tip": "Questions asking for the 'next greater element' usually use a Monotonic Stack.",
+    "code": "function dailyTemperatures(temperatures) {\n  const result = Array(temperatures.length).fill(0);\n  const stack = [];\n\n  for (let i = 0; i < temperatures.length; i++) {\n    while (stack.length && temperatures[i] > temperatures[stack[stack.length - 1]]) {\n      const index = stack.pop();\n      result[index] = i - index;\n    }\n    stack.push(i);\n  }\n\n  return result;\n}\n\nconsole.log(dailyTemperatures([73,74,75,71,69,72,76,73]));",
+    "lang": "js"
+  },
+  {
+    "id": "code-min-stack",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "stack",
+      "design"
+    ],
+    "question": "Min Stack — design a stack that supports retrieving the minimum element in O(1).",
+    "answer": "<p>Maintain two stacks. One stores all values, while the other stores the current minimum after each push. The minimum is always at the top of the second stack.</p>",
+    "tip": "Whenever constant-time minimum or maximum is required, think of maintaining an auxiliary stack.",
+    "code": "class MinStack {\n  constructor() {\n    this.stack = [];\n    this.minStack = [];\n  }\n\n  push(val) {\n    this.stack.push(val);\n\n    if (!this.minStack.length || val <= this.getMin()) {\n      this.minStack.push(val);\n    }\n  }\n\n  pop() {\n    if (this.stack.pop() === this.getMin()) {\n      this.minStack.pop();\n    }\n  }\n\n  top() {\n    return this.stack[this.stack.length - 1];\n  }\n\n  getMin() {\n    return this.minStack[this.minStack.length - 1];\n  }\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-evaluate-reverse-polish-notation",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "stack",
+      "math"
+    ],
+    "question": "Evaluate Reverse Polish Notation.",
+    "answer": "<p>Traverse the tokens. Push numbers onto the stack. When an operator is found, pop the last two numbers, evaluate them, and push the result back.</p>",
+    "tip": "Reverse Polish Notation is a classic Stack problem.",
+    "code": "function evalRPN(tokens) {\n  const stack = [];\n\n  for (const token of tokens) {\n    if (!'+-*/'.includes(token)) {\n      stack.push(Number(token));\n    } else {\n      const b = stack.pop();\n      const a = stack.pop();\n\n      switch (token) {\n        case '+': stack.push(a + b); break;\n        case '-': stack.push(a - b); break;\n        case '*': stack.push(a * b); break;\n        case '/': stack.push(Math.trunc(a / b)); break;\n      }\n    }\n  }\n\n  return stack.pop();\n}\n\nconsole.log(evalRPN(['2','1','+','3','*']));",
+    "lang": "js"
+  },
+  {
+    "id": "code-binary-search-rotated-array",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "binary-search",
+      "array"
+    ],
+    "question": "Search in Rotated Sorted Array.",
+    "answer": "<p>Apply Binary Search while determining which half of the array is sorted. Decide whether the target lies in the sorted half, then continue searching only that half.</p>",
+    "tip": "The trick is identifying the sorted half at every iteration.",
+    "code": "function search(nums, target) {\n  let left = 0;\n  let right = nums.length - 1;\n\n  while (left <= right) {\n    const mid = Math.floor((left + right) / 2);\n\n    if (nums[mid] === target) return mid;\n\n    if (nums[left] <= nums[mid]) {\n      if (target >= nums[left] && target < nums[mid]) {\n        right = mid - 1;\n      } else {\n        left = mid + 1;\n      }\n    } else {\n      if (target > nums[mid] && target <= nums[right]) {\n        left = mid + 1;\n      } else {\n        right = mid - 1;\n      }\n    }\n  }\n\n  return -1;\n}\n\nconsole.log(search([4,5,6,7,0,1,2],0));",
+    "lang": "js"
+  },
+  {
+    "id": "code-find-first-last-position",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "array",
+      "binary-search"
+    ],
+    "question": "Find First and Last Position of Element in Sorted Array.",
+    "answer": "<p>Use Binary Search twice—once to find the leftmost occurrence and once to find the rightmost occurrence. This gives O(log n) time complexity.</p>",
+    "tip": "Whenever you need first or last occurrence in a sorted array, think of modified Binary Search.",
+    "code": "function searchRange(nums, target) {\n  function find(first) {\n    let left = 0, right = nums.length - 1;\n    let ans = -1;\n\n    while (left <= right) {\n      const mid = Math.floor((left + right) / 2);\n\n      if (nums[mid] === target) {\n        ans = mid;\n        if (first) right = mid - 1;\n        else left = mid + 1;\n      } else if (nums[mid] < target) {\n        left = mid + 1;\n      } else {\n        right = mid - 1;\n      }\n    }\n\n    return ans;\n  }\n\n  return [find(true), find(false)];\n}\n\nconsole.log(searchRange([5,7,7,8,8,10],8));",
+    "lang": "js"
+  },
+  {
+    "id": "code-merge-intervals",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "array",
+      "intervals",
+      "sorting"
+    ],
+    "question": "Merge Intervals — merge all overlapping intervals.",
+    "answer": "<p>Sort intervals by start time. Compare each interval with the previous one. If they overlap, merge them; otherwise, add a new interval.</p>",
+    "tip": "Almost every interval problem starts with sorting.",
+    "code": "function merge(intervals) {\n  intervals.sort((a,b)=>a[0]-b[0]);\n\n  const result=[];\n\n  for(const interval of intervals){\n    if(!result.length || result[result.length-1][1] < interval[0]){\n      result.push(interval);\n    }else{\n      result[result.length-1][1]=Math.max(result[result.length-1][1],interval[1]);\n    }\n  }\n\n  return result;\n}\n\nconsole.log(merge([[1,3],[2,6],[8,10],[15,18]]));",
+    "lang": "js"
+  },
+  {
+    "id": "code-insert-interval",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "array",
+      "intervals"
+    ],
+    "question": "Insert Interval — insert a new interval into sorted intervals.",
+    "answer": "<p>Add all intervals before the new interval, merge overlapping intervals, then append the remaining intervals.</p>",
+    "tip": "This is an extension of Merge Intervals. Master Merge Intervals first.",
+    "code": "function insert(intervals,newInterval){\n  const result=[];\n  let i=0;\n\n  while(i<intervals.length && intervals[i][1]<newInterval[0]){\n    result.push(intervals[i++]);\n  }\n\n  while(i<intervals.length && intervals[i][0]<=newInterval[1]){\n    newInterval=[\n      Math.min(newInterval[0],intervals[i][0]),\n      Math.max(newInterval[1],intervals[i][1])\n    ];\n    i++;\n  }\n\n  result.push(newInterval);\n\n  while(i<intervals.length){\n    result.push(intervals[i++]);\n  }\n\n  return result;\n}\n\nconsole.log(insert([[1,3],[6,9]],[2,5]));",
+    "lang": "js"
+  },
+  {
+    "id": "code-spiral-matrix",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "matrix",
+      "array",
+      "simulation"
+    ],
+    "question": "Spiral Matrix — return all elements in spiral order.",
+    "answer": "<p>Maintain four boundaries (top, bottom, left, right). Traverse each boundary and shrink it until every element is visited.</p>",
+    "tip": "Most matrix traversal problems use boundary pointers.",
+    "code": "function spiralOrder(matrix){\n  const result=[];\n\n  let top=0;\n  let bottom=matrix.length-1;\n  let left=0;\n  let right=matrix[0].length-1;\n\n  while(top<=bottom && left<=right){\n    for(let i=left;i<=right;i++) result.push(matrix[top][i]);\n    top++;\n\n    for(let i=top;i<=bottom;i++) result.push(matrix[i][right]);\n    right--;\n\n    if(top<=bottom){\n      for(let i=right;i>=left;i--) result.push(matrix[bottom][i]);\n      bottom--;\n    }\n\n    if(left<=right){\n      for(let i=bottom;i>=top;i--) result.push(matrix[i][left]);\n      left++;\n    }\n  }\n\n  return result;\n}\n\nconsole.log(spiralOrder([[1,2,3],[4,5,6],[7,8,9]]));",
+    "lang": "js"
+  },
+  {
+    "id": "code-number-of-islands",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "graph",
+      "dfs",
+      "matrix",
+      "bfs"
+    ],
+    "question": "Number of Islands — count the number of islands in a grid.",
+    "answer": "<p>Traverse every cell. Whenever you find land ('1'), increment the count and perform DFS/BFS to mark the entire island as visited.</p>",
+    "tip": "Whenever you need to visit connected cells, think DFS or BFS.",
+    "code": "function numIslands(grid){\n  let count=0;\n\n  function dfs(r,c){\n    if(r<0||c<0||r>=grid.length||c>=grid[0].length||grid[r][c]==='0') return;\n\n    grid[r][c]='0';\n\n    dfs(r+1,c);\n    dfs(r-1,c);\n    dfs(r,c+1);\n    dfs(r,c-1);\n  }\n\n  for(let r=0;r<grid.length;r++){\n    for(let c=0;c<grid[0].length;c++){\n      if(grid[r][c]==='1'){\n        count++;\n        dfs(r,c);\n      }\n    }\n  }\n\n  return count;\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-clone-graph",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "graph",
+      "dfs",
+      "bfs",
+      "hashmap"
+    ],
+    "question": "Clone Graph — create a deep copy of an undirected graph.",
+    "answer": "<p>Use DFS (or BFS) with a <code class=\"inline\">Map</code> to store already cloned nodes. If a node is visited again, return its clone instead of creating a new one.</p>",
+    "tip": "Whenever deep copying objects with cycles, always maintain a visited Map.",
+    "code": "function cloneGraph(node) {\n  if (!node) return null;\n\n  const map = new Map();\n\n  function dfs(node) {\n    if (map.has(node)) return map.get(node);\n\n    const clone = { val: node.val, neighbors: [] };\n    map.set(node, clone);\n\n    for (const nei of node.neighbors) {\n      clone.neighbors.push(dfs(nei));\n    }\n\n    return clone;\n  }\n\n  return dfs(node);\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-course-schedule",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "graph",
+      "topological-sort",
+      "dfs"
+    ],
+    "question": "Course Schedule — determine whether all courses can be completed.",
+    "answer": "<p>Represent courses as a graph and detect cycles using DFS. If a cycle exists, all courses cannot be completed. Otherwise, return true.</p>",
+    "tip": "Course Schedule is the most common Topological Sort interview question.",
+    "code": "function canFinish(numCourses, prerequisites) {\n  const graph = Array.from({ length: numCourses }, () => []);\n\n  for (const [a, b] of prerequisites) {\n    graph[a].push(b);\n  }\n\n  const visiting = new Set();\n  const visited = new Set();\n\n  function dfs(course) {\n    if (visiting.has(course)) return false;\n    if (visited.has(course)) return true;\n\n    visiting.add(course);\n\n    for (const next of graph[course]) {\n      if (!dfs(next)) return false;\n    }\n\n    visiting.delete(course);\n    visited.add(course);\n\n    return true;\n  }\n\n  for (let i = 0; i < numCourses; i++) {\n    if (!dfs(i)) return false;\n  }\n\n  return true;\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-lowest-common-ancestor",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "tree",
+      "dfs",
+      "binary-tree"
+    ],
+    "question": "Lowest Common Ancestor of a Binary Tree.",
+    "answer": "<p>Traverse recursively. If either node is found, return it. If both left and right recursive calls return non-null values, the current node is the Lowest Common Ancestor.</p>",
+    "tip": "The first node where both recursive branches return a value is the answer.",
+    "code": "function lowestCommonAncestor(root, p, q) {\n  if (!root || root === p || root === q) return root;\n\n  const left = lowestCommonAncestor(root.left, p, q);\n  const right = lowestCommonAncestor(root.right, p, q);\n\n  if (left && right) return root;\n\n  return left || right;\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-kth-largest-element",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "array",
+      "heap",
+      "priority-queue"
+    ],
+    "question": "Kth Largest Element in an Array.",
+    "answer": "<p>Sort the array in descending order and return the Kth element. Interviewers may later ask for an O(n log k) Heap solution or O(n) Quick Select solution.</p>",
+    "tip": "Start with sorting, then discuss Heap or Quick Select as optimizations.",
+    "code": "function findKthLargest(nums, k) {\n  nums.sort((a, b) => b - a);\n  return nums[k - 1];\n}\n\nconsole.log(findKthLargest([3,2,1,5,6,4],2));",
+    "lang": "js"
+  },
+  {
+    "id": "code-letter-combinations-phone-number",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "backtracking",
+      "recursion",
+      "string"
+    ],
+    "question": "Letter Combinations of a Phone Number.",
+    "answer": "<p>Use Backtracking to generate all possible combinations. For every digit, iterate through its mapped letters and recursively build the current string.</p>",
+    "tip": "Whenever you need all possible combinations, Backtracking is usually the correct approach.",
+    "code": "function letterCombinations(digits) {\n  if (!digits.length) return [];\n\n  const map = {\n    '2':'abc','3':'def','4':'ghi','5':'jkl',\n    '6':'mno','7':'pqrs','8':'tuv','9':'wxyz'\n  };\n\n  const result = [];\n\n  function backtrack(index, current) {\n    if (index === digits.length) {\n      result.push(current);\n      return;\n    }\n\n    for (const ch of map[digits[index]]) {\n      backtrack(index + 1, current + ch);\n    }\n  }\n\n  backtrack(0, '');\n  return result;\n}\n\nconsole.log(letterCombinations('23'));",
+    "lang": "js"
+  },
+  {
+    "id": "code-dedupe",
+    "category": "coding",
+    "difficulty": "beginner",
+    "tags": [
+      "array",
+      "set"
+    ],
+    "question": "Remove duplicates from an array.",
+    "answer": "<p>Wrap it in a <code class=\"inline\">Set</code> (which keeps unique values) and spread back to an array. For objects by a key, use a Map keyed on that field.</p>",
+    "tip": "[...new Set(arr)] is the idiomatic dedupe; use a Map for de-duping objects by id.",
+    "code": "const unique = arr => [...new Set(arr)];\nunique([1, 1, 2, 3, 3]); // [1, 2, 3]\n\n// by key:\nconst byId = arr => [...new Map(arr.map(o => [o.id, o])).values()];",
+    "lang": "js"
+  },
+  {
+    "id": "code-flatten-array",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "array",
+      "recursion"
+    ],
+    "question": "Flatten a deeply nested array (without .flat(Infinity)).",
+    "answer": "<p>Reduce over the array; if an element is itself an array, recurse and concat the result, otherwise include it. Or use an explicit stack to avoid recursion.</p>",
+    "tip": "Recursion reads cleanly; mention a stack-based version if asked about very deep nesting.",
+    "code": "function flatten(arr) {\n  return arr.reduce((acc, v) =>\n    acc.concat(Array.isArray(v) ? flatten(v) : v), []);\n}\nflatten([1, [2, [3, [4]]]]); // [1, 2, 3, 4]",
+    "lang": "js"
+  },
+  {
+    "id": "code-debounce",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "closures",
+      "timing",
+      "debounce"
+    ],
+    "question": "Implement a debounce function.",
+    "answer": "<p>Return a function that clears a pending timer and sets a new one on each call, so the wrapped function only runs after calls stop for <code class=\"inline\">ms</code>. The timer id lives in a closure.</p>",
+    "tip": "Preserve `this` and args with apply so it works as a method or event handler.",
+    "code": "function debounce(fn, ms) {\n  let t;\n  return function (...args) {\n    clearTimeout(t);\n    t = setTimeout(() => fn.apply(this, args), ms);\n  };\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-throttle",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "closures",
+      "timing",
+      "throttle"
+    ],
+    "question": "Implement a throttle function.",
+    "answer": "<p>Track the last run time; only invoke the wrapped function if at least <code class=\"inline\">ms</code> has elapsed since the previous call. Guarantees a maximum call rate.</p>",
+    "tip": "Debounce waits for quiet; throttle enforces a steady rate — know both.",
+    "code": "function throttle(fn, ms) {\n  let last = 0;\n  return function (...args) {\n    const now = Date.now();\n    if (now - last >= ms) { last = now; fn.apply(this, args); }\n  };\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-deep-clone",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "objects",
+      "recursion",
+      "clone"
+    ],
+    "question": "Deep clone an object (without structuredClone).",
+    "answer": "<p>Recurse: return primitives as-is, map arrays, and rebuild objects key by key cloning each value. Handle <code class=\"inline\">Date</code>/arrays explicitly. (In real code prefer <code class=\"inline\">structuredClone</code>.)</p>",
+    "tip": "Mention structuredClone as the modern built-in, but be able to hand-roll it.",
+    "code": "function deepClone(v) {\n  if (v === null || typeof v !== 'object') return v;\n  if (v instanceof Date) return new Date(v);\n  if (Array.isArray(v)) return v.map(deepClone);\n  return Object.fromEntries(\n    Object.entries(v).map(([k, val]) => [k, deepClone(val)])\n  );\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-memoize",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "closures",
+      "cache",
+      "memoization"
+    ],
+    "question": "Write a generic memoize higher-order function.",
+    "answer": "<p>Cache results in a Map keyed by the serialized arguments; return the cached value on repeat calls. Great for expensive pure functions.</p>",
+    "tip": "Keying by JSON.stringify(args) is simple but breaks on functions/circular refs — fine for primitives.",
+    "code": "function memoize(fn) {\n  const cache = new Map();\n  return function (...args) {\n    const key = JSON.stringify(args);\n    if (cache.has(key)) return cache.get(key);\n    const result = fn.apply(this, args);\n    cache.set(key, result);\n    return result;\n  };\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-curry",
+    "category": "coding",
+    "difficulty": "advanced",
+    "tags": [
+      "closures",
+      "functional",
+      "currying"
+    ],
+    "question": "Implement curry — curry(fn)(a)(b)(c) === fn(a,b,c).",
+    "answer": "<p>Collect arguments across calls; once you have at least <code class=\"inline\">fn.length</code> of them, invoke. Otherwise return a function that keeps gathering. Uses closures + recursion.</p>",
+    "tip": "fn.length gives the expected arity — that's how you know when to call.",
+    "code": "function curry(fn) {\n  return function curried(...args) {\n    return args.length >= fn.length\n      ? fn.apply(this, args)\n      : (...next) => curried.apply(this, args.concat(next));\n  };\n}\nconst add = (a, b, c) => a + b + c;\ncurry(add)(1)(2)(3); // 6",
+    "lang": "js"
+  },
+  {
+    "id": "code-promise-all",
+    "category": "coding",
+    "difficulty": "advanced",
+    "tags": [
+      "promise",
+      "async"
+    ],
+    "question": "Implement Promise.all.",
+    "answer": "<p>Return a new Promise. Track a results array and a completion counter; resolve when every input settles, preserving order by index; reject on the first failure.</p>",
+    "tip": "Preserve order by writing to results[i], not by push — inputs resolve out of order.",
+    "code": "function promiseAll(promises) {\n  return new Promise((resolve, reject) => {\n    const results = []; let done = 0;\n    if (!promises.length) return resolve(results);\n    promises.forEach((p, i) => {\n      Promise.resolve(p).then(v => {\n        results[i] = v;\n        if (++done === promises.length) resolve(results);\n      }, reject);\n    });\n  });\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-event-emitter",
+    "category": "coding",
+    "difficulty": "advanced",
+    "tags": [
+      "oop",
+      "pub-sub",
+      "events"
+    ],
+    "question": "Build a simple EventEmitter (on / off / emit).",
+    "answer": "<p>Keep a map of event name → array of listeners. <code class=\"inline\">on</code> pushes, <code class=\"inline\">off</code> filters out, <code class=\"inline\">emit</code> calls each listener with the payload. This is the pub/sub pattern behind RxJS Subjects and Node's EventEmitter.</p>",
+    "tip": "This is the pattern behind cross-component communication via a shared service.",
+    "code": "class EventEmitter {\n  constructor() { this.map = {}; }\n  on(e, fn) { (this.map[e] ||= []).push(fn); return () => this.off(e, fn); }\n  off(e, fn) { this.map[e] = (this.map[e] || []).filter(f => f !== fn); }\n  emit(e, ...args) { (this.map[e] || []).forEach(fn => fn(...args)); }\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-group-by",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "array",
+      "reduce",
+      "objects"
+    ],
+    "question": "Group an array of objects by a property.",
+    "answer": "<p>Reduce into an object whose keys are the group values and whose values are arrays. Modern JS also has <code class=\"inline\">Object.groupBy</code>.</p>",
+    "tip": "reduce with an accumulator object is the canonical group-by pattern.",
+    "code": "const groupBy = (arr, key) =>\n  arr.reduce((acc, item) => {\n    (acc[item[key]] ||= []).push(item);\n    return acc;\n  }, {});\ngroupBy([{ t: 'a', v: 1 }, { t: 'b', v: 2 }, { t: 'a', v: 3 }], 't');",
+    "lang": "js"
+  },
+  {
+    "id": "code-flatten-object",
+    "category": "coding",
+    "difficulty": "advanced",
+    "tags": [
+      "objects",
+      "recursion"
+    ],
+    "question": "Flatten a nested object to dot-notation keys.",
+    "answer": "<p>Recurse over entries; for nested objects, prefix the parent key with a dot and keep descending; for leaves, assign the flattened key.</p>",
+    "tip": "Handy for turning nested config into a flat lookup or query params.",
+    "code": "function flatten(obj, prefix = '', out = {}) {\n  for (const [k, v] of Object.entries(obj)) {\n    const key = prefix ? `${prefix}.${k}` : k;\n    if (v && typeof v === 'object' && !Array.isArray(v)) flatten(v, key, out);\n    else out[key] = v;\n  }\n  return out;\n}\nflatten({ a: { b: { c: 1 } } }); // { 'a.b.c': 1 }",
+    "lang": "js"
+  },
+  {
+    "id": "code-word-frequency",
+    "category": "coding",
+    "difficulty": "beginner",
+    "tags": [
+      "string",
+      "hashmap"
+    ],
+    "question": "Count word frequency in a sentence.",
+    "answer": "<p>Lowercase, split into words, and tally each in a Map/object. Sort by count if you need the most frequent.</p>",
+    "tip": "A frequency map is a building block for anagrams, top-K, and dedupe problems.",
+    "code": "function wordFreq(str) {\n  const map = {};\n  for (const w of str.toLowerCase().match(/\\w+/g) || [])\n    map[w] = (map[w] || 0) + 1;\n  return map;\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-sleep",
+    "category": "coding",
+    "difficulty": "beginner",
+    "tags": [
+      "promise",
+      "async"
+    ],
+    "question": "Write an async sleep(ms) helper.",
+    "answer": "<p>Return a Promise that resolves via <code class=\"inline\">setTimeout</code>. You can then <code class=\"inline\">await sleep(1000)</code> to pause inside an async function.</p>",
+    "tip": "There's no built-in sleep in JS — this Promise wrapper is the idiom.",
+    "code": "const sleep = ms => new Promise(res => setTimeout(res, ms));\n\nasync function run() {\n  console.log('start');\n  await sleep(1000);\n  console.log('1s later');\n}",
+    "lang": "js"
+  },
+  {
+    "id": "code-map-polyfill",
+    "category": "coding",
+    "difficulty": "advanced",
+    "tags": [
+      "array",
+      "prototype",
+      "polyfill"
+    ],
+    "question": "Polyfill Array.prototype.map.",
+    "answer": "<p>Add a method to the prototype that loops the array, calls the callback with <code class=\"inline\">(value, index, array)</code>, and pushes each result into a new array — never mutating the original.</p>",
+    "tip": "Writing a polyfill proves you understand what the built-in actually does.",
+    "code": "Array.prototype.myMap = function (cb) {\n  const out = [];\n  for (let i = 0; i < this.length; i++) out.push(cb(this[i], i, this));\n  return out;\n};\n[1, 2, 3].myMap(x => x * 2); // [2, 4, 6]",
+    "lang": "js"
+  },
+  {
+    "id": "code-anagram",
+    "category": "coding",
+    "difficulty": "beginner",
+    "tags": [
+      "string",
+      "sorting"
+    ],
+    "question": "Check whether two strings are anagrams.",
+    "answer": "<p>Normalise (lowercase, strip non-word chars), then compare sorted characters — or compare character-frequency maps for O(n) instead of O(n log n).</p>",
+    "tip": "Frequency-map comparison is O(n); sorting is O(n log n) — mention the tradeoff.",
+    "code": "const norm = s => s.toLowerCase().replace(/\\W/g, '').split('').sort().join('');\nconst isAnagram = (a, b) => norm(a) === norm(b);\nisAnagram('listen', 'silent'); // true",
+    "lang": "js"
+  },
+  {
+    "id": "code-max-subarray",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "array",
+      "kadane",
+      "dynamic-programming"
+    ],
+    "question": "Find the maximum sum of a contiguous subarray (Kadane's).",
+    "answer": "<p>Track the best sum ending at the current index (<code class=\"inline\">cur</code>) and the global best. Extend or restart at each element. O(n) time, O(1) space.</p>",
+    "tip": "Kadane's algorithm is the classic O(n) DP — restart when the running sum goes negative.",
+    "code": "function maxSubArray(nums) {\n  let cur = nums[0], best = nums[0];\n  for (let i = 1; i < nums.length; i++) {\n    cur = Math.max(nums[i], cur + nums[i]);\n    best = Math.max(best, cur);\n  }\n  return best;\n}\nmaxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4]); // 6",
+    "lang": "js"
+  },
+  {
+    "id": "code-output-order-basic",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "output",
+      "event-loop",
+      "async"
+    ],
+    "question": "Predict the output: sync vs setTimeout vs Promise.",
+    "answer": "<p><strong>Output: 1, 4, 3, 2.</strong></p><p>Synchronous code runs first (<code class=\"inline\">1</code>, then <code class=\"inline\">4</code>). When the stack is empty, the engine drains the <strong>microtask</strong> queue (the Promise <code class=\"inline\">.then</code> → <code class=\"inline\">3</code>) before any <strong>macrotask</strong>. The <code class=\"inline\">setTimeout</code> callback is a macrotask, so <code class=\"inline\">2</code> runs last — even with a <code class=\"inline\">0ms</code> delay.</p>",
+    "tip": "Microtasks (Promises) always run before macrotasks (setTimeout), no matter the delay.",
+    "code": "console.log(1);\nsetTimeout(() => console.log(2), 0);\nPromise.resolve().then(() => console.log(3));\nconsole.log(4);\n\n// Output:\n// 1\n// 4\n// 3\n// 2",
+    "lang": "js",
+    "deep": "<h4>Step-by-step trace</h4><ol><li><code class=\"inline\">console.log(1)</code> runs synchronously → <strong>1</strong>.</li><li><code class=\"inline\">setTimeout(..., 0)</code> hands its callback to the timer API; when ready it's queued as a <strong>macrotask</strong>.</li><li><code class=\"inline\">Promise.resolve().then(...)</code> queues its callback as a <strong>microtask</strong>.</li><li><code class=\"inline\">console.log(4)</code> runs synchronously → <strong>4</strong>.</li><li>Stack is now empty. The event loop <em>fully drains microtasks first</em> → <strong>3</strong>.</li><li>Only then does it take one macrotask → <strong>2</strong>.</li></ol><h4>The rule to memorise</h4><p>After the synchronous code (and after every macrotask), the engine empties the <em>entire</em> microtask queue before running the next macrotask. So Promise callbacks beat <code class=\"inline\">setTimeout</code> every time.</p>"
+  },
+  {
+    "id": "code-output-async-await",
+    "category": "coding",
+    "difficulty": "advanced",
+    "tags": [
+      "V.Imp",
+      "output",
+      "async-await",
+      "event-loop"
+    ],
+    "question": "Predict the output: async/await ordering.",
+    "answer": "<p><strong>Output: start, async1 start, async2, end, async1 end, promise, timeout.</strong></p><p>Everything up to the first <code class=\"inline\">await</code> runs synchronously. <code class=\"inline\">await async2()</code> runs <code class=\"inline\">async2</code>'s body now, then schedules the <em>rest</em> of <code class=\"inline\">async1</code> as a microtask. The synchronous script finishes (<code class=\"inline\">end</code>) before any microtask. Microtasks (the <code class=\"inline\">await</code> continuation and the <code class=\"inline\">.then</code>) drain before the <code class=\"inline\">setTimeout</code> macrotask.</p>",
+    "tip": "Code after an await is a microtask — the surrounding synchronous code always runs first.",
+    "code": "async function async1() {\n  console.log('async1 start');\n  await async2();\n  console.log('async1 end');\n}\nasync function async2() {\n  console.log('async2');\n}\n\nconsole.log('start');\nsetTimeout(() => console.log('timeout'), 0);\nasync1();\nPromise.resolve().then(() => console.log('promise'));\nconsole.log('end');\n\n// Output:\n// start\n// async1 start\n// async2\n// end\n// async1 end\n// promise\n// timeout",
+    "lang": "js",
+    "deep": "<h4>Why this order</h4><ol><li><code class=\"inline\">'start'</code> — sync.</li><li><code class=\"inline\">setTimeout</code> — its callback becomes a <strong>macrotask</strong> (parked).</li><li><code class=\"inline\">async1()</code> is called: <code class=\"inline\">'async1 start'</code> runs, then <code class=\"inline\">await async2()</code> executes <code class=\"inline\">async2</code>'s body → <code class=\"inline\">'async2'</code>. The <code class=\"inline\">await</code> now <em>suspends</em> async1 and schedules <code class=\"inline\">'async1 end'</code> as a <strong>microtask</strong>.</li><li>Back in the main script: <code class=\"inline\">Promise.resolve().then</code> queues <code class=\"inline\">'promise'</code> as a microtask, then <code class=\"inline\">'end'</code> runs — sync.</li><li>Stack empties. Microtasks drain in FIFO order: <code class=\"inline\">'async1 end'</code> (queued first), then <code class=\"inline\">'promise'</code>.</li><li>Finally the macrotask: <code class=\"inline\">'timeout'</code>.</li></ol><p><strong>Key idea:</strong> <code class=\"inline\">await x</code> ≈ <code class=\"inline\">x.then(rest)</code>. The line before <code class=\"inline\">await</code> is synchronous; everything after it is a microtask.</p>"
+  },
+  {
+    "id": "code-output-loop-settimeout",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "output",
+      "closure",
+      "hoisting"
+    ],
+    "question": "Predict the output: setTimeout inside a for-loop (var vs let).",
+    "answer": "<p>With <code class=\"inline\">var</code> → <strong>3, 3, 3</strong>. With <code class=\"inline\">let</code> → <strong>0, 1, 2</strong>.</p><p><code class=\"inline\">var</code> is function-scoped, so all three callbacks close over the <em>same</em> <code class=\"inline\">i</code>. The loop finishes (i = 3) before any timeout fires, so all log 3. <code class=\"inline\">let</code> is block-scoped and creates a <em>fresh binding each iteration</em>, so each callback captures its own value.</p>",
+    "tip": "This is the #1 closure gotcha — the fix is simply let (a new binding per iteration).",
+    "code": "for (var i = 0; i < 3; i++) {\n  setTimeout(() => console.log(i), 0);\n}\n// 3, 3, 3\n\nfor (let j = 0; j < 3; j++) {\n  setTimeout(() => console.log(j), 0);\n}\n// 0, 1, 2",
+    "lang": "js",
+    "deep": "<h4>Why var logs 3, 3, 3</h4><p>There is only one <code class=\"inline\">i</code> for the whole loop. The three <code class=\"inline\">setTimeout</code> callbacks are macrotasks that run <em>after</em> the synchronous loop completes — by then <code class=\"inline\">i === 3</code>. All three read that same final value.</p><h4>Why let logs 0, 1, 2</h4><p>A <code class=\"inline\">let</code> in the loop head is re-bound on every iteration, so each callback closes over a distinct <code class=\"inline\">j</code> holding the value at that iteration.</p><h4>The pre-let fix (IIFE)</h4><pre><code>for (var i = 0; i &lt; 3; i++) {\n  (function (k) {\n    setTimeout(() =&gt; console.log(k), 0);\n  })(i); // capture current i as k → 0, 1, 2\n}</code></pre>"
+  },
+  {
+    "id": "code-output-promise-then-timeout",
+    "category": "coding",
+    "difficulty": "advanced",
+    "tags": [
+      "V.Imp",
+      "output",
+      "promise",
+      "event-loop"
+    ],
+    "question": "Predict the output: interleaved Promise chain and setTimeout.",
+    "answer": "<p><strong>Output: script start, script end, promise1, promise2, setTimeout.</strong></p><p>Both <code class=\"inline\">console.log</code>s in the main body are synchronous. The Promise chain runs as microtasks (<code class=\"inline\">promise1</code> then <code class=\"inline\">promise2</code>), and the whole microtask queue drains before the single <code class=\"inline\">setTimeout</code> macrotask.</p>",
+    "tip": "Each .then in a chain is a separate microtask, but they all still run before any setTimeout.",
+    "code": "console.log('script start');\n\nsetTimeout(() => console.log('setTimeout'), 0);\n\nPromise.resolve()\n  .then(() => console.log('promise1'))\n  .then(() => console.log('promise2'));\n\nconsole.log('script end');\n\n// Output:\n// script start\n// script end\n// promise1\n// promise2\n// setTimeout",
+    "lang": "js",
+    "deep": "<h4>Trace</h4><ol><li><code class=\"inline\">'script start'</code> — sync.</li><li><code class=\"inline\">setTimeout</code> callback parked as a macrotask.</li><li>First <code class=\"inline\">.then</code> queued as a microtask.</li><li><code class=\"inline\">'script end'</code> — sync. Stack empty.</li><li>Microtask runs → <code class=\"inline\">'promise1'</code>; its return schedules the next <code class=\"inline\">.then</code> as a <em>new</em> microtask → <code class=\"inline\">'promise2'</code>. The loop keeps draining microtasks until none remain.</li><li>Now a macrotask runs → <code class=\"inline\">'setTimeout'</code>.</li></ol><p>Even though the chain adds microtasks one at a time, the event loop won't touch the timer until the microtask queue is completely empty.</p>"
+  },
+  {
+    "id": "code-lru-cache",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "design",
+      "hashmap",
+      "linked-list"
+    ],
+    "question": "Design an LRU Cache supporting get() and put() in O(1).",
+    "answer": "<p>The optimal solution combines a <code class=\"inline\">HashMap</code> with a doubly linked list. The HashMap provides O(1) lookup, while the linked list maintains usage order. Recently used items move to the front, and the least recently used item is removed from the tail.</p>",
+    "tip": "If an interviewer asks for O(1) get() and put(), HashMap + Doubly Linked List is the expected solution.",
+    "code": "class LRUCache {\n  constructor(capacity) {\n    this.capacity = capacity;\n    this.map = new Map();\n  }\n\n  get(key) {\n    if (!this.map.has(key)) return -1;\n\n    const value = this.map.get(key);\n    this.map.delete(key);\n    this.map.set(key, value);\n\n    return value;\n  }\n\n  put(key, value) {\n    if (this.map.has(key)) {\n      this.map.delete(key);\n    }\n\n    this.map.set(key, value);\n\n    if (this.map.size > this.capacity) {\n      const oldest = this.map.keys().next().value;\n      this.map.delete(oldest);\n    }\n  }\n}\n\nconst cache = new LRUCache(2);\ncache.put(1,1);\ncache.put(2,2);\nconsole.log(cache.get(1)); // 1",
+    "lang": "js"
+  },
+  {
+    "id": "code-next-greater-element",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "V.Imp",
+      "stack",
+      "monotonic-stack",
+      "array"
+    ],
+    "question": "Next Greater Element — find the next greater element for each number.",
+    "answer": "<p>Use a monotonic decreasing stack. While the current element is greater than the stack top, pop it and map its next greater element. Remaining elements have no greater value and map to -1.</p>",
+    "tip": "Whenever you hear 'next greater/smaller', think Monotonic Stack.",
+    "code": "function nextGreaterElement(nums1, nums2) {\n  const stack = [];\n  const map = new Map();\n\n  for (const num of nums2) {\n    while (stack.length && num > stack[stack.length - 1]) {\n      map.set(stack.pop(), num);\n    }\n    stack.push(num);\n  }\n\n  while (stack.length) {\n    map.set(stack.pop(), -1);\n  }\n\n  return nums1.map(n => map.get(n));\n}\n\nconsole.log(nextGreaterElement([4,1,2],[1,3,4,2]));",
+    "lang": "js"
+  },
+  {
+    "id": "code-permutations",
+    "category": "coding",
+    "difficulty": "intermediate",
+    "tags": [
+      "backtracking",
+      "recursion",
+      "array"
+    ],
+    "question": "Permutations — generate all possible permutations of an array.",
+    "answer": "<p>Use Backtracking. Choose one unused element at each recursive step, mark it as visited, recurse, then backtrack by removing it and marking it unused again.</p>",
+    "tip": "Backtracking problems follow the pattern: Choose → Explore → Undo (Backtrack).",
+    "code": "function permute(nums) {\n  const result = [];\n  const used = Array(nums.length).fill(false);\n\n  function backtrack(path) {\n    if (path.length === nums.length) {\n      result.push([...path]);\n      return;\n    }\n\n    for (let i = 0; i < nums.length; i++) {\n      if (used[i]) continue;\n\n      used[i] = true;\n      path.push(nums[i]);\n\n      backtrack(path);\n\n      path.pop();\n      used[i] = false;\n    }\n  }\n\n  backtrack([]);\n  return result;\n}\n\nconsole.log(permute([1,2,3]));",
+    "lang": "js"
+  },
+  {
+    "id": "code-output-nested-timeout-promise",
+    "category": "coding",
+    "difficulty": "advanced",
+    "tags": [
+      "output",
+      "event-loop",
+      "microtask",
+      "macrotask"
+    ],
+    "question": "Predict the output: microtask queued inside a macrotask.",
+    "answer": "<p><strong>Output: 1, 5, 3, 2, 4.</strong></p><p>Sync first: <code class=\"inline\">1</code>, <code class=\"inline\">5</code>. The stack empties, so the microtask <code class=\"inline\">3</code> runs. Then the timeout macrotask runs <code class=\"inline\">2</code> and, inside it, queues a new microtask. Because the microtask queue is drained again <em>right after</em> that macrotask finishes, <code class=\"inline\">4</code> runs next — before any further macrotask.</p>",
+    "tip": "After EACH macrotask the microtask queue is drained again — not just once at the start.",
+    "code": "console.log(1);\n\nsetTimeout(() => {\n  console.log(2);\n  Promise.resolve().then(() => console.log(4));\n}, 0);\n\nPromise.resolve().then(() => console.log(3));\n\nconsole.log(5);\n\n// Output:\n// 1\n// 5\n// 3\n// 2\n// 4",
+    "lang": "js",
+    "deep": "<h4>Why 4 comes right after 2</h4><p>The critical rule: the microtask queue is drained <strong>after every single macrotask</strong>, not only once. So:</p><ol><li>Sync → <code class=\"inline\">1</code>, <code class=\"inline\">5</code>.</li><li>Drain microtasks → <code class=\"inline\">3</code>.</li><li>Run one macrotask (the timeout) → <code class=\"inline\">2</code>, which <em>queues a new microtask</em> for <code class=\"inline\">4</code>.</li><li>That macrotask finishes; before taking any further work the loop drains microtasks again → <code class=\"inline\">4</code>.</li></ol><p>If there were a second <code class=\"inline\">setTimeout</code>, its callback would only run after <code class=\"inline\">4</code>, because the microtask from the first timeout jumps ahead of the next macrotask.</p>"
+  },
+  {
+    "id": "code-output-async-return-then",
+    "category": "coding",
+    "difficulty": "advanced",
+    "tags": [
+      "output",
+      "async-await",
+      "promise"
+    ],
+    "question": "Predict the output: what does an async function return, and when?",
+    "answer": "<p><strong>Output: A, C, B.</strong></p><p>An <code class=\"inline\">async</code> function returns a Promise immediately. Calling <code class=\"inline\">f()</code> runs its body synchronously up to the return (<code class=\"inline\">A</code>), but the <code class=\"inline\">.then</code> attached to the returned Promise (<code class=\"inline\">B</code>) is a microtask. So the synchronous <code class=\"inline\">C</code> after the call runs before <code class=\"inline\">B</code>.</p>",
+    "tip": "Calling an async function is synchronous up to its first await/return; the .then runs later as a microtask.",
+    "code": "async function f() {\n  console.log('A');\n  return 'done';\n}\n\nf().then((v) => console.log('B', v));\nconsole.log('C');\n\n// Output:\n// A\n// C\n// B done",
+    "lang": "js",
+    "deep": "<h4>Key points</h4><ul><li>An <code class=\"inline\">async</code> function <strong>always</strong> returns a Promise; a plain <code class=\"inline\">return x</code> resolves it with <code class=\"inline\">x</code>.</li><li>The body runs synchronously until the first <code class=\"inline\">await</code> or the <code class=\"inline\">return</code> — that's why <code class=\"inline\">A</code> prints during the <code class=\"inline\">f()</code> call.</li><li>The <code class=\"inline\">.then</code> callback is scheduled as a microtask, so it runs after the current synchronous code (<code class=\"inline\">C</code>).</li></ul><p>Corollary: <code class=\"inline\">throw</code> inside an async function rejects its returned Promise — catch it with <code class=\"inline\">.catch()</code> or <code class=\"inline\">try/catch</code> around the <code class=\"inline\">await</code>.</p>"
+  }
+]

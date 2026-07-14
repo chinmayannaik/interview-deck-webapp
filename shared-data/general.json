@@ -1,0 +1,178 @@
+[
+  {
+    "id": "gen-rest",
+    "category": "general",
+    "difficulty": "beginner",
+    "tags": [
+      "rest",
+      "http",
+      "api"
+    ],
+    "question": "REST basics — methods, status codes, idempotency.",
+    "answer": "<p><strong>GET</strong> read, <strong>POST</strong> create, <strong>PUT</strong> replace, <strong>PATCH</strong> partial update, <strong>DELETE</strong> remove. GET/PUT/DELETE are idempotent; POST is not.</p><p>Status codes: <strong>200</strong> OK, <strong>201</strong> Created, <strong>204</strong> No Content, <strong>400</strong> bad request, <strong>401</strong> unauthenticated, <strong>403</strong> forbidden, <strong>404</strong> not found, <strong>500</strong> server error.</p>",
+    "tip": "401 = 'who are you?'; 403 = 'I know you, but no'.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-jwt",
+    "category": "general",
+    "difficulty": "intermediate",
+    "tags": [
+      "auth",
+      "jwt",
+      "security"
+    ],
+    "question": "Explain the JWT authentication flow.",
+    "answer": "<p>User logs in → server returns a signed <strong>JWT</strong> (header.payload.signature). The client stores it and sends it as <code class=\"inline\">Authorization: Bearer &lt;token&gt;</code>. The server verifies the signature and expiry on each request — no server-side session needed (stateless).</p>",
+    "tip": "The payload is only base64-encoded, not encrypted — never put secrets in it.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-cors",
+    "category": "general",
+    "difficulty": "intermediate",
+    "tags": [
+      "cors",
+      "security",
+      "browser"
+    ],
+    "question": "What is CORS and how do you fix it?",
+    "answer": "<p><strong>CORS</strong> (Cross-Origin Resource Sharing) is a browser rule that blocks requests to a different origin unless the server opts in with <code class=\"inline\">Access-Control-Allow-Origin</code> headers. Fix it on the <strong>server</strong>; in dev you can use a proxy.</p>",
+    "tip": "CORS is enforced by the browser, so the fix always lives on the server.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-http-https",
+    "category": "general",
+    "difficulty": "beginner",
+    "tags": [
+      "http",
+      "https",
+      "network"
+    ],
+    "question": "HTTP vs HTTPS, and what is TLS?",
+    "answer": "<p><strong>HTTPS</strong> is HTTP over <strong>TLS</strong>, which encrypts traffic, verifies the server's identity via certificates, and prevents tampering. It's required for PWAs, service workers, and modern browser features.</p>",
+    "tip": "HTTPS gives you confidentiality, integrity, and authentication of the server.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-get-post",
+    "category": "general",
+    "difficulty": "beginner",
+    "tags": [
+      "http",
+      "get",
+      "post"
+    ],
+    "question": "GET vs POST — key differences.",
+    "answer": "<p><strong>GET</strong> — params in the URL, cacheable, idempotent, no body; for reads. <strong>POST</strong> — data in the body, not cached, not idempotent; for creating/side-effecting operations. Never send sensitive data in a GET query string.</p>",
+    "tip": "If refreshing the page shouldn't repeat the action, it shouldn't be a GET.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-auth-authz",
+    "category": "general",
+    "difficulty": "beginner",
+    "tags": [
+      "auth",
+      "security"
+    ],
+    "question": "Authentication vs authorization.",
+    "answer": "<p><strong>Authentication</strong> — proving who you are (login). <strong>Authorization</strong> — what you're allowed to do (roles/permissions). AuthN comes first, then AuthZ.</p>",
+    "tip": "AuthN = identity (401); AuthZ = permission (403).",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-caching",
+    "category": "general",
+    "difficulty": "intermediate",
+    "tags": [
+      "caching",
+      "performance",
+      "http"
+    ],
+    "question": "How does browser/HTTP caching work?",
+    "answer": "<p>Servers send caching headers: <code class=\"inline\">Cache-Control</code> (max-age, no-cache), <code class=\"inline\">ETag</code>/<code class=\"inline\">Last-Modified</code> for revalidation. The browser reuses cached responses until they expire, then revalidates. CDNs cache at the edge for speed.</p>",
+    "tip": "Fingerprint filenames (app.abc123.js) so you can cache forever and bust on change.",
+    "code": "Cache-Control: max-age=31536000, immutable",
+    "lang": ""
+  },
+  {
+    "id": "gen-spa-ssr",
+    "category": "general",
+    "difficulty": "intermediate",
+    "tags": [
+      "spa",
+      "ssr",
+      "rendering"
+    ],
+    "question": "SPA vs SSR vs SSG.",
+    "answer": "<ul><li><strong>SPA</strong> — renders in the browser; fast navigation, weaker initial SEO/first paint.</li><li><strong>SSR</strong> — server renders HTML per request; better SEO and first paint (Angular Universal).</li><li><strong>SSG</strong> — pre-render at build time; fastest, best for static content.</li></ul>",
+    "tip": "SSR/SSG mainly help SEO and time-to-first-paint for content sites.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-time-complexity",
+    "category": "general",
+    "difficulty": "intermediate",
+    "tags": [
+      "algorithms",
+      "big-o"
+    ],
+    "question": "What is Big-O and name common complexities.",
+    "answer": "<p>Big-O describes how runtime/space grows with input size (worst case). Common: <code class=\"inline\">O(1)</code> constant, <code class=\"inline\">O(log n)</code> binary search, <code class=\"inline\">O(n)</code> linear scan, <code class=\"inline\">O(n log n)</code> good sorts, <code class=\"inline\">O(n²)</code> nested loops.</p>",
+    "tip": "A HashMap lookup is O(1); replacing a nested loop with a map often turns O(n²) into O(n).",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-array-linkedlist",
+    "category": "general",
+    "difficulty": "intermediate",
+    "tags": [
+      "data-structures"
+    ],
+    "question": "Array vs Linked List vs Hash Table — tradeoffs.",
+    "answer": "<ul><li><strong>Array</strong> — O(1) index access, O(n) insert/delete in the middle.</li><li><strong>Linked list</strong> — O(1) insert/delete at a known node, O(n) access.</li><li><strong>Hash table</strong> — O(1) average lookup/insert, unordered.</li></ul>",
+    "tip": "Pick the structure by the operation you do most: lookups → hash, ordered access → array.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-solid",
+    "category": "general",
+    "difficulty": "advanced",
+    "tags": [
+      "design",
+      "solid",
+      "principles"
+    ],
+    "question": "What are the SOLID principles?",
+    "answer": "<ul><li><strong>S</strong> — Single Responsibility (one reason to change).</li><li><strong>O</strong> — Open/Closed (open to extension, closed to modification).</li><li><strong>L</strong> — Liskov Substitution (subtypes replace base types safely).</li><li><strong>I</strong> — Interface Segregation (small, focused interfaces).</li><li><strong>D</strong> — Dependency Inversion (depend on abstractions).</li></ul>",
+    "tip": "Angular's DI is a direct application of the Dependency Inversion principle.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "gen-agile",
+    "category": "general",
+    "difficulty": "beginner",
+    "tags": [
+      "agile",
+      "scrum",
+      "process"
+    ],
+    "question": "Explain Agile / Scrum basics.",
+    "answer": "<p><strong>Scrum</strong> works in fixed <strong>sprints</strong> (1–4 weeks). Ceremonies: sprint planning, daily stand-up, review (demo), and retrospective. Roles: Product Owner (backlog), Scrum Master (process), and the development team.</p>",
+    "tip": "Stand-ups answer three things: what I did, what I'll do, what's blocking me.",
+    "code": "",
+    "lang": ""
+  }
+]

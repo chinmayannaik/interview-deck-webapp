@@ -1,0 +1,238 @@
+[
+  {
+    "id": "bhv-tell-about",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "intro",
+      "pitch"
+    ],
+    "question": "\"Tell me about yourself.\"",
+    "answer": "<p>Give a tight 60–90 second pitch, not your life story. Structure: <strong>present</strong> (current role + core stack) → <strong>past</strong> (one or two relevant achievements with impact) → <strong>future</strong> (why this role fits your next step).</p>",
+    "tip": "End on why you're excited about THIS role — it sets the tone and invites follow-ups you want.",
+    "code": "",
+    "lang": "",
+    "deep": "<h4>My pitch (fill in name, company &amp; team)</h4><p>“I'm <strong>______</strong>, a Frontend Developer with 3.5 years of experience, mainly in Angular. I currently work on a <strong>______</strong> team at <strong>______</strong>, where we build customer-specific solutions and present them as demos to win projects. My focus is developing UI screens from Figma using our in-house frontend libraries and integrating them with REST and GraphQL APIs. I'm now looking for a role where I can grow further and take on more challenging frontend work.”</p><h4>Stronger closing options</h4><ul><li>“…take on more challenging frontend work and <strong>deepen my Angular expertise</strong>.”</li><li>“…where I can work on <strong>larger-scale products</strong> and keep growing as a frontend engineer.”</li></ul><h4>Add one concrete win (optional)</h4><p>Drop a single specific example in the middle to be memorable — e.g. “For instance, I recently built a reusable type-ahead search component used across several demo screens.”</p><h4>Delivery notes</h4><ul><li>Keep it ~30–40 seconds — present → what you do → forward-looking close.</li><li>Name your company clearly the first time, so “our in-house libraries” makes sense later.</li><li>End on intent (the role you want), not just “improve my skills”.</li></ul>"
+  },
+  {
+    "id": "bhv-star",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "framework",
+      "star"
+    ],
+    "question": "What is the STAR method?",
+    "answer": "<p>A structure for behavioural answers: <strong>Situation</strong> (context) → <strong>Task</strong> (your responsibility) → <strong>Action</strong> (what YOU did) → <strong>Result</strong> (the outcome, ideally quantified).</p>",
+    "tip": "Spend most of your time on Action and Result — that's what they're assessing.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-why-leaving",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "motivation"
+    ],
+    "question": "\"Why are you looking to change / leave your current job?\"",
+    "answer": "<p>Stay positive and forward-looking: frame it as seeking <strong>growth</strong> — bigger scope, new tech, more ownership, or a domain you care about. Never bad-mouth your current employer or manager; it reads as a red flag.</p>",
+    "tip": "Pull toward the new opportunity, don't push away from the old one.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-strength-weakness",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "self-awareness"
+    ],
+    "question": "\"What is your greatest strength and weakness?\"",
+    "answer": "<p><strong>Strength</strong>: pick one relevant to the role and back it with a concrete example. <strong>Weakness</strong>: give a real, non-fatal one plus what you're actively doing to improve it — this shows self-awareness, which is the actual thing being tested.</p>",
+    "tip": "Avoid the cliché 'I'm a perfectionist' — pick a genuine, improvable weakness.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-challenge",
+    "category": "behavioral",
+    "difficulty": "intermediate",
+    "tags": [
+      "problem-solving",
+      "star"
+    ],
+    "question": "\"Tell me about a challenging bug or technical problem you solved.\"",
+    "answer": "<p>Use STAR. Pick a genuinely hard problem, explain how you <strong>diagnosed</strong> it (not just the fix), the tradeoffs you weighed, and the measurable result. Show your debugging process and reasoning — that's the point.</p>",
+    "tip": "Interviewers care about HOW you diagnosed it more than the final one-line fix.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-conflict",
+    "category": "behavioral",
+    "difficulty": "intermediate",
+    "tags": [
+      "teamwork",
+      "conflict"
+    ],
+    "question": "\"Tell me about a conflict with a teammate.\"",
+    "answer": "<p>Show maturity: describe the disagreement neutrally, how you <strong>listened</strong> to their view, focused on the shared goal/data rather than ego, and reached a resolution. Emphasise the working relationship afterwards.</p>",
+    "tip": "Never paint the other person as purely wrong — show empathy and a constructive outcome.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-disagree-manager",
+    "category": "behavioral",
+    "difficulty": "intermediate",
+    "tags": [
+      "teamwork",
+      "communication"
+    ],
+    "question": "\"Describe a time you disagreed with a manager or a design decision.\"",
+    "answer": "<p>Show you can push back <strong>respectfully with evidence</strong> (data, prototypes, tradeoffs), but also that you can <strong>disagree and commit</strong> once a decision is made. Balance conviction with being a team player.</p>",
+    "tip": "'Disagree and commit' is the phrase that signals maturity here.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-deadline",
+    "category": "behavioral",
+    "difficulty": "intermediate",
+    "tags": [
+      "pressure",
+      "prioritization"
+    ],
+    "question": "\"How do you handle tight deadlines or pressure?\"",
+    "answer": "<p>Describe your system: <strong>prioritise</strong> ruthlessly (impact vs effort), communicate risks early, break work into increments, and negotiate scope rather than silently missing dates. Give a concrete example where this worked.</p>",
+    "tip": "Highlight proactive communication — hiding a slipping deadline is the real failure.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-failure",
+    "category": "behavioral",
+    "difficulty": "intermediate",
+    "tags": [
+      "growth",
+      "ownership"
+    ],
+    "question": "\"Tell me about a time you failed or made a mistake.\"",
+    "answer": "<p>Pick a real mistake, <strong>own it</strong> without blaming others, explain the impact, how you fixed it, and — most importantly — the <strong>lesson</strong> and how you changed your process so it won't recur.</p>",
+    "tip": "The growth/lesson is the whole point — don't pick a fake 'I worked too hard' failure.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-keep-learning",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "growth",
+      "learning"
+    ],
+    "question": "\"How do you keep up with new technology?\"",
+    "answer": "<p>Be specific: docs/changelogs, newsletters, following core-team members, side projects, reading source, communities. Mention something recent you learned and applied (e.g. Angular Signals) to prove it's real, not a script.</p>",
+    "tip": "Name a concrete recent thing you learned and used — specificity sells it.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-ownership",
+    "category": "behavioral",
+    "difficulty": "intermediate",
+    "tags": [
+      "ownership",
+      "initiative"
+    ],
+    "question": "\"Tell me about a time you took ownership or initiative.\"",
+    "answer": "<p>Describe something you drove <strong>beyond your assigned tasks</strong> — improving a slow build, adding tests, refactoring a fragile module, mentoring — where you saw a problem and acted without being told. Quantify the impact.</p>",
+    "tip": "Initiative + measurable impact is exactly what separates mid from junior.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-feedback",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "feedback",
+      "growth"
+    ],
+    "question": "\"How do you handle criticism or code-review feedback?\"",
+    "answer": "<p>Frame feedback as a gift: you separate ego from the code, ask clarifying questions, apply what's valid, and discuss respectfully where you disagree. Give an example where feedback improved your work.</p>",
+    "tip": "Show you treat reviews as learning, not personal attacks.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-5-years",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "motivation",
+      "career"
+    ],
+    "question": "\"Where do you see yourself in 5 years?\"",
+    "answer": "<p>Show ambition that aligns with the company: growing technical depth (senior/architect) or breadth (leading features/mentoring). Avoid over-specific titles or anything that signals you'll leave quickly. Tie it to growing <em>here</em>.</p>",
+    "tip": "Signal you want to grow with them, not use them as a stepping stone.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-why-hire",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "pitch",
+      "fit"
+    ],
+    "question": "\"Why should we hire you?\"",
+    "answer": "<p>Map your strengths directly to the <strong>role's needs</strong> from the job description: relevant skills, a track record of impact, and culture/attitude fit. Be confident and specific, not generic.</p>",
+    "tip": "Mirror the top 2–3 requirements from the JD and evidence each one.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-salary",
+    "category": "behavioral",
+    "difficulty": "intermediate",
+    "tags": [
+      "negotiation",
+      "compensation"
+    ],
+    "question": "\"What are your salary expectations?\"",
+    "answer": "<p>Research the market range for the role/location/experience first. Give a <strong>range</strong> grounded in that, state it's negotiable based on the total package, and where possible let them anchor first. Never undersell without data.</p>",
+    "tip": "Anchor on a researched range, not a single number, and mention total comp.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-notice",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "logistics"
+    ],
+    "question": "\"What is your notice period / when can you join?\"",
+    "answer": "<p>State your actual notice honestly and add that you're flexible where possible (buy-out, negotiating an early release). Being straightforward here builds trust for the offer stage.</p>",
+    "tip": "Honesty on availability avoids awkwardness later — but note any flexibility.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "bhv-questions-to-ask",
+    "category": "behavioral",
+    "difficulty": "beginner",
+    "tags": [
+      "closing",
+      "engagement"
+    ],
+    "question": "\"Do you have any questions for us?\"",
+    "answer": "<p>Always say yes — it signals genuine interest. Good questions: the team's biggest technical challenge, how success is measured in the first 6 months, the codebase/testing culture, how decisions get made, and growth/mentoring paths.</p>",
+    "tip": "Asking about their biggest challenge shows you think like an owner, not just an applicant.",
+    "code": "",
+    "lang": ""
+  }
+]

@@ -1,0 +1,188 @@
+[
+  {
+    "id": "java-oops",
+    "category": "java",
+    "difficulty": "beginner",
+    "tags": [
+      "oop",
+      "principles"
+    ],
+    "question": "What are the four OOP principles?",
+    "answer": "<ul><li><strong>Encapsulation</strong> — bundle data + methods, hide internals behind access modifiers.</li><li><strong>Abstraction</strong> — expose what an object does, hide how (interfaces/abstract classes).</li><li><strong>Inheritance</strong> — reuse via an is-a relationship (<code class=\"inline\">extends</code>).</li><li><strong>Polymorphism</strong> — one interface, many implementations (overriding/overloading).</li></ul>",
+    "tip": "Remember the acronym A-PIE (Abstraction, Polymorphism, Inheritance, Encapsulation).",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "java-overload-override",
+    "category": "java",
+    "difficulty": "beginner",
+    "tags": [
+      "polymorphism",
+      "overloading",
+      "overriding"
+    ],
+    "question": "Method overloading vs overriding.",
+    "answer": "<p><strong>Overloading</strong> — same method name, different parameters, in the <em>same</em> class (compile-time polymorphism).</p><p><strong>Overriding</strong> — a subclass redefines a parent method with the same signature (runtime polymorphism); mark it <code class=\"inline\">@Override</code>.</p>",
+    "tip": "Overloading = compile-time, overriding = runtime.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "java-abstract-interface",
+    "category": "java",
+    "difficulty": "intermediate",
+    "tags": [
+      "interface",
+      "abstract-class"
+    ],
+    "question": "Interface vs abstract class.",
+    "answer": "<p><strong>Interface</strong> — a contract; a class can implement many. Since Java 8 it can have <code class=\"inline\">default</code>/<code class=\"inline\">static</code> methods but no instance state.</p><p><strong>Abstract class</strong> — a partial base with state and constructors; single inheritance only. Use it to share code among related classes.</p>",
+    "tip": "Interface = 'can do' capability; abstract class = 'is a' base with shared code.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "java-equals-hashcode",
+    "category": "java",
+    "difficulty": "intermediate",
+    "tags": [
+      "equals",
+      "hashcode",
+      "collections"
+    ],
+    "question": "Why override equals() and hashCode() together?",
+    "answer": "<p>Hash-based collections (<code class=\"inline\">HashMap</code>, <code class=\"inline\">HashSet</code>) use <code class=\"inline\">hashCode()</code> to find the bucket and <code class=\"inline\">equals()</code> to confirm the match. If you override one but not the other, objects that are 'equal' can land in different buckets, breaking lookups.</p>",
+    "tip": "Contract: equal objects must have equal hash codes (not vice versa).",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "java-collections",
+    "category": "java",
+    "difficulty": "intermediate",
+    "tags": [
+      "collections",
+      "list",
+      "map"
+    ],
+    "question": "ArrayList vs LinkedList vs HashMap vs HashSet.",
+    "answer": "<ul><li><strong>ArrayList</strong> — dynamic array; fast random access, slower mid-list inserts.</li><li><strong>LinkedList</strong> — doubly linked; fast inserts/removes, slow random access.</li><li><strong>HashMap</strong> — key/value, O(1) average lookup, unordered.</li><li><strong>HashSet</strong> — unique elements, backed by a HashMap.</li></ul>",
+    "tip": "Default to ArrayList and HashMap unless you have a specific reason not to.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "java-checked-unchecked",
+    "category": "java",
+    "difficulty": "intermediate",
+    "tags": [
+      "exceptions"
+    ],
+    "question": "Checked vs unchecked exceptions.",
+    "answer": "<p><strong>Checked</strong> (<code class=\"inline\">IOException</code>) — must be declared or caught; the compiler enforces handling.</p><p><strong>Unchecked</strong> (<code class=\"inline\">RuntimeException</code>, <code class=\"inline\">NullPointerException</code>) — programming errors, not enforced by the compiler.</p>",
+    "tip": "Don't swallow exceptions with an empty catch block — log or rethrow.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "java-string-immutable",
+    "category": "java",
+    "difficulty": "intermediate",
+    "tags": [
+      "string",
+      "immutability"
+    ],
+    "question": "Why are Strings immutable, and String vs StringBuilder?",
+    "answer": "<p>Immutability enables the <strong>String pool</strong> (interning), thread-safety, and safe use as map keys. Concatenating Strings in a loop creates many objects.</p><p>Use <strong>StringBuilder</strong> for heavy concatenation — it mutates one buffer.</p>",
+    "tip": "String concatenation in a loop is a classic performance red flag — use StringBuilder.",
+    "code": "StringBuilder sb = new StringBuilder();\nfor (String s : items) sb.append(s);",
+    "lang": "java"
+  },
+  {
+    "id": "java-final",
+    "category": "java",
+    "difficulty": "beginner",
+    "tags": [
+      "final",
+      "keywords"
+    ],
+    "question": "What does the final keyword do?",
+    "answer": "<ul><li><strong>final variable</strong> — assigned once (a constant).</li><li><strong>final method</strong> — cannot be overridden.</li><li><strong>final class</strong> — cannot be extended (e.g. String).</li></ul>",
+    "tip": "final on a reference means the reference can't change, but the object can still mutate.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "java-static",
+    "category": "java",
+    "difficulty": "beginner",
+    "tags": [
+      "static",
+      "keywords"
+    ],
+    "question": "What does static mean?",
+    "answer": "<p>A <code class=\"inline\">static</code> member belongs to the <strong>class</strong>, not an instance — shared across all objects and accessible without creating one. Used for constants, utility methods, and counters.</p>",
+    "tip": "static methods can't access instance (non-static) fields.",
+    "code": "public static int square(int n) { return n * n; }",
+    "lang": "java"
+  },
+  {
+    "id": "java-streams",
+    "category": "java",
+    "difficulty": "advanced",
+    "tags": [
+      "streams",
+      "functional",
+      "java8"
+    ],
+    "question": "What are Java 8 Streams?",
+    "answer": "<p>A declarative API for processing collections via a pipeline of operations — <code class=\"inline\">filter</code>, <code class=\"inline\">map</code>, <code class=\"inline\">reduce</code>, <code class=\"inline\">collect</code>. Streams are lazy and can run in parallel, making data transformation concise and readable.</p>",
+    "tip": "Streams don't mutate the source — they produce a new result.",
+    "code": "List<String> names = users.stream()\n  .filter(u -> u.isActive())\n  .map(User::getName)\n  .collect(Collectors.toList());",
+    "lang": "java"
+  },
+  {
+    "id": "java-optional",
+    "category": "java",
+    "difficulty": "intermediate",
+    "tags": [
+      "optional",
+      "null-safety"
+    ],
+    "question": "What is Optional and why use it?",
+    "answer": "<p><code class=\"inline\">Optional&lt;T&gt;</code> is a container that may or may not hold a value — a clearer alternative to returning <code class=\"inline\">null</code>. It forces callers to handle the empty case, reducing <code class=\"inline\">NullPointerException</code>s.</p>",
+    "tip": "Use Optional as a return type, not as a method parameter or field.",
+    "code": "return repo.findById(id)\n  .map(User::getName)\n  .orElse(\"Unknown\");",
+    "lang": "java"
+  },
+  {
+    "id": "java-threads",
+    "category": "java",
+    "difficulty": "advanced",
+    "tags": [
+      "concurrency",
+      "threads"
+    ],
+    "question": "How do you create and manage threads in Java?",
+    "answer": "<p>Implement <code class=\"inline\">Runnable</code> (preferred) or extend <code class=\"inline\">Thread</code>. In practice use an <strong>ExecutorService</strong> / thread pool instead of raw threads, and share state safely with <code class=\"inline\">synchronized</code>, locks, or concurrent collections.</p>",
+    "tip": "Prefer ExecutorService over new Thread() — pooling avoids the cost of thread churn.",
+    "code": "ExecutorService pool = Executors.newFixedThreadPool(4);\npool.submit(() -> doWork());",
+    "lang": "java"
+  },
+  {
+    "id": "java-jvm",
+    "category": "java",
+    "difficulty": "intermediate",
+    "tags": [
+      "jvm",
+      "memory",
+      "gc"
+    ],
+    "question": "JDK vs JRE vs JVM, and how does GC work?",
+    "answer": "<p><strong>JVM</strong> runs bytecode. <strong>JRE</strong> = JVM + libraries (to run apps). <strong>JDK</strong> = JRE + compiler/tools (to build apps).</p><p><strong>Garbage collection</strong> automatically frees objects no longer reachable from roots, mostly in the young generation (frequent, cheap) vs old generation (rare, costly).</p>",
+    "tip": "You can't force GC — System.gc() is only a suggestion.",
+    "code": "",
+    "lang": ""
+  }
+]

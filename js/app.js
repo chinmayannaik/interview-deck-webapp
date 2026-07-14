@@ -10,35 +10,30 @@
   const { qs, qsa, el, debounce, strip, toast, download } = IQB.utils;
   const store = IQB.storage;
 
-  /* ---- category config (order + labels) ---- */
-  const CATEGORIES = [
-    { key: "angular", label: "Angular" },
-    { key: "ngcoding", label: "Angular Coding" },
-    { key: "javascript", label: "JavaScript" },
-    { key: "typescript", label: "TypeScript" },
-    { key: "html", label: "HTML" },
-    { key: "css", label: "CSS" },
-    { key: "coding", label: "JS Coding" },
-    { key: "rxjs", label: "RxJS" },
-    { key: "ngrx", label: "NgRx" },
-    { key: "testing", label: "Testing" },
-    { key: "java", label: "Java" },
-    { key: "springboot", label: "Spring Boot" },
-    { key: "sql", label: "SQL" },
-    { key: "git", label: "Git" },
-    { key: "general", label: "General" },
-    { key: "behavioral", label: "Behavioral" }
-  ];
-  /* ---- top-level groups (the simplified tab bar) ---- */
-  const GROUPS = [
-    {
-      key: "frontend", label: "Frontend", color: "var(--cat-angular)",
-      cats: ["angular", "ngcoding", "javascript", "coding", "typescript", "html", "css", "rxjs", "ngrx", "testing", "general"]
-    },
-    { key: "backend", label: "Backend", color: "var(--cat-springboot)", cats: ["java", "springboot", "sql"] },
-    { key: "devops", label: "DevOps", color: "var(--cat-git)", cats: ["git"] },
-    { key: "hr", label: "Behavioral", color: "var(--cat-behavioral)", cats: ["behavioral"] }
-  ];
+  /* ---- category + group config, derived ENTIRELY from the content manifest ----
+     Adding a new main field (group) or a new section (category) is a git-only
+     change: edit manifest.json (+ the category's JSON file) and push. No website
+     or app redeploy — both clients read groups, categories, order and colors
+     straight from the manifest. */
+  const MANIFEST = (window.IQB && IQB.manifest) || { groups: [], categories: [] };
+  const CAT_META = MANIFEST.categories || [];
+
+  const CATEGORIES = CAT_META.map((c) => ({ key: c.id, label: c.label }));
+
+  /* per-category accent colors (from the manifest); future categories with no
+     color fall back to a rotating palette so they still render sensibly. */
+  const COLORS = {};
+  CAT_META.forEach((c) => { if (c.color) COLORS[c.id] = c.color; });
+  const FALLBACK_COLORS = ["#C3002F", "#B4820A", "#2F6FB0", "#7A4FD6", "#0B7285", "#1E8E57", "#9A5B34", "#A83294"];
+  let _fbIdx = 0;
+  const colorOf = (key) => COLORS[key] || (COLORS[key] = FALLBACK_COLORS[_fbIdx++ % FALLBACK_COLORS.length]);
+
+  const GROUPS = (MANIFEST.groups || []).map((g) => ({
+    key: g.id,
+    label: g.label,
+    color: g.color || colorOf((CAT_META.find((c) => c.group === g.id) || {}).id),
+    cats: CAT_META.filter((c) => c.group === g.id).map((c) => c.id)
+  }));
   const groupOf = (catKey) => GROUPS.find((g) => g.cats.includes(catKey)) || null;
   const isGroup = (key) => GROUPS.some((g) => g.key === key);
   const catsFor = (key) => {
@@ -185,7 +180,7 @@
       if (n === 0) return;
       sideEl.appendChild(el("button", {
         class: "side-link side-sub" + (key === catKey ? " active" : ""),
-        "data-cat": catKey, style: `--side-c: var(--cat-${catKey})`,
+        "data-cat": catKey, style: `--side-c: ${colorOf(catKey)}`,
         onclick: () => setCategory(catKey, true)
       }, [el("span", { text: labelOf(catKey) }), el("span", { class: "s-count", text: String(n) })]));
     });
@@ -211,7 +206,7 @@
       if (n === 0) return;
       subnavEl.appendChild(el("button", {
         class: "subchip" + (key === catKey ? " active" : ""),
-        "data-cat": catKey, style: `--sc: var(--cat-${catKey})`,
+        "data-cat": catKey, style: `--sc: ${colorOf(catKey)}`,
         onclick: () => setCategory(catKey, true)
       }, [document.createTextNode(labelOf(catKey)), el("span", { class: "subchip-n", text: String(n) })]));
     });
@@ -379,7 +374,7 @@
     const card = el("article", {
       class: "qa-card" + (progress.has(q.id) ? " done" : ""),
       "data-id": q.id, "data-category": q.category, "data-difficulty": q.difficulty || "",
-      style: `--cat: var(--cat-${q.category})`
+      style: `--cat: ${colorOf(q.category)}`
     });
 
     // header (div with button semantics so we can nest the star button)
@@ -506,7 +501,14 @@
     render();
     updateProgressBar();
   }
-  IQB.app = { getData: getSyncData, setData: setSyncData };
+  function getProgressSummary() {
+    const groups = GROUPS.map((g) => {
+      const p = progressFor(g.cats);
+      return { key: g.key, label: g.label, color: g.color, done: p.done, total: p.total };
+    });
+    return { totalCompleted: progress.size, totalQuestions: ALL.length, groups: groups };
+  }
+  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary };
   function updateProgressBar() {
     const fill = qs("#progress-fill", sideEl);
     const label = qs("#progress-label", sideEl);

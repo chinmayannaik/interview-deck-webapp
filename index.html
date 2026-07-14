@@ -5,28 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>Interview Questions Bank — Angular, JavaScript, TypeScript &amp; Frontend</title>
-  <meta name="description" content="A free, searchable bank of frontend interview questions and answers — Angular, JavaScript, TypeScript, RxJS, NgRx, HTML, CSS, Java, Spring Boot, SQL and Git. Practice mode, bookmarks and progress tracking." />
-  <meta name="keywords" content="interview questions, angular interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git" />
-  <meta name="author" content="Interview Questions Bank" />
+  <title>Interview Helper — Coding &amp; Interview Questions</title>
+  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, JavaScript, TypeScript, RxJS, NgRx, HTML, CSS, Java, Spring Boot, SQL and Git. Practice mode, bookmarks and progress tracking." />
+  <meta name="keywords" content="interview questions, coding interview, angular interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git" />
+  <meta name="author" content="Interview Helper" />
   <link rel="canonical" href="https://interview-questions-bank.netlify.app/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Interview Questions Bank" />
-  <meta property="og:description" content="Master Angular, JavaScript, TypeScript and Frontend interviews,a searchable question bank with practice mode." />
+  <meta property="og:title" content="Interview Helper" />
+  <meta property="og:description" content="Master coding and interview questions — a searchable bank with practice mode, bookmarks and progress tracking." />
   <meta property="og:url" content="https://interview-questions-bank.netlify.app/" />
-  <meta property="og:image" content="assets/favicon/icon.svg" />
+  <meta property="og:image" content="assets/favicon/icon.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Interview Questions Bank" />
-  <meta name="twitter:description" content="Master Angular, JavaScript, TypeScript and Frontend interviews." />
+  <meta name="twitter:title" content="Interview Helper" />
+  <meta name="twitter:description" content="Master coding and interview questions — searchable, with practice mode." />
   <meta name="twitter:image" content="assets/favicon/icon.svg" />
 
   <!-- icons + manifest -->
-  <link rel="icon" href="assets/favicon/favicon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="assets/favicon/icon.svg" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#141118" media="(prefers-color-scheme: dark)" />
@@ -53,9 +53,13 @@
   <div class="app">
     <!-- ===== header ===== -->
     <header class="site-header">
-      <a class="brand" href="#frontend" aria-label="Interview Questions Bank home">
-        <span class="brand-mark">IQ</span>
-        <span class="brand-name">Interview <span>Questions</span></span>
+      <a class="brand" href="#frontend" aria-label="Interview Helper home">
+  <img
+    src="assets/favicon/favicon.svg"
+    alt="Interview Helper"
+    class="brand-logo"
+  />
+        <span class="brand-name">Interview <span>Helper</span></span>
       </a>
       <div class="header-spacer"></div>
 
@@ -65,7 +69,16 @@
         <span class="s-kbd" aria-hidden="true">/</span>
       </label>
 
-      <button class="icon-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices" hidden>⇆</button>
+      <!-- auth button: shows "Sign In" pill when signed out, compact avatar icon when signed in -->
+      <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+        <span class="auth-btn-label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          Sign In
+        </span>
+        <span class="auth-btn-user" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+        </span>
+      </button>
       <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode">☾</button>
     </header>
 
@@ -101,8 +114,8 @@
         <div class="content-head">
           <h2 class="content-title" id="content-title">All Questions</h2>
           <div class="content-tools">
-            <button class="tool" id="random-btn" type="button" title="Random question (R)">🎲 Random</button>
-            <button class="tool" id="practice-toggle" type="button" title="Hide answers until revealed">🎯 Practice</button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">Random</button>
+            <button class="tool" id="practice-toggle" type="button" title="Hide answers until revealed">Practice</button>
             <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">★ Saved</button>
             <button class="tool" id="expand-all" type="button">Expand all</button>
             <button class="tool" id="collapse-all" type="button">Collapse all</button>
@@ -122,40 +135,20 @@
     <!-- ===== footer ===== -->
   </div>
 
-  <!-- ===== data (each file registers into window.IQB.data.<category>) ===== -->
-  <script src="data/angular.js"></script>
-  <script src="data/javascript.js"></script>
-  <script src="data/typescript.js"></script>
-  <script src="data/html.js"></script>
-  <script src="data/css.js"></script>
-  <script src="data/rxjs.js"></script>
-  <script src="data/ngrx.js"></script>
-  <script src="data/java.js"></script>
-  <script src="data/springboot.js"></script>
-  <script src="data/sql.js"></script>
-  <script src="data/git.js"></script>
-  <script src="data/general.js"></script>
-  <script src="data/coding.js"></script>
-  <script src="data/angular-coding.js"></script>
-  <script src="data/testing.js"></script>
-  <script src="data/behavioral.js"></script>
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+     window.IQB = { DATA_BASE:
+    "https://raw.githubusercontent.com/chinmayanaik123/interview-helper-question-bank/main/" }; // use for testing
 
-  <!-- ===== app ===== -->
+    // window.IQB = { DATA_BASE:
+    //   "https://cdn.jsdelivr.net/gh/chinmayanaik123/interview-helper-question-bank@main/" }; //better to keep this in production
+  </script>
   <script src="js/utils.js"></script>
   <script src="js/storage.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/data-loader.js"></script>
   <script src="js/sync.js"></script>
-
-  <!-- fill hero stats (kept tiny + inline so it runs after data loads) -->
-  <script>
-    (function () {
-      var d = (window.IQB && IQB.data) || {};
-      var total = 0, cats = 0;
-      Object.keys(d).forEach(function (k) { if (Array.isArray(d[k]) && d[k].length) { total += d[k].length; cats++; } });
-      var t = document.getElementById("stat-total"); if (t) t.textContent = total + "+";
-      var c = document.getElementById("stat-cats"); if (c) c.textContent = cats;
-      var hc = document.getElementById("header-count-slot"); if (hc) hc.textContent = total + " questions";
-    })();
-  </script>
 </body>
 </html>

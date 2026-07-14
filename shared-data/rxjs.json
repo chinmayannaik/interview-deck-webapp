@@ -1,0 +1,429 @@
+[
+  {
+    "id": "rx-observable-promise",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "observable",
+      "promise"
+    ],
+    "question": "Observable vs Promise.",
+    "answer": "<ul><li>Observable is <strong>lazy</strong> (runs on subscribe); a Promise is eager.</li><li>Observable emits <strong>multiple</strong> values over time; a Promise resolves once.</li><li>Observable is <strong>cancellable</strong> (unsubscribe); a Promise isn't.</li><li>Observables have a rich <strong>operator</strong> pipeline (<code class=\"inline\">map</code>, <code class=\"inline\">filter</code>, <code class=\"inline\">switchMap</code>…).</li></ul>",
+    "tip": "Cancellability is the killer feature — it's why type-ahead search uses observables.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "rx-flattening",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "operators",
+      "switchMap",
+      "mergeMap",
+      "concatMap",
+      "exhaustMap"
+    ],
+    "question": "switchMap vs mergeMap vs concatMap vs exhaustMap.",
+    "answer": "<ul><li><strong>switchMap</strong> — cancels the previous inner observable when a new value arrives. <em>Type-ahead search, cancel stale API calls.</em></li><li><strong>mergeMap</strong> — runs all inner observables concurrently, no order guarantee. <em>Parallel independent requests.</em></li><li><strong>concatMap</strong> — queues them one after another in order. <em>Ordered writes/saves.</em></li><li><strong>exhaustMap</strong> — ignores new values while one is still running. <em>Prevent double form submits / login spam.</em></li></ul>",
+    "tip": "The single most-asked RxJS question — memorise the use-case for each.",
+    "code": "search$.pipe(\n  debounceTime(300),\n  distinctUntilChanged(),\n  switchMap(term => this.api.search(term))\n)",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-subjects",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "subject",
+      "behaviorsubject",
+      "replaysubject"
+    ],
+    "question": "Subject vs BehaviorSubject vs ReplaySubject vs AsyncSubject.",
+    "answer": "<ul><li><strong>Subject</strong> — multicast; subscribers only get values emitted <em>after</em> they subscribe.</li><li><strong>BehaviorSubject</strong> — holds a <strong>current value</strong>, needs an initial value, emits the latest immediately on subscribe.</li><li><strong>ReplaySubject</strong> — replays the last N values to new subscribers.</li><li><strong>AsyncSubject</strong> — emits only the last value, and only on complete.</li></ul>",
+    "tip": "BehaviorSubject is the go-to for shared state like the current user.",
+    "code": "const user$ = new BehaviorSubject<User | null>(null);",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-unsubscribe",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "memory-leak",
+      "unsubscribe"
+    ],
+    "question": "How do you avoid memory leaks / unsubscribe?",
+    "answer": "<ul><li><strong>async pipe</strong> in the template — subscribes and unsubscribes automatically (preferred).</li><li><strong>takeUntil(destroy$)</strong> with a Subject completed in <code class=\"inline\">ngOnDestroy</code>.</li><li><code class=\"inline\">takeUntilDestroyed()</code> in modern Angular.</li><li>Store the <code class=\"inline\">Subscription</code> and call <code class=\"inline\">unsubscribe()</code> in <code class=\"inline\">ngOnDestroy</code>.</li></ul><p>HTTP calls complete on their own, but long-lived streams (Subjects, valueChanges, intervals) leak if you don't clean up.</p>",
+    "tip": "async pipe first; takeUntil when you must subscribe in the class.",
+    "code": "this.data$.pipe(takeUntil(this.destroy$)).subscribe(...);\nngOnDestroy() { this.destroy$.next(); this.destroy$.complete(); }",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-hot-cold",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "hot",
+      "cold",
+      "multicast"
+    ],
+    "question": "Hot vs cold observables.",
+    "answer": "<p><strong>Cold</strong> — each subscriber triggers its own producer, getting an independent execution (e.g. an HTTP call runs per subscribe).</p><p><strong>Hot</strong> — the producer is shared; subscribers see values as they happen (e.g. DOM events, a Subject). Use <code class=\"inline\">share()</code> / <code class=\"inline\">shareReplay()</code> to make a cold stream hot.</p>",
+    "tip": "Wrap an HTTP call with shareReplay(1) to avoid firing it once per subscriber.",
+    "code": "readonly config$ = this.http.get('/config').pipe(shareReplay(1));",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-common-operators",
+    "category": "rxjs",
+    "difficulty": "beginner",
+    "tags": [
+      "operators"
+    ],
+    "question": "Name common RxJS operators and what they do.",
+    "answer": "<ul><li><code class=\"inline\">map</code> / <code class=\"inline\">filter</code> — transform / keep values.</li><li><code class=\"inline\">tap</code> — side effects (logging) without changing the stream.</li><li><code class=\"inline\">debounceTime</code> / <code class=\"inline\">distinctUntilChanged</code> — throttle noisy input.</li><li><code class=\"inline\">take</code> / <code class=\"inline\">takeUntil</code> — limit emissions.</li><li><code class=\"inline\">catchError</code> — handle errors and recover.</li></ul>",
+    "tip": "tap is for side effects only — never mutate values inside it.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "rx-error-handling",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "error",
+      "catchError",
+      "retry"
+    ],
+    "question": "How do you handle errors in RxJS?",
+    "answer": "<p>Use <code class=\"inline\">catchError</code> to intercept an error and return a fallback observable (or rethrow). <code class=\"inline\">retry(n)</code> / <code class=\"inline\">retryWhen</code> re-subscribe on failure.</p><p>Remember: an error <strong>terminates</strong> the stream — nothing emits after it, so handle it inside the inner observable if you want the outer stream to survive.</p>",
+    "tip": "In a switchMap search, put catchError inside the inner call so one failed search doesn't kill the whole stream.",
+    "code": "switchMap(term => this.api.search(term).pipe(\n  catchError(() => of([]))\n))",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-combine",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "combineLatest",
+      "forkJoin",
+      "merge",
+      "zip"
+    ],
+    "question": "combineLatest vs forkJoin vs merge vs zip.",
+    "answer": "<ul><li><strong>combineLatest</strong> — emits the latest of each source whenever any emits.</li><li><strong>forkJoin</strong> — waits for all to complete, emits the last value of each (like Promise.all).</li><li><strong>merge</strong> — interleaves emissions from all sources.</li><li><strong>zip</strong> — pairs emissions by index.</li></ul>",
+    "tip": "forkJoin is the RxJS equivalent of Promise.all for parallel HTTP calls.",
+    "code": "forkJoin({ user: this.getUser(), roles: this.getRoles() })\n  .subscribe(({ user, roles }) => {});",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-of-from",
+    "category": "rxjs",
+    "difficulty": "beginner",
+    "tags": [
+      "creation",
+      "of",
+      "from"
+    ],
+    "question": "of vs from vs fromEvent.",
+    "answer": "<ul><li><code class=\"inline\">of(1,2,3)</code> — emits the given values then completes.</li><li><code class=\"inline\">from(arrayOrPromise)</code> — turns an array/iterable/Promise into an observable.</li><li><code class=\"inline\">fromEvent(el,'click')</code> — an observable of DOM events.</li></ul>",
+    "tip": "from unpacks an array element-by-element; of emits the array as a single value.",
+    "code": "of([1, 2, 3]);   // one emission: [1,2,3]\nfrom([1, 2, 3]); // three emissions: 1, 2, 3",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-pipe",
+    "category": "rxjs",
+    "difficulty": "beginner",
+    "tags": [
+      "pipe",
+      "operators"
+    ],
+    "question": "What is the pipe() method?",
+    "answer": "<p><code class=\"inline\">pipe()</code> composes operators left to right into a new observable. Pipeable operators are tree-shakable pure functions — you import only what you use.</p>",
+    "tip": "Order matters — debounceTime before switchMap, not after.",
+    "code": "source$.pipe(map(x => x * 2), filter(x => x > 4));",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-distinct",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "distinctUntilChanged",
+      "debounce"
+    ],
+    "question": "Why pair debounceTime with distinctUntilChanged in search?",
+    "answer": "<p><code class=\"inline\">debounceTime</code> waits for the user to pause typing; <code class=\"inline\">distinctUntilChanged</code> drops emissions equal to the previous one (e.g. type then delete back to the same term) so you don't fire a duplicate request.</p>",
+    "tip": "This trio — debounceTime, distinctUntilChanged, switchMap — is the canonical search pattern.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "rx-startwith",
+    "category": "rxjs",
+    "difficulty": "beginner",
+    "tags": [
+      "startWith",
+      "operators"
+    ],
+    "question": "What does startWith do?",
+    "answer": "<p>Emits one or more seed values <em>before</em> the source starts — handy for showing an initial/default UI state (e.g. a loading flag or empty list) before real data arrives.</p>",
+    "tip": "Combine startWith with an async pipe to render an initial value instantly.",
+    "code": "this.items$ = this.load().pipe(startWith([]));",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-typeahead",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "pattern",
+      "search",
+      "switchMap"
+    ],
+    "question": "Show the canonical type-ahead search pipeline.",
+    "answer": "<p>Combine the four operators every interviewer wants: <code class=\"inline\">debounceTime</code> (wait for a pause), <code class=\"inline\">distinctUntilChanged</code> (skip duplicate terms), <code class=\"inline\">switchMap</code> (cancel stale requests), and <code class=\"inline\">catchError</code> inside the inner call (so one failure doesn't kill the stream).</p>",
+    "tip": "Put catchError on the inner observable, not the outer — otherwise the stream dies after one error.",
+    "code": "input$.pipe(\n  debounceTime(300),\n  distinctUntilChanged(),\n  switchMap(q => this.api.search(q).pipe(catchError(() => of([]))))\n)",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-polling",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "polling",
+      "timer",
+      "interval"
+    ],
+    "question": "How do you poll an API every N seconds with RxJS?",
+    "answer": "<p>Use <code class=\"inline\">timer(0, N)</code> to emit immediately then every N ms, and <code class=\"inline\">switchMap</code> to the request (so a slow response doesn't overlap the next tick). Stop with <code class=\"inline\">takeUntil</code>.</p>",
+    "tip": "switchMap prevents overlapping requests if one poll is slower than the interval.",
+    "code": "timer(0, 5000).pipe(\n  switchMap(() => this.api.getStatus()),\n  takeUntil(this.destroy$)\n)",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-retry-backoff",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "error",
+      "retry",
+      "backoff"
+    ],
+    "question": "How do you retry a failed request with exponential backoff?",
+    "answer": "<p>Use <code class=\"inline\">retry</code> with a <code class=\"inline\">delay</code> function (RxJS 7.4+) that returns an increasing delay per attempt, or <code class=\"inline\">retryWhen</code> in older versions. Cap the number of retries so it doesn't loop forever.</p>",
+    "tip": "Exponential backoff avoids hammering a struggling server — mention capping the retries.",
+    "code": "req$.pipe(\n  retry({ count: 3, delay: (_e, i) => timer(2 ** i * 1000) })\n)",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-shareReplay-cache",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "caching",
+      "shareReplay",
+      "multicast"
+    ],
+    "question": "How do you cache an HTTP result across subscribers?",
+    "answer": "<p>Pipe the request through <code class=\"inline\">shareReplay(1)</code>: the underlying call runs once, and every current/future subscriber gets the last emitted value — a simple in-memory cache. Add <code class=\"inline\">{ refCount: true }</code> to release it when no one's subscribed.</p>",
+    "tip": "shareReplay(1) turns a per-subscriber HTTP call into a single shared, cached one.",
+    "code": "readonly config$ = this.http.get('/config').pipe(shareReplay(1));",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-scan",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "scan",
+      "state",
+      "reduce"
+    ],
+    "question": "What does scan do (vs reduce)?",
+    "answer": "<p><code class=\"inline\">scan</code> is like <code class=\"inline\">reduce</code> but emits the accumulated value on <em>every</em> emission, not just at the end — perfect for accumulating state over a stream (a running total, or building up a list from actions).</p>",
+    "tip": "scan is the RxJS building block for a reducer-style state stream.",
+    "code": "actions$.pipe(\n  scan((state, action) => reducer(state, action), initial)\n)",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-withlatestfrom",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "withLatestFrom",
+      "combineLatest"
+    ],
+    "question": "combineLatest vs withLatestFrom.",
+    "answer": "<p><strong>combineLatest</strong> emits when <em>any</em> source emits. <strong>withLatestFrom</strong> emits only when the <em>source</em> emits, pulling in the latest value of the others — use it when one stream is the trigger and the rest are just context.</p>",
+    "tip": "withLatestFrom = 'when A fires, also give me the current B' — one driver, others passive.",
+    "code": "saveClicks$.pipe(\n  withLatestFrom(this.formValue$),\n  switchMap(([_, form]) => this.api.save(form))\n)",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-finalize",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "finalize",
+      "cleanup"
+    ],
+    "question": "What is finalize used for?",
+    "answer": "<p><code class=\"inline\">finalize</code> runs a callback when the observable <strong>completes, errors, or is unsubscribed</strong> — the RxJS equivalent of <code class=\"inline\">finally</code>. Common use: hide a loading spinner regardless of success or failure.</p>",
+    "tip": "finalize is the clean place to turn off a loading flag — it always runs.",
+    "code": "this.loading = true;\nreq$.pipe(finalize(() => this.loading = false)).subscribe();",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-throttle-audit-sample",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "debounceTime",
+      "throttleTime",
+      "auditTime"
+    ],
+    "question": "debounceTime vs throttleTime vs auditTime vs sampleTime.",
+    "answer": "<ul><li><strong>debounceTime</strong> — emit after a quiet gap (last value).</li><li><strong>throttleTime</strong> — emit the first value, then ignore for a window.</li><li><strong>auditTime</strong> — ignore for a window, then emit the <em>latest</em> value.</li><li><strong>sampleTime</strong> — emit the latest value on a fixed interval.</li></ul>",
+    "tip": "debounce for search, throttle for scroll/resize, sample for periodic snapshots.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "rx-mergeall",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "mergeAll",
+      "concatAll",
+      "higher-order"
+    ],
+    "question": "What are higher-order observables and *All operators?",
+    "answer": "<p>A <strong>higher-order observable</strong> emits other observables. Flattening operators subscribe to the inner ones: <code class=\"inline\">mergeAll</code> (concurrent), <code class=\"inline\">concatAll</code> (in order), <code class=\"inline\">switchAll</code> (cancel previous). The <code class=\"inline\">*Map</code> variants (mergeMap, concatMap…) are just <code class=\"inline\">map + *All</code>.</p>",
+    "tip": "switchMap === map(...) + switchAll — knowing this shows deep RxJS understanding.",
+    "code": "source$.pipe(map(id => this.load(id)), concatAll());\n// same as: source$.pipe(concatMap(id => this.load(id)))",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-takeuntildestroyed",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "takeUntilDestroyed",
+      "cleanup",
+      "modern"
+    ],
+    "question": "What is takeUntilDestroyed?",
+    "answer": "<p>(Angular 16+) An operator that auto-completes a subscription when the component/directive is destroyed — replacing the manual <code class=\"inline\">destroy$</code> Subject + <code class=\"inline\">takeUntil</code> boilerplate. Call it in an injection context, or pass a <code class=\"inline\">DestroyRef</code>.</p>",
+    "tip": "It's the modern, boilerplate-free way to prevent subscription leaks.",
+    "code": "data$.pipe(takeUntilDestroyed()).subscribe(...);",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-custom-operator",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "custom-operator",
+      "pipe"
+    ],
+    "question": "How do you write a custom operator?",
+    "answer": "<p>A pipeable operator is just a function that takes a source observable and returns a new one — usually by composing existing operators with <code class=\"inline\">pipe</code>. This makes reusable, named stream transformations.</p>",
+    "tip": "A custom operator is often just a named composition of built-in operators.",
+    "code": "const cleanSearch = () =>\n  (src$) => src$.pipe(debounceTime(300), distinctUntilChanged());\n\ninput$.pipe(cleanSearch());",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-scheduler",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "scheduler",
+      "timing"
+    ],
+    "question": "What are RxJS schedulers?",
+    "answer": "<p>A scheduler controls <em>when</em> and <em>on what context</em> emissions happen — e.g. <code class=\"inline\">asyncScheduler</code> (macrotask), <code class=\"inline\">asapScheduler</code> (microtask), <code class=\"inline\">animationFrameScheduler</code> (rAF). Used for fine timing control and for virtual time in tests (<code class=\"inline\">TestScheduler</code>).</p>",
+    "tip": "Most code never touches schedulers directly — but marble tests rely on the TestScheduler.",
+    "code": "observeOn(animationFrameScheduler)",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-firstvaluefrom",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "promise",
+      "interop",
+      "firstValueFrom"
+    ],
+    "question": "How do you convert an Observable to a Promise?",
+    "answer": "<p>Use <code class=\"inline\">firstValueFrom(obs$)</code> (resolves with the first emission) or <code class=\"inline\">lastValueFrom(obs$)</code> (waits for completion). These replaced the deprecated <code class=\"inline\">.toPromise()</code>. Handy when awaiting a one-shot stream in async/await code.</p>",
+    "tip": ".toPromise() is deprecated — use firstValueFrom / lastValueFrom.",
+    "code": "const user = await firstValueFrom(this.api.getUser(id));",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-cold-multiple-subscribers",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "cold",
+      "http",
+      "multicast"
+    ],
+    "question": "Why does my HTTP call fire twice with two async pipes?",
+    "answer": "<p>Observables are <strong>cold</strong> — each subscription re-runs the producer, so two <code class=\"inline\">async</code> pipes on the same <code class=\"inline\">http.get()</code> trigger two requests. Fix by multicasting with <code class=\"inline\">shareReplay(1)</code>, or subscribe once and reuse the value.</p>",
+    "tip": "Two async pipes on one HTTP observable = two network calls unless you shareReplay it.",
+    "code": "readonly user$ = this.http.get('/me').pipe(shareReplay(1));",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-error-terminates",
+    "category": "rxjs",
+    "difficulty": "intermediate",
+    "tags": [
+      "error",
+      "completion",
+      "lifecycle"
+    ],
+    "question": "What happens to a stream after it errors?",
+    "answer": "<p>An error is a <strong>terminal</strong> event — the observable stops and emits nothing further, and the subscription is torn down. To keep a long-lived stream alive (like a search box), handle the error <em>inside</em> the inner observable with <code class=\"inline\">catchError</code> so the outer stream never sees it.</p>",
+    "tip": "Error and complete both end a stream permanently — design for that.",
+    "code": "",
+    "lang": ""
+  },
+  {
+    "id": "rx-tosignal",
+    "category": "rxjs",
+    "difficulty": "advanced",
+    "tags": [
+      "signals",
+      "interop",
+      "toSignal"
+    ],
+    "question": "How do Observables and Signals interoperate?",
+    "answer": "<p>(Angular 16+) <code class=\"inline\">toSignal(obs$)</code> subscribes and exposes the latest value as a signal (auto-unsubscribes); <code class=\"inline\">toObservable(sig)</code> turns a signal into a stream. Use RxJS for async/events, signals for synchronous local state, and bridge between them.</p>",
+    "tip": "toSignal replaces the async pipe in signal-based components and auto-cleans up.",
+    "code": "count = toSignal(this.store.count$, { initialValue: 0 });",
+    "lang": "ts"
+  },
+  {
+    "id": "rx-tap-side-effects",
+    "category": "rxjs",
+    "difficulty": "beginner",
+    "tags": [
+      "tap",
+      "side-effects",
+      "debugging"
+    ],
+    "question": "When should you use tap?",
+    "answer": "<p><code class=\"inline\">tap</code> runs a side effect (logging, setting a flag, triggering an action) without altering the emitted value or the stream. Great for debugging and for effects that shouldn't change data. Never mutate values inside it.</p>",
+    "tip": "tap is for side effects only — if you're transforming the value, use map.",
+    "code": "req$.pipe(tap(() => this.loading = true), /* ... */);",
+    "lang": "ts"
+  }
+]
