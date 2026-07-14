@@ -97,12 +97,23 @@
   function setButton(state, u) {
     if (!btn) return;
     if (state === "signed-in" && u) {
-      btn.textContent = initialOf(u);
+      if (u.photoURL) {
+        btn.innerHTML = '<img src="' + u.photoURL + '" alt="" referrerpolicy="no-referrer" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block;">';
+      } else {
+        btn.textContent = initialOf(u);
+      }
       btn.classList.add("signed-in");
       btn.setAttribute("aria-label", "Account — " + (u.email || initialOf(u)));
       btn.title = "Account & progress";
     } else {
-      btn.textContent = "Sign In"; // 
+      btn.innerHTML =
+        '<span class="auth-btn-label">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>' +
+          'Sign In' +
+        '</span>' +
+        '<span class="auth-btn-user" aria-hidden="true">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>' +
+        '</span>';
       btn.classList.remove("signed-in");
       btn.setAttribute("aria-label", "Sign in with Google to sync across devices");
       btn.title = "Sign in to sync across devices";
