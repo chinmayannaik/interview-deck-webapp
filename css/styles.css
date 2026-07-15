@@ -297,7 +297,7 @@
 .qa-card.open { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)); }
 .qa-card.done { border-left: 3px solid var(--beginner); }
 
-.qa-head { width: 100%; text-align: left; padding: 15px 16px; display: grid; gap: 9px; cursor: pointer; }
+.qa-head { width: 100%; text-align: left; padding: 15px 16px; display: grid; gap: 9px; cursor: pointer; user-select: none; -webkit-user-select: none; }
 .qa-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .badge {
   font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .03em;
@@ -373,7 +373,97 @@
 .qa-deep th, .qa-deep td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; }
 .qa-deep th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
 
-.qa-body-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+/* personal note (collapsible, per-question) */
+.pn-section { margin-top: 12px; }
+.pn-toggle.has-note { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)); color: var(--cat, var(--accent)); }
+.pn-toggle.has-note::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--accent)); margin-left: 2px; }
+.pn-body {
+  margin-top: 10px; padding: 14px 16px; border-radius: var(--r-sm);
+  border: 1px solid var(--border); border-left: 3px solid var(--cat, var(--accent));
+  background: color-mix(in srgb, var(--cat, var(--accent)) 4%, var(--surface));
+}
+.pn-add {
+  font-family: var(--mono); font-size: var(--step--1); padding: 7px 13px;
+  border-radius: var(--r-sm); border: 1px dashed var(--border-strong);
+  background: var(--surface); color: var(--ink-2); transition: var(--trans);
+}
+.pn-add:hover { border-color: var(--cat, var(--accent)); color: var(--cat, var(--accent)); }
+.pn-text { font-size: var(--step-0); color: var(--ink); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+.pn-input {
+  width: 100%; font-family: inherit; font-size: var(--step-0); line-height: 1.55;
+  color: var(--ink); background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm); padding: 10px 12px; resize: vertical; min-height: 80px;
+}
+.pn-input:focus { outline: none; border-color: var(--cat, var(--accent)); box-shadow: var(--focus); }
+.pn-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+.pn-btn {
+  font-family: var(--mono); font-size: var(--step--1); padding: 6px 12px;
+  border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface);
+  color: var(--ink-2); transition: var(--trans);
+}
+.pn-btn:hover { border-color: var(--accent); color: var(--accent); }
+.pn-primary { border-color: var(--cat, var(--accent)); color: var(--cat, var(--accent)); }
+.pn-primary:hover { background: color-mix(in srgb, var(--cat, var(--accent)) 10%, var(--surface)); }
+.pn-danger:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+
+/* ===== text highlights ===== */
+/* solid swatch colors (used by the header palette + per-mark toolbar) */
+:root {
+  --hlp-yellow: hsl(48 95% 62%);
+  --hlp-green:  hsl(140 60% 58%);
+  --hlp-blue:   hsl(210 90% 62%);
+  --hlp-pink:   hsl(330 85% 66%);
+}
+/* applied marks — tint sits under the body text (see dark-theme.css for --hl-l) */
+.answer, .qa-deep, .qa-qtext { --hl-l: 78%; }
+mark.hl { background: transparent; color: inherit; border-radius: 3px; padding: 0 1px; cursor: pointer; box-decoration-break: clone; -webkit-box-decoration-break: clone; transition: filter var(--trans); }
+mark.hl:hover { filter: brightness(0.94); }
+mark.hl-yellow { background: hsl(48 95% var(--hl-l)); }
+mark.hl-green  { background: hsl(140 60% var(--hl-l)); }
+mark.hl-blue   { background: hsl(210 90% var(--hl-l)); }
+mark.hl-pink   { background: hsl(330 85% var(--hl-l)); }
+
+/* header highlighter button: active state shows the current pen color */
+#hl-toggle.pen-on { color: var(--ink); border-color: color-mix(in srgb, var(--pen, var(--accent)) 60%, var(--border)); box-shadow: inset 0 -3px 0 var(--pen, var(--accent)); }
+body.hl-pen .answer, body.hl-pen .qa-deep, body.hl-pen .qa-qtext { cursor: text; }
+
+/* generic round swatch (header palette) */
+.hl-swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform var(--trans), border-color var(--trans); box-shadow: inset 0 0 0 1px rgba(0,0,0,.14); }
+.hl-swatch:hover { transform: scale(1.12); }
+.hl-swatch[data-active="true"] { border-color: var(--ink); }
+.hl-swatch.hl-yellow { background: var(--hlp-yellow); }
+.hl-swatch.hl-green  { background: var(--hlp-green); }
+.hl-swatch.hl-blue   { background: var(--hlp-blue); }
+.hl-swatch.hl-pink   { background: var(--hlp-pink); }
+
+/* header palette dropdown */
+.hl-palette { position: absolute; z-index: 70; width: max-content; padding: 12px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg, 0 12px 40px rgba(0,0,0,.2)); }
+.hl-palette-title { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 9px; }
+.hl-swatch-row { display: flex; gap: 10px; margin-bottom: 11px; }
+.hl-off { width: 100%; font-family: var(--mono); font-size: var(--step--1); padding: 7px 10px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans); cursor: pointer; }
+.hl-off:hover { border-color: var(--accent); color: var(--accent); }
+
+/* the display:flex/absolute below would otherwise override the [hidden]
+   attribute (same specificity, author beats UA) and the menu/palette would
+   never hide — restore hiding explicitly. */
+.hl-menu[hidden], .hl-palette[hidden] { display: none; }
+
+/* active highlight being edited: a ring so you see exactly which span the
+   toolbar acts on (cleared when the toolbar closes) */
+mark.hl.hl-editing { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 2px; }
+
+/* per-mark toolbar (recolor + delete) — dark floating pill */
+.hl-menu { position: absolute; z-index: 70; display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 999px; background: #2a2731; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 8px 26px rgba(0,0,0,.35); }
+.hl-menu-swatch { width: 18px; height: 18px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform var(--trans); box-shadow: inset 0 0 0 1px rgba(0,0,0,.2); }
+.hl-menu-swatch:hover { transform: scale(1.15); }
+.hl-menu-swatch.hl-yellow { background: var(--hlp-yellow); }
+.hl-menu-swatch.hl-green  { background: var(--hlp-green); }
+.hl-menu-swatch.hl-blue   { background: var(--hlp-blue); }
+.hl-menu-swatch.hl-pink   { background: var(--hlp-pink); }
+.hl-menu-del { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-left: 4px; border-left: 1px solid rgba(255,255,255,.16); border-top: none; border-right: none; border-bottom: none; padding-left: 8px; border-radius: 0; background: none; color: #f3b4b4; cursor: pointer; transition: var(--trans); }
+.hl-menu-del:hover { color: #ff7a7a; }
+
+.qa-body-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; user-select: none; -webkit-user-select: none; }
 .qa-act { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: var(--step--1); padding: 6px 11px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans); }
 .qa-act:hover { border-color: var(--accent); color: var(--accent); }
 .qa-act.on { background: var(--beginner-soft); border-color: var(--beginner); color: var(--beginner); }
@@ -449,9 +539,46 @@
   .qa-question { font-size: var(--step-0); }
 }
 
+/* ---------- scroll to top button ---------- */
+.scroll-to-top {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 90;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--trans), transform var(--trans), background var(--trans), border-color var(--trans);
+  transform: translateY(10px);
+}
+.scroll-to-top.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.scroll-to-top:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: scale(1.05);
+}
+.scroll-to-top:active {
+  transform: scale(0.95);
+}
+
 /* ---------- print ---------- */
 @media print {
-  .site-header, .tabs-wrap, .sidebar, .hero-pills, .content-tools, .filter-row, .qa-star, .qa-toggle, .copy-btn, .qa-body-actions, .reveal-btn, .site-footer, .icon-btn, .toast { display: none !important; }
+  .site-header, .tabs-wrap, .sidebar, .hero-pills, .content-tools, .filter-row, .qa-star, .qa-toggle, .copy-btn, .qa-body-actions, .reveal-btn, .site-footer, .icon-btn, .toast, .scroll-to-top { display: none !important; }
   .main { display: block; }
   .qa-body { display: block !important; }
   .qa-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; margin-bottom: 8px; }

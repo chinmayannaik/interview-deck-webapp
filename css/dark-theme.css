@@ -138,3 +138,16 @@
   --shadow-md: 0 1px 2px rgba(32, 26, 28, .04), 0 8px 24px rgba(32, 26, 28, .06);
   --shadow-lg: 0 12px 40px rgba(32, 26, 28, .12);
 }
+
+/* Text-highlight tints: dark theme needs a much lower lightness so the tint
+   sits UNDER the light body text and stays readable. Light re-declared so the
+   manual light toggle wins over the dark media query on OS-dark devices. */
+@media (prefers-color-scheme: dark) {
+  .answer, .qa-deep, .qa-qtext { --hl-l: 34%; }
+}
+:root[data-theme="dark"] .answer,
+:root[data-theme="dark"] .qa-deep,
+:root[data-theme="dark"] .qa-qtext { --hl-l: 34%; }
+:root[data-theme="light"] .answer,
+:root[data-theme="light"] .qa-deep,
+:root[data-theme="light"] .qa-qtext { --hl-l: 78%; }

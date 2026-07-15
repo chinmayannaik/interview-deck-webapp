@@ -29,6 +29,10 @@
 
   let fb = null, user = null, unsub = null, pushTimer = null;
   let menuEl = null, promptEl = null;
+  const userChangeCbs = [];
+  function emitUserChange() {
+    userChangeCbs.forEach(function (cb) { try { cb(user); } catch (e) { /* isolate */ } });
+  }
 
   if (btn) {
     btn.hidden = false;
@@ -38,6 +42,76 @@
     btn.addEventListener("click", onButtonClick);
   }
   IQB.sync = { pushSoon: pushSoon };
+
+  /* ============================================================
+     IQB.cloud — generic per-question user-state layer.
+
+     A single, feature-agnostic gateway to per-question user documents at
+       users/{uid}/{feature}/{questionId}
+     One document per question per feature. "notes" uses it today; a future
+     "highlights" (or any per-question state) plugs in by passing its own
+     feature name — no changes here, no schema migration, no refactor.
+
+     Signed out or Firebase unconfigured, every method degrades to a no-op /
+     null so callers can keep a local-only fallback (see js/notes.js).
+     ============================================================ */
+  IQB.cloud = {
+    isSignedIn: function () { return !!user; },
+    getUser: function () { return user; },
+
+    /* Register cb(user|null); fires immediately with the current user when
+       Firebase is already up, and again on every sign-in/sign-out. Returns an
+       unsubscribe function. */
+    onChange: function (cb) {
+      userChangeCbs.push(cb);
+      if (fb) { try { cb(user); } catch (e) { /* isolate */ } }
+      return function () {
+        const i = userChangeCbs.indexOf(cb);
+        if (i >= 0) userChangeCbs.splice(i, 1);
+      };
+    },
+
+    _ref: function (feature, questionId) {
+      return fb.doc(fb.db, "users", user.uid, feature, String(questionId));
+    },
+
+    /* Load one question's document. Resolves null when signed out or absent. */
+    load: async function (feature, questionId) {
+      if (!user || !fb) return null;
+      const snap = await fb.getDoc(this._ref(feature, questionId));
+      return snap.exists() ? snap.data() : null;
+    },
+
+    /* Load every document in a feature's subcollection as { questionId: data }. */
+    loadAll: async function (feature) {
+      const out = {};
+      if (!user || !fb) return out;
+      const snap = await fb.getDocs(fb.collection(fb.db, "users", user.uid, feature));
+      snap.forEach(function (d) { out[d.id] = d.data(); });
+      return out;
+    },
+
+    /* Upsert (merge) one question's document. */
+    save: async function (feature, questionId, data) {
+      if (!user || !fb) return;
+      await fb.setDoc(this._ref(feature, questionId), data, { merge: true });
+    },
+
+    /* Delete one question's document. */
+    remove: async function (feature, questionId) {
+      if (!user || !fb) return;
+      await fb.deleteDoc(this._ref(feature, questionId));
+    },
+
+    /* Optional real-time subscription to one question's document.
+       cb(data|null); returns an unsubscribe function. */
+    watch: function (feature, questionId, cb) {
+      if (!user || !fb) return function () {};
+      return fb.onSnapshot(this._ref(feature, questionId), function (snap) {
+        cb(snap.exists() ? snap.data() : null);
+      });
+    }
+  };
 
   // close the account menu on outside click / Escape
   document.addEventListener("click", function (e) {
@@ -61,7 +135,8 @@
       signOut: authMod.signOut,
       onAuthStateChanged: authMod.onAuthStateChanged,
       db: fsMod.getFirestore(appInst),
-      doc: fsMod.doc, getDoc: fsMod.getDoc, setDoc: fsMod.setDoc, onSnapshot: fsMod.onSnapshot
+      doc: fsMod.doc, getDoc: fsMod.getDoc, setDoc: fsMod.setDoc, onSnapshot: fsMod.onSnapshot,
+      collection: fsMod.collection, getDocs: fsMod.getDocs, deleteDoc: fsMod.deleteDoc
     };
   }
 
@@ -77,6 +152,7 @@
         if (unsub) { unsub(); unsub = null; }
         maybeShowPrompt();
       }
+      emitUserChange(); // notify per-question feature modules (notes, future highlights)
     });
   }
 

@@ -74,6 +74,9 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
         </span>
       </button>
+      <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+      </button>
       <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode">☾</button>
     </header>
 
@@ -112,6 +115,10 @@
             <button class="tool" id="random-btn" type="button" title="Random question (R)">Random</button>
             <button class="tool" id="practice-toggle" type="button" title="Hide answers until revealed">Practice</button>
             <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">★ Saved</button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">✓ Completed</button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">○ Uncompleted</button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">📝 With Notes</button>
+            <button class="tool" id="highlight-filter" type="button" title="Show questions with highlights">🎨 With Highlights</button>
             <button class="tool" id="expand-all" type="button">Expand all</button>
             <button class="tool" id="collapse-all" type="button">Collapse all</button>
             <input id="import-file" type="file" accept="application/json" hidden />
@@ -130,6 +137,10 @@
     <!-- ===== footer ===== -->
   </div>
 
+  <button id="scroll-to-top" class="scroll-to-top" type="button" aria-label="Scroll to top" title="Scroll to top">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+  </button>
+
   <!-- ===== app =====
        Questions live in a dedicated content repo (the single source of truth,
        shared with the Flutter app), served via jsDelivr. data-loader.js fetches
@@ -145,5 +156,7 @@
   <script src="js/storage.js"></script>
   <script src="js/data-loader.js"></script>
   <script src="js/sync.js"></script>
+  <script src="js/notes.js"></script>
+  <script src="js/highlights.js"></script>
 </body>
 </html>

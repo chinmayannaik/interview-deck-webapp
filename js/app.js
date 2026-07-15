@@ -63,12 +63,24 @@
     });
   });
 
+  // Sort questions: beginner (Basics) -> intermediate -> advanced
+  const DIFF_WEIGHT = { "beginner": 1, "intermediate": 2, "advanced": 3 };
+  ALL.sort((a, b) => {
+    const wA = DIFF_WEIGHT[a.difficulty] || 1;
+    const wB = DIFF_WEIGHT[b.difficulty] || 1;
+    return wA - wB;
+  });
+
   /* ---- state ---- */
   const state = {
     category: "all",
     query: "",
     difficulty: "all",
     bookmarkedOnly: false,
+    completedOnly: false,
+    uncompletedOnly: false,
+    hasNoteOnly: false,
+    hasHighlightOnly: false,
     practice: false
   };
   let bookmarks = store.getBookmarks();
@@ -313,6 +325,16 @@
       if (allowed && !allowed.includes(item.category)) return false;
       if (state.difficulty !== "all" && item.difficulty !== state.difficulty) return false;
       if (state.bookmarkedOnly && !bookmarks.has(item.id)) return false;
+      if (state.completedOnly && !progress.has(item.id)) return false;
+      if (state.uncompletedOnly && progress.has(item.id)) return false;
+      if (state.hasNoteOnly) {
+        const note = store.getNote(item.id);
+        if (!(note && note.text && note.text.trim())) return false;
+      }
+      if (state.hasHighlightOnly) {
+        const hl = store.getHL(item.id);
+        if (!(hl && hl.ranges && hl.ranges.length)) return false;
+      }
       if (q && !item._search.includes(q)) return false;
       return true;
     });
@@ -363,14 +385,14 @@
     const { items, shown, CHUNK } = renderState;
     const next = items.slice(shown, shown + CHUNK);
     const frag = document.createDocumentFragment();
-    next.forEach((q) => frag.appendChild(buildCard(q)));
+    next.forEach((q, idx) => frag.appendChild(buildCard(q, shown + idx + 1)));
     const sentinel = qs("#load-sentinel", listEl);
     if (sentinel) listEl.insertBefore(frag, sentinel);
     else listEl.appendChild(frag);
     renderState.shown += next.length;
   }
 
-  function buildCard(q) {
+  function buildCard(q, index) {
     const card = el("article", {
       class: "qa-card" + (progress.has(q.id) ? " done" : ""),
       "data-id": q.id, "data-category": q.category, "data-difficulty": q.difficulty || "",
@@ -391,8 +413,12 @@
     ]);
 
     // question is plain text — use text (not html) so literal tags like
-    // "<!DOCTYPE html>" or "<router-outlet>" render instead of being parsed away
-    const question = el("div", { class: "qa-question", text: q.question });
+    // "<!DOCTYPE html>" or "<router-outlet>" render instead of being parsed away.
+    // The number lives in its own span so the highlightable .qa-qtext holds ONLY
+    // the question text — keeps highlight offsets stable regardless of position.
+    const question = el("div", { class: "qa-question" });
+    if (index) question.appendChild(el("span", { class: "qa-qnum", text: index + ". " }));
+    question.appendChild(el("span", { class: "qa-qtext", text: q.question }));
 
     const tags = el("div", { class: "qa-tags" },
       (q.tags || []).slice(0, 5).map((t) =>
@@ -401,14 +427,25 @@
 
     const head = el("div", {
       class: "qa-head", role: "button", tabindex: "0", "aria-expanded": "false",
-      onclick: () => toggleCard(card),
+      onclick: () => {
+        // don't toggle if the user is selecting/highlighting the question text
+        const sel = window.getSelection();
+        if (sel && !sel.isCollapsed && sel.anchorNode && head.contains(sel.anchorNode)) return;
+        toggleCard(card);
+      },
       onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleCard(card); } }
     }, [top, question, foot]);
 
     // reveal button (practice mode)
     const reveal = el("button", {
       class: "reveal-btn",
-      onclick: () => { card.classList.add("open", "revealed"); head.setAttribute("aria-expanded", "true"); markOpened(q.id); }
+      onclick: () => {
+        card.classList.add("open", "revealed");
+        head.setAttribute("aria-expanded", "true");
+        markOpened(q.id);
+        if (window.IQB.notes) IQB.notes.onCardOpen(q.id);
+        if (window.IQB.highlights) IQB.highlights.onCardOpen(q.id);
+      }
     }, "🙈 Show answer");
 
     // body
@@ -443,6 +480,10 @@
       inner.appendChild(deepContent);
     }
 
+    // optional personal-note section (js/notes.js) — reuses the generic
+    // per-question user-state layer (IQB.cloud). Loads lazily on card open.
+    if (window.IQB.notes) inner.appendChild(IQB.notes.build(q.id));
+
     const doneBtn = el("button", {
       class: "qa-act" + (progress.has(q.id) ? " on" : ""),
       onclick: (e) => { e.stopPropagation(); toggleDone(q.id, doneBtn, card); }
@@ -468,9 +509,23 @@
 
     inner.appendChild(el("div", { class: "qa-body-actions" }, actions));
 
-    const body = el("div", { class: "qa-body" }, [inner]);
+    const body = el("div", {
+      class: "qa-body",
+      onclick: (e) => {
+        const isBg = e.target.classList.contains("qa-body") || 
+                     e.target.classList.contains("qa-body-inner") ||
+                     e.target.classList.contains("qa-body-actions") ||
+                     e.target.classList.contains("pn-section");
+        if (isBg) toggleCard(card);
+      }
+    }, [inner]);
 
     card.append(head, reveal, body);
+
+    // register highlightable roots (.answer / .qa-deep) + selection wiring.
+    // Reuses the same per-question user-state layer as notes (IQB.cloud).
+    if (window.IQB.highlights) IQB.highlights.register(q.id, card);
+
     return card;
   }
 
@@ -481,6 +536,8 @@
     if (open) {
       card.classList.add("revealed"); // header click reveals in practice mode too
       markOpened(card.dataset.id);
+      if (window.IQB.notes) IQB.notes.onCardOpen(card.dataset.id);
+      if (window.IQB.highlights) IQB.highlights.onCardOpen(card.dataset.id);
     }
   }
 
@@ -495,11 +552,16 @@
     if (state.bookmarkedOnly) render();
   }
   function toggleDone(id, btn, card) {
+    const isCompleted = !progress.has(id);
     if (progress.has(id)) { progress.delete(id); btn.classList.remove("on"); btn.textContent = "○ Mark as done"; card.classList.remove("done"); }
     else { progress.add(id); btn.classList.add("on"); btn.textContent = "✓ Completed"; card.classList.add("done"); }
     store.saveProgress(progress);
     syncPush();
     updateProgressBar();
+    if (isCompleted && card.classList.contains("open")) {
+      toggleCard(card);
+    }
+    if (state.completedOnly || state.uncompletedOnly) render();
   }
   function markOpened(id) { store.setLastOpened(id); }
 
@@ -509,10 +571,24 @@
     return { progress: Array.from(progress), bookmarks: Array.from(bookmarks) };
   }
   function setSyncData(data) {
-    if (data && Array.isArray(data.progress)) { progress = new Set(data.progress); store.saveProgress(progress); }
-    if (data && Array.isArray(data.bookmarks)) { bookmarks = new Set(data.bookmarks); store.saveBookmarks(bookmarks); }
-    render();
-    updateProgressBar();
+    // Cloud sync pushes this several times during sign-in (initial merge, then
+    // the onSnapshot echo). Only re-render when the data actually changed —
+    // otherwise the list rebuilds needlessly and any open card visibly collapses.
+    let changed = false;
+    if (data && Array.isArray(data.progress)) {
+      const next = new Set(data.progress);
+      if (!sameSet(next, progress)) { progress = next; store.saveProgress(progress); changed = true; }
+    }
+    if (data && Array.isArray(data.bookmarks)) {
+      const next = new Set(data.bookmarks);
+      if (!sameSet(next, bookmarks)) { bookmarks = next; store.saveBookmarks(bookmarks); changed = true; }
+    }
+    if (changed) { render(); updateProgressBar(); }
+  }
+  function sameSet(a, b) {
+    if (a.size !== b.size) return false;
+    for (const x of a) if (!b.has(x)) return false;
+    return true;
   }
   function getProgressSummary() {
     const groups = GROUPS.map((g) => {
@@ -681,6 +757,36 @@
       e.currentTarget.classList.toggle("on", state.bookmarkedOnly);
       render();
     });
+    on("#completed-filter", "click", (e) => {
+      state.completedOnly = !state.completedOnly;
+      if (state.completedOnly) {
+        state.uncompletedOnly = false;
+        const pendingBtn = qs("#uncompleted-filter");
+        if (pendingBtn) pendingBtn.classList.remove("on");
+      }
+      e.currentTarget.classList.toggle("on", state.completedOnly);
+      render();
+    });
+    on("#uncompleted-filter", "click", (e) => {
+      state.uncompletedOnly = !state.uncompletedOnly;
+      if (state.uncompletedOnly) {
+        state.completedOnly = false;
+        const compBtn = qs("#completed-filter");
+        if (compBtn) compBtn.classList.remove("on");
+      }
+      e.currentTarget.classList.toggle("on", state.uncompletedOnly);
+      render();
+    });
+    on("#note-filter", "click", (e) => {
+      state.hasNoteOnly = !state.hasNoteOnly;
+      e.currentTarget.classList.toggle("on", state.hasNoteOnly);
+      render();
+    });
+    on("#highlight-filter", "click", (e) => {
+      state.hasHighlightOnly = !state.hasHighlightOnly;
+      e.currentTarget.classList.toggle("on", state.hasHighlightOnly);
+      render();
+    });
     on("#practice-toggle", "click", (e) => {
       state.practice = !state.practice;
       listEl.classList.toggle("practice", state.practice);
@@ -711,7 +817,25 @@
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
     }
+
+    initScrollToTop();
   }
+
+  function initScrollToTop() {
+    const btn = qs("#scroll-to-top");
+    if (!btn) return;
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        btn.classList.add("show");
+      } else {
+        btn.classList.remove("show");
+      }
+    });
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
   function on(sel, ev, fn) { const n = qs(sel); if (n) n.addEventListener(ev, fn); }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);

@@ -410,10 +410,52 @@ Suggested Firestore doc:
 ```jsonc
 // users/{uid}
 { "progress": ["git-merge-rebase", …], "bookmarks": ["ng-signals", …],
-  "notes": { "ng-signals": "revise DI" }, "streak": 5, "premium": false,
-  "updatedAt": 1720860000000 }
+  "streak": 5, "premium": false, "updatedAt": 1720860000000 }
 ```
-Lock it down: `allow read, write: if request.auth.uid == uid;`
+
+### Per-question user state (notes + highlights)
+
+Progress/bookmarks are small id-sets that fit in the single `users/{uid}` doc.
+Per-question *content* (notes and text highlights) does **not** — it would bloat
+one document and force full rewrites. Instead each such feature is a
+**subcollection with one document per question**:
+
+```
+users/{uid}/notes/{questionId}       →  { "text": "revise DI", "updatedAt": 1720860000000 }
+users/{uid}/highlights/{questionId}  →  { "ranges": [ { "region":"answer",
+                                            "start":0, "end":7, "color":"green" } ],
+                                          "updatedAt": 1720860000000 }
+```
+
+`js/sync.js` exposes a single feature-agnostic gateway, **`IQB.cloud`**
+(`load / loadAll / save / remove / watch / onChange`), keyed by
+`(feature, questionId)`. Two consumers ride it with **zero changes to the layer**:
+`js/notes.js` (`feature="notes"`) and `js/highlights.js` (`feature="highlights"`)
+— the proof that new per-question features drop in without a refactor. Both are
+mirrored to `localStorage` (via `IQB.storage`) so they work signed-out/offline and
+are merged last-write-wins (by `updatedAt`) on sign-in.
+
+Highlight ranges are character offsets into a root's `textContent`. Three
+highlightable regions per card, tagged with `data-hl-region`: `question`
+(`.qa-qtext` — the question text only; the number lives in a separate `.qa-qnum`
+span so offsets never shift with position), `answer` (`.answer`), and `deep`
+(`.qa-deep`). A selection that spills outside a region (e.g. dragging across the
+"1." number) is **clamped** to the region rather than rejected. On load, ranges
+are re-wrapped in `<mark>` elements; the `question` region paints at card-build
+time from the local mirror (it's visible while collapsed), the rest on card open.
+The highlighter *pen* preference (on/off + color) is device-local (`iqb:hlPen`),
+deliberately **not** synced.
+
+**Security rules — subcollections do NOT inherit the parent's rule.** Add a
+recursive wildcard so per-question docs are locked to their owner:
+```
+match /users/{uid} {
+  allow read, write: if request.auth.uid == uid;
+  match /{document=**} {                       // notes/, highlights/, …
+    allow read, write: if request.auth.uid == uid;
+  }
+}
+```
 
 ---
 
