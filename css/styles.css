@@ -396,6 +396,9 @@
 .qa-tip { font-size: var(--step--1); color: var(--ink-2); border-left: 3px solid var(--cat, var(--accent)); padding: 4px 0 4px 12px; margin-top: 12px; background: color-mix(in srgb, var(--cat, var(--accent)) 5%, transparent); border-radius: 0 6px 6px 0; }
 .qa-tip b { color: var(--cat, var(--accent)); font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; margin-right: 6px; }
 
+/* Small gap when a Study-in-depth button immediately follows a tip */
+.qa-tip + .deep-btn { margin-top: 10px; display: inline-block; }
+
 /* in-depth study panel */
 .deep-btn { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)) !important; color: var(--cat, var(--accent)) !important; }
 .qa-deep {

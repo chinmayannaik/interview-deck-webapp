@@ -117,7 +117,7 @@
     const toggleBtn = el("button", {
       class: "qa-act pn-toggle", type: "button", "aria-expanded": "false",
       onclick: function (e) { e.stopPropagation(); toggleOpen(); }
-    }, "📝 Personal Note");
+    }, "Personal Note");
 
     const body = el("div", { class: "pn-body", hidden: "" });
 
@@ -132,7 +132,11 @@
       } else {
         body.removeAttribute("hidden");
         toggleBtn.setAttribute("aria-expanded", "true");
-        ensureLoaded(); // fetch on first expand if the card open didn't already
+        // fetch and then either open the editor directly when there is no
+        // existing note, or render the current view when a note exists.
+        ensureLoaded().then(function () {
+          if (!note || !note.text) startEdit(); else paint();
+        });
       }
     }
 
@@ -143,11 +147,11 @@
     }
 
     function renderEmpty() {
+      // When no note exists we intentionally keep the collapsed section body
+      // empty — users open the section via the "Personal Note" toggle which
+      // now directly starts the editor. This avoids showing a redundant
+      // "Add Note" button inside the expanded body.
       body.innerHTML = "";
-      body.appendChild(el("button", {
-        class: "pn-add", type: "button",
-        onclick: function () { startEdit(); }
-      }, "Add Note"));
     }
 
     function renderView() {
@@ -184,7 +188,16 @@
 
     function cancelEdit() {
       editing = false;
-      (note && note.text) ? renderView() : renderEmpty();
+      if (note && note.text) {
+        renderView();
+      } else {
+        // When there is no saved note, cancelling should close the expanded
+        // body instead of leaving an empty visible box. Keep the body
+        // contents empty and collapse the section.
+        renderEmpty();
+        body.setAttribute("hidden", "");
+        toggleBtn.setAttribute("aria-expanded", "false");
+      }
     }
 
     async function onSave(value) {
@@ -201,6 +214,10 @@
       note = null;
       refreshIndicator();
       renderEmpty();
+      // After deleting the only note, collapse the expanded body so the UI
+      // doesn't show an empty box. Keep the collapsed toggle visible.
+      body.setAttribute("hidden", "");
+      toggleBtn.setAttribute("aria-expanded", "false");
     }
 
     // render whatever state we currently hold (without refetching)

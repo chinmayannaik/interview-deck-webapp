@@ -472,10 +472,10 @@
         onclick: (e) => {
           e.stopPropagation();
           const hidden = deepContent.hasAttribute("hidden");
-          if (hidden) { deepContent.removeAttribute("hidden"); e.currentTarget.textContent = "📖 Hide deep dive"; markOpened(q.id); }
-          else { deepContent.setAttribute("hidden", ""); e.currentTarget.textContent = "📖 Study in depth"; }
+          if (hidden) { deepContent.removeAttribute("hidden"); e.currentTarget.textContent = "Hide deep dive"; markOpened(q.id); }
+          else { deepContent.setAttribute("hidden", ""); e.currentTarget.textContent = "Study in depth"; }
         }
-      }, "📖 Study in depth");
+      }, "Study in depth");
       inner.appendChild(deepBtn);
       inner.appendChild(deepContent);
     }
@@ -487,7 +487,7 @@
     const doneBtn = el("button", {
       class: "qa-act" + (progress.has(q.id) ? " on" : ""),
       onclick: (e) => { e.stopPropagation(); toggleDone(q.id, doneBtn, card); }
-    }, progress.has(q.id) ? "✓ Completed" : "○ Mark as done");
+    }, progress.has(q.id) ? "✓ Completed" : "Mark as done");
 
     const linkBtn = el("button", {
       class: "qa-act",
@@ -553,8 +553,8 @@
   }
   function toggleDone(id, btn, card) {
     const isCompleted = !progress.has(id);
-    if (progress.has(id)) { progress.delete(id); btn.classList.remove("on"); btn.textContent = "○ Mark as done"; card.classList.remove("done"); }
-    else { progress.add(id); btn.classList.add("on"); btn.textContent = "✓ Completed"; card.classList.add("done"); }
+    if (progress.has(id)) { progress.delete(id); btn.classList.remove("on"); btn.textContent = "Mark as done"; card.classList.remove("done"); }
+    else { progress.add(id); btn.classList.add("on"); btn.textContent = "Completed"; card.classList.add("done"); }
     store.saveProgress(progress);
     syncPush();
     updateProgressBar();
