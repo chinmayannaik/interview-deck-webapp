@@ -8,14 +8,45 @@
 .app { display: flex; flex-direction: column; min-height: 100vh; }
 
 /* ---------- header ---------- */
-.site-header {
+.header-shell {
   position: sticky; top: 0; z-index: 40;
-  height: var(--header-h);
-  display: flex; align-items: center; gap: 16px;
-  padding: 0 clamp(14px, 3vw, 28px);
+  overflow: hidden;
+  --header-shell-h: calc(var(--header-h) + var(--tabs-h));
+  --header-shell-h-collapsed: var(--header-h);
   background: color-mix(in srgb, var(--bg) 86%, transparent);
   backdrop-filter: blur(12px);
+  box-shadow: none;
+  transition: box-shadow .24s ease;
+  will-change: transform;
+}
+.header-shell.is-collapsed {
+  box-shadow: 0 8px 24px rgba(32, 26, 28, 0.06);
+}
+.site-header {
+  position: relative; z-index: 2;
+  min-height: var(--header-h);
+  display: flex; align-items: center; gap: 16px;
+  padding: 0 clamp(14px, 3vw, 28px);
   border-bottom: 1px solid var(--border);
+  transition: padding .24s ease, gap .24s ease;
+}
+.header-shell.is-collapsed .site-header {
+  padding-top: 9px;
+  padding-bottom: 9px;
+  gap: 10px;
+}
+.header-shell.is-collapsed .brand-name {
+  font-size: 1.05rem;
+}
+.header-shell.is-collapsed .header-search {
+  max-width: 280px;
+}
+.header-shell.is-collapsed .header-search input {
+  height: 34px;
+}
+.header-shell.is-collapsed .auth-btn,
+.header-shell.is-collapsed .icon-btn {
+  transform: scale(0.96);
 }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; }
 .brand-logo {
@@ -32,7 +63,7 @@
   white-space: nowrap;
 }
 .header-spacer { flex: 1; }
-.header-search { position: relative; width: min(340px, 40vw); }
+.header-search { position: relative; flex: 1 1 240px; max-width: 340px; min-width: 0; }
 .header-search input {
   width: 100%; height: 38px; padding: 0 34px 0 34px;
   border: 1px solid var(--border); border-radius: var(--r-pill);
@@ -192,11 +223,24 @@
 .hero-stat b { display: block; font-size: var(--step-2); font-weight: 800; color: var(--ink); font-variant-numeric: tabular-nums; }
 .hero-stat span { font-size: var(--step--1); color: var(--muted); font-family: var(--mono); }
 
-/* ---------- category tabs (sticky) ---------- */
+/* ---------- category tabs ---------- */
 .tabs-wrap {
-  position: sticky; top: var(--header-h); z-index: 30;
+  position: relative;
+  z-index: 1;
+  max-height: 64px;
+  overflow: hidden;
   background: color-mix(in srgb, var(--bg) 90%, transparent);
   backdrop-filter: blur(10px); border-bottom: 1px solid var(--border);
+  opacity: 1;
+  transform: translateY(0);
+  transition: max-height .24s ease, opacity .24s ease, transform .24s ease, border-color .24s ease;
+}
+.header-shell.is-collapsed .tabs-wrap {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+  border-bottom-color: transparent;
+  pointer-events: none;
 }
 .tabs {
   max-width: var(--maxw); margin: 0 auto; display: flex; gap: 6px;
@@ -223,7 +267,11 @@
    Forcing min-width:0 lets the column shrink; long code blocks scroll inside <pre>. */
 .main > * { min-width: 0; }
 
-.sidebar { position: sticky; top: calc(var(--header-h) + var(--tabs-h) + 6px); align-self: start; height: fit-content; }
+.sidebar { position: sticky; top: calc(var(--header-offset) + 6px); align-self: start; height: fit-content; }
+.header-shell.is-collapsed + .mobile-search,
+.header-shell.is-collapsed + .mobile-search + .mobile-controls {
+  margin-top: 0;
+}
 .sidebar-title { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 4px 0 10px 12px; }
 .side-link {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;

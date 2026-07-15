@@ -69,6 +69,8 @@
   /* layout */
   --header-h: 60px;
   --tabs-h: 54px;
+  --header-shell-h: calc(var(--header-h) + var(--tabs-h));
+  --header-offset: var(--header-shell-h);
   --maxw: 1180px;
   --sidebar-w: 210px;
 

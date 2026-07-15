@@ -52,33 +52,40 @@
 <body>
   <div class="app">
     <!-- ===== header ===== -->
-  <header class="site-header">
-  <a class="brand" href="#frontend" aria-label="Interview Helper home">
-    <span class="brand-name">Interview <span>Helper</span></span>
-  </a>
-  <div class="header-spacer"></div>
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Helper home">
+          <span class="brand-name">Interview <span>Helper</span></span>
+        </a>
+        <div class="header-spacer"></div>
 
-      <label class="header-search" aria-label="Search questions">
-        <span class="s-icon" aria-hidden="true">⌕</span>
-        <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
-        <span class="s-kbd" aria-hidden="true">/</span>
-      </label>
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true">⌕</span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
 
-      <!-- auth button: shows "Sign In" pill when signed out, compact avatar icon when signed in -->
-      <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
-        <span class="auth-btn-label">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          Sign In
-        </span>
-        <span class="auth-btn-user" aria-hidden="true">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
-        </span>
-      </button>
-      <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
-        <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
-      </button>
-      <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode">☾</button>
-    </header>
+        <!-- auth button: shows "Sign In" pill when signed out, compact avatar icon when signed in -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode">☾</button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell) -->
+      <div class="tabs-wrap">
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+      </div>
+    </div>
 
     <!-- mobile search (shown < 900px) -->
     <div class="mobile-search">
@@ -96,11 +103,6 @@
     </div>
 
     <!-- ===== hero ===== -->
-
-    <!-- ===== category tabs (sticky) ===== -->
-    <div class="tabs-wrap">
-      <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
-    </div>
 
     <!-- ===== main ===== -->
     <main class="main">

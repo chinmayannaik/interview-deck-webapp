@@ -819,6 +819,58 @@
     }
 
     initScrollToTop();
+    initCollapsibleHeader();
+  }
+
+  function initCollapsibleHeader() {
+    const shell = qs("#header-shell");
+    if (!shell) return;
+
+    const threshold = 100;
+    const releaseThreshold = 70;
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+    let collapsed = false;
+
+    const applyHeaderState = () => {
+      const currentY = window.scrollY;
+      const isMobile = window.innerWidth <= 900;
+      const scrollingDown = currentY > lastScrollY + 2;
+      const scrollingUp = currentY < lastScrollY - 2;
+
+      if (isMobile) {
+        shell.classList.remove("is-collapsed");
+        document.documentElement.style.setProperty("--header-offset", "var(--header-shell-h)");
+        lastScrollY = currentY;
+        ticking = false;
+        return;
+      }
+
+      if (scrollingDown && currentY > threshold && !collapsed) {
+        collapsed = true;
+        shell.classList.add("is-collapsed");
+        document.documentElement.style.setProperty("--header-offset", "var(--header-shell-h-collapsed)");
+      } else if ((scrollingUp && currentY < releaseThreshold) || currentY <= releaseThreshold) {
+        collapsed = false;
+        shell.classList.remove("is-collapsed");
+        document.documentElement.style.setProperty("--header-offset", "var(--header-shell-h)");
+      }
+
+      lastScrollY = currentY;
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(applyHeaderState);
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    window.addEventListener("load", onScroll);
+    onScroll();
   }
 
   function initScrollToTop() {
