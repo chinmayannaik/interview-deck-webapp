@@ -345,7 +345,7 @@
 .qa-card.open { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)); }
 .qa-card.done { border-left: 3px solid var(--beginner); }
 
-.qa-head { width: 100%; text-align: left; padding: 15px 16px; display: grid; gap: 9px; cursor: pointer; user-select: none; -webkit-user-select: none; }
+.qa-head { width: 100%; text-align: left; padding: 15px 16px; display: grid; gap: 9px; cursor: pointer; user-select: text; -webkit-user-select: text; }
 .qa-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .badge {
   font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .03em;
@@ -473,6 +473,14 @@ mark.hl-pink   { background: hsl(330 85% var(--hl-l)); }
 
 /* header highlighter button: active state shows the current pen color */
 #hl-toggle.pen-on { color: var(--ink); border-color: color-mix(in srgb, var(--pen, var(--accent)) 60%, var(--border)); box-shadow: inset 0 -3px 0 var(--pen, var(--accent)); }
+/* when underline style is active, show a neutral underline icon instead of color fill */
+#hl-toggle.hl-btn-style-underline.pen-on { color: var(--ink); border-color: var(--border); box-shadow: none; }
+/* show a small color dot on the toggle indicating selected color only when using the highlighter (not underline) */
+#hl-toggle.pen-on:not(.hl-btn-style-underline) { position: relative; }
+#hl-toggle.pen-on:not(.hl-btn-style-underline)::after {
+  content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%; right: 6px; bottom: 6px;
+  background: var(--pen, var(--hlp-yellow)); border: 1px solid rgba(0,0,0,0.06);
+}
 body.hl-pen .answer, body.hl-pen .qa-deep, body.hl-pen .qa-qtext { cursor: text; }
 
 /* generic round swatch (header palette) */
@@ -487,7 +495,17 @@ body.hl-pen .answer, body.hl-pen .qa-deep, body.hl-pen .qa-qtext { cursor: text;
 /* header palette dropdown */
 .hl-palette { position: absolute; z-index: 70; width: max-content; padding: 12px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg, 0 12px 40px rgba(0,0,0,.2)); }
 .hl-palette-title { font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 9px; }
-.hl-swatch-row { display: flex; gap: 10px; margin-bottom: 11px; }
+.hl-swatch-row { display: flex; gap: 10px; margin-bottom: 11px; align-items: center; }
+.hl-swatch-row--with-style { gap: 12px; }
+.hl-style-row { display: flex; justify-content: center; margin-bottom: 10px; }
+.hl-style-option, .hl-menu-style {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--ink); cursor: pointer; transition: var(--trans);
+}
+.hl-style-option:hover, .hl-menu-style:hover { border-color: var(--accent); color: var(--accent); }
+.hl-style-option.active, .hl-menu-style.active { border-color: var(--accent); background: var(--accent-soft); }
+.hl-style-line { display: block; width: 16px; height: 2px; border-radius: 999px; background: currentColor; }
 .hl-off { width: 100%; font-family: var(--mono); font-size: var(--step--1); padding: 7px 10px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans); cursor: pointer; }
 .hl-off:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -499,6 +517,21 @@ body.hl-pen .answer, body.hl-pen .qa-deep, body.hl-pen .qa-qtext { cursor: text;
 /* active highlight being edited: a ring so you see exactly which span the
    toolbar acts on (cleared when the toolbar closes) */
 mark.hl.hl-editing { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 2px; }
+mark.hl-underline {
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-skip-ink: auto;
+}
+/* Underline style: keep neutral underline (no per-color underline) */
+mark.hl-underline {
+  background: transparent;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-skip-ink: auto;
+  /* Always render underline in solid black per product request */
+  text-decoration-color: #000 !important;
+}
 
 /* per-mark toolbar (recolor + delete) — dark floating pill */
 .hl-menu { position: absolute; z-index: 70; display: flex; align-items: center; gap: 8px; padding: 7px 9px; border-radius: 999px; background: #2a2731; border: 1px solid rgba(255,255,255,.12); box-shadow: 0 8px 26px rgba(0,0,0,.35); }
@@ -508,6 +541,7 @@ mark.hl.hl-editing { outline: 2px solid var(--accent); outline-offset: 1px; bord
 .hl-menu-swatch.hl-green  { background: var(--hlp-green); }
 .hl-menu-swatch.hl-blue   { background: var(--hlp-blue); }
 .hl-menu-swatch.hl-pink   { background: var(--hlp-pink); }
+.hl-menu-swatch[data-active="true"] { border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 8%, transparent); }
 .hl-menu-del { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-left: 4px; border-left: 1px solid rgba(255,255,255,.16); border-top: none; border-right: none; border-bottom: none; padding-left: 8px; border-radius: 0; background: none; color: #f3b4b4; cursor: pointer; transition: var(--trans); }
 .hl-menu-del:hover { color: #ff7a7a; }
 

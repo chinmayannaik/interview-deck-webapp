@@ -28,6 +28,7 @@
 
   const FEATURE = "highlights";
   const COLORS = ["yellow", "green", "blue", "pink"];
+  const STYLES = ["highlight", "underline"];
 
   const cloud = function () { return window.IQB.cloud || null; };
   const signedIn = function () { const c = cloud(); return !!(c && c.isSignedIn()); };
@@ -78,8 +79,9 @@
   });
 
   /* global highlighter-pen state (device-local) */
-  const pen = store.getHLPen() || { on: false, color: "yellow" };
+  const pen = store.getHLPen() || { on: false, color: "yellow", style: "highlight" };
   if (COLORS.indexOf(pen.color) === -1) pen.color = "yellow";
+  if (STYLES.indexOf(pen.style) === -1) pen.style = "highlight";
 
   /* ---- persistence (cloud-first when signed in, always mirror locally) ---- */
   async function fetchHL(questionId) {
@@ -174,7 +176,7 @@
     root.normalize();
   }
 
-  function markRange(root, start, end, id, color) {
+  function markRange(root, start, end, id, style, color) {
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
     let pos = 0, node;
     const slices = [];
@@ -194,6 +196,8 @@
       range.setEnd(sl.node, sl.e);
       const mark = document.createElement("mark");
       mark.className = "hl hl-" + (color || "yellow");
+      if (style === "underline") mark.classList.add("hl-underline");
+      else mark.classList.add("hl-highlight");
       mark.dataset.hlId = String(id);
       try { range.surroundContents(mark); } catch (e) { /* skip un-wrappable slice */ }
     });
@@ -223,7 +227,7 @@
       if (!root) return;
       clearMarks(root);
       ranges.forEach(function (rg, i) {
-        if (rg.region === region) markRange(root, rg.start, rg.end, i, rg.color);
+        if (rg.region === region) markRange(root, rg.start, rg.end, i, rg.style || "highlight", rg.color || "yellow");
       });
     }
     function paintAll() { Object.keys(roots).forEach(paintRegion); }
@@ -242,7 +246,7 @@
     }
 
     // add a highlight, merging overlapping spans in the same region (new color wins)
-    function addRange(region, start, end, color) {
+    function addRange(region, start, end, color, style) {
       pushUndo(questionId, ranges);
       let ns = start, ne = end;
       const kept = [];
@@ -251,7 +255,7 @@
           ns = Math.min(ns, rg.start); ne = Math.max(ne, rg.end);
         } else { kept.push(rg); }
       });
-      kept.push({ region: region, start: ns, end: ne, color: color });
+      kept.push({ region: region, start: ns, end: ne, color: color, style: style || "highlight" });
       ranges = kept;
       paintRegion(region);
       saveHL(questionId, ranges);
@@ -260,6 +264,15 @@
       if (index < 0 || index >= ranges.length) return;
       pushUndo(questionId, ranges);
       ranges[index].color = color;
+      // if this range was an underline, convert it to a filled highlighter
+      if (ranges[index].style === "underline") ranges[index].style = "highlight";
+      paintRegion(ranges[index].region);
+      saveHL(questionId, ranges);
+    }
+    function setStyleAt(index, style) {
+      if (index < 0 || index >= ranges.length) return;
+      pushUndo(questionId, ranges);
+      ranges[index].style = style || "highlight";
       paintRegion(ranges[index].region);
       saveHL(questionId, ranges);
     }
@@ -283,10 +296,36 @@
         const mark = e.target.closest && e.target.closest("mark.hl");
         if (!mark || !root.contains(mark)) return;
         e.stopPropagation();
-        const idx = parseInt(mark.dataset.hlId, 10);
+        // compute the character offset of the clicked mark within the root
+        let clickedOffset = null;
+        try {
+          const r = document.createRange();
+          r.selectNodeContents(root);
+          r.setEndBefore(mark);
+          clickedOffset = r.toString().length;
+        } catch (ex) { /* fallback to dataset id if computations fail */ }
+
+        // find which ranges overlap the clickedOffset (or fallback to dataset id)
+        const matched = new Set();
+        if (clickedOffset != null) {
+          ranges.forEach(function (rg, i) {
+            if (rg.region === root.dataset.hlRegion && rg.start <= clickedOffset && rg.end > clickedOffset) matched.add(i);
+          });
+        }
+        if (matched.size === 0) {
+          const idx = parseInt(mark.dataset.hlId, 10);
+          if (!isNaN(idx)) matched.add(idx);
+        }
+
+        // helpers that act on all matched indices
+        const applyToMatched = function (fn) {
+          Array.from(matched).sort(function(a,b){return a-b;}).forEach(function (i) { fn(i); });
+        };
+
         MarkMenu.show(mark, {
-          onColor: function (c) { recolorAt(idx, c); },
-          onDelete: function () { removeAt(idx); }
+          onColor: function (c) { applyToMatched(function(i) { recolorAt(i, c); }); },
+          onStyle: function (s) { applyToMatched(function(i) { setStyleAt(i, s); }); },
+          onDelete: function () { applyToMatched(function(i) { removeAt(i); }); }
         });
       });
       // release a selection while the pen is ON → highlight immediately
@@ -300,9 +339,11 @@
       setTimeout(function () {
         const sel = window.getSelection();
         if (!sel || sel.isCollapsed || sel.rangeCount === 0) return;
-        const off = clampSelectionToRoot(root, sel.getRangeAt(0));
+        const rng = sel.getRangeAt(0);
+        if (!rng || !root.contains(rng.commonAncestorContainer)) return;
+        const off = clampSelectionToRoot(root, rng);
         if (!off) return;
-        addRange(root.dataset.hlRegion, off.start, off.end, pen.color);
+        addRange(root.dataset.hlRegion, off.start, off.end, pen.color, pen.style);
         sel.removeAllRanges();
       }, 0);
     }
@@ -329,6 +370,7 @@
 
   const HeaderPalette = (function () {
     let btn = null, panel = null;
+    let btnIconOriginal = null;
 
     function syncButton() {
       if (!btn) return;
@@ -336,10 +378,23 @@
       btn.style.setProperty("--pen", "var(--hlp-" + pen.color + ")");
       btn.setAttribute("aria-pressed", String(pen.on));
       document.body.classList.toggle("hl-pen", pen.on);
+      // if the pen is off, always show the original icon
+      if (!pen.on) {
+        btn.classList.remove("hl-btn-style-underline");
+        if (btnIconOriginal) btn.innerHTML = btnIconOriginal;
+      } else if (pen.style === "underline") {
+        // show underline icon only when pen is ON and style is underline
+        btn.classList.add("hl-btn-style-underline");
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v6a6 6 0 0 0 12 0V4"/><line x1="6" y1="20" x2="18" y2="20"/></svg>';
+      } else {
+        btn.classList.remove("hl-btn-style-underline");
+        if (btnIconOriginal) btn.innerHTML = btnIconOriginal;
+      }
     }
     function setPen(next) {
       Object.assign(pen, next);
-      store.setHLPen({ on: pen.on, color: pen.color });
+      if (STYLES.indexOf(pen.style) === -1) pen.style = "highlight";
+      store.setHLPen({ on: pen.on, color: pen.color, style: pen.style });
       syncButton();
       if (panel) renderPanel();
     }
@@ -351,11 +406,21 @@
     function renderPanel() {
       panel.innerHTML = "";
       panel.appendChild(el("div", { class: "hl-palette-title", text: "Highlighter" }));
-      const row = el("div", { class: "hl-swatch-row" },
-        COLORS.map(function (c) {
-          return swatch(c, "hl-swatch", function (color) { setPen({ on: true, color: color }); close(); },
-            c === pen.color && pen.on ? { "data-active": "true" } : {});
-        }));
+      // swatches + inline style button (underline) in the same row
+      const swatches = COLORS.map(function (c) {
+        // picking a color from the palette should set the pen into HIGHLIGHT mode
+        return swatch(c, "hl-swatch", function (color) { setPen({ on: true, color: color, style: 'highlight' }); close(); },
+          c === pen.color && pen.on ? { "data-active": "true" } : {});
+      });
+      const styleBtn = el("button", {
+        class: "hl-style-option" + (pen.style === "underline" ? " active" : ""),
+        type: "button",
+        title: "Underline",
+        "aria-label": "Underline",
+        onmousedown: function (e) { e.preventDefault(); e.stopPropagation(); setPen({ on: true, color: pen.color, style: "underline" }); close(); }
+      }, [el("span", { class: "hl-style-line" })]);
+
+      const row = el("div", { class: "hl-swatch-row hl-swatch-row--with-style" }, swatches.concat([styleBtn]));
       panel.appendChild(row);
       panel.appendChild(el("button", {
         class: "hl-off", type: "button",
@@ -373,13 +438,24 @@
     }
     function close() { if (panel) panel.hidden = true; if (btn) btn.setAttribute("aria-expanded", "false"); }
     function isOpen() { return panel && !panel.hidden; }
+    function shouldIgnoreClose(target) {
+      if (!target || !target.closest) return false;
+      const clickedInPanel = panel && panel.contains(target);
+      const clickedInButton = btn && btn.contains(target);
+      const clickedInContent = !!target.closest('.qa-qtext, .answer, .qa-deep, .content, .qa-card');
+      return clickedInPanel || clickedInButton || clickedInContent;
+    }
 
     function init() {
       btn = qs("#hl-toggle");
       if (!btn) return;
+      // remember the original inner content so we can restore it when switching styles
+      btnIconOriginal = btn.innerHTML;
+      // persist original on the DOM so other modules can restore it when needed
+      try { btn.dataset.hlOriginal = btnIconOriginal; } catch (e) {}
       btn.addEventListener("click", function (e) { e.stopPropagation(); isOpen() ? close() : open(); });
-      document.addEventListener("click", function (e) {
-        if (isOpen() && !panel.contains(e.target) && e.target !== btn && !btn.contains(e.target)) close();
+      document.addEventListener("mousedown", function (e) {
+        if (isOpen() && !shouldIgnoreClose(e.target)) close();
       });
       syncButton();
     }
@@ -412,9 +488,29 @@
       if (!elmt) elmt = build();
       handlers = h;
       elmt.innerHTML = "";
+      // mark's current color (e.g. 'yellow') so we can show active swatch
+      let markColor = null;
+      for (const cls of mark.classList) {
+        if (cls.indexOf("hl-") === 0 && cls !== "hl-underline" && cls !== "hl-editing") { markColor = cls.replace("hl-",""); break; }
+      }
       COLORS.forEach(function (c) {
-        elmt.appendChild(swatch(c, "hl-menu-swatch", function (color) { if (handlers) handlers.onColor(color); hide(); }));
+        const extra = (c === markColor) ? { "data-active": "true" } : {};
+        elmt.appendChild(swatch(c, "hl-menu-swatch", function (color) { if (handlers) handlers.onColor(color); hide(); }, extra));
       });
+      const currentStyle = mark.classList.contains("hl-underline") ? "underline" : "highlight";
+      elmt.appendChild(el("button", {
+        class: "hl-menu-style" + (currentStyle === "underline" ? " active" : ""),
+        type: "button",
+        title: "Toggle underline",
+        "aria-label": "Toggle underline",
+        onmousedown: function (e) {
+          e.preventDefault(); e.stopPropagation();
+          const newStyle = currentStyle === "underline" ? "highlight" : "underline";
+          if (handlers) handlers.onStyle(newStyle);
+          // Do NOT change global pen.style or header icon here — only the clicked mark should change.
+          hide();
+        }
+      }, [el("span", { class: "hl-style-line" })]));
       const del = el("button", {
         class: "hl-menu-del", type: "button", "aria-label": "Delete highlight", title: "Delete",
         onmousedown: function (e) { e.preventDefault(); e.stopPropagation(); if (handlers) handlers.onDelete(); hide(); }
