@@ -446,7 +446,7 @@
         if (window.IQB.notes) IQB.notes.onCardOpen(q.id);
         if (window.IQB.highlights) IQB.highlights.onCardOpen(q.id);
       }
-    }, "🙈 Show answer");
+    }, "Show answer");
 
     // body
     const inner = el("div", { class: "qa-body-inner" });
@@ -820,6 +820,22 @@
 
     initScrollToTop();
     initCollapsibleHeader();
+    initReadingMode();
+  }
+
+  function initReadingMode() {
+    const btn = qs("#reading-mode-toggle");
+    if (!btn) return;
+    const enter = () => {
+      document.body.classList.add("reading-mode");
+      btn.classList.add("on");
+      // scroll to top of list for a reading session
+      const list = qs("#q-list"); if (list) list.scrollIntoView({ behavior: "instant" });
+    };
+    const exit = () => { document.body.classList.remove("reading-mode"); btn.classList.remove("on"); };
+    btn.addEventListener("click", () => { document.body.classList.toggle("reading-mode") ? enter() : exit(); });
+    // allow Esc to exit reading mode
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && document.body.classList.contains("reading-mode")) exit(); });
   }
 
   function initCollapsibleHeader() {

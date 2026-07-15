@@ -399,6 +399,29 @@
 /* Small gap when a Study-in-depth button immediately follows a tip */
 .qa-tip + .deep-btn { margin-top: 10px; display: inline-block; }
 
+/* ---------- reading mode toggle button ---------- */
+.reading-mode-toggle, .scroll-to-top { transition: transform .18s ease, opacity .18s ease; }
+.reading-mode-toggle {
+  position: fixed; right: 18px; bottom: 20px; /* above scroll-to-top */
+  width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--ink); display: grid; place-items: center;
+  box-shadow: var(--shadow-lg); z-index: 120; cursor: pointer; font-size: 18px;
+}
+.reading-mode-toggle:hover { transform: translateY(-4px); border-color: var(--accent); color: var(--accent); }
+.reading-mode-toggle.on { background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
+
+/* reading-mode layout rules */
+body.reading-mode .header-shell,
+body.reading-mode .mobile-search,
+body.reading-mode .mobile-controls,
+body.reading-mode .sidebar,
+body.reading-mode .content-head { display: none !important; }
+body.reading-mode .main { grid-template-columns: 1fr !important; gap: 0 !important; padding-top: 12px; }
+body.reading-mode .content { padding-left: 0; padding-right: 0; }
+body.reading-mode .q-list { max-width: 960px; margin: 0 auto; }
+/* ensure cards have larger reading-friendly spacing */
+body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
+
 /* in-depth study panel */
 .deep-btn { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)) !important; color: var(--cat, var(--accent)) !important; }
 .qa-deep {
@@ -627,11 +650,11 @@ mark.hl-underline {
 /* ---------- scroll to top button ---------- */
 .scroll-to-top {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: 70px;
+  right: 18px;
   z-index: 90;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 1px solid var(--border);
   background: var(--surface);
