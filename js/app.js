@@ -10,6 +10,11 @@
   const { qs, qsa, el, debounce, strip, toast, download } = IQB.utils;
   const store = IQB.storage;
 
+  const starOnSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  const starOffSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+  const doneOffHtml = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg>Mark as done';
+  const doneOnHtml = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>Completed';
+
   /* ---- category + group config, derived ENTIRELY from the content manifest ----
      Adding a new main field (group) or a new section (category) is a git-only
      change: edit manifest.json (+ the category's JSON file) and push. No website
@@ -103,7 +108,9 @@
     const btn = qs("#theme-toggle");
     if (btn) {
       const dark = currentThemeIsDark();
-      btn.textContent = dark ? "☀" : "☾";
+      btn.innerHTML = dark
+        ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+        : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
       btn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
     }
   }
@@ -354,7 +361,7 @@
 
     if (!items.length) {
       listEl.appendChild(el("div", { class: "empty" }, [
-        el("div", { class: "big", text: "🔍" }),
+        el("div", { class: "big", html: '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--muted);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' }),
         el("h3", { text: "No questions found" }),
         el("p", { text: "Try a different search term, category, or difficulty." })
       ]));
@@ -404,7 +411,8 @@
       class: "qa-star" + (bookmarks.has(q.id) ? " on" : ""),
       "aria-label": "Bookmark this question", title: "Bookmark",
       onclick: (e) => { e.stopPropagation(); toggleBookmark(q.id, star); }
-    }, bookmarks.has(q.id) ? "★" : "☆");
+    });
+    star.innerHTML = bookmarks.has(q.id) ? starOnSvg : starOffSvg;
 
     const top = el("div", { class: "qa-top" }, [
       el("span", { class: "badge cat", text: labelOf(q.category) }),
@@ -446,7 +454,8 @@
         if (window.IQB.notes) IQB.notes.onCardOpen(q.id);
         if (window.IQB.highlights) IQB.highlights.onCardOpen(q.id);
       }
-    }, "Show answer");
+    });
+    reveal.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show answer';
 
     // body
     const inner = el("div", { class: "qa-body-inner" });
@@ -467,15 +476,17 @@
     // optional in-depth study section
     if (q.deep) {
       const deepContent = el("div", { class: "qa-deep", hidden: "", html: q.deep });
+      const bookSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 1-4 4v14a3 3 0 0 1 3-3h7z"/></svg>';
       const deepBtn = el("button", {
         class: "qa-act deep-btn",
         onclick: (e) => {
           e.stopPropagation();
           const hidden = deepContent.hasAttribute("hidden");
-          if (hidden) { deepContent.removeAttribute("hidden"); e.currentTarget.textContent = "Hide deep dive"; markOpened(q.id); }
-          else { deepContent.setAttribute("hidden", ""); e.currentTarget.textContent = "Study in depth"; }
+          if (hidden) { deepContent.removeAttribute("hidden"); e.currentTarget.innerHTML = bookSvg + "Hide deep dive"; markOpened(q.id); }
+          else { deepContent.setAttribute("hidden", ""); e.currentTarget.innerHTML = bookSvg + "Study in depth"; }
         }
-      }, "Study in depth");
+      });
+      deepBtn.innerHTML = bookSvg + "Study in depth";
       inner.appendChild(deepBtn);
       inner.appendChild(deepContent);
     }
@@ -487,12 +498,14 @@
     const doneBtn = el("button", {
       class: "qa-act" + (progress.has(q.id) ? " on" : ""),
       onclick: (e) => { e.stopPropagation(); toggleDone(q.id, doneBtn, card); }
-    }, progress.has(q.id) ? "✓ Completed" : "Mark as done");
+    });
+    doneBtn.innerHTML = progress.has(q.id) ? doneOnHtml : doneOffHtml;
 
     const linkBtn = el("button", {
       class: "qa-act",
       onclick: (e) => { e.stopPropagation(); copyText(location.origin + location.pathname + "#q=" + q.id, e.currentTarget, "Link copied"); }
-    }, "🔗 Copy link");
+    });
+    linkBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Copy link';
 
     const actions = [doneBtn, linkBtn];
     if (q.youtube && q.youtube.trim()) {
@@ -512,11 +525,8 @@
     const body = el("div", {
       class: "qa-body",
       onclick: (e) => {
-        const isBg = e.target.classList.contains("qa-body") || 
-                     e.target.classList.contains("qa-body-inner") ||
-                     e.target.classList.contains("qa-body-actions") ||
-                     e.target.classList.contains("pn-section");
-        if (isBg) toggleCard(card);
+        const preserve = e.target.closest("button, a, textarea, input, .pn-text, .answer, .code-block, .qa-tip, .qa-deep");
+        if (!preserve) toggleCard(card);
       }
     }, [inner]);
 
@@ -545,16 +555,16 @@
      BOOKMARKS / PROGRESS / NOTES
      ======================================================== */
   function toggleBookmark(id, btn) {
-    if (bookmarks.has(id)) { bookmarks.delete(id); btn.classList.remove("on"); btn.textContent = "☆"; }
-    else { bookmarks.add(id); btn.classList.add("on"); btn.textContent = "★"; }
+    if (bookmarks.has(id)) { bookmarks.delete(id); btn.classList.remove("on"); btn.innerHTML = starOffSvg; }
+    else { bookmarks.add(id); btn.classList.add("on"); btn.innerHTML = starOnSvg; }
     store.saveBookmarks(bookmarks);
     syncPush();
     if (state.bookmarkedOnly) render();
   }
   function toggleDone(id, btn, card) {
     const isCompleted = !progress.has(id);
-    if (progress.has(id)) { progress.delete(id); btn.classList.remove("on"); btn.textContent = "Mark as done"; card.classList.remove("done"); }
-    else { progress.add(id); btn.classList.add("on"); btn.textContent = "Completed"; card.classList.add("done"); }
+    if (progress.has(id)) { progress.delete(id); btn.classList.remove("on"); btn.innerHTML = doneOffHtml; card.classList.remove("done"); }
+    else { progress.add(id); btn.classList.add("on"); btn.innerHTML = doneOnHtml; card.classList.add("done"); }
     store.saveProgress(progress);
     syncPush();
     updateProgressBar();

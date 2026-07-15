@@ -303,10 +303,43 @@
 .tool {
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--mono); font-size: var(--step--1); padding: 6px 11px; border-radius: var(--r-sm);
-  border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans);
+  border: 1px solid var(--border); background: var(--surface); color: var(--ink-2);
+  transition: background var(--trans), border-color var(--trans), color var(--trans), transform var(--trans), box-shadow var(--trans);
 }
-.tool:hover { border-color: var(--accent); color: var(--accent); }
-.tool.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); }
+.tool svg {
+  transition: transform var(--trans);
+}
+.tool:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 5%, var(--surface));
+  transform: translateY(-1.5px);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 8%, transparent);
+}
+.tool:active {
+  transform: translateY(0) scale(0.96);
+  box-shadow: none;
+}
+.tool.on {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.tool.on:hover {
+  background: color-mix(in srgb, var(--accent) 15%, var(--surface));
+}
+.tool:hover svg {
+  transform: scale(1.1);
+}
+.tool#random-btn:hover svg {
+  transform: scale(1.1) rotate(15deg);
+}
+.tool#expand-all:hover svg {
+  transform: scale(1.1) translateY(1px);
+}
+.tool#collapse-all:hover svg {
+  transform: scale(1.1) translateY(-1px);
+}
 
 /* mobile/tablet topic selector — hidden on desktop (sidebar covers it) */
 .subnav { display: none; }
@@ -397,7 +430,7 @@
 .qa-tip b { color: var(--cat, var(--accent)); font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; margin-right: 6px; }
 
 /* Small gap when a Study-in-depth button immediately follows a tip */
-.qa-tip + .deep-btn { margin-top: 10px; display: inline-block; }
+.qa-tip + .deep-btn { margin-top: 10px; display: inline-flex; }
 
 /* ---------- reading mode toggle button ---------- */
 .reading-mode-toggle, .scroll-to-top { transition: transform .18s ease, opacity .18s ease; }
@@ -439,8 +472,8 @@ body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
   font-size: var(--step-0); color: var(--ink-2);
 }
 .qa-deep h4 {
-  font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--cat, var(--accent)); margin: 16px 0 8px; font-weight: 700;
+  font-family: var(--mono); font-size: 15px; letter-spacing: normal;
+  color: var(--cat, var(--accent)); margin: 16px 0 8px; font-weight: 800;
 }
 .qa-deep h4:first-child { margin-top: 0; }
 .qa-deep p { margin-bottom: 10px; }
@@ -591,14 +624,22 @@ mark.hl-underline {
 .reveal-btn { align-items: center; gap: 6px; font-family: var(--mono); font-size: var(--step--1); padding: 7px 13px; border-radius: var(--r-sm); border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
 
 /* empty / no-results */
-.empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
 .empty .big { font-size: 40px; margin-bottom: 10px; }
 .empty h3 { color: var(--ink); margin-bottom: 6px; }
 
 /* progress bar in sidebar */
 .progress-box { margin: 4px 12px 14px; }
 .progress-box .pl { display: flex; justify-content: space-between; gap: 8px; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-bottom: 6px; }
-.progress-box .prog-num { color: var(--side-c, var(--ink)); font-variant-numeric: tabular-nums; }
+.progress-box .prog-num { color: var(--side-c, var(--ink)); font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
 .progress-track { height: 7px; border-radius: 100px; background: var(--surface-3); overflow: hidden; }
 .progress-fill { height: 100%; width: 0; background: var(--beginner); border-radius: 100px; transition: width .4s ease; }
 
