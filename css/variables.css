@@ -20,6 +20,10 @@
   --accent-soft: #FBE9EC;
   --accent-contrast: #FFFFFF;
 
+  /* text on a solid category colour (.subchip.active). Category colours are dark
+     in this theme so white clears AA; the dark theme flips this — see dark-theme.css. */
+  --on-cat: #FFFFFF;
+
   /* semantic (difficulty) */
   --beginner: #1F9254;
   --beginner-soft: #E3F5EB;
@@ -45,6 +49,12 @@
   --cat-ngcoding: #B0335F;
   --cat-testing: #A83294;
   --cat-behavioral: #5C7A8F;
+
+  /* group (main field) colours — same role as --cat-*, for manifest.json groups */
+  --group-frontend: #C3002F;
+  --group-backend: #4E8B2C;
+  --group-devops: #D9491F;
+  --group-hr: #5C7A8F;
 
   /* typography */
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;

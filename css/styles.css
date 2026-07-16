@@ -54,6 +54,31 @@ html { overflow-anchor: none; }
   transform: scale(0.96);
 }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; }
+/* The app mark — carries the brand alone on mobile (see the responsive block).
+   Drawn as a mask rather than an <img> so the glyph takes var(--accent): the
+   source art is a fixed crimson authored for white paper, which would sit at
+   ~3:1 on the dark theme while every other accent around it lifted to #FF6B80.
+   The mask is the artwork's alpha only, so the colour is ours to choose. */
+.brand-mark {
+  display: none; flex: 0 0 auto;
+  width: 30px; height: 30px;
+  background: var(--accent);
+  -webkit-mask: url("../assets/logo-mask.png") center / contain no-repeat;
+  mask: url("../assets/logo-mask.png") center / contain no-repeat;
+}
+/* desktop shows the wordmark with the mark beside it */
+@media (min-width: 901px) { .brand-mark { display: block; } }
+/* the count rides on the corner of the funnel icon */
+.filter-btn { position: relative; overflow: visible; }
+.filter-count {
+  position: absolute; top: -5px; right: -5px;
+  display: grid; place-items: center; min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: var(--r-pill); background: var(--accent); color: var(--accent-contrast);
+  font-family: var(--mono); font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums;
+  border: 2px solid var(--bg);
+}
+.filter-count[hidden] { display: none; }
+.filter-btn.has-active { border-color: var(--accent); color: var(--accent); }
 .brand-logo {
     width: 30px;
     height: 30px;
@@ -89,6 +114,11 @@ html { overflow-anchor: none; }
 }
 .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
 .icon-btn.signed-in { border-color: var(--accent); color: var(--accent); font-weight: 800; }
+
+/* Mobile-only header controls — off by default, switched on in the <=900px
+   block. Declared AFTER .icon-btn: they carry that class too, so an earlier
+   `display: none` would just lose to `.icon-btn { display: grid }`. */
+.search-close, .search-toggle, .filter-btn { display: none; }
 
 /* ---------- auth pill button ---------- */
 .auth-btn {
@@ -126,7 +156,11 @@ html { overflow-anchor: none; }
 .auth-menu {
   position: fixed; z-index: 80; width: min(320px, calc(100vw - 24px));
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
-  box-shadow: var(--shadow-lg); overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  /* x hidden keeps the rounded corners clipping; y auto lets a long progress
+     list scroll rather than run off the bottom (positionMenu caps the height) */
+  overflow: hidden auto;
+  overscroll-behavior: contain;
 }
 .auth-head {
   display: flex; align-items: center; gap: 12px; padding: 16px 16px 14px;
@@ -196,6 +230,17 @@ html { overflow-anchor: none; }
   transition: var(--trans);
 }
 .lp-signin:hover { filter: brightness(1.08); }
+.lp-signin.is-busy, .auth-btn.is-busy {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  cursor: default; filter: none; opacity: .85;
+}
+.btn-spinner {
+  width: 13px; height: 13px; flex: 0 0 auto; border-radius: 50%;
+  border: 2px solid currentColor; border-top-color: transparent;
+  animation: btn-spin .7s linear infinite;
+}
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .btn-spinner { animation-duration: 2s; } }
 .lp-later {
   flex: 0 0 auto; padding: 9px 12px; border-radius: var(--r-pill);
   border: 1px solid var(--border); background: var(--surface); color: var(--muted);
@@ -297,10 +342,6 @@ html { overflow-anchor: none; }
 .main > * { min-width: 0; }
 
 .sidebar { position: sticky; top: calc(var(--header-offset) + 6px); align-self: start; height: fit-content; }
-.header-shell.is-collapsed + .mobile-search,
-.header-shell.is-collapsed + .mobile-search + .mobile-controls {
-  margin-top: 0;
-}
 .sidebar-title { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 4px 0 10px 12px; }
 .side-link {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
@@ -392,6 +433,9 @@ html { overflow-anchor: none; }
   border-color: var(--accent);
   color: var(--accent-ink);
 }
+/* The theme switch only joins the tools on mobile, where it is evicted from the
+   header for space. Declared after .tool so it beats that rule's inline-flex. */
+.tool-theme { display: none; }
 .tool.on:hover {
   background: color-mix(in srgb, var(--accent) 15%, var(--surface));
 }
@@ -408,6 +452,17 @@ html { overflow-anchor: none; }
   transform: scale(1.1) translateY(-1px);
 }
 
+/* ---------- filters & tools sheet ----------
+   Desktop: the panel is `display: contents`, so .content-tools stays a direct
+   child of .content-head and lays out exactly as it did before this existed.
+   The trigger, sheet chrome and backdrop are all off. Under 900px the panel
+   becomes a bottom sheet — see the responsive block. */
+.tools-panel { display: contents; }
+.filter-btn,
+.tools-sheet-head,
+.tools-sheet-foot,
+.tools-backdrop { display: none; }
+
 /* mobile/tablet topic selector — hidden on desktop (sidebar covers it) */
 .subnav { display: none; }
 .subchip {
@@ -418,9 +473,11 @@ html { overflow-anchor: none; }
 }
 .subchip .cat-ic { width: 13px; height: 13px; }
 .subchip:hover { border-color: var(--sc, var(--accent)); color: var(--sc, var(--accent)); }
-.subchip.active { background: var(--sc, var(--accent)); border-color: var(--sc, var(--accent)); color: #fff; }
+/* --on-cat, not #fff: the category colours invert per theme (dark on light, light
+   on dark), so a pinned white label drops to 2.7:1 in the dark theme. */
+.subchip.active { background: var(--sc, var(--accent)); border-color: var(--sc, var(--accent)); color: var(--on-cat); }
 /* the active chip paints --sc as its background, so the mark has to stop being --sc */
-.subchip.active .cat-ic { color: #fff; }
+.subchip.active .cat-ic { color: var(--on-cat); }
 .subchip-n { font-size: 10px; opacity: .7; font-variant-numeric: tabular-nums; }
 @media (max-width: 900px) {
   .subnav {
@@ -518,7 +575,6 @@ html { overflow-anchor: none; }
 
 /* reading-mode layout rules */
 body.reading-mode .header-shell,
-body.reading-mode .mobile-search,
 body.reading-mode .mobile-controls,
 body.reading-mode .sidebar,
 body.reading-mode .content-head { display: none !important; }
@@ -557,9 +613,34 @@ body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
 .qa-deep :is(code, .inline) { font-family: var(--mono); font-size: .85em; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--border); color: var(--accent-ink); }
 .qa-deep pre { font-family: var(--mono); font-size: 12.5px; line-height: 1.55; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 13px 15px; overflow-x: auto; margin: 4px 0 12px; }
 .qa-deep pre code { background: none; border: none; padding: 0; color: var(--ink); }
-.qa-deep table { width: 100%; border-collapse: collapse; margin: 4px 0 12px; font-size: var(--step--1); }
-.qa-deep th, .qa-deep td { border: 1px solid var(--border); padding: 7px 10px; text-align: left; }
-.qa-deep th { background: var(--surface-2); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+/* ---------- tables (answer + deep-dive) ----------
+   Each table is wrapped in a .table-scroll port by wrapTables() in js/app.js.
+   The port is what scrolls; the table keeps its natural column widths. These
+   rules used to be scoped to .qa-deep only, which left the one <table> that
+   lives in an answer completely unstyled. */
+:is(.qa-deep, .answer) table { width: 100%; border-collapse: collapse; margin: 0; font-size: var(--step--1); }
+:is(.qa-deep, .answer) :is(th, td) { border: 1px solid var(--border); padding: 7px 10px; text-align: left; }
+:is(.qa-deep, .answer) th {
+  background: var(--surface-2); font-family: var(--mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .04em; color: var(--ink);
+}
+
+.table-scroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  margin: 4px 0 12px;
+  border-radius: var(--r-sm);
+}
+/* width:100% alone let the table auto-layout squeeze every column down to
+   min-content on a phone — a 542px table crammed into 273px, one word per line.
+   max-content lets each table take the width it actually needs (these run
+   411-896px) and pan; min-width:100% still makes it fill a roomy desktop card. */
+.table-scroll > table { width: max-content; min-width: 100%; }
+/* the port is focusable so it can be scrolled by keyboard — it must show that */
+.table-scroll:focus-visible { outline: none; box-shadow: var(--focus); }
+/* a scroll port would clip columns off the sheet; let print fall back to squeezing */
+@media print { .table-scroll { overflow-x: visible; } .table-scroll > table { width: 100%; min-width: 0; } }
 
 /* personal note (collapsible, per-question) */
 .pn-section { margin-top: 12px; }
@@ -601,6 +682,8 @@ body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
   --hlp-green:  hsl(140 60% 58%);
   --hlp-blue:   hsl(210 90% 62%);
   --hlp-pink:   hsl(330 85% 66%);
+  /* presenter pen — the single ink color, matched to INK in js/inkpen.js */
+  --ink-pen:    #ef2b2b;
 }
 /* applied marks — tint sits under the body text (see dark-theme.css for --hl-l) */
 .answer, .qa-deep, .qa-qtext { --hl-l: 78%; }
@@ -648,6 +731,30 @@ body.hl-pen .answer, body.hl-pen .qa-deep, body.hl-pen .qa-qtext { cursor: text;
 .hl-style-line { display: block; width: 16px; height: 2px; border-radius: 999px; background: currentColor; }
 .hl-off { width: 100%; font-family: var(--mono); font-size: var(--step--1); padding: 7px 10px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans); cursor: pointer; }
 .hl-off:hover { border-color: var(--accent); color: var(--accent); }
+
+/* presenter pen (js/inkpen.js) — desktop-only, sits inline with the swatches */
+.hl-ink-option {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--ink-pen); cursor: pointer; transition: var(--trans);
+}
+.hl-ink-option:hover { border-color: var(--ink-pen); }
+.hl-ink-option.active { border-color: var(--ink-pen); background: color-mix(in srgb, var(--ink-pen) 12%, transparent); }
+/* the pen is a mode on the highlighter button — it wears the pen icon (set in
+   js/highlights.js) and rings itself in the pen's own red. Both rules must outrank
+   the .pen-on pair above, which is why they carry the doubled class. */
+#hl-toggle.ink-active.ink-active { border-color: var(--ink-pen); color: var(--ink-pen); box-shadow: 0 0 0 2px color-mix(in srgb, var(--ink-pen) 26%, transparent); }
+/* the color dot belongs to the highlighter — this pen has exactly one color, so
+   the dot says nothing here and only reads as the wrong one */
+#hl-toggle.ink-active.ink-active::after { content: none; }
+
+/* the drawing surface itself: over the content, under the sticky header (40) and
+   the palette (70) so the control that turns it off stays reachable */
+.ink-layer { position: fixed; inset: 0; cursor: crosshair; touch-action: none; }
+.ink-layer[hidden] { display: none; }
+/* while drawing, a drag must not select the text underneath */
+body.ink-on { user-select: none; -webkit-user-select: none; }
+@media (max-width: 899px) { .ink-layer { display: none; } }
 
 /* the display:flex/absolute below would otherwise override the [hidden]
    attribute (same specificity, author beats UA) and the menu/palette would
@@ -730,18 +837,136 @@ mark.hl-underline {
   :root { --sidebar-w: 0px; }
   .main { grid-template-columns: 1fr; }
   .sidebar { display: none; }
-  .header-search { display: none; }
-  .mobile-search { display: block; }
   /* replace the space-hungry chip rows with compact dropdowns */
   .mobile-controls { display: flex; }
   .tabs-wrap { display: none; }
   .subnav { display: none; }
   #difficulty-filter { display: none; }
-}
-@media (min-width: 901px) { .mobile-search, .mobile-controls { display: none; } }
 
-.mobile-search { padding: 14px clamp(14px, 3vw, 28px) 0; max-width: var(--maxw); margin: 0 auto; }
-.mobile-search .header-search { width: 100%; display: block; }
+  /* ---------- mobile header ----------
+     One sticky row: [mark] ......... [profile] [filter] [highlighter] [search].
+     The wordmark goes (the mark says it in 30px), the search collapses to an
+     icon, and the theme switch moves into the tools sheet — which is what buys
+     four comfortable 38px targets at 375px. Everything the reader needs stays
+     in the sticky header, so none of it scrolls away. */
+  .brand-name { display: none; }
+  .brand-mark { display: grid; }
+  #filter-btn, #search-toggle { display: grid; }
+  /* the moon lives in the tools sheet down here (#theme-toggle-m) */
+  #theme-toggle { display: none; }
+  .site-header { gap: 8px; }
+  .header-search { display: none; } /* until the search icon expands it */
+  .header-search .s-kbd { display: none; } /* no "/" shortcut on a phone */
+
+  /* expanded search: the row becomes the search bar. Plain flex swaps, no
+     absolute overlay — nothing to mis-position over the sticky header. */
+  .site-header.search-open > :is(.brand, .header-spacer, #auth-btn, #filter-btn, #hl-toggle, #search-toggle) { display: none; }
+  .site-header.search-open .header-search { display: block; flex: 1 1 auto; max-width: none; }
+  .site-header.search-open .search-close { display: grid; }
+
+  /* Ten tools ragged-wrapping into five rows was the messiest block on a phone.
+     A horizontal scroller fixed the mess but hid the tools behind a swipe with
+     no affordance — you cannot tell a row scrolls until you try. So they move
+     into a bottom sheet behind an explicit "Filters & tools" button that shows
+     how many are active. Everything stays visible at once inside the sheet, and
+     it is a normal multi-select: tap several, then Show results. */
+  .content-head { gap: 10px; }
+
+  .tools-backdrop {
+    display: block; position: fixed; inset: 0; z-index: 110;
+    background: rgba(15, 23, 42, .5);
+    opacity: 0; transition: opacity .22s ease;
+  }
+  .tools-backdrop.show { opacity: 1; }
+  .tools-backdrop[hidden] { display: none; }
+
+  .tools-panel {
+    display: flex; flex-direction: column;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 111;
+    max-height: min(78vh, 560px);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-radius: var(--r-lg) var(--r-lg) 0 0;
+    box-shadow: var(--shadow-lg);
+    /* Parked below the fold and hidden. `visibility` is what keeps the closed
+       sheet's eleven tools out of the tab order and the a11y tree — transform
+       alone would leave them reachable, just invisible.
+
+       It lives HERE, in the media query, on purpose. The same buttons ARE the
+       desktop toolbar (the panel is display:contents above 900px), so whatever
+       hides them must switch itself off at the breakpoint with no help from
+       JavaScript. A JS-driven equivalent (the `inert` attribute) depends on a
+       matchMedia change event firing, and when that event is missed the failure
+       is a silently dead desktop toolbar. A media query cannot miss.
+
+       No transition on either property: the idle state must not animate, or
+       crossing the breakpoint — which swaps this between display:contents (no
+       box) and a fixed sheet — tries to animate that swap. */
+    transform: translateY(100%);
+    visibility: hidden;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  /* the motion belongs to the two gestures, the only times it should move */
+  .tools-panel.show { transform: translateY(0); visibility: visible; }
+  /* .closing holds it visible through the slide-out; app.js drops the class once
+     the sheet is parked, which is what returns it to hidden — no timed
+     visibility transition to unwind. */
+  .tools-panel.closing { visibility: visible; }
+  .tools-panel.show,
+  .tools-panel.closing { transition: transform .28s cubic-bezier(.4, 0, .2, 1); }
+
+  .tools-sheet-head {
+    position: relative; /* anchors the grab handle below */
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 16px 16px 10px; border-bottom: 1px solid var(--border); flex: 0 0 auto;
+  }
+  /* the grab handle above the title, so the sheet reads as a sheet */
+  .tools-sheet-head::before {
+    content: ""; position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+    width: 36px; height: 4px; border-radius: var(--r-pill); background: var(--border-strong);
+  }
+  .tools-sheet-title { font-weight: 700; color: var(--ink); font-size: var(--step-0); }
+  .tools-close {
+    display: grid; place-items: center; width: 30px; height: 30px; flex: 0 0 auto;
+    border: none; background: none; color: var(--muted); border-radius: 8px; cursor: pointer;
+  }
+  .tools-close:hover { background: var(--surface-2); color: var(--ink); }
+
+  /* two even columns — every tool visible at once, nothing ragged, no scroll
+     affordance to miss. The sheet itself scrolls only if the viewport is tiny. */
+  .content-tools {
+    width: auto; margin: 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    padding: 14px 16px; overflow-y: auto; flex: 1 1 auto; min-height: 0;
+  }
+  .tool { justify-content: flex-start; padding: 10px 12px; }
+  /* the hover lift makes buttons jitter under a thumb in a grid */
+  .tool:hover { transform: none; box-shadow: none; }
+  /* the relocated theme switch spans the grid so it reads as its own thing
+     rather than an eleventh filter */
+  .tool-theme { display: inline-flex; grid-column: 1 / -1; }
+
+  .tools-sheet-foot {
+    display: flex; gap: 8px; flex: 0 0 auto;
+    padding: 12px 16px; border-top: 1px solid var(--border);
+  }
+  .tools-clear, .tools-done {
+    flex: 1 1 0; padding: 11px 12px; border-radius: var(--r-pill);
+    font-family: var(--mono); font-size: var(--step--1); font-weight: 700; cursor: pointer;
+    transition: var(--trans);
+  }
+  .tools-clear { border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); }
+  .tools-clear:hover { border-color: var(--accent); color: var(--accent); }
+  .tools-done { border: 1px solid var(--accent); background: var(--accent); color: var(--accent-contrast); }
+  .tools-done:hover { filter: brightness(1.06); }
+
+  body.tools-open { overflow: hidden; }
+}
+
+@media (max-width: 900px) and (prefers-reduced-motion: reduce) {
+  .tools-panel, .tools-backdrop { transition-duration: .01ms; }
+}
+@media (min-width: 901px) { .mobile-controls { display: none; } }
 
 /* ---------- mobile controls ---------- */
 .mobile-controls {
@@ -825,7 +1050,7 @@ mark.hl-underline {
 
 @media (max-width: 560px) {
   .hero-stats { gap: 18px; }
-  .content-tools { width: 100%; margin-left: 0; }
+  /* .content-tools now goes full-width and scrolls from 900px down */
   .qa-question { font-size: var(--step-0); }
 }
 

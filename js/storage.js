@@ -86,6 +86,17 @@
     setLastOpened(id) { write("lastOpened", id); },
     getLastOpened() { return read("lastOpened", null); },
 
+    /* --- sign-out wipe ---
+       Drops everything personal from this device so the next person to open the
+       browser sees a clean slate. Device preferences (theme, last tab, pen) stay.
+       Safe to call any time: the cloud copy is the source of truth and comes
+       back on the next sign-in. */
+    clearUserData() {
+      ["bookmarks", "progress", "notes", "highlights", "lastOpened"].forEach(function (k) {
+        try { localStorage.removeItem(PREFIX + k); } catch (e) { /* ignore */ }
+      });
+    },
+
     /* --- export / import all user data --- */
     exportAll() {
       return JSON.stringify({

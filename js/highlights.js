@@ -30,6 +30,10 @@
   const COLORS = ["yellow", "green", "blue", "pink"];
   const STYLES = ["highlight", "underline"];
 
+  /* shared by the palette entry and the header button, which wears it while the
+     presentation pen (js/inkpen.js) is the active mode */
+  const INK_PEN_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>';
+
   const cloud = function () { return window.IQB.cloud || null; };
   const signedIn = function () { const c = cloud(); return !!(c && c.isSignedIn()); };
 
@@ -374,10 +378,19 @@
 
     function syncButton() {
       if (!btn) return;
+      const inkOn = !!(window.IQB.inkPen && IQB.inkPen.isOn());
       btn.classList.toggle("pen-on", pen.on);
       btn.style.setProperty("--pen", "var(--hlp-" + pen.color + ")");
       btn.setAttribute("aria-pressed", String(pen.on));
       document.body.classList.toggle("hl-pen", pen.on);
+      btn.classList.toggle("ink-active", inkOn);
+      /* While the presentation pen is on it IS the active mode, whatever the
+         highlighter is set to — so the button wears its icon and nothing else. */
+      if (inkOn) {
+        btn.classList.remove("hl-btn-style-underline");
+        btn.innerHTML = INK_PEN_SVG;
+        return;
+      }
       // if the pen is off, always show the original icon
       if (!pen.on) {
         btn.classList.remove("hl-btn-style-underline");
@@ -392,6 +405,12 @@
       }
     }
     function setPen(next) {
+      /* The two pens are alternative modes on one button, so reaching for any
+         highlighter tool — a color, underline, even "turn off" — puts the red pen
+         down. Otherwise its overlay stays up and keeps swallowing the very text
+         selection the highlighter you just picked needs, and the click reads as
+         doing nothing at all. */
+      if (window.IQB.inkPen && IQB.inkPen.isOn()) IQB.inkPen.off();
       Object.assign(pen, next);
       if (STYLES.indexOf(pen.style) === -1) pen.style = "highlight";
       store.setHLPen({ on: pen.on, color: pen.color, style: pen.style });
@@ -420,13 +439,42 @@
         onmousedown: function (e) { e.preventDefault(); e.stopPropagation(); setPen({ on: true, color: pen.color, style: "underline" }); close(); }
       }, [el("span", { class: "hl-style-line" })]);
 
-      const row = el("div", { class: "hl-swatch-row hl-swatch-row--with-style" }, swatches.concat([styleBtn]));
+      const tools = [styleBtn];
+      const inkBtn = inkButton();
+      if (inkBtn) tools.push(inkBtn);
+      const row = el("div", { class: "hl-swatch-row hl-swatch-row--with-style" }, swatches.concat(tools));
       panel.appendChild(row);
       panel.appendChild(el("button", {
         class: "hl-off", type: "button",
         onmousedown: function (e) { e.preventDefault(); setPen({ on: false }); close(); }
-      }, pen.on ? "Turn off highlighter" : "Highlighter is off"));
+      }, pen.on ? "Turn off Markup" : "Markup is off"));
     }
+    /* The presenter pen (js/inkpen.js) sits in this row as one more pen to pick
+       up — it just draws over the page instead of into the text, and its ink is
+       throwaway. Absent on touch/small screens, where the module declines to run. */
+    function inkButton() {
+      const ink = window.IQB.inkPen;
+      if (!ink || !ink.supported()) return null;
+      const active = ink.isOn();
+      const b = el("button", {
+        class: "hl-ink-option" + (active ? " active" : ""),
+        type: "button",
+        "aria-pressed": String(active),
+        "aria-label": "Presentation pen",
+        title: active
+          ? "Presentation pen — on. Click to turn off (or press Esc)"
+          : "Presentation pen — draw over the page while explaining; the ink fades away",
+        onmousedown: function (e) {
+          e.preventDefault(); e.stopPropagation();
+          ink.toggle();
+          if (ink.isOn()) toast("Presentation pen on — draw anywhere. Esc to exit.");
+          close();
+        }
+      });
+      b.innerHTML = INK_PEN_SVG;
+      return b;
+    }
+
     function open() {
       if (!panel) panel = buildPanel();
       renderPanel();
@@ -457,6 +505,8 @@
       document.addEventListener("mousedown", function (e) {
         if (isOpen() && !shouldIgnoreClose(e.target)) close();
       });
+      // Esc turns the presenter pen off from anywhere — keep the button in step.
+      if (window.IQB.inkPen) IQB.inkPen.onChange(function () { syncButton(); if (isOpen()) renderPanel(); });
       syncButton();
     }
     return { init: init, close: close };

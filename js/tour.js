@@ -246,21 +246,35 @@
       spotlightEl.style.height = (targetHeight + pad * 2) + "px";
       spotlightEl.style.borderRadius = window.getComputedStyle(targetEl).borderRadius || "8px";
 
-      // Tooltip position: below the spotlight area
-      let tooltipTop = rect.top + scrollY + targetHeight + 12;
-      let tooltipLeft = rect.left + scrollX + (rect.width - 320) / 2;
+      /* Place the card against the target's real size, not a guess.
+         The old code assumed a 320x240 card and flipped it "above" by a flat
+         240px. The card is ~330px tall, so for a target in the bottom-right
+         corner — Reading Mode, step 4 — flipping moved it up 240px and still
+         left its lower half sitting on top of the very button it was pointing
+         at. Measuring means the flip actually clears the target, whatever the
+         step's copy happens to be. */
+      const tipW = tooltipEl.offsetWidth || 320;
+      const tipH = tooltipEl.offsetHeight || 240;
+      const M = 12; // gap to the target, and to the viewport edges
 
-      // Constraints
-      if (tooltipLeft < 10) tooltipLeft = 10;
-      if (tooltipLeft + 330 > window.innerWidth) tooltipLeft = window.innerWidth - 330;
-
-      // Flip on top of the target if it would overflow bottom viewport
-      if (rect.top + targetHeight + 260 > window.innerHeight && rect.top > 300) {
-        tooltipTop = rect.top + scrollY - 240;
+      // prefer below the target; flip above when it would not fit
+      let tooltipTop = rect.bottom + M;
+      if (tooltipTop + tipH > window.innerHeight - M) {
+        const above = rect.top - tipH - M;
+        // if neither side fits, sit as low as the viewport allows rather than
+        // hanging off the bottom
+        tooltipTop = above >= M ? above : Math.max(M, window.innerHeight - tipH - M);
       }
+      tooltipTop += scrollY;
 
-      tooltipEl.style.top = tooltipTop + "px";
-      tooltipEl.style.left = tooltipLeft + "px";
+      // centre on the target, then clamp so it stays fully on screen
+      let tooltipLeft = rect.left + (rect.width - tipW) / 2;
+      tooltipLeft = Math.min(tooltipLeft, window.innerWidth - tipW - M);
+      tooltipLeft = Math.max(M, tooltipLeft);
+      tooltipLeft += scrollX;
+
+      tooltipEl.style.top = Math.round(tooltipTop) + "px";
+      tooltipEl.style.left = Math.round(tooltipLeft) + "px";
       tooltipEl.classList.add("show");
     }, 200);
   }

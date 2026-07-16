@@ -1,153 +1,131 @@
 /* ============================================================
-   Dark theme. Applies via OS preference AND the manual toggle.
-   The [data-theme] selectors must win over the media query in
-   both directions, so light is re-declared too.
+   Dark theme.
+
+   The blocking bootstrap in <head> ALWAYS writes data-theme
+   ("dark" or "light") before first paint, so :root[data-theme="dark"]
+   is the single source of truth for dark and :root in variables.css
+   is the single source of truth for light. Neither needs re-declaring
+   anywhere else.
+
+   This file used to also carry a `prefers-color-scheme: dark` media
+   query and a `[data-theme="light"]` block that re-declared the same
+   tokens a second and third time. The attribute always won on
+   specificity, so the media query only ever supplied tokens the
+   [data-theme="dark"] block had FORGOTTEN — which silently hid four
+   missing category colours (coding, ngcoding, testing, behavioral).
+   They fell back to their light values on any OS-light machine with
+   the dark toggle on, landing at ~2.9:1 against --surface. Keeping one
+   palette in one place makes that class of bug impossible. (The app
+   fetches its questions over JS, so there is no meaningful no-JS
+   fallback to preserve.)
+
+   Every token below is checked against WCAG AA (>= 4.5:1) for the pair
+   it is actually used in — see the notes on each group. The palette is
+   a warm neutral that carries the light theme's crimson bias, rather
+   than the cool purple cast it had before.
    ============================================================ */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #141118;
-    --surface: #1C1822;
-    --surface-2: #241F2B;
-    --surface-3: #2E2836;
-    --ink: #F1ECF2;
-    --ink-2: #C9C1CE;
-    --muted: #948B9C;
-    --border: #322B3A;
-    --border-strong: #453D4F;
-
-    --accent: #FF6079;
-    --accent-ink: #FF90A2;
-    --accent-soft: #2C1720;
-    --accent-contrast: #1A0E13;
-
-    --beginner: #46C783;
-    --beginner-soft: #16281F;
-    --intermediate: #E0A63B;
-    --intermediate-soft: #2A2213;
-    --advanced: #F0796C;
-    --advanced-soft: #2B1714;
-
-    --cat-angular: #FF5C77;
-    --cat-javascript: #E6C049;
-    --cat-typescript: #6BA6E0;
-    --cat-html: #F08050;
-    --cat-css: #B08CF0;
-    --cat-coding: #3FBBD1;
-    --cat-rxjs: #56C990;
-    --cat-ngrx: #8A8CF0;
-    --cat-java: #D0966B;
-    --cat-springboot: #86C860;
-    --cat-sql: #4FBAD1;
-    --cat-git: #F0795A;
-    --cat-general: #A6AEBF;
-    --cat-ngcoding: #F080A6;
-    --cat-testing: #E070C6;
-    --cat-behavioral: #90AEC2;
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
-    --shadow-md: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .3);
-    --shadow-lg: 0 12px 40px rgba(0, 0, 0, .5);
-  }
-}
-
-/* explicit dark (toggle) — must override media query */
 :root[data-theme="dark"] {
-  --bg: #141118;
-  --surface: #1C1822;
-  --surface-2: #241F2B;
-  --surface-3: #2E2836;
-  --ink: #F1ECF2;
-  --ink-2: #C9C1CE;
-  --muted: #948B9C;
-  --border: #322B3A;
-  --border-strong: #453D4F;
+  /* neutrals — warm bias, matching the light theme's lean toward the
+     crimson accent. ink 15.3:1 / ink-2 10.4:1 / muted 6.1:1 on --surface. */
+  --bg: #151213;
+  --surface: #1D191A;
+  --surface-2: #262122;
+  --surface-3: #322C2D;
+  --ink: #F4EFEF;
+  --ink-2: #CFC6C7;
+  --muted: #A09698;
+  --border: #332D2E;
+  --border-strong: #4A4344;
 
-  --accent: #FF6079;
-  --accent-ink: #FF90A2;
-  --accent-soft: #2C1720;
-  --accent-contrast: #1A0E13;
+  /* brand accent — the light theme's #C21836 lifted to stay legible on a
+     dark surface: accent 6.4:1, accent-ink 8.7:1. --accent-contrast is text
+     ON solid --accent (6.6:1), so it has to be dark here, not white. */
+  --accent: #FF6B80;
+  --accent-ink: #FF9AA8;
+  --accent-soft: #2E191D;
+  --accent-contrast: #1F1216;
 
-  --beginner: #46C783;
-  --beginner-soft: #16281F;
-  --intermediate: #E0A63B;
-  --intermediate-soft: #2A2213;
-  --advanced: #F0796C;
-  --advanced-soft: #2B1714;
+  /* text on a solid category colour (.subchip.active). Category colours are
+     light in this theme, so white would only reach 2.7:1 — see variables.css. */
+  --on-cat: #151213;
 
-  --cat-angular: #FF5C77;
-  --cat-javascript: #E6C049;
-  --cat-typescript: #6BA6E0;
-  --cat-html: #F08050;
-  --cat-css: #B08CF0;
-  --cat-rxjs: #56C990;
-  --cat-ngrx: #8A8CF0;
-  --cat-java: #D0966B;
-  --cat-springboot: #86C860;
-  --cat-sql: #4FBAD1;
-  --cat-git: #F0795A;
-  --cat-general: #A6AEBF;
+  /* semantic (difficulty) — each pairs with its own -soft background at >= 6.7:1 */
+  --beginner: #4ED08B;
+  --beginner-soft: #17281E;
+  --intermediate: #E5AC44;
+  --intermediate-soft: #2A2113;
+  --advanced: #F58275;
+  --advanced-soft: #2B1815;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
-  --shadow-md: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .3);
-  --shadow-lg: 0 12px 40px rgba(0, 0, 0, .5);
+  /* category colours — used as badge text on color-mix(--cat 14%, --surface)
+     and as sidebar//title text on --surface. All >= 5.2:1 in both. */
+  --cat-angular: #FF6B80;
+  --cat-javascript: #E8C34D;
+  --cat-typescript: #6FAAE4;
+  --cat-html: #F2874F;
+  --cat-css: #B392F0;
+  --cat-coding: #4CC3D9;
+  --cat-rxjs: #5CD196;
+  --cat-ngrx: #9095F5;
+  --cat-java: #D89B6E;
+  --cat-springboot: #8ACF63;
+  --cat-sql: #57C2D8;
+  --cat-git: #F5825F;
+  --cat-general: #AAB2C2;
+  --cat-ngcoding: #F58BAE;
+  --cat-testing: #E97ACE;
+  --cat-behavioral: #9BB8CC;
+
+  /* group (main field) colours — 6.8:1+ on --surface */
+  --group-frontend: #FF6B80;
+  --group-backend: #8ACF63;
+  --group-devops: #F5825F;
+  --group-hr: #9BB8CC;
+
+  /* Shadows can't read as depth on a dark surface the way they do on white —
+     a near-black blur on near-black is invisible. Lean on a hairline top
+     highlight instead (see .qa-card below) and keep the shadow for lift only. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, .4);
+  --shadow-md: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .38);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, .6);
 }
 
-/* explicit light (toggle) — must override the dark media query */
-:root[data-theme="light"] {
-  --bg: #FBF9F8;
-  --surface: #FFFFFF;
-  --surface-2: #F5F0EF;
-  --surface-3: #EFE8E7;
-  --ink: #201A1C;
-  --ink-2: #4A4145;
-  --muted: #756A6E;
-  --border: #E9E1E0;
-  --border-strong: #D8CECD;
-
-  --accent: #C21836;
-  --accent-ink: #8E1128;
-  --accent-soft: #FBE9EC;
-  --accent-contrast: #FFFFFF;
-
-  --beginner: #1F9254;
-  --beginner-soft: #E3F5EB;
-  --intermediate: #B4690E;
-  --intermediate-soft: #FBEEDD;
-  --advanced: #C0392B;
-  --advanced-soft: #FBE6E3;
-
-  --cat-angular: #C3002F;
-  --cat-javascript: #B4820A;
-  --cat-typescript: #2F6FB0;
-  --cat-html: #D9531E;
-  --cat-css: #7A4FD6;
-  --cat-coding: #0B7285;
-  --cat-rxjs: #1E8E57;
-  --cat-ngrx: #4B4ECb;
-  --cat-java: #9A5B34;
-  --cat-springboot: #4E8B2C;
-  --cat-sql: #0E7C93;
-  --cat-git: #D9491F;
-  --cat-general: #667085;
-  --cat-ngcoding: #B0335F;
-  --cat-testing: #A83294;
-  --cat-behavioral: #5C7A8F;
-
-  --shadow-sm: 0 1px 2px rgba(32, 26, 28, .05);
-  --shadow-md: 0 1px 2px rgba(32, 26, 28, .04), 0 8px 24px rgba(32, 26, 28, .06);
-  --shadow-lg: 0 12px 40px rgba(32, 26, 28, .12);
-}
-
-/* Text-highlight tints: dark theme needs a much lower lightness so the tint
-   sits UNDER the light body text and stays readable. Light re-declared so the
-   manual light toggle wins over the dark media query on OS-dark devices. */
-@media (prefers-color-scheme: dark) {
-  .answer, .qa-deep, .qa-qtext { --hl-l: 34%; }
-}
+/* Text-highlight tints: the dark theme needs a much lower lightness so the tint
+   sits UNDER the light body text and stays readable. 78% (the light value) lives
+   on the .answer rule in styles.css. */
 :root[data-theme="dark"] .answer,
 :root[data-theme="dark"] .qa-deep,
 :root[data-theme="dark"] .qa-qtext { --hl-l: 34%; }
-:root[data-theme="light"] .answer,
-:root[data-theme="light"] .qa-deep,
-:root[data-theme="light"] .qa-qtext { --hl-l: 78%; }
+
+/* The underline highlight style is pinned to solid black, which is invisible on
+   a dark background. Track the text colour instead — it stays neutral (the point
+   of the style) while actually being visible. */
+:root[data-theme="dark"] mark.hl-underline { text-decoration-color: var(--ink) !important; }
+
+/* A 6% black shadow does nothing against #151213, so the collapsed header had no
+   edge at all while content scrolled under it. Give it a real border instead. */
+:root[data-theme="dark"] .header-shell.is-collapsed {
+  box-shadow: 0 1px 0 var(--border-strong), 0 8px 24px rgba(0, 0, 0, .45);
+}
+
+/* Cards sit only ~1.4:1 off the page background — enough with a border, but flat.
+   A one-pixel top highlight reads as a lit edge and gives the stack depth without
+   touching contrast. */
+:root[data-theme="dark"] .qa-card {
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, .04);
+}
+
+/* Code blocks are the one surface that should recede rather than lift: on dark,
+   an inset well reads more like code than a raised panel does. */
+:root[data-theme="dark"] :is(.code-block pre, .qa-deep pre) {
+  background: #171314;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, .4);
+}
+
+/* The dark floating pill is hardcoded near-black and drawn ON the dark page, so
+   it loses its edge entirely. Lift it onto the theme's own surfaces. */
+:root[data-theme="dark"] .hl-menu {
+  background: var(--surface-3);
+  border-color: var(--border-strong);
+}

@@ -33,6 +33,18 @@
   let _fbIdx = 0;
   const colorOf = (key) => COLORS[key] || (COLORS[key] = FALLBACK_COLORS[_fbIdx++ % FALLBACK_COLORS.length]);
 
+  /* The manifest's colours are authored for the light theme — dark, saturated inks
+     meant for white paper. Injecting them inline as literal hexes pinned them to
+     that lightness in BOTH themes, so on dark a category badge sat at 3.4:1, the
+     Tip label at 2.8:1 and a deep-dive heading at 3.4:1 (all AA failures), while
+     the per-category tokens each theme carefully defines went unread by anything
+     at all. Emit a reference to the token instead, with the manifest hex
+     as the CSS fallback: known categories now follow the theme, and a brand-new
+     one added to manifest.json alone still renders on its manifest colour with no
+     code change — which is the point of the manifest being the source of truth. */
+  const catColor = (key) => `var(--cat-${key}, ${colorOf(key)})`;
+  const groupColor = (g) => `var(--group-${g.key}, ${g.color})`;
+
   const GROUPS = (MANIFEST.groups || []).map((g) => ({
     key: g.id,
     label: g.label,
@@ -60,7 +72,7 @@
     // as its background, and a plain custom property lets the CSS there re-tint the
     // mark without having to out-specify an inline style.
     return el("span", {
-      class: "cat-ic", html: IQB.icons.svg(key), style: `--ic: ${colorOf(key)}`
+      class: "cat-ic", html: IQB.icons.svg(key), style: `--ic: ${catColor(key)}`
     });
   };
 
@@ -121,13 +133,24 @@
     } else {
       document.documentElement.removeAttribute("data-theme");
     }
+    const dark = currentThemeIsDark();
+    const icon = dark
+      ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+      : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    const label = dark ? "Switch to light mode" : "Switch to dark mode";
+
+    /* Two triggers, one state: the moon in the desktop header and the labelled
+       row inside the mobile tools sheet (the header has no room for it on a
+       phone). Both are updated here so neither can fall out of step. */
     const btn = qs("#theme-toggle");
     if (btn) {
-      const dark = currentThemeIsDark();
-      btn.innerHTML = dark
-        ? '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
-        : '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
-      btn.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+      btn.innerHTML = icon;
+      btn.setAttribute("aria-label", label);
+    }
+    const mBtn = qs("#theme-toggle-m");
+    if (mBtn) {
+      mBtn.innerHTML = icon + (dark ? "Light mode" : "Dark mode");
+      mBtn.setAttribute("aria-label", label);
     }
   }
   function currentThemeIsDark() {
@@ -159,7 +182,7 @@
       if (n === 0) return;
       const tab = el("button", {
         class: "tab", role: "tab", "data-cat": t.key,
-        style: `--tab-c: ${t.color}`,
+        style: `--tab-c: ${groupColor(t)}`,
         onclick: () => setCategory(t.key, true)
       }, [
         el("span", { class: "dot" }),
@@ -191,7 +214,7 @@
     const selCats = catsFor(key) || group.cats;
     const { done, total } = progressFor(selCats);
     const pct = total ? Math.round((done / total) * 100) : 0;
-    sideEl.appendChild(el("div", { class: "progress-box", style: `--side-c: ${group.color}` }, [
+    sideEl.appendChild(el("div", { class: "progress-box", style: `--side-c: ${groupColor(group)}` }, [
       el("div", { class: "pl" }, [
         el("span", { text: labelOf(key) + " progress" }),
         el("span", { class: "prog-num", id: "progress-label", text: done + " / " + total })
@@ -205,7 +228,7 @@
     sideEl.appendChild(el("p", { class: "sidebar-title", text: group.label }));
     sideEl.appendChild(el("button", {
       class: "side-link" + (key === group.key ? " active" : ""),
-      "data-cat": group.key, style: `--side-c: ${group.color}`,
+      "data-cat": group.key, style: `--side-c: ${groupColor(group)}`,
       onclick: () => setCategory(group.key, true)
     }, [el("span", { text: "All " + group.label }), el("span", { class: "s-count", text: String(c[group.key]) })]));
 
@@ -215,7 +238,7 @@
       if (n === 0) return;
       sideEl.appendChild(el("button", {
         class: "side-link side-sub" + (key === catKey ? " active" : ""),
-        "data-cat": catKey, style: `--side-c: ${colorOf(catKey)}`,
+        "data-cat": catKey, style: `--side-c: ${catColor(catKey)}`,
         onclick: () => setCategory(catKey, true)
       }, [
         el("span", { class: "side-link-label" }, [catIcon(catKey), el("span", { text: labelOf(catKey) })]),
@@ -244,7 +267,7 @@
       if (n === 0) return;
       subnavEl.appendChild(el("button", {
         class: "subchip" + (key === catKey ? " active" : ""),
-        "data-cat": catKey, style: `--sc: ${colorOf(catKey)}`,
+        "data-cat": catKey, style: `--sc: ${catColor(catKey)}`,
         onclick: () => setCategory(catKey, true)
       }, [catIcon(catKey), document.createTextNode(labelOf(catKey)), el("span", { class: "subchip-n", text: String(n) })]));
     });
@@ -384,6 +407,7 @@
     const items = filtered();
     renderState.items = items;
     renderState.shown = 0;
+    syncFilterCount();
 
     titleEl.innerHTML = "";
     const titleIc = catIcon(state.category);
@@ -438,7 +462,7 @@
     const card = el("article", {
       class: "qa-card" + (progress.has(q.id) ? " done" : ""),
       "data-id": q.id, "data-category": q.category, "data-difficulty": q.difficulty || "",
-      style: `--cat: ${colorOf(q.category)}`
+      style: `--cat: ${catColor(q.category)}`
     });
 
     // header (div with button semantics so we can nest the star button)
@@ -494,7 +518,9 @@
 
     // body
     const inner = el("div", { class: "qa-body-inner" });
-    inner.appendChild(el("div", { class: "answer", html: q.answer || "" }));
+    const answer = el("div", { class: "answer", html: q.answer || "" });
+    wrapTables(answer);
+    inner.appendChild(answer);
 
     if (q.code) {
       const pre = el("pre", {}, [el("code", { text: q.code })]);
@@ -505,12 +531,16 @@
       inner.appendChild(el("div", { class: "code-block" }, [copy, pre]));
     }
     if (q.tip) {
-      inner.appendChild(el("div", { class: "qa-tip", html: "<b>Tip</b>" + escapeText(q.tip) }));
+      // Tips are authored HTML in the same trusted JSON as q.answer/q.deep (which
+      // are injected raw just above/below). Escaping this one field printed the
+      // markup as literal text — "<strong>Promise = One value.</strong>".
+      inner.appendChild(el("div", { class: "qa-tip", html: "<b>Tip</b> " + q.tip }));
     }
 
     // optional in-depth study section
     if (q.deep) {
       const deepContent = el("div", { class: "qa-deep", hidden: "", html: q.deep });
+      wrapTables(deepContent);
       const bookSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 1-4 4v14a3 3 0 0 1 3-3h7z"/></svg>';
       const deepBtn = el("button", {
         class: "qa-act deep-btn",
@@ -769,8 +799,24 @@
      HELPERS
      ======================================================== */
   function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : s; }
-  function escapeText(s) { const d = document.createElement("span"); d.textContent = " " + s; return d.innerHTML; }
   function cssEscape(s) { return String(s).replace(/"/g, '\\"'); }
+
+  /* Authored answer/deep HTML contains comparison tables that want 411-896px.
+     Styled `width: 100%` they never overflowed the page — they did something
+     worse and quieter: auto-layout squeezed every column to min-content to obey
+     the 100%, so on a phone a 542px table crammed into a 273px card at one word
+     per line. Giving each table its own scroll port lets it keep its natural
+     column widths and pan, while the card stays inside the viewport. Wrapping
+     adds an element but no text, so highlight offsets (js/highlights.js) are
+     unaffected. */
+  function wrapTables(root) {
+    qsa("table", root).forEach((t) => {
+      if (t.parentElement && t.parentElement.classList.contains("table-scroll")) return;
+      const scroller = el("div", { class: "table-scroll", role: "region", tabindex: "0", "aria-label": "Table, scrollable" });
+      t.parentNode.insertBefore(scroller, t);
+      scroller.appendChild(t);
+    });
+  }
 
   /* ========================================================
      INIT
@@ -799,6 +845,7 @@
 
     // wire toolbar
     on("#theme-toggle", "click", toggleTheme);
+    on("#theme-toggle-m", "click", toggleTheme);
     on("#expand-all", "click", expandAll);
     on("#collapse-all", "click", collapseAll);
     on("#random-btn", "click", randomQuestion);
@@ -881,10 +928,147 @@
 
     initScrollToTop();
     initCollapsibleHeader();
+    initMobileSearch();
+    initToolsSheet();
     initReadingMode();
     if (window.IQB.tour && typeof window.IQB.tour.init === "function") {
       window.IQB.tour.init();
     }
+  }
+
+  /* The six "show only" toggles, paired with the button that drives each. Not
+     the practice/expand/collapse/random tools: those are actions and modes, not
+     filters, so they neither count toward the badge nor get cleared. */
+  const FILTERS = {
+    bookmarkedOnly: "#bookmark-filter",
+    completedOnly: "#completed-filter",
+    uncompletedOnly: "#uncompleted-filter",
+    hasNoteOnly: "#note-filter",
+    hasHighlightOnly: "#highlight-filter",
+    hasVideoOnly: "#video-filter"
+  };
+
+  /* Under 900px the tools live in a closed sheet, so the trigger is the only
+     thing telling you a filter is on — and "3 questions" with no visible reason
+     is exactly how a filter gets forgotten. Derived from state (not from
+     counting .on classes) so it cannot drift, and called from render(), which
+     every filter change already goes through. */
+  function syncFilterCount() {
+    const btn = qs("#filter-btn");
+    const badge = qs("#filter-count");
+    if (!btn || !badge) return;
+    const n = Object.keys(FILTERS).filter((k) => state[k]).length;
+    badge.textContent = String(n);
+    badge.hidden = n === 0;
+    btn.classList.toggle("has-active", n > 0);
+    btn.setAttribute("aria-label", n ? `Filters and tools, ${n} active` : "Filters and tools");
+  }
+
+  function clearFilters() {
+    Object.entries(FILTERS).forEach(([key, sel]) => {
+      state[key] = false;
+      const b = qs(sel);
+      if (b) b.classList.remove("on");
+    });
+    render();
+  }
+
+  /* Mobile search: the header has room for four icon targets, not a text field,
+     so search collapses to an icon that expands the real .header-search across
+     the header row. The input is the SAME one the desktop header uses — no
+     second field, so no second source of truth for the query. */
+  function initMobileSearch() {
+    const header = qs(".site-header");
+    const toggle = qs("#search-toggle");
+    const close = qs("#search-close");
+    const input = qs(".site-header .js-search");
+    if (!header || !toggle || !close || !input) return;
+
+    const setOpen = (next) => {
+      header.classList.toggle("search-open", next);
+      toggle.setAttribute("aria-expanded", String(next));
+      if (next) input.focus();
+    };
+
+    toggle.addEventListener("click", () => setOpen(true));
+    /* X cancels: it clears the query as well as collapsing. Collapsing while a
+       query stayed live would leave the list filtered with the reason hidden
+       behind an icon — the same trap the filter sheet's badge exists to avoid. */
+    close.addEventListener("click", () => {
+      input.value = "";
+      state.query = "";
+      render();
+      setOpen(false);
+      toggle.focus();
+    });
+    input.addEventListener("keydown", (e) => { if (e.key === "Escape") close.click(); });
+
+    /* Resizing to desktop mid-search would stick .search-open on the header,
+       hiding the brand and every control behind a bar that has no X on desktop. */
+    const desktop = matchMedia("(min-width: 901px)");
+    desktop.addEventListener("change", (e) => { if (e.matches) setOpen(false); });
+  }
+
+  function initToolsSheet() {
+    const trigger = qs("#filter-btn");
+    const panel = qs("#tools-panel");
+    const backdrop = qs("#tools-backdrop");
+    if (!trigger || !panel || !backdrop) return;
+
+    const desktop = matchMedia("(min-width: 901px)");
+    let open = false;
+    let closeTimer = null;
+
+    /* Hiding the closed sheet from keyboard and screen readers is CSS's job
+       (visibility, in the <=900px block — see styles.css), not this function's.
+       Doing it here with `inert` needed the matchMedia change event to fire to
+       undo it on desktop, and when that was missed the whole desktop toolbar
+       went dead. State lives here; breakpoint behaviour lives in the stylesheet. */
+    const setOpen = (next) => {
+      open = next;
+      trigger.setAttribute("aria-expanded", String(next));
+      document.body.classList.toggle("tools-open", next);
+      clearTimeout(closeTimer);
+      if (next) {
+        panel.classList.remove("closing");
+        panel.classList.add("show");
+        backdrop.hidden = false;
+        // one frame between display and opacity, or the fade has nothing to
+        // transition from
+        requestAnimationFrame(() => backdrop.classList.add("show"));
+        qs("#tools-close").focus();
+      } else {
+        // .closing carries the slide-down; it comes off once the sheet is parked
+        // so the idle state stays transition-free (see styles.css)
+        panel.classList.add("closing");
+        panel.classList.remove("show");
+        backdrop.classList.remove("show");
+        closeTimer = setTimeout(() => {
+          if (open) return;
+          panel.classList.remove("closing");
+          backdrop.hidden = true;
+        }, 300);
+        trigger.focus();
+      }
+    };
+
+    trigger.addEventListener("click", () => setOpen(!open));
+    backdrop.addEventListener("click", () => setOpen(false));
+    on("#tools-close", "click", () => setOpen(false));
+    on("#tools-done", "click", () => setOpen(false));
+    on("#tools-clear", "click", clearFilters);
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && open) setOpen(false); });
+
+    /* Random and the expand/collapse pair act on the list behind the sheet —
+       staying open would just hide their result. The filters deliberately do
+       not close it: picking several in a row is the whole point. */
+    ["#random-btn", "#expand-all", "#collapse-all"].forEach((sel) =>
+      on(sel, "click", () => { if (open) setOpen(false); }));
+
+    /* Tidy-up only, deliberately not load-bearing: body.tools-open is itself
+       scoped to the <=900px block, so even if this never fires, resizing to
+       desktop cannot leave the page scroll-locked or the toolbar unusable. */
+    desktop.addEventListener("change", (e) => { if (e.matches && open) setOpen(false); });
   }
 
   function initReadingMode() {

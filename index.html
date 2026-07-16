@@ -16,26 +16,30 @@
   <meta property="og:title" content="Interview Helper" />
   <meta property="og:description" content="Master coding and interview questions — a searchable bank with practice mode, bookmarks and progress tracking." />
   <meta property="og:url" content="https://interview-questions-bank.netlify.app/" />
-  <meta property="og:image" content="assets/favicon/icon.png" />
+  <meta property="og:image" content="assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Interview Helper" />
   <meta name="twitter:description" content="Master coding and interview questions — searchable, with practice mode." />
-  <meta name="twitter:image" content="assets/favicon/icon.svg" />
+  <meta name="twitter:image" content="assets/og-card.png" />
 
   <!-- icons + manifest -->
   <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" />
   <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#141118" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
 
   <!-- stylesheets (order matters: tokens → reset → components → theme) -->
   <link rel="stylesheet" href="css/variables.css" />
   <link rel="stylesheet" href="css/reset.css" />
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
   <link rel="stylesheet" href="css/dark-theme.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
 
   <!-- set theme before first paint to avoid a flash -->
   <script>
@@ -51,11 +55,41 @@
 </head>
 
 <body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">Interview <span>Helper</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
   <div class="app">
     <!-- ===== header ===== -->
     <div class="header-shell" id="header-shell">
       <header class="site-header">
         <a class="brand" href="#frontend" aria-label="Interview Helper home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
           <span class="brand-name">Interview <span>Helper</span></span>
         </a>
         <div class="header-spacer"></div>
@@ -65,6 +99,10 @@
           <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
           <span class="s-kbd" aria-hidden="true">/</span>
         </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
 
         <!-- auth button: shows "Sign In" pill when signed out, compact avatar icon when signed in -->
         <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
@@ -76,24 +114,31 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
           </span>
         </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
         <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
         </button>
-        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode" style="display: inline-flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       </header>
 
       <!-- category tabs (sticky within the header shell) -->
       <div class="tabs-wrap">
         <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
       </div>
-    </div>
 
-    <!-- mobile search (shown < 900px) -->
-    <div class="mobile-search">
-      <label class="header-search" aria-label="Search questions">
-        <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-        <input class="js-search" type="search" placeholder="Search questions" autocomplete="off" />
-      </label>
     </div>
 
     <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
@@ -114,6 +159,19 @@
       <section class="content" aria-live="polite">
         <div class="content-head">
           <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header. -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
           <div class="content-tools">
             <button class="tool" id="random-btn" type="button" title="Random question (R)">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
@@ -155,9 +213,20 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
               Collapse all
             </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
             <input id="import-file" type="file" accept="application/json" hidden />
           </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear filters</button>
+              <button class="tools-done" id="tools-done" type="button">Show results</button>
+            </div>
+          </div>
         </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
 
         <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
         <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
@@ -230,9 +299,13 @@
   <script src="js/icons.js"></script>
   <script src="js/select.js"></script>
   <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
   <script src="js/data-loader.js"></script>
   <script src="js/sync.js"></script>
   <script src="js/notes.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
   <script src="js/highlights.js"></script>
   <script src="js/tour.js"></script>
 </body>

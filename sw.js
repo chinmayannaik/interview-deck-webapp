@@ -3,7 +3,7 @@
 
    Questions are served from the shared content repo via the jsDelivr CDN
    (cross-origin), so they're handled by a dedicated runtime rule below. */
-const CACHE = "iqb-v14";
+const CACHE = "iqb-v17";
 
 /* the git-hosted single source of truth (same repo the Flutter app reads) */
 const CONTENT_HOST = "cdn.jsdelivr.net";
@@ -16,19 +16,27 @@ const CORE = [
   "./css/variables.css",
   "./css/reset.css",
   "./css/styles.css",
+  "./css/splash.css",
   "./css/dark-theme.css",
   "./js/utils.js",
   "./js/storage.js",
+  "./js/splash.js",
   "./js/data-loader.js",
   "./js/app.js",
   "./js/sync.js",
   "./js/notes.js",
   "./js/highlights.js",
+  "./js/inkpen.js",
   "./js/icons.js",
   "./js/select.js",
   "./js/tour.js",
   "./assets/favicon/favicon.svg",
-  "./assets/favicon/icon.svg"
+  "./assets/favicon/icon.svg",
+  "./assets/favicon/icon-192.png",
+  /* the brand mark is a CSS mask on .brand-mark / .splash-logo — if it misses
+     the cache the logo silently paints nothing at all, so it belongs in CORE */
+  "./assets/logo-mask.png",
+  "./assets/splash-illustration.webp"
 ];
 
 self.addEventListener("install", (e) => {

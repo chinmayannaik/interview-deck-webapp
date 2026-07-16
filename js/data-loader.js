@@ -22,12 +22,20 @@
 
   const url = (f) => IQB.DATA_BASE.replace(/\/?$/, "/") + f;
 
+  /* js/splash.js may not be on the page (it removes itself once done, and the
+     splash is optional markup) — never let a missing splash break the load. */
+  const splash = () => (IQB.splash || { begin() {}, step() {}, done() {}, fail() {} });
+
   async function loadData() {
     const manifest = await fetch(url("manifest.json"), { cache: "no-cache" })
       .then((r) => { if (!r.ok) throw new Error("manifest HTTP " + r.status); return r.json(); });
     IQB.manifest = manifest;
 
-    await Promise.all((manifest.categories || []).map(async (c) => {
+    const cats = manifest.categories || [];
+    splash().begin(cats.length);
+    splash().step(); // the manifest itself
+
+    await Promise.all(cats.map(async (c) => {
       try {
         const res = await fetch(url(c.file));
         if (!res.ok) throw new Error("HTTP " + res.status);
@@ -35,6 +43,10 @@
       } catch (e) {
         console.warn("[data] failed to load", c.file, e);
         IQB.data[c.id] = []; // degrade gracefully; other categories still work
+      } finally {
+        // a category that failed is still a category we are no longer waiting
+        // on, so the bar has to advance for it too or it would stall short
+        splash().step();
       }
     }));
     return manifest;
@@ -43,12 +55,17 @@
   function boot() {
     const s = document.createElement("script");
     s.src = "js/app.js";
+    // app.js calls init() as it executes, so by onload the questions are on the
+    // page and the splash can come down over a rendered app rather than a shell
+    s.onload = () => splash().done();
     s.onerror = () => fail(new Error("app.js failed to load"));
     document.body.appendChild(s);
   }
 
   function fail(err) {
     console.error("[data] load failed", err);
+    // take the splash down first, or this error state renders behind it
+    splash().fail();
     const list = document.getElementById("q-list");
     if (list) {
       list.innerHTML =

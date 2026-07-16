@@ -27,8 +27,8 @@
   const btn = document.getElementById("auth-btn");
   if (!CONFIGURED) return; // dormant: app stays local-only
 
-  let fb = null, user = null, unsub = null, pushTimer = null;
-  let menuEl = null, promptEl = null;
+  let fb = null, user = null, unsub = null, pushTimer = null, wasSignedIn = false;
+  let menuEl = null, promptEl = null, signingIn = false;
   const userChangeCbs = [];
   function emitUserChange() {
     userChangeCbs.forEach(function (cb) { try { cb(user); } catch (e) { /* isolate */ } });
@@ -118,8 +118,14 @@
     if (menuEl && !menuEl.hidden && !menuEl.contains(e.target) && e.target !== btn && !btn.contains(e.target)) closeMenu();
   });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeMenu(); });
+  /* The panel is fixed and positioned once at open, so a rotate or a resize
+     would leave it clamped to the old viewport. */
+  window.addEventListener("resize", function () { positionMenu(); });
 
-  loadFirebase().then(startAuth).catch(function (e) { console.warn("[sync] disabled:", e); });
+  /* Kept as a promise, not just a flag: a sign-in click can land before the SDK
+     modules finish downloading, and signIn() awaits this rather than dropping it. */
+  const fbReady = loadFirebase().then(startAuth);
+  fbReady.catch(function (e) { console.warn("[sync] disabled:", e); });
 
   /* ---------- Firebase ---------- */
   async function loadFirebase() {
@@ -150,24 +156,69 @@
       } else {
         setButton("signed-out");
         if (unsub) { unsub(); unsub = null; }
+        // Only wipe on a real sign-out transition. This callback also fires with
+        // null on first load for someone who never signed in — clearing there
+        // would destroy a local-only user's progress.
+        if (wasSignedIn) clearLocalUserData();
         maybeShowPrompt();
       }
+      wasSignedIn = !!user;
       emitUserChange(); // notify per-question feature modules (notes, future highlights)
     });
   }
 
-  function signIn() {
-    if (!fb) return;
-    fb.signInWithPopup(fb.auth, fb.provider).catch(function (e) {
-      console.warn("[sync] sign-in failed:", e && e.code);
-    });
+  /* Sign-out wipe: the signed-in user's questions, notes and highlights live in
+     Firestore, so the local mirror is disposable. Drop it on the way out —
+     otherwise the next person on this browser sees the previous user's
+     completed questions and highlights. */
+  function clearLocalUserData() {
+    clearTimeout(pushTimer);              // a debounced push must not outlive the session
+    pushTimer = null;
+    try { IQB.storage.clearUserData(); } catch (e) { /* ignore */ }
+    // Reset the in-memory sets and repaint the list / progress bar.
+    if (IQB.app && IQB.app.setData) IQB.app.setData({ progress: [], bookmarks: [] });
+    // notes.js / highlights.js reload from the (now empty) mirror via emitUserChange().
+  }
+
+  /* The Google popup can take a second or two to appear — the SDK may still be
+     loading, and Google's own window is slow to paint. Without a busy state the
+     button looks dead and gets clicked again. */
+  async function signIn(sourceBtn) {
+    if (signingIn) return;
+    signingIn = true;
+    setSigninBusy(sourceBtn, true);
+    try {
+      await fbReady;
+      await fb.signInWithPopup(fb.auth, fb.provider);
+    } catch (e) {
+      console.warn("[sync] sign-in failed:", (e && e.code) || e);
+    } finally {
+      signingIn = false;
+      setSigninBusy(sourceBtn, false);
+    }
+  }
+
+  function setSigninBusy(el, busy) {
+    if (!el) return;
+    el.classList.toggle("is-busy", busy);
+    el.disabled = busy;
+    if (busy) {
+      el.dataset.prevHtml = el.innerHTML;
+      el.innerHTML = '<span class="btn-spinner" aria-hidden="true"></span><span>Signing in…</span>';
+      return;
+    }
+    /* The header button's markup depends on auth state, which may have flipped
+       while we were busy — let setButton rebuild it instead of restoring. */
+    if (el === btn) setButton(user ? "signed-in" : "signed-out", user);
+    else if (el.dataset.prevHtml != null) el.innerHTML = el.dataset.prevHtml;
+    delete el.dataset.prevHtml;
   }
 
   /* ---------- header avatar button ---------- */
   function onButtonClick(e) {
     e.stopPropagation();
     if (user) toggleMenu();
-    else signIn();
+    else signIn(btn);
   }
 
   function setButton(state, u) {
@@ -212,10 +263,29 @@
     if (menuEl) menuEl.hidden = true;
     if (btn) btn.setAttribute("aria-expanded", "false");
   }
+  /* Right-align the panel to the avatar, but never outside the viewport.
+     Anchoring `right` to the button alone assumed the avatar sits hard against
+     the right edge of the header — it no longer does on mobile, where the
+     filter, highlighter and search icons follow it. That pushed the 320px
+     panel's left edge off-screen (a menu with its name and half its content
+     cut off). Clamping to the viewport makes it independent of where the
+     trigger happens to sit. */
   function positionMenu() {
+    if (!menuEl || menuEl.hidden) return;
     const r = btn.getBoundingClientRect();
+    const M = 10; // keep this much clear of the viewport edges
+    const w = menuEl.offsetWidth;
+
+    let left = r.right - w; // preferred: the panel's right edge meets the button's
+    left = Math.min(left, window.innerWidth - w - M);
+    left = Math.max(M, left);
+    menuEl.style.left = Math.round(left) + "px";
+    menuEl.style.right = "auto";
+
     menuEl.style.top = Math.round(r.bottom + 8) + "px";
-    menuEl.style.right = Math.round(window.innerWidth - r.right) + "px";
+    /* The panel is as tall as the reader's progress list, so on a short screen
+       it would otherwise run off the bottom with Sign out unreachable. */
+    menuEl.style.maxHeight = Math.max(200, Math.round(window.innerHeight - r.bottom - 8 - M)) + "px";
   }
 
   function buildMenu() {
@@ -304,7 +374,7 @@
       '</div>';
     document.body.appendChild(p);
     promptEl = p;
-    p.querySelector("#lp-signin").addEventListener("click", function () { signIn(); });
+    p.querySelector("#lp-signin").addEventListener("click", function (ev) { signIn(ev.currentTarget); });
     p.querySelector("#lp-later").addEventListener("click", dismissPrompt);
     p.querySelector("#lp-close").addEventListener("click", dismissPrompt);
     requestAnimationFrame(function () { p.classList.add("show"); });

@@ -1,0 +1,194 @@
+/* ============================================================
+   Splash screen — covers the app until the question data has
+   loaded and app.js has rendered.
+
+   This exists because the questions are fetched from a remote
+   content repo (see DATA_BASE in index.html): a manifest plus one
+   JSON per category, so first paint is otherwise an empty shell.
+   The progress bar is driven by real fetch completions from
+   js/data-loader.js via js/splash.js — it is not a fake timer.
+
+   Everything is built from the existing design tokens, so the
+   splash themes itself in dark mode with no extra rules.
+   ============================================================ */
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; /* over .tour-overlay (1000) and every floating control */
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 3vh, 30px);
+  padding: clamp(24px, 5vh, 48px) 20px;
+  overflow: hidden;
+  text-align: center;
+  opacity: 1;
+  transition: opacity .45s ease;
+}
+
+/* The soft accent wash from the design — recreated in CSS rather than baked
+   into the artwork so it follows the theme instead of pinning a light pink
+   onto the dark background. Two off-centre radial tints, no extra elements. */
+.splash::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 45% at 50% 82%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 70%),
+    radial-gradient(45% 38% at 82% 22%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%);
+}
+
+/* every child sits above the wash */
+.splash > * { position: relative; z-index: 1; }
+
+/* ---------- hide + teardown ---------- */
+.splash.is-hiding { opacity: 0; }
+.splash[hidden] { display: none; }
+/* while the splash is up the app behind it must not scroll or be reachable */
+body.splash-open { overflow: hidden; }
+
+/* ---------- brand ---------- */
+.splash-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+/* The brand mark, painted as a mask so it takes var(--accent) and lifts to the
+   dark theme's accent instead of staying the artwork's paper-crimson. No tile
+   behind it: the glyph IS the logo, and a coloured tile under a same-coloured
+   glyph would erase it. */
+.splash-logo {
+  width: clamp(60px, 11vw, 76px);
+  height: clamp(60px, 11vw, 76px);
+  background: var(--accent);
+  -webkit-mask: url("../assets/logo-mask.png") center / contain no-repeat;
+  mask: url("../assets/logo-mask.png") center / contain no-repeat;
+}
+.splash-title {
+  font-size: clamp(1.9rem, 6vw, 3rem);
+  font-weight: 850;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.splash-title span { color: var(--accent); }
+.splash-tagline {
+  font-size: clamp(.9rem, 2.6vw, 1.05rem);
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 34ch;
+  margin: 0 auto;
+}
+
+/* ---------- progress ---------- */
+.splash-progress { width: min(280px, 72vw); }
+.splash-track {
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface-2));
+  overflow: hidden;
+}
+.splash-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  /* the width is set from real load progress; the ease makes each jump glide
+     rather than snap, so the bar reads as motion instead of a step function */
+  transition: width .5s cubic-bezier(.4, 0, .2, 1);
+  position: relative;
+  overflow: hidden;
+}
+/* a sheen travelling along the filled part — the only purely decorative motion,
+   and the thing that keeps the bar alive during a long single fetch */
+.splash-bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .38), transparent);
+  transform: translateX(-100%);
+  animation: splash-sheen 1.25s ease-in-out infinite;
+}
+@keyframes splash-sheen { to { transform: translateX(100%); } }
+
+.splash-status {
+  margin-top: 14px;
+  font-size: var(--step--1);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- bouncing dots ---------- */
+.splash-dots { display: flex; gap: 7px; justify-content: center; margin-top: 12px; }
+.splash-dots i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: .3;
+  animation: splash-dot 1.15s ease-in-out infinite;
+}
+.splash-dots i:nth-child(2) { animation-delay: .16s; }
+.splash-dots i:nth-child(3) { animation-delay: .32s; }
+@keyframes splash-dot {
+  0%, 100% { opacity: .3; transform: translateY(0); }
+  40%      { opacity: 1;  transform: translateY(-4px); }
+}
+
+/* ---------- illustration ----------
+   No `margin-top: auto` here: that would absorb every spare pixel and pin the
+   art to the bottom edge, opening a dead gap under the dots on tall screens.
+   The art is just the last item in the centred column, so brand + progress +
+   art read as one group in the middle of the viewport at any height.
+   It shrinks (flex-shrink:1) before anything else, because on a short screen
+   the art is what should give way — never the progress bar. */
+.splash-art {
+  width: min(760px, 100%);
+  flex: 0 1 auto;
+  min-height: 0;
+}
+.splash-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 32vh;
+  object-fit: contain;
+  /* reserve the box before the image arrives so nothing jumps when it does */
+  aspect-ratio: 1041 / 375;
+  animation: splash-art-in .6s .1s ease-out both;
+}
+@keyframes splash-art-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- small screens ----------
+   The art earns its space only when there is space: below this the column is
+   tight and the brand + progress matter more. */
+@media (max-width: 560px) {
+  .splash { gap: 16px; }
+  .splash-art img { max-height: 24vh; }
+}
+/* Short viewports (landscape phones, split-screen): drop the art entirely
+   rather than crushing the brand and the bar against the edges. */
+@media (max-height: 520px) {
+  .splash-art { display: none; }
+  .splash { justify-content: center; gap: 16px; }
+  .splash-tagline { display: none; }
+}
+
+/* ---------- reduced motion ----------
+   The bar still moves (it is information, not decoration); the sheen, the
+   bounce and the entrance are the parts that are purely motion. */
+@media (prefers-reduced-motion: reduce) {
+  .splash-bar::after,
+  .splash-dots i { animation: none; }
+  .splash-dots i { opacity: .55; }
+  .splash-art img { animation: none; }
+  .splash, .splash-bar { transition-duration: .01ms; }
+}
