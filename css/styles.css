@@ -5,6 +5,11 @@
    ============================================================ */
 
 /* ---------- app shell ---------- */
+/* Scroll anchoring rewrites scrollY whenever something above the viewport resizes.
+   The collapsing header and the expanding answer cards both do that constantly, so
+   the browser's correction fights our own scroll handling instead of helping it.
+   We position those two cases explicitly (see initCollapsibleHeader / toggleCard). */
+html { overflow-anchor: none; }
 .app { display: flex; flex-direction: column; min-height: 100vh; }
 
 /* ---------- header ---------- */
@@ -170,7 +175,7 @@
 
 /* ---------- sign-in prompt (dismissible) ---------- */
 .login-prompt {
-  position: fixed; right: 18px; bottom: 18px; z-index: 75;
+  position: fixed; right: 64px; bottom: 18px; z-index: 75;
   width: min(340px, calc(100vw - 28px));
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg);
   box-shadow: var(--shadow-lg); padding: 16px 16px 14px;
@@ -198,8 +203,32 @@
 }
 .lp-later:hover { border-color: var(--border-strong); color: var(--ink); }
 
-@media (max-width: 560px) {
-  .login-prompt { right: 12px; left: 12px; bottom: 12px; width: auto; }
+/* Below 900px the sidebar and tabs bar are gone and the bottom-right corner this
+   card was anchored to belongs to .reading-mode-toggle (z-index 120) and
+   .scroll-to-top (z-index 90) — which is what the earlier right/bottom nudges were
+   dodging. Centering clears them outright and gives the one-and-only sign-in ask
+   the weight it deserves. The dim is a box-shadow spread (the same trick
+   .tour-spotlight uses) rather than a z-index:-1 pseudo-element, because negative
+   children paint over their parent's background and would tint the card itself.
+   It deliberately does NOT block the page: the copy calls itself optional. */
+@media (max-width: 900px) {
+  .login-prompt {
+    top: 50%; left: 50%; right: auto; bottom: auto;
+    z-index: 130; /* over .reading-mode-toggle so the dim covers it too */
+    width: min(360px, calc(100vw - 32px));
+    padding: 20px 18px 16px;
+    border-color: var(--accent);
+    transform: translate(-50%, calc(-50% + 14px)) scale(.97);
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent),
+      var(--shadow-lg),
+      0 0 0 9999px rgba(15, 23, 42, .55);
+  }
+  .login-prompt.show { transform: translate(-50%, -50%) scale(1); }
+  .lp-title { font-size: var(--step-1); }
+  /* stack full-width so the primary action leads and nothing is cramped */
+  .lp-actions { flex-direction: column; align-items: stretch; gap: 9px; }
+  .lp-signin, .lp-later { width: 100%; padding: 12px; }
 }
 
 /* ---------- hero ---------- */
@@ -280,9 +309,36 @@
   border-left: 3px solid transparent;
 }
 .side-link .s-count { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+/* label + mark share a row; min-width:0 lets a long category name ellipsis
+   rather than shove the count out of the sidebar */
+.side-link-label { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.side-link-label > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.side-link .cat-ic { width: 15px; height: 15px; }
 .side-link:hover { background: var(--surface-2); }
-.side-link.active { background: var(--surface-2); color: var(--ink); border-left-color: var(--side-c, var(--accent)); }
-.side-link.active .s-count { color: var(--side-c, var(--accent)); }
+/* Selected has to differ from :hover by HUE, not lightness. These two used to share
+   --surface-2 outright, so a merely hovered row looked exactly as selected as the
+   real one — and neither separated from the page behind it (1.08:1). Lightness
+   can't fix that (even a 22% tint only reaches 1.20:1 on this palette), and a solid
+   fill like .tab.active uses isn't available either: white on the lighter category
+   accents (JavaScript #B4820A) is 3.4:1, under AA for label-sized text. A tint of
+   the row's own category colour reads unmistakably as "this one" while keeping the
+   label above 13:1, and hover stays neutral so the two can never be confused. */
+.side-link.active {
+  background: color-mix(in srgb, var(--side-c, var(--accent)) 14%, var(--surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--side-c, var(--accent)) 28%, transparent);
+  color: var(--ink);
+  font-weight: 700;
+  border-left-color: var(--side-c, var(--accent));
+}
+/* The raw accent is only 2.96:1 here at 11px (JavaScript's #B4820A is the floor),
+   and this is a real number, not decoration. Mixing toward --ink keeps the category
+   hue and self-corrects per theme — --ink darkens the accent on light, lightens it
+   on dark. 55% clears AA on both (6.16 light / 4.97 dark); 60% lands exactly on 4.50
+   with no headroom for a future category, and 65% fails dark outright at 4.13. */
+.side-link.active .s-count {
+  color: color-mix(in srgb, var(--side-c, var(--accent)) 55%, var(--ink));
+  font-weight: 700;
+}
 .side-group {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   width: 100%; text-align: left; padding: 10px 12px 5px; margin-top: 8px;
@@ -295,9 +351,20 @@
 .side-sub { padding-left: 22px; font-weight: 500; }
 .side-sep { height: 1px; background: var(--border); margin: 12px 8px; }
 
+/* ---------- category tech marks (js/icons.js) ----------
+   One solid 24x24 path per category, tinted with that category's manifest accent
+   via the --ic custom property app.js sets inline. Sized in em so each mark tracks
+   whatever text it sits beside. Groups never get one. */
+.cat-ic {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex: 0 0 auto; color: var(--ic, currentColor);
+}
+.cat-ic svg { width: 100%; height: 100%; display: block; }
+
 /* ---------- content ---------- */
 .content-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-bottom: 16px; }
 .content-title { font-size: var(--step-2); }
+.content-title .cat-ic { width: 1em; height: 1em; margin-right: .38em; vertical-align: -.1em; }
 .content-title small { font-family: var(--mono); font-size: var(--step--1); color: var(--muted); font-weight: 500; margin-left: 6px; }
 .content-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
 .tool {
@@ -349,8 +416,11 @@
   border-radius: var(--r-pill); border: 1px solid var(--border); background: var(--surface);
   color: var(--ink-2); white-space: nowrap; transition: var(--trans);
 }
+.subchip .cat-ic { width: 13px; height: 13px; }
 .subchip:hover { border-color: var(--sc, var(--accent)); color: var(--sc, var(--accent)); }
 .subchip.active { background: var(--sc, var(--accent)); border-color: var(--sc, var(--accent)); color: #fff; }
+/* the active chip paints --sc as its background, so the mark has to stop being --sc */
+.subchip.active .cat-ic { color: #fff; }
 .subchip-n { font-size: 10px; opacity: .7; font-variant-numeric: tabular-nums; }
 @media (max-width: 900px) {
   .subnav {
@@ -373,6 +443,9 @@
 .qa-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md);
   box-shadow: var(--shadow-sm); overflow: hidden; transition: border-color var(--trans), box-shadow var(--trans), transform var(--trans);
+  /* keeps scrollIntoView from parking a card underneath the sticky header */
+  scroll-margin-top: calc(var(--header-offset) + 12px);
+  scroll-margin-bottom: 12px;
 }
 .qa-card:hover { box-shadow: var(--shadow-md); }
 .qa-card.open { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)); }
@@ -422,7 +495,7 @@
 .code-block { position: relative; margin: 12px 0; }
 .code-block pre { font-family: var(--mono); font-size: 12.7px; line-height: 1.55; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-sm); padding: 14px 15px; overflow-x: auto; }
 .code-block pre code { background: none; border: none; padding: 0; color: var(--ink); }
-.copy-btn { position: absolute; top: 8px; right: 8px; font-family: var(--mono); font-size: 11px; padding: 4px 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); transition: var(--trans); }
+.copy-btn { position: absolute; top: -13px; right: 8px; font-family: var(--mono); font-size: 11px; padding: 4px 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--muted); transition: var(--trans); }
 .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
 .copy-btn.done { color: var(--beginner); border-color: var(--beginner); }
 
@@ -457,9 +530,9 @@ body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
 
 /* Compact brand on small screens: show a shorter title to save header space */
 @media (max-width: 900px) {
-  .brand { gap: 8px; }
-  .brand-logo { width: 24px; height: 24px; }
-  .brand-name { font-size: 1rem; font-weight: 800; }
+  .brand { gap: 4px; }
+  .brand-logo { width: 20px; height: 24px; }
+  .brand-name { font-size: 12px; font-weight: 800; }
   /* hide the second word ('Helper') so the title is shorter on mobile */
 }
 
@@ -670,12 +743,15 @@ mark.hl-underline {
 .mobile-search { padding: 14px clamp(14px, 3vw, 28px) 0; max-width: var(--maxw); margin: 0 auto; }
 .mobile-search .header-search { width: 100%; display: block; }
 
-/* ---------- mobile controls (native-select dropdowns) ---------- */
+/* ---------- mobile controls ---------- */
 .mobile-controls {
   flex-wrap: wrap; gap: 8px;
   padding: 12px clamp(14px, 3vw, 28px) 2px; max-width: var(--maxw); margin: 0 auto;
 }
 .m-field { position: relative; flex: 1 1 30%; min-width: 0; }
+/* the caret and the bare-select styling below are the no-JS fallback; once
+   js/select.js enhances a field it draws its own trigger and the <select> goes
+   display:none (see .sel-host) */
 .m-field::after {
   content: "▾"; position: absolute; right: 11px; top: 50%; transform: translateY(-50%);
   pointer-events: none; color: var(--muted); font-size: 12px;
@@ -689,6 +765,63 @@ mark.hl-underline {
 }
 .m-select:hover { border-color: var(--border-strong); }
 .m-select:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+
+/* ---------- styled combobox (js/select.js) ----------
+   Replaces the native <option> popup, which the browser draws and no CSS can
+   reach. The <select> stays as the model but is hidden — and hidden from the
+   a11y tree with it, so .sel-btn is the only control exposed. */
+.sel-host .m-select { display: none; }
+.sel-host::after { content: none; }
+
+.sel-btn {
+  width: 100%; display: flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: var(--step--1); line-height: 1.2;
+  padding: 9px 12px; border-radius: var(--r-pill);
+  border: 1px solid var(--border); background: var(--surface); color: var(--ink);
+  cursor: pointer; transition: var(--trans); text-align: left;
+}
+.sel-btn:hover { border-color: var(--border-strong); }
+.sel-btn:focus-visible { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+.sel-host.is-open .sel-btn { border-color: var(--accent); box-shadow: var(--focus); }
+.sel-label { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sel-btn .cat-ic { width: 14px; height: 14px; }
+.sel-caret { flex: 0 0 auto; width: 13px; height: 13px; color: var(--muted); transition: transform .18s ease; }
+.sel-caret svg { width: 100%; height: 100%; display: block; }
+.sel-host.is-open .sel-caret { transform: rotate(180deg); color: var(--accent); }
+
+.sel-panel {
+  position: absolute; z-index: 70; top: calc(100% + 6px); left: 0;
+  min-width: 100%; width: max-content; max-width: min(280px, calc(100vw - 28px));
+  max-height: 300px; overflow-y: auto; overscroll-behavior: contain;
+  padding: 5px; border-radius: var(--r-md);
+  border: 1px solid var(--border); background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  animation: sel-in .14s ease-out;
+}
+@keyframes sel-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .sel-panel { animation: none; } }
+/* the Level field sits against the right edge, where a left-aligned panel wider
+   than its trigger would hang off the viewport */
+.mobile-controls .m-field:last-child .sel-panel { left: auto; right: 0; }
+
+.sel-opt {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px; border-radius: var(--r-sm); cursor: pointer;
+  font-family: var(--mono); font-size: var(--step--1); color: var(--ink-2);
+  white-space: nowrap; transition: background var(--trans), color var(--trans);
+}
+.sel-opt .cat-ic { width: 15px; height: 15px; }
+.sel-opt-label { flex: 1 1 auto; overflow: hidden; text-overflow: ellipsis; }
+.sel-opt:hover { background: var(--surface-2); color: var(--ink); }
+.sel-opt.is-selected { background: var(--accent-soft); color: var(--ink); font-weight: 700; }
+/* Focus is real here (options are tabindex=-1 and get .focus()), so it has to be
+   visible — and this must out-rank .is-selected, because opening with the keyboard
+   lands focus on the selected option first. Ranked below it, the one option you
+   start on would be the one with no ring. :focus-visible keeps the ring off the
+   mouse path, where open() focuses an option the user never asked to see. */
+.sel-opt:focus-visible { outline: none; background: var(--surface-2); color: var(--ink); box-shadow: var(--focus); }
+.sel-opt-check { flex: 0 0 auto; width: 13px; height: 13px; color: var(--accent); }
+.sel-opt-check svg { width: 100%; height: 100%; display: block; }
 
 @media (max-width: 560px) {
   .hero-stats { gap: 18px; }
@@ -733,9 +866,169 @@ mark.hl-underline {
   transform: scale(0.95);
 }
 
+/* ---------- Interactive Product Tour (Spotlight) ---------- */
+.tour-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.tour-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+body.tour-active {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+.tour-spotlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-radius: 8px;
+  border: 2px solid var(--accent);
+  box-shadow: 0 0 0 9999px rgba(15, 23, 42, 0.75), 0 0 15px var(--accent);
+  pointer-events: auto;
+  transition: top .3s cubic-bezier(0.4, 0, 0.2, 1),
+              left .3s cubic-bezier(0.4, 0, 0.2, 1),
+              width .3s cubic-bezier(0.4, 0, 0.2, 1),
+              height .3s cubic-bezier(0.4, 0, 0.2, 1),
+              border-radius .3s ease;
+  z-index: 1001;
+}
+.tour-tooltip {
+  position: absolute;
+  width: 320px;
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-lg), 0 10px 25px rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  z-index: 1002;
+  transition: transform .25s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity .25s ease,
+              top .3s cubic-bezier(0.4, 0, 0.2, 1),
+              left .3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+  opacity: 0;
+  transform: scale(0.95);
+  transform-origin: center;
+}
+.tour-tooltip.show {
+  opacity: 1;
+  transform: scale(1);
+}
+.tour-step-indicator {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.tour-step-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+.tour-step-desc {
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin-bottom: 16px;
+}
+.tour-tooltip-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.tour-tooltip-nav {
+  display: flex;
+  gap: 8px;
+}
+.tour-btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition: var(--trans);
+}
+.tour-btn:hover {
+  background: var(--surface-3);
+  color: var(--ink);
+}
+.tour-btn-next {
+  background: var(--accent);
+  color: var(--accent-contrast);
+  border-color: var(--accent);
+}
+.tour-btn-next:hover {
+  background: color-mix(in srgb, var(--accent) 85%, #000);
+  color: var(--accent-contrast);
+}
+.tour-btn-skip {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--trans);
+}
+.tour-btn-skip:hover {
+  color: var(--advanced);
+}
+.tour-welcome-card {
+  position: fixed;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(0.95);
+  transform-origin: center;
+  transition: transform .25s ease, opacity .25s ease;
+  width: 360px;
+}
+.tour-welcome-card.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+.tour-image-card {
+  position: fixed;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) scale(0.95);
+  transform-origin: center;
+  transition: transform .25s ease, opacity .25s ease;
+  width: min(650px, 95vw);
+}
+.tour-image-card.show {
+  transform: translate(-50%, -50%) scale(1);
+}
+/* On phones every step is centered (its spotlight target is display:none), so the
+   cards must fit the viewport and scroll rather than run off the top and bottom. */
+@media (max-width: 900px) {
+  .tour-welcome-card { width: min(360px, calc(100vw - 32px)); }
+  .tour-welcome-card, .tour-image-card {
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+}
+
 /* ---------- print ---------- */
 @media print {
-  .site-header, .tabs-wrap, .sidebar, .hero-pills, .content-tools, .filter-row, .qa-star, .qa-toggle, .copy-btn, .qa-body-actions, .reveal-btn, .site-footer, .icon-btn, .toast, .scroll-to-top { display: none !important; }
+  .site-header, .tabs-wrap, .sidebar, .hero-pills, .content-tools, .filter-row, .qa-star, .qa-toggle, .copy-btn, .qa-body-actions, .reveal-btn, .site-footer, .icon-btn, .toast, .scroll-to-top, .tour-overlay, .tour-spotlight, .tour-tooltip { display: none !important; }
   .main { display: block; }
   .qa-body { display: block !important; }
   .qa-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; margin-bottom: 8px; }

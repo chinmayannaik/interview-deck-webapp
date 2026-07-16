@@ -41,7 +41,7 @@
     setButton("signed-out");
     btn.addEventListener("click", onButtonClick);
   }
-  IQB.sync = { pushSoon: pushSoon };
+  IQB.sync = { pushSoon: pushSoon, maybeShowPrompt: maybeShowPrompt };
 
   /* ============================================================
      IQB.cloud — generic per-question user-state layer.
@@ -279,6 +279,7 @@
   /* ---------- sign-in prompt (dismissible, skippable) ---------- */
   function maybeShowPrompt() {
     if (localStorage.getItem(PROMPT_KEY) === "1") return;
+    if (localStorage.getItem("iqb_tour_completed") !== "true") return;
     setTimeout(function () {
       if (user) return;                    // signed in meanwhile
       if (localStorage.getItem(PROMPT_KEY) === "1") return;

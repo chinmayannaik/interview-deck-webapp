@@ -17,7 +17,7 @@
 
   const S = {
     /* --- theme --- */
-    getTheme() { return read("theme", null); },              // 'light' | 'dark' | null (system)
+    getTheme() { return read("theme", "light"); },              // 'light' | 'dark'
     setTheme(v) { write("theme", v); },
 
     /* --- last tab --- */

@@ -1,0 +1,287 @@
+/* ============================================================
+   Interview Questions Bank — Interactive Product Tour
+   Implements a premium spotlight-based user onboarding tour
+   ============================================================ */
+(function () {
+  window.IQB = window.IQB || {};
+
+  const steps = [
+    {
+      title: "Welcome to Interview Helper",
+      desc: "Master interviews with an interactive question bank.<br><br>Let's take a quick 30-second tour to see the key features.",
+      target: null,
+      nextText: "Start Tour",
+      setup: function () {
+        // welcome card
+      }
+    },
+    {
+      title: "Step 1 – Choose Your Domain",
+      desc: "Select your interview domain here. Each category contains carefully curated interview questions for that technology stack.<br><br>",
+      target: "#tabs",
+      setup: function () {
+        if (window.IQB.app && typeof IQB.app.setCategory === "function") {
+          IQB.app.setCategory("frontend", false);
+        }
+      }
+    },
+    {
+      title: "Step 2 – Choose a Technology",
+      desc: "Each technology is organized into focused topics. Pick the technology you are preparing for.<br><br>",
+      target: '#sidebar-nav .side-link[data-cat="angular"]',
+      fallbackTarget: "#sidebar-nav .side-link:nth-child(2)",
+      setup: function () {
+        if (window.IQB.app && typeof IQB.app.setCategory === "function") {
+          IQB.app.setCategory("frontend", false);
+        }
+      }
+    },
+    {
+      title: "Step 3 – Question Card Features",
+      desc: `Here is a detailed look at an open question card. It includes a quick interview answer, a deep dive section, personal notes, highlights, bookmarks, and a Learn More button:
+             <div style="text-align: center; margin-top: 12px;">
+               <img src="assets/tour-card.png" alt="Question card features" style="width: 100%; border-radius: 8px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);" />
+             </div>`,
+      target: null,
+      isImageStep: true,
+      setup: function () {
+        if (window.IQB.app && typeof IQB.app.setCategory === "function") {
+          IQB.app.setCategory("angular", false);
+        }
+      }
+    },
+    {
+      title: "Step 4 – Reading Mode & Full Screen",
+      desc: "<b>Distraction-Free Reading</b><br><br>Hide the sidebar and filters to focus only on the current question.<br><br><i>For the best experience, press <b>F11</b> to enter your browser's full-screen mode (and F12 is recommended for developer console if needed).</i>",
+      target: "#reading-mode-toggle",
+      nextText: "Finish Tour",
+      setup: function () {
+        if (window.IQB.app && typeof IQB.app.setCategory === "function") {
+          IQB.app.setCategory("angular", false);
+        }
+      }
+    }
+  ];
+
+  let currentStep = 0;
+  let overlayEl = null;
+  let spotlightEl = null;
+  let tooltipEl = null;
+
+  /* Below 900px the tabs bar and the sidebar are display:none (see the responsive
+     block in styles.css), so steps 1 and 2 have nothing to point at on a phone.
+     Every step is shown as a centered card there instead of a spotlight. */
+  function isMobile() { return window.matchMedia("(max-width: 900px)").matches; }
+
+  /* A display:none target still resolves via querySelector but measures 0x0 at
+     (0,0), which spotlights the top-left corner rather than failing loudly —
+     treat that as "no target" so the step falls back to the centered card. */
+  function hasVisibleBox(el) {
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  }
+
+  function initTour() {
+    const completed = localStorage.getItem("iqb_tour_completed");
+    if (completed === "true") return;
+
+    // Build Tour HTML structure dynamically
+    overlayEl = document.createElement("div");
+    overlayEl.id = "tour-overlay";
+    overlayEl.className = "tour-overlay";
+
+    spotlightEl = document.createElement("div");
+    spotlightEl.id = "tour-spotlight";
+    spotlightEl.className = "tour-spotlight";
+
+    tooltipEl = document.createElement("div");
+    tooltipEl.id = "tour-tooltip";
+    tooltipEl.className = "tour-tooltip";
+
+    tooltipEl.innerHTML = `
+      <div class="tour-tooltip-content">
+        <div class="tour-step-indicator" id="tour-indicator"></div>
+        <h3 class="tour-step-title" id="tour-title"></h3>
+        <p class="tour-step-desc" id="tour-desc"></p>
+        <div class="tour-tooltip-actions">
+          <button class="tour-btn tour-btn-skip" id="tour-btn-skip" type="button">Skip</button>
+          <div class="tour-tooltip-nav">
+            <button class="tour-btn tour-btn-back" id="tour-btn-back" type="button">Back</button>
+            <button class="tour-btn tour-btn-next" id="tour-btn-next" type="button">Next</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    overlayEl.appendChild(spotlightEl);
+    overlayEl.appendChild(tooltipEl);
+    document.body.appendChild(overlayEl);
+
+    // Event listeners
+    document.getElementById("tour-btn-skip").onclick = endTour;
+    document.getElementById("tour-btn-back").onclick = prevStep;
+    document.getElementById("tour-btn-next").onclick = nextStep;
+
+    // Start with a small timeout to let app finish initial category loads
+    setTimeout(startTour, 800);
+  }
+
+  function startTour() {
+    currentStep = 0;
+    overlayEl.classList.add("show");
+    document.body.classList.add("tour-active");
+    showStep();
+  }
+
+  function endTour() {
+    overlayEl.classList.remove("show");
+    document.body.classList.remove("tour-active");
+    localStorage.setItem("iqb_tour_completed", "true");
+
+    // Once tour ends or skips, show Google login suggestion prompt if not signed in
+    if (window.IQB.sync && typeof window.IQB.sync.maybeShowPrompt === "function") {
+      window.IQB.sync.maybeShowPrompt();
+    }
+  }
+
+  function nextStep() {
+    if (currentStep < steps.length - 1) {
+      currentStep++;
+      showStep();
+    } else {
+      endTour();
+    }
+  }
+
+  function prevStep() {
+    if (currentStep > 0) {
+      currentStep--;
+      showStep();
+    }
+  }
+
+  function showStep() {
+    const step = steps[currentStep];
+    const ind = document.getElementById("tour-indicator");
+    const tit = document.getElementById("tour-title");
+    const des = document.getElementById("tour-desc");
+    const backBtn = document.getElementById("tour-btn-back");
+    const nextBtn = document.getElementById("tour-btn-next");
+
+    tooltipEl.classList.remove("show");
+
+    // Run setup action for the step (like category loading)
+    if (typeof step.setup === "function") {
+      step.setup();
+    }
+
+    ind.textContent = currentStep === 0 ? "Onboarding" : `Step ${currentStep} of ${steps.length - 1}`;
+    tit.innerHTML = step.title;
+    des.innerHTML = step.desc;
+
+    // Nav visibility
+    backBtn.style.display = currentStep === 0 ? "none" : "inline-block";
+    nextBtn.textContent = step.nextText || "Next";
+
+    // Wait a brief moment for DOM layouts to settle from setup operations
+    setTimeout(() => {
+      let targetEl = null;
+      if (typeof step.target === "function") {
+        targetEl = step.target();
+      } else if (typeof step.target === "string") {
+        targetEl = document.querySelector(step.target);
+        if (!targetEl && step.fallbackTarget) {
+          targetEl = document.querySelector(step.fallbackTarget);
+        }
+      }
+      positionSpotlight(targetEl, step.isImageStep);
+    }, 250);
+  }
+
+  function positionSpotlight(targetEl, isImageStep) {
+    if (!targetEl || !hasVisibleBox(targetEl) || isMobile()) {
+      // Welcome Step, Image Step, or any step on mobile — centered modal.
+      // The 0x0 spotlight keeps the full-page dim (it comes from the ring's
+      // 9999px box-shadow) while collapsing the ring itself behind the card.
+      spotlightEl.style.width = "0px";
+      spotlightEl.style.height = "0px";
+      spotlightEl.style.top = "50%";
+      spotlightEl.style.left = "50%";
+      spotlightEl.style.borderRadius = "50%";
+      
+      tooltipEl.className = isImageStep ? "tour-tooltip tour-image-card" : "tour-tooltip tour-welcome-card";
+      tooltipEl.style.top = "50%";
+      tooltipEl.style.left = "50%";
+      
+      setTimeout(() => tooltipEl.classList.add("show"), 50);
+      return;
+    }
+
+    tooltipEl.className = "tour-tooltip";
+
+    // Scroll target into view
+    const rectBeforeScroll = targetEl.getBoundingClientRect();
+    if (rectBeforeScroll.height > 300) {
+      targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    // Wait for scroll adjustment
+    setTimeout(() => {
+      const rect = targetEl.getBoundingClientRect();
+      const scrollY = window.scrollY;
+      const scrollX = window.scrollX;
+
+      const pad = 6;
+      let targetHeight = rect.height;
+      if (targetHeight > 300) {
+        targetHeight = 300; // limit height so it fits on screen
+      }
+
+      spotlightEl.style.top = (rect.top + scrollY - pad) + "px";
+      spotlightEl.style.left = (rect.left + scrollX - pad) + "px";
+      spotlightEl.style.width = (rect.width + pad * 2) + "px";
+      spotlightEl.style.height = (targetHeight + pad * 2) + "px";
+      spotlightEl.style.borderRadius = window.getComputedStyle(targetEl).borderRadius || "8px";
+
+      // Tooltip position: below the spotlight area
+      let tooltipTop = rect.top + scrollY + targetHeight + 12;
+      let tooltipLeft = rect.left + scrollX + (rect.width - 320) / 2;
+
+      // Constraints
+      if (tooltipLeft < 10) tooltipLeft = 10;
+      if (tooltipLeft + 330 > window.innerWidth) tooltipLeft = window.innerWidth - 330;
+
+      // Flip on top of the target if it would overflow bottom viewport
+      if (rect.top + targetHeight + 260 > window.innerHeight && rect.top > 300) {
+        tooltipTop = rect.top + scrollY - 240;
+      }
+
+      tooltipEl.style.top = tooltipTop + "px";
+      tooltipEl.style.left = tooltipLeft + "px";
+      tooltipEl.classList.add("show");
+    }, 200);
+  }
+
+  // Handle window resizing
+  window.addEventListener("resize", () => {
+    if (overlayEl && overlayEl.classList.contains("show")) {
+      const step = steps[currentStep];
+      let targetEl = null;
+      if (typeof step.target === "function") {
+        targetEl = step.target();
+      } else if (typeof step.target === "string") {
+        targetEl = document.querySelector(step.target);
+        if (!targetEl && step.fallbackTarget) {
+          targetEl = document.querySelector(step.fallbackTarget);
+        }
+      }
+      positionSpotlight(targetEl, step.isImageStep);
+    }
+  });
+
+  window.IQB = window.IQB || {};
+  window.IQB.tour = { start: startTour, init: initTour };
+})();

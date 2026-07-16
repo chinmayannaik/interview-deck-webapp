@@ -49,6 +49,21 @@
   const labelOf = (k) =>
     (CATEGORIES.find((c) => c.key === k) || GROUPS.find((g) => g.key === k) || { label: k }).label;
 
+  /* Tech mark for a category, tinted with that category's manifest colour.
+     Groups ("Frontend", "Backend") and "all" get none — they're not a technology,
+     and a logo per group would just be decoration. Unknown ids still render:
+     IQB.icons falls back to a default mark, so a category added to the manifest
+     later needs no change here. */
+  const catIcon = (key) => {
+    if (key === "all" || isGroup(key) || !window.IQB.icons) return null;
+    // --ic rather than `color` directly: an active subchip paints that same accent
+    // as its background, and a plain custom property lets the CSS there re-tint the
+    // mark without having to out-specify an inline style.
+    return el("span", {
+      class: "cat-ic", html: IQB.icons.svg(key), style: `--ic: ${colorOf(key)}`
+    });
+  };
+
   /* ---- flatten all questions into one searchable index ---- */
   const ALL = [];
   CATEGORIES.forEach((c) => {
@@ -86,6 +101,7 @@
     uncompletedOnly: false,
     hasNoteOnly: false,
     hasHighlightOnly: false,
+    hasVideoOnly: false,
     practice: false
   };
   let bookmarks = store.getBookmarks();
@@ -201,7 +217,10 @@
         class: "side-link side-sub" + (key === catKey ? " active" : ""),
         "data-cat": catKey, style: `--side-c: ${colorOf(catKey)}`,
         onclick: () => setCategory(catKey, true)
-      }, [el("span", { text: labelOf(catKey) }), el("span", { class: "s-count", text: String(n) })]));
+      }, [
+        el("span", { class: "side-link-label" }, [catIcon(catKey), el("span", { text: labelOf(catKey) })]),
+        el("span", { class: "s-count", text: String(n) })
+      ]));
     });
   }
 
@@ -227,7 +246,7 @@
         class: "subchip" + (key === catKey ? " active" : ""),
         "data-cat": catKey, style: `--sc: ${colorOf(catKey)}`,
         onclick: () => setCategory(catKey, true)
-      }, [document.createTextNode(labelOf(catKey)), el("span", { class: "subchip-n", text: String(n) })]));
+      }, [catIcon(catKey), document.createTextNode(labelOf(catKey)), el("span", { class: "subchip-n", text: String(n) })]));
     });
 
     const active = qs(".subchip.active", subnavEl);
@@ -254,6 +273,7 @@
     qsa("[data-diff]", diffEl).forEach((b) =>
       b.classList.toggle("active", b.dataset.diff === state.difficulty));
     if (mDiffEl) mDiffEl.value = state.difficulty;
+    if (window.IQB.select) IQB.select.syncAll();
   }
   function setDifficulty(k) { state.difficulty = k; syncFilterChips(); render(); }
 
@@ -280,6 +300,16 @@
 
     // topic (options rebuilt per active group in renderMobileTopic)
     mTopicEl.addEventListener("change", () => setCategory(mTopicEl.value, true));
+
+    /* Swap the native <option> popups for the styled combobox (js/select.js).
+       These selects stay the model; only the popup changes. Passing catIcon in
+       means the topic list marks its categories and skips groups by the very
+       same rule the sidebar uses. */
+    if (window.IQB.select) {
+      IQB.select.enhance(mCatEl);                    // sections are groups — no marks
+      IQB.select.enhance(mTopicEl, { icon: catIcon });
+      IQB.select.enhance(mDiffEl);
+    }
   }
 
   function renderMobileTopic(key) {
@@ -315,6 +345,8 @@
     // keep the mobile dropdowns in sync
     if (mCatEl) mCatEl.value = parentGroup;
     renderMobileTopic(key);
+    // assigning .value fires no event, so the styled buttons have to be told
+    if (window.IQB.select) IQB.select.syncAll();
 
     if (updateHash) history.replaceState(null, "", "#" + key);
     const activeTab = qs(".tab.active", tabsEl);
@@ -342,6 +374,7 @@
         const hl = store.getHL(item.id);
         if (!(hl && hl.ranges && hl.ranges.length)) return false;
       }
+      if (state.hasVideoOnly && !(item.youtube && item.youtube.trim())) return false;
       if (q && !item._search.includes(q)) return false;
       return true;
     });
@@ -353,6 +386,8 @@
     renderState.shown = 0;
 
     titleEl.innerHTML = "";
+    const titleIc = catIcon(state.category);
+    if (titleIc) titleEl.appendChild(titleIc);
     titleEl.appendChild(document.createTextNode(state.category === "all" ? "All Questions" : labelOf(state.category)));
     titleEl.appendChild(el("small", { text: items.length + (items.length === 1 ? " question" : " questions") }));
 
@@ -548,6 +583,13 @@
       markOpened(card.dataset.id);
       if (window.IQB.notes) IQB.notes.onCardOpen(card.dataset.id);
       if (window.IQB.highlights) IQB.highlights.onCardOpen(card.dataset.id);
+    } else {
+      // Closing drops the answer's height, so everything below it slides up while
+      // the scroll offset stays put — the reader ends up staring at some unrelated
+      // question further down the list. Pull the card we just closed back into view.
+      // block:"nearest" is a no-op when it is already fully visible, and the easing
+      // is left to html{scroll-behavior} so reduced-motion users still get a jump.
+      card.scrollIntoView({ block: "nearest" });
     }
   }
 
@@ -607,7 +649,7 @@
     });
     return { totalCompleted: progress.size, totalQuestions: ALL.length, groups: groups };
   }
-  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary };
+  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, setCategory: setCategory };
   function updateProgressBar() {
     const fill = qs("#progress-fill", sideEl);
     const label = qs("#progress-label", sideEl);
@@ -797,11 +839,20 @@
       e.currentTarget.classList.toggle("on", state.hasHighlightOnly);
       render();
     });
+    on("#video-filter", "click", (e) => {
+      state.hasVideoOnly = !state.hasVideoOnly;
+      e.currentTarget.classList.toggle("on", state.hasVideoOnly);
+      render();
+    });
     on("#practice-toggle", "click", (e) => {
       state.practice = !state.practice;
       listEl.classList.toggle("practice", state.practice);
       e.currentTarget.classList.toggle("on", state.practice);
-      toast(state.practice ? "Practice mode on — answers hidden" : "Practice mode off");
+      toast(
+        state.practice
+          ? "Practice mode on — answers hidden"
+          : "Practice mode off",
+      );
     });
     const importInput = qs("#import-file");
     on("#import-btn", "click", () => importInput && importInput.click());
@@ -831,6 +882,9 @@
     initScrollToTop();
     initCollapsibleHeader();
     initReadingMode();
+    if (window.IQB.tour && typeof window.IQB.tour.init === "function") {
+      window.IQB.tour.init();
+    }
   }
 
   function initReadingMode() {
@@ -852,8 +906,15 @@
     const shell = qs("#header-shell");
     if (!shell) return;
 
-    const threshold = 100;
-    const releaseThreshold = 70;
+    /* The shell is sticky but still in normal flow, so collapsing it pulls the
+       whole page up by the height of the tabs strip (~57px). These two marks must
+       therefore stay further apart than that strip is tall — otherwise the layout
+       shift the collapse itself causes is enough to push the scroll position back
+       over the other mark, and the header flip-flops. Releasing only near the very
+       top also puts the re-expand where its shift reads as the tabs sliding back
+       in, rather than as the page lurching under the reader. */
+    const threshold = 140;
+    const releaseThreshold = 24;
     let lastScrollY = window.scrollY;
     let ticking = false;
     let collapsed = false;

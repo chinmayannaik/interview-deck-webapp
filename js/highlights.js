@@ -473,12 +473,17 @@
       document.body.appendChild(m);
       return m;
     }
-    // ring every <mark> that belongs to the same highlight so the user sees the
-    // exact span the toolbar will act on
+    // Ring every <mark> that belongs to the same highlight so the user sees the
+    // exact span the toolbar will act on. data-hl-id is only an index into the
+    // owning card's ranges, so it repeats across cards ("0" is every card's first
+    // highlight) — the query MUST stay inside the mark's own region root or it
+    // rings the same-numbered highlight in every other question too. Matching on
+    // [data-hl-region] covers every root makeController registers, so a new region
+    // can't silently fall through to a document-wide scope again.
     function setActive(mark, on) {
-      const root = mark.closest(".answer, .qa-deep");
-      const scope = root || document;
-      scope.querySelectorAll('mark.hl[data-hl-id="' + mark.dataset.hlId + '"]')
+      const root = mark.closest("[data-hl-region]");
+      if (!root) { mark.classList.toggle("hl-editing", on); return; }
+      root.querySelectorAll('mark.hl[data-hl-id="' + mark.dataset.hlId + '"]')
         .forEach(function (m) { m.classList.toggle("hl-editing", on); });
     }
     function clearActive() {
