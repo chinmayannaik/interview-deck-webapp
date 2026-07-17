@@ -512,7 +512,6 @@
           el("span", { class: "pg-lang", text: "JS" }),
           document.createTextNode("Playground")
         ]),
-        el("p", { class: "pg-sub", text: "Runs in your browser — nothing is sent anywhere." }),
         el("div", { class: "pg-bar-actions" }, [
           el("button", {
             class: "tool", type: "button", title: "Restore the starter snippet",
