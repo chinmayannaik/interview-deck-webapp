@@ -26,13 +26,15 @@
   /* The splash must never be the reason someone stares at a frozen screen, so
      every exit path is time-boxed:
        MIN_MS  — a warm/service-worker load can finish in ~50ms, and a splash
-                 that flashes for one frame reads as a glitch. Hold it briefly
-                 so the reveal looks deliberate.
+                 that flashes for one frame reads as a glitch. Hold it so the
+                 illustration is actually seen and the reveal looks deliberate,
+                 however fast the network was. This is a FLOOR, not a delay: a
+                 slow load already exceeds it and waits on nothing extra.
        MAX_MS  — if the data never resolves and nothing calls done() or fail()
                  (a hung connection rather than a rejected fetch), tear the
                  splash down anyway and let the app show its own empty/error
                  state. Being stuck behind a splash forever is strictly worse. */
-  const MIN_MS = 700;
+  const MIN_MS = 2000;
   const MAX_MS = 12000;
 
   const t0 = Date.now();

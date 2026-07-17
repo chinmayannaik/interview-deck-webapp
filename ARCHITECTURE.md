@@ -413,6 +413,31 @@ Suggested Firestore doc:
   "streak": 5, "premium": false, "updatedAt": 1720860000000 }
 ```
 
+### Last selected view (`lastTab`)
+
+The reader's `users/{uid}` doc carries `lastTab` alongside `progress`/`bookmarks`,
+so signing in on a new device lands them where they left off. **One field covers
+both levels of the selection**: `state.category` holds *either* a group key
+(`"frontend"`) or a category key (`"angular"`), and a category already implies
+its parent group — `setCategory` derives the lit tab via `groupOf(key)`.
+
+Unlike progress/bookmarks there is nothing to union: a view is a single choice,
+so the **cloud copy wins** on sign-in — that IS the feature. Two rules keep it
+from being obnoxious:
+
+- **Restore fires once**, in `subscribe()`, never from the `onSnapshot` echo —
+  otherwise switching tabs on a laptop would rip the phone away from whatever is
+  being read on it.
+- **`app.js` declines the restore** if the reader has already chosen a view this
+  session (`viewPinned`: any `setCategory(key, /*updateHash*/ true)`, or a hash
+  in the URL). A shared `#q=…` link is the most explicit intent there is and
+  always outranks the saved view. An unknown key (a category deleted since the
+  profile was written) is refused rather than rendering an empty list.
+
+`iqb:lastTab` remains the device-local mirror, so the view also persists signed
+out, and it is deliberately **not** wiped on sign-out (it's a device preference,
+like theme and the pen — see `storage.clearUserData`).
+
 ### Per-question user state (notes + highlights)
 
 Progress/bookmarks are small id-sets that fit in the single `users/{uid}` doc.
@@ -454,6 +479,80 @@ match /users/{uid} {
   match /{document=**} {                       // notes/, highlights/, …
     allow read, write: if request.auth.uid == uid;
   }
+}
+```
+
+### Issue reports (`/reports`) — the one collection that is *not* per-user
+
+Notes and highlights share one property: the author is the only reader, so
+`users/{uid}/…` (and `IQB.cloud`) expresses them perfectly. An **issue report**
+inverts it — a reader writes a document that only a *moderator* may read — so it
+cannot live in the reporter's own subtree. It goes in a top-level `/reports`
+collection, reached through a second, deliberately separate gateway:
+**`IQB.shared`** (`js/sync.js`: `add` / `list` / `update` / `remove` / `now`).
+`IQB.cloud` stays untouched and per-user; nothing about notes/highlights changed.
+
+`js/reports.js` is the only consumer. One entry point: **"Report Issue"** in each
+card's action row.
+
+**Selection is captured passively** (`SelectionMemory`). If the reader had text
+selected inside that card's `.qa-qtext` / `.answer` / `.qa-deep`, the dialog
+quotes it so the admin sees the exact wrong sentence, and offers "✕ Report whole
+question" to drop it. Nothing renders while they read: an earlier build floated a
+"Report Selected Text" button over every selection, which put a button in the
+reader's face every time they dragged across a line — reporting is rare, reading
+is the product. Capture happens on pointer/key *release*, not at click time,
+because pressing any button collapses the selection first. A drag spanning two
+regions is ignored rather than half-stored.
+
+Document shape (`/reports/{autoId}`):
+```json
+{ "questionId": "angular-data-binding", "questionText": "…", "category": "angular",
+  "reason": "incorrect-answer", "selectedText": "Angular uses controllers.",
+  "region": "answer", "comment": "This refers to AngularJS, not Angular.",
+  "reportedBy": "userId", "reporterEmail": "…", "reporterName": "…",
+  "status": "open", "createdAt": "<serverTimestamp>" }
+```
+`createdAt` is a **server** timestamp: a client clock must not decide report
+ordering. There is **no local mirror** — unlike a note, a report is a message to
+someone else, and queuing one offline would tell the reader it was filed when
+nobody can see it. Submitting requires sign-in (the dialog offers the button
+in place via `IQB.sync.signIn`).
+
+Both panels are the same component (`Panel`, opened with a mode), reached from
+the account dropdown:
+
+- **"My reported issues"** — every signed-in reader. Their own reports only,
+  read-only, with status, so a report doesn't vanish into a void: they can see it
+  was received and whether it's been fixed. Queried with `listWhere("reportedBy",
+  uid)` and sorted client-side — pairing an equality filter with `orderBy` on
+  another field would make Firestore demand a composite index, i.e. a console
+  step before the first reader could see anything.
+- **"Issue reports"** — allowlisted accounts only. Every report, plus
+  reporter identity, resolve/reopen and delete.
+
+Both offer Open/Resolved/All filters and jump-to-question.
+
+**Security rules — `ADMIN_EMAILS` in `js/sync.js` decides nothing.** It only
+controls whether the UI *offers* the admin panel; anyone can edit their own JS.
+The rule below is the actual gate, and its email list must be kept in step:
+```
+match /reports/{id} {
+  function isAdmin() {
+    return request.auth != null && request.auth.token.email in [
+      'chinmayanaik920@gmail.com',
+      'chinmayannaik@gmail.com'
+    ];
+  }
+  // any signed-in reader may file one, but only as themselves
+  allow create: if request.auth != null
+                && request.resource.data.reportedBy == request.auth.uid;
+  // a reader may read back their OWN reports ("My reported issues");
+  // an admin may read every report
+  allow read: if isAdmin()
+              || (request.auth != null && resource.data.reportedBy == request.auth.uid);
+  // triage is admin-only — a reader must not be able to close their own report
+  allow update, delete: if isAdmin();
 }
 ```
 

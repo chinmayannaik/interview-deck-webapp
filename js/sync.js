@@ -24,6 +24,11 @@
   const CONFIGURED = !!firebaseConfig.apiKey && firebaseConfig.apiKey.indexOf("PASTE") === -1;
   const PROMPT_KEY = "iqb:loginPromptDismissed";
 
+  /* Accounts allowed into the admin Reports panel. This list only decides what
+     the UI offers — the real gate is the Firestore rule on /reports, which must
+     carry the same emails. Editing this alone grants nobody anything. */
+  const ADMIN_EMAILS = ["chinmayanaik920@gmail.com", "chinmayannaik@gmail.com"];
+
   const btn = document.getElementById("auth-btn");
   if (!CONFIGURED) return; // dormant: app stays local-only
 
@@ -41,7 +46,9 @@
     setButton("signed-out");
     btn.addEventListener("click", onButtonClick);
   }
-  IQB.sync = { pushSoon: pushSoon, maybeShowPrompt: maybeShowPrompt };
+  /* signIn is exposed so a feature that requires an account can offer the button
+     in place (js/reports.js) instead of sending the reader up to the header. */
+  IQB.sync = { pushSoon: pushSoon, maybeShowPrompt: maybeShowPrompt, signIn: signIn };
 
   /* ============================================================
      IQB.cloud — generic per-question user-state layer.
@@ -58,6 +65,12 @@
   IQB.cloud = {
     isSignedIn: function () { return !!user; },
     getUser: function () { return user; },
+
+    /* Is the signed-in account allowed to moderate (see js/reports.js)? UI-level
+       only — Firestore rules are what actually protect the data. */
+    isAdmin: function () {
+      return !!(user && ADMIN_EMAILS.indexOf(String(user.email || "").toLowerCase()) !== -1);
+    },
 
     /* Register cb(user|null); fires immediately with the current user when
        Firebase is already up, and again on every sign-in/sign-out. Returns an
@@ -113,6 +126,69 @@
     }
   };
 
+  /* ============================================================
+     IQB.shared — top-level collections that are NOT scoped to one user.
+
+     IQB.cloud above can only ever address users/{uid}/…, which is the right
+     shape for notes and highlights: the author is the only reader. Issue
+     reports invert that — a reader writes a document that only a moderator
+     may read — so they need a collection outside the user's own subtree
+     (/reports/{autoId}). Who may read or write which collection is decided by
+     Firestore rules, never here; these methods just surface the failure.
+     ============================================================ */
+  IQB.shared = {
+    isReady: function () { return !!fb; },
+    ready: function () { return fbReady; },
+
+    /* Append a document with a generated id. Returns the new id. */
+    add: async function (name, data) {
+      await fbReady;
+      const ref = await fb.addDoc(fb.collection(fb.db, name), data);
+      return ref.id;
+    },
+
+    /* Every document in a collection as [{ id, ...data }], newest field first
+       when orderField is given. Rejects (permission-denied) for non-admins —
+       callers surface that rather than silently showing an empty list. */
+    list: async function (name, orderField) {
+      await fbReady;
+      const col = fb.collection(fb.db, name);
+      const q = orderField ? fb.query(col, fb.orderBy(orderField, "desc")) : col;
+      const snap = await fb.getDocs(q);
+      const out = [];
+      snap.forEach(function (d) { out.push(Object.assign({ id: d.id }, d.data())); });
+      return out;
+    },
+
+    /* Every document in a collection whose `field` equals `value`, as
+       [{ id, ...data }]. Sorting is left to the caller ON PURPOSE: pairing an
+       equality filter with orderBy on a different field makes Firestore demand a
+       composite index, which would mean a console step before the first reader
+       could see their own reports. A single-field filter needs no setup, and the
+       result set here is one person's reports — cheap to sort in memory. */
+    listWhere: async function (name, field, value) {
+      await fbReady;
+      const snap = await fb.getDocs(fb.query(fb.collection(fb.db, name), fb.where(field, "==", value)));
+      const out = [];
+      snap.forEach(function (d) { out.push(Object.assign({ id: d.id }, d.data())); });
+      return out;
+    },
+
+    update: async function (name, id, patch) {
+      await fbReady;
+      await fb.updateDoc(fb.doc(fb.db, name, id), patch);
+    },
+
+    remove: async function (name, id) {
+      await fbReady;
+      await fb.deleteDoc(fb.doc(fb.db, name, id));
+    },
+
+    /* Server-authoritative timestamp — a client clock must not decide report
+       ordering, and reportedAt is shown to a moderator as fact. */
+    now: function () { return fb ? fb.serverTimestamp() : new Date(); }
+  };
+
   // close the account menu on outside click / Escape
   document.addEventListener("click", function (e) {
     if (menuEl && !menuEl.hidden && !menuEl.contains(e.target) && e.target !== btn && !btn.contains(e.target)) closeMenu();
@@ -142,7 +218,10 @@
       onAuthStateChanged: authMod.onAuthStateChanged,
       db: fsMod.getFirestore(appInst),
       doc: fsMod.doc, getDoc: fsMod.getDoc, setDoc: fsMod.setDoc, onSnapshot: fsMod.onSnapshot,
-      collection: fsMod.collection, getDocs: fsMod.getDocs, deleteDoc: fsMod.deleteDoc
+      collection: fsMod.collection, getDocs: fsMod.getDocs, deleteDoc: fsMod.deleteDoc,
+      addDoc: fsMod.addDoc, updateDoc: fsMod.updateDoc,
+      query: fsMod.query, orderBy: fsMod.orderBy, where: fsMod.where,
+      serverTimestamp: fsMod.serverTimestamp
     };
   }
 
@@ -305,11 +384,21 @@
         '<div class="auth-total"><span>Total completed</span><strong id="auth-total-n">0</strong></div>' +
         '<div class="auth-rows" id="auth-rows"></div>' +
       '</div>' +
+      '<button class="auth-link" id="auth-myreports" type="button" hidden>My reported issues</button>' +
+      '<button class="auth-link auth-admin" id="auth-admin" type="button" hidden>Issue reports</button>' +
       '<button class="auth-signout" id="auth-signout" type="button">⏻ Sign out</button>';
     document.body.appendChild(m);
     m.querySelector("#auth-signout").addEventListener("click", function () {
       closeMenu();
       if (fb) fb.signOut(fb.auth);
+    });
+    m.querySelector("#auth-myreports").addEventListener("click", function () {
+      closeMenu();
+      if (window.IQB.reports) IQB.reports.openMine();
+    });
+    m.querySelector("#auth-admin").addEventListener("click", function () {
+      closeMenu();
+      if (window.IQB.reports) IQB.reports.openAdmin();
     });
     return m;
   }
@@ -326,6 +415,13 @@
     }
     menuEl.querySelector("#auth-name").textContent = user.displayName || "Signed in";
     menuEl.querySelector("#auth-email").textContent = user.email || "";
+
+    // Anyone signed in can track the reports they filed; only an allowlisted
+    // account gets the moderation queue.
+    const mineBtn = menuEl.querySelector("#auth-myreports");
+    if (mineBtn) mineBtn.hidden = !window.IQB.reports;
+    const adminBtn = menuEl.querySelector("#auth-admin");
+    if (adminBtn) adminBtn.hidden = !(IQB.cloud.isAdmin() && window.IQB.reports);
 
     const sum = (IQB.app && IQB.app.getProgressSummary) ? IQB.app.getProgressSummary() : { totalCompleted: 0, groups: [] };
     menuEl.querySelector("#auth-total-n").textContent = String(sum.totalCompleted);
@@ -367,7 +463,7 @@
     p.innerHTML =
       '<button class="lp-close" id="lp-close" type="button" aria-label="Dismiss">✕</button>' +
       '<div class="lp-title">Save your progress</div>' +
-      '<div class="lp-text">Sign in with Google to sync your completed questions and bookmarks across all your devices. It’s optional — you can keep using the site without it.</div>' +
+      '<div class="lp-text">Sign in with Google to sync your completed questions and bookmarks across all your devices. It’s optional, you can keep using the site without it.</div>' +
       '<div class="lp-actions">' +
         '<button class="lp-signin" id="lp-signin" type="button">Sign in with Google</button>' +
         '<button class="lp-later" id="lp-later" type="button">Not now</button>' +
@@ -400,8 +496,21 @@
         bookmarks: union(local.bookmarks, remote.bookmarks),
         updatedAt: Date.now()
       };
+      /* The last selected view is a single choice, not a set — there is nothing
+         to union. The cloud copy wins because that IS the feature: pick Angular
+         on the laptop, sign in on the phone, land on Angular. Falls back to this
+         device's view for a profile written before this field existed. */
+      const view = remote.lastTab || local.lastTab;
+      if (view) merged.lastTab = view;
+
       IQB.app.setData(merged);
       await fb.setDoc(ref, merged, { merge: true });
+
+      /* Once, here — deliberately NOT in the onSnapshot below. Restoring on every
+         snapshot would mean a tab switch on another device yanks this one away
+         from whatever the reader is currently reading. app.js declines if they
+         have already picked a view this session (see restoreView). */
+      if (remote.lastTab && IQB.app.restoreView) IQB.app.restoreView(remote.lastTab);
     } catch (e) { console.warn("[sync] initial merge failed:", e); }
 
     unsub = fb.onSnapshot(ref, function (snap) {
@@ -421,9 +530,11 @@
   function push() {
     if (!user || !fb) return;
     const data = IQB.app.getData();
-    fb.setDoc(docRef(user.uid), {
-      progress: data.progress, bookmarks: data.bookmarks, updatedAt: Date.now()
-    }, { merge: true }).catch(function (e) { console.warn("[sync] push failed:", e); });
+    const payload = { progress: data.progress, bookmarks: data.bookmarks, updatedAt: Date.now() };
+    // Firestore rejects an explicit undefined, so only send a view we actually have.
+    if (data.lastTab) payload.lastTab = data.lastTab;
+    fb.setDoc(docRef(user.uid), payload, { merge: true })
+      .catch(function (e) { console.warn("[sync] push failed:", e); });
   }
 
   /* ---------- helpers ---------- */

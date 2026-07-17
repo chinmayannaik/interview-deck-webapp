@@ -12,7 +12,16 @@
 
   const starOnSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
   const starOffSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
-  const doneOffHtml = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg>Mark as done';
+  /* The card's action row runs out of width on a phone (three labelled buttons
+     need ~336px of a 313px row), so each label carries a short form for narrow
+     screens — .qa-act-long/.qa-act-short swap, .qa-act-word simply drops. Only
+     one of the pair is ever rendered, so screen readers still read one label.
+
+     .qa-act is inline-flex, so every child is a flex item and picks up the 6px
+     gap: a bare "Copy" + <span> link</span> renders as "Copy  link". Any label
+     split across elements must therefore sit inside ONE .qa-act-label wrapper.
+     The long/short pair is exempt — display:none removes the loser entirely. */
+  const doneOffHtml = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/></svg><span class="qa-act-long">Mark as done</span><span class="qa-act-short">Done</span>';
   const doneOnHtml = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>Completed';
 
   /* ---- category + group config, derived ENTIRELY from the content manifest ----
@@ -120,6 +129,12 @@
     hasVideoOnly: false,
     practice: false
   };
+
+  /* True once the reader has expressed an explicit choice this session — opened
+     a link carrying a hash, or picked a tab/category themselves. The cloud view
+     restore (js/sync.js) checks this: signing in must never yank someone out of
+     the view they are already reading. Boot's own setCategory doesn't pin. */
+  let viewPinned = false;
   let bookmarks = store.getBookmarks();
   let progress = store.getProgress();
 
@@ -393,7 +408,13 @@
 
   function setCategory(key, updateHash) {
     state.category = key;
-    store.setLastTab(key);
+    store.setLastTab(key);          // device-local; survives signed-out too
+    /* updateHash is only ever true when the reader themselves picked this view
+       (a tab, a sidebar category, a dropdown) — boot and the cloud restore pass
+       false. So it doubles as "this was a deliberate choice". */
+    if (updateHash) viewPinned = true;
+    // mirror the choice into the reader's cloud profile (no-op when signed out)
+    if (window.IQB.sync && IQB.sync.pushSoon) IQB.sync.pushSoon();
 
     if (key === PLAYGROUND) {
       qsa(".tab", tabsEl).forEach((t) => t.classList.toggle("active", t.dataset.cat === PLAYGROUND));
@@ -613,17 +634,21 @@
 
     const doneBtn = el("button", {
       class: "qa-act" + (progress.has(q.id) ? " on" : ""),
+      /* explicit, so the accessible name stays whole where the visible label
+         shortens to "Done" on a phone */
+      "aria-label": progress.has(q.id) ? "Completed" : "Mark as done",
       onclick: (e) => { e.stopPropagation(); toggleDone(q.id, doneBtn, card); }
     });
     doneBtn.innerHTML = progress.has(q.id) ? doneOnHtml : doneOffHtml;
 
     const linkBtn = el("button", {
-      class: "qa-act",
+      class: "qa-act", "aria-label": "Copy link",
       onclick: (e) => { e.stopPropagation(); copyText(location.origin + location.pathname + "#q=" + q.id, e.currentTarget, "Link copied"); }
     });
-    linkBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>Copy link';
+    linkBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="qa-act-label">Copy<span class="qa-act-word">&nbsp;link</span></span>';
 
     const actions = [doneBtn, linkBtn];
+    if (window.IQB.reports) actions.push(IQB.reports.build(card));
     if (q.youtube && q.youtube.trim()) {
       const ytBtn = el("a", {
         class: "qa-act",
@@ -686,8 +711,8 @@
   }
   function toggleDone(id, btn, card) {
     const isCompleted = !progress.has(id);
-    if (progress.has(id)) { progress.delete(id); btn.classList.remove("on"); btn.innerHTML = doneOffHtml; card.classList.remove("done"); }
-    else { progress.add(id); btn.classList.add("on"); btn.innerHTML = doneOnHtml; card.classList.add("done"); }
+    if (progress.has(id)) { progress.delete(id); btn.classList.remove("on"); btn.innerHTML = doneOffHtml; btn.setAttribute("aria-label", "Mark as done"); card.classList.remove("done"); }
+    else { progress.add(id); btn.classList.add("on"); btn.innerHTML = doneOnHtml; btn.setAttribute("aria-label", "Completed"); card.classList.add("done"); }
     store.saveProgress(progress);
     syncPush();
     updateProgressBar();
@@ -701,7 +726,24 @@
   /* ---- bridge for the optional cloud-sync module (js/sync.js) ---- */
   function syncPush() { if (window.IQB.sync) window.IQB.sync.pushSoon(); }
   function getSyncData() {
-    return { progress: Array.from(progress), bookmarks: Array.from(bookmarks) };
+    /* lastTab carries BOTH levels of the reader's selection: it holds either a
+       group key ("frontend") or a category key ("angular"), and a category
+       already implies its parent group (see the parentGroup lookup in
+       setCategory) — so one field restores the tab and the category together. */
+    return { progress: Array.from(progress), bookmarks: Array.from(bookmarks), lastTab: state.category };
+  }
+
+  /* Apply the view saved in the reader's cloud profile. js/sync.js calls this
+     once, when sign-in resolves — never on later snapshots, or a change made on
+     another device would rip this one out from under the reader mid-sentence.
+     Declines when they've already chosen a view this session. */
+  function restoreView(key) {
+    if (viewPinned) return "declined: reader already chose a view";
+    if (!key || key === state.category) return "no-op";
+    const valid = isGroup(key) || key === PLAYGROUND || CATEGORIES.some((c) => c.key === key);
+    if (!valid) return "declined: unknown view " + key;   // stale key from an older content version
+    setCategory(key, false);
+    return "restored " + key;
   }
   function setSyncData(data) {
     // Cloud sync pushes this several times during sign-in (initial merge, then
@@ -730,7 +772,7 @@
     });
     return { totalCompleted: progress.size, totalQuestions: ALL.length, groups: groups };
   }
-  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, setCategory: setCategory, copyText: copyText };
+  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, setCategory: setCategory, restoreView: restoreView, copyText: copyText };
   function updateProgressBar() {
     const fill = qs("#progress-fill", sideEl);
     const label = qs("#progress-label", sideEl);
@@ -824,6 +866,9 @@
   function parseHash() {
     const h = decodeURIComponent(location.hash.replace(/^#/, ""));
     if (!h) return;
+    /* A shared link is the most explicit intent there is — it outranks whatever
+       view the reader's profile last saved. */
+    viewPinned = true;
     if (h === PLAYGROUND) { setCategory(PLAYGROUND, false); return; }
     if (h.startsWith("q=")) { openQuestion(h.slice(2), true); return; }
     if (isGroup(h) || CATEGORIES.some((c) => c.key === h)) setCategory(h, false);

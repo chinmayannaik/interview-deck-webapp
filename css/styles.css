@@ -200,6 +200,17 @@ html { overflow-anchor: none; }
 .auth-bar { height: 6px; border-radius: 100px; background: var(--surface-3); overflow: hidden; }
 .auth-bar-fill { height: 100%; border-radius: 100px; transition: width .4s ease; }
 
+/* entries into the reports panels (js/reports.js) — "My reported issues" for
+   any signed-in reader, "Issue reports" for an allowlisted admin */
+.auth-link {
+  width: 100%; padding: 13px; border: none; border-top: 1px solid var(--border);
+  background: none; color: var(--ink); font-weight: 700; font-size: var(--step--1);
+  text-align: left;
+  cursor: pointer; transition: var(--trans);
+}
+.auth-link:hover { background: var(--surface-2); color: var(--accent); }
+.auth-link[hidden] { display: none; }
+
 .auth-signout {
   width: 100%; padding: 13px; border: none; border-top: 1px solid var(--border);
   background: none; color: var(--advanced); font-weight: 700; font-size: var(--step--1);
@@ -721,6 +732,15 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 .qa-question :is(code, .inline) { font-family: var(--mono); font-size: .82em; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; border: 1px solid var(--border); color: var(--accent-ink); }
 .qa-foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .qa-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Tags earn their place in the list, where they help you scan; once a card is
+   open you've already chosen the question and they're just a line between it and
+   the answer. So they go on open cards — every width, reading mode or not.
+
+   The whole foot goes, not only .qa-tags: the +/✕ toggle shares that row and
+   holds it at full height, so hiding the tags alone would reclaim 0px. Nothing
+   becomes unreachable — .qa-head is itself the click target that closes the
+   card, and an open card is self-evident from its answer being visible. */
+.qa-card.open .qa-foot { display: none; }
 .qa-tag { font-family: var(--mono); font-size: 11px; color: var(--muted); }
 .qa-tag::before { content: "#"; opacity: .55; }
 /* "V.Imp" flag — a high-priority marker that stands out from ordinary #tags */
@@ -1008,6 +1028,8 @@ mark.hl-underline {
 .qa-body-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; user-select: none; -webkit-user-select: none; }
 .qa-act { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: var(--step--1); padding: 6px 11px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans); }
 .qa-act:hover { border-color: var(--accent); color: var(--accent); }
+/* Responsive labels — the short form only exists below 560px (see that block). */
+.qa-act-short { display: none; }
 .qa-act.on { background: var(--beginner-soft); border-color: var(--beginner); color: var(--beginner); }
 
 /* practice mode: hide answers behind a reveal */
@@ -1265,6 +1287,32 @@ mark.hl-underline {
   .hero-stats { gap: 18px; }
   /* .content-tools now goes full-width and scrolls from 900px down */
   .qa-question { font-size: var(--step-0); }
+  /* The card's action row doesn't fit a phone: three labelled buttons wanted
+     ~336px of a 313px row and spilled onto a second line. Shorten the labels
+     ("Mark as done"→"Done", "Copy link"→"Copy", "Report Issue"→"Report") and
+     trim the horizontal padding, which together bring it to ~255px — one line
+     with room to spare. Icons and full desktop labels are untouched, and each
+     button keeps an aria-label so the accessible name never shortens. */
+  .qa-act-long { display: none; }
+  .qa-act-short { display: inline; }
+  .qa-act-word { display: none; }
+  /* Tags are dropped outright on a phone: they wrap to their own line under
+     every question and cost more room than they earn at this width. The row
+     itself stays for the +/✕ expand hint, so this trades noise rather than
+     height — open cards drop the whole row anyway (see .qa-card.open .qa-foot).
+     NOTE this takes the ★ V.IMP marker with them — see .qa-tag.vimp. */
+  .qa-tags { display: none; }
+
+  /* The number medallion's gutter costs 50px (36px column + 14px gap) of a
+     ~343px card, squeezing the question into what's left. Shrink both together:
+     the column width and .qa-qnum are one measurement in two places, and
+     changing only the circle would leave the gutter — and the indent — as-is. */
+  .qa-head.numbered { grid-template-columns: 26px 1fr; column-gap: 10px; }
+  .qa-qnum { width: 26px; height: 26px; font-size: 11px; }
+
+  /* Only horizontal air is trimmed — tap targets stay ~35px tall. */
+  .qa-body-actions { gap: 6px; }
+  .qa-act { padding: 6px 8px; gap: 5px; }
 }
 
 /* ---------- scroll to top button ---------- */
@@ -1464,9 +1512,270 @@ body.tour-active {
   }
 }
 
+/* ============================================================
+   Issue reports (js/reports.js) — the report dialog, the floating
+   "Report Selected Text" button, and the admin triage panel.
+
+   Built entirely from the tokens in variables.css, so dark-theme.css
+   re-themes all of it without a single override here.
+   ============================================================ */
+
+/* the page behind a dialog must not scroll under it */
+body.rp-open { overflow: hidden; }
+
+/* ---------- shared dialog chrome ---------- */
+.rp-overlay, .rp-admin-overlay {
+  position: fixed; inset: 0; z-index: 90;
+  display: grid; place-items: center;
+  padding: 16px;
+  background: color-mix(in srgb, var(--ink) 45%, transparent);
+  backdrop-filter: blur(3px);
+}
+/* display:grid above beats the [hidden] attribute's UA display:none, so without
+   this the overlays would never hide — the same trap .hl-menu fell into. */
+.rp-overlay[hidden], .rp-admin-overlay[hidden] { display: none; }
+.rp-panel, .rp-admin {
+  width: min(520px, 100%);
+  max-height: calc(100vh - 32px);
+  display: flex; flex-direction: column;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg);
+}
+.rp-head, .rp-admin-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 14%, var(--surface)), var(--surface));
+  position: sticky; top: 0; z-index: 1;
+}
+.rp-title { font-size: var(--step-1); font-weight: 800; letter-spacing: -.02em; color: var(--ink); margin: 0; }
+.rp-x {
+  margin-left: auto; flex: 0 0 auto;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--muted); font-size: 13px; line-height: 1; cursor: pointer;
+  transition: var(--trans);
+}
+.rp-x:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- what's being reported ---------- */
+.rp-context { padding: 14px 18px 0; }
+.rp-ctx-q {
+  font-size: var(--step--1); font-weight: 600; color: var(--ink-2);
+  padding: 10px 12px; border-radius: var(--r-sm);
+  background: var(--surface-2); border: 1px solid var(--border);
+  /* a long question would otherwise push the reasons below the fold */
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.rp-ctx-sel { margin-top: 10px; }
+.rp-ctx-sel[hidden] { display: none; }
+.rp-ctx-selhead { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.rp-ctx-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent); font-weight: 700;
+}
+/* drop a stale selection and report the whole question instead */
+.rp-drop {
+  margin-left: auto; padding: 0; border: none; background: none;
+  color: var(--muted); font-size: 11px; font-weight: 600; cursor: pointer;
+  transition: var(--trans);
+}
+.rp-drop:hover { color: var(--accent); }
+.rp-quote {
+  margin: 0; padding: 9px 12px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: var(--accent-soft);
+  color: var(--ink); font-size: var(--step--1); line-height: 1.5;
+  max-height: 7.5em; overflow-y: auto;
+}
+.rp-quote-region {
+  display: block; margin-bottom: 4px;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- reasons ---------- */
+.rp-reasons { padding: 14px 18px 4px; display: flex; flex-direction: column; gap: 2px; }
+.rp-reason {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 10px; border-radius: var(--r-sm);
+  cursor: pointer; transition: var(--trans);
+}
+.rp-reason:hover { background: var(--surface-2); }
+/* Drawn rather than native: the UA radio renders as a solid dark disc against
+   this warm surface, so every option read as already selected. */
+.rp-radio {
+  appearance: none; -webkit-appearance: none;
+  width: 16px; height: 16px; margin: 2px 0 0; flex: 0 0 auto;
+  border: 2px solid var(--border-strong); border-radius: 50%;
+  background: var(--surface);
+  cursor: pointer; transition: var(--trans);
+}
+.rp-radio:hover { border-color: var(--accent); }
+.rp-radio:checked {
+  border-color: var(--accent);
+  /* the dot is painted inside the ring, so only the checked option has a fill */
+  background: radial-gradient(circle at center, var(--accent) 0 4px, var(--surface) 4.5px);
+}
+.rp-radio:focus-visible { outline: none; box-shadow: var(--focus); }
+.rp-reason-text { display: flex; flex-direction: column; gap: 1px; }
+.rp-reason-label { font-size: var(--step-0); color: var(--ink); font-weight: 600; }
+.rp-reason-hint { font-size: var(--step--1); color: var(--muted); }
+
+/* ---------- details ---------- */
+.rp-field { padding: 8px 18px 4px; }
+.rp-label { display: block; margin-bottom: 6px; font-size: var(--step--1); font-weight: 600; color: var(--ink-2); }
+.rp-input {
+  width: 100%; padding: 10px 12px; resize: vertical;
+  border: 1px solid var(--border-strong); border-radius: var(--r-sm);
+  background: var(--surface); color: var(--ink);
+  font-family: var(--sans); font-size: var(--step--1); line-height: 1.5;
+}
+.rp-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+
+/* ---------- actions ---------- */
+.rp-note {
+  margin: 4px 18px 0; padding: 10px 12px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--intermediate) 35%, var(--border));
+  background: var(--intermediate-soft);
+  border-radius: var(--r-sm);
+  font-size: var(--step--1); color: var(--ink-2);
+}
+/* display:flex above beats [hidden]'s UA display:none — without this the note
+   stayed as an empty strip for signed-in readers, and survived signing in. */
+.rp-note[hidden] { display: none; }
+.rp-actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 16px 18px; margin-top: 4px;
+  border-top: 1px solid var(--border);
+  position: sticky; bottom: 0; background: var(--surface);
+}
+.rp-btn {
+  padding: 9px 18px; border-radius: var(--r-pill);
+  border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--ink-2); font-family: var(--sans); font-size: var(--step--1); font-weight: 700;
+  cursor: pointer; transition: var(--trans);
+}
+.rp-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.rp-btn:disabled { opacity: .5; cursor: not-allowed; }
+.rp-primary {
+  background: var(--accent); border-color: var(--accent); color: var(--accent-contrast);
+}
+.rp-primary:hover:not(:disabled) { background: var(--accent-ink); border-color: var(--accent-ink); color: var(--accent-contrast); }
+.rp-danger { color: var(--advanced); }
+.rp-danger:hover:not(:disabled) { border-color: var(--advanced); color: var(--advanced); background: var(--advanced-soft); }
+.rp-sm { padding: 6px 12px; font-size: 11.5px; }
+
+/* ---------- reports panel (admin queue + the reader's own reports) ---------- */
+/* The panel is a fixed head + tabs with a scrolling list, rather than a
+   scrolling panel with sticky bits: the tabs used to be pinned at a hardcoded
+   top:61px, which is only the head's height while the title fits one line. On a
+   phone the title wraps and the tabs then sit over it. Here the list is the only
+   thing that scrolls, so nothing needs to know the head's height. */
+.rp-admin { width: min(760px, 100%); overflow: hidden; }
+.rp-admin-head, .rp-admin-tabs { flex: 0 0 auto; }
+.rp-admin-count {
+  font-family: var(--mono); font-size: 11px; color: var(--muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap;
+}
+.rp-refresh {
+  margin-left: auto; padding: 5px 12px; border-radius: var(--r-pill);
+  border: 1px solid var(--border-strong); background: var(--surface);
+  color: var(--ink-2); font-size: 11.5px; font-weight: 700; cursor: pointer;
+  transition: var(--trans);
+}
+.rp-refresh:hover { border-color: var(--accent); color: var(--accent); }
+.rp-admin-head .rp-x { margin-left: 0; }
+
+.rp-admin-tabs {
+  display: flex; gap: 6px; padding: 12px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.rp-tab {
+  padding: 6px 14px; border-radius: var(--r-pill);
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--muted); font-size: var(--step--1); font-weight: 700; cursor: pointer;
+  transition: var(--trans);
+}
+.rp-tab:hover { color: var(--ink); }
+.rp-tab.on { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+
+.rp-admin-list {
+  flex: 1 1 auto; min-height: 0;      /* min-height:0 or the flex item won't shrink to scroll */
+  overflow-y: auto; overscroll-behavior: contain;
+  padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 12px;
+}
+.rp-empty { padding: 40px 12px; text-align: center; color: var(--muted); font-size: var(--step--1); }
+.rp-empty-hint { margin-top: 8px; font-family: var(--mono); font-size: 11px; color: var(--advanced); }
+.rp-empty-sub { margin-top: 6px; font-size: 11.5px; color: var(--muted); }
+/* the reader's confirmation that a report of theirs was acted on */
+.rp-item-note {
+  padding: 8px 12px; margin-bottom: 10px; border-radius: var(--r-sm);
+  background: var(--beginner-soft); color: var(--beginner);
+  font-size: 11.5px; font-weight: 700;
+}
+
+.rp-item {
+  padding: 14px; border-radius: var(--r-md);
+  border: 1px solid var(--border); background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+/* a resolved report stays legible but stops competing for attention */
+.rp-item.rp-resolved { opacity: .62; }
+.rp-item-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 9px; }
+.rp-badge {
+  padding: 3px 9px; border-radius: var(--r-pill);
+  background: var(--accent-soft); color: var(--accent-ink);
+  font-size: 10.5px; font-weight: 800; letter-spacing: .02em;
+}
+.rp-badge-cat { background: var(--surface-3); color: var(--ink-2); font-family: var(--mono); font-weight: 600; }
+.rp-status {
+  padding: 3px 9px; border-radius: var(--r-pill);
+  font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;
+}
+.rp-status-open { background: var(--intermediate-soft); color: var(--intermediate); }
+.rp-status-resolved { background: var(--beginner-soft); color: var(--beginner); }
+.rp-when { margin-left: auto; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+.rp-item-q { font-size: var(--step-0); font-weight: 700; color: var(--ink); line-height: 1.4; margin-bottom: 8px; }
+.rp-item .rp-quote { margin-bottom: 8px; }
+.rp-item-comment {
+  padding: 9px 12px; border-radius: var(--r-sm);
+  background: var(--surface-2); border: 1px solid var(--border);
+  font-size: var(--step--1); color: var(--ink-2); line-height: 1.5;
+  white-space: pre-wrap; margin-bottom: 8px;
+}
+.rp-item-by { font-family: var(--mono); font-size: 10.5px; color: var(--muted); margin-bottom: 10px; word-break: break-all; }
+.rp-item-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+@media (max-width: 640px) {
+  /* Centred, not pinned to the bottom edge — `align-items: end` here left the
+     panel hanging off the foot of the screen instead of sitting in the middle. */
+  .rp-overlay, .rp-admin-overlay { padding: 10px; place-items: center; }
+  .rp-panel, .rp-admin { max-height: calc(100vh - 20px); }
+  .rp-actions { flex-direction: column-reverse; }
+  .rp-actions .rp-btn { width: 100%; }
+
+  /* The head is four items on a ~340px row, so the title wrapped mid-word and
+     the count broke across lines. Title + Refresh + ✕ share the first row; the
+     count drops to its own line, where it has space to stay on one. */
+  .rp-admin-head { flex-wrap: wrap; gap: 8px; padding: 14px 14px 12px; }
+  .rp-admin-head .rp-title { font-size: var(--step-0); white-space: nowrap; }
+  .rp-admin-count { order: 3; width: 100%; }
+  .rp-admin-tabs { padding: 10px 14px; }
+  .rp-admin-list { padding: 12px 14px 14px; }
+  .rp-item-actions .rp-btn { flex: 1 1 auto; }   /* full-width taps, no stray gaps */
+}
+
 /* ---------- print ---------- */
 @media print {
-  .site-header, .tabs-wrap, .sidebar, .hero-pills, .content-tools, .filter-row, .qa-star, .qa-toggle, .copy-btn, .qa-body-actions, .reveal-btn, .site-footer, .icon-btn, .toast, .scroll-to-top, .tour-overlay, .tour-spotlight, .tour-tooltip { display: none !important; }
+  .site-header, .tabs-wrap, .sidebar, .hero-pills, .content-tools, .filter-row, .qa-star, .qa-toggle, .copy-btn, .qa-body-actions, .reveal-btn, .site-footer, .icon-btn, .toast, .scroll-to-top, .tour-overlay, .tour-spotlight, .tour-tooltip, .rp-overlay, .rp-admin-overlay { display: none !important; }
   .main { display: block; }
   .qa-body { display: block !important; }
   .qa-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; margin-bottom: 8px; }

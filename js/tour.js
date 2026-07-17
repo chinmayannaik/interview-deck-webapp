@@ -38,7 +38,7 @@
     },
     {
       title: "Step 3 – Question Card Features",
-      desc: `Here is a detailed look at an open question card. It includes a quick interview answer, a deep dive section, personal notes, highlights, bookmarks, and a Learn More button:
+      desc: `Here is a detailed look at an open question card. It includes a quick interview answer, a deep dive section, personal notes, highlights, bookmarks, and a Report Issue button if you spot a mistake:
              <div style="text-align: center; margin-top: 12px;">
                <img src="assets/tour-card.png" alt="Question card features" style="width: 100%; border-radius: 8px; border: 1px solid var(--border); box-shadow: var(--shadow-sm);" />
              </div>`,

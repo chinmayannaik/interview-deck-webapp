@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>Interview Helper — Coding &amp; Interview Questions</title>
+  <title>Interview Helper - Coding &amp; Interview Questions</title>
   <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, JavaScript, TypeScript, RxJS, NgRx, HTML, CSS, Java, Spring Boot, SQL and Git. Practice mode, bookmarks and progress tracking." />
   <meta name="keywords" content="interview questions, coding interview, angular interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git" />
   <meta name="author" content="Interview Helper" />
@@ -14,14 +14,14 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Interview Helper" />
-  <meta property="og:description" content="Master coding and interview questions — a searchable bank with practice mode, bookmarks and progress tracking." />
+  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
   <meta property="og:url" content="https://interview-questions-bank.netlify.app/" />
   <meta property="og:image" content="assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Interview Helper" />
-  <meta name="twitter:description" content="Master coding and interview questions — searchable, with practice mode." />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="assets/og-card.png" />
 
   <!-- icons + manifest -->
@@ -128,7 +128,7 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
           <span class="filter-count" id="filter-count" hidden>0</span>
         </button>
-        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter - pick a color, then select text to highlight">
           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
         </button>
         <!-- mobile only: expands .header-search across the header row -->
@@ -205,7 +205,7 @@
             </button>
             <button class="tool" id="highlight-filter" type="button" title="Show questions with highlights">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M7.5 10.5c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5z"/><path d="M11.5 7.5c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5z"/><path d="M16.5 9.5c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5z"/><path d="M6 14c0-2 2-3 4-3 1 0 3 .5 3 2 0 2.5-4 4.5-7 1z"/></svg>
-              With Highlights
+              Highlights
             </button>
             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
               <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
@@ -227,8 +227,8 @@
           </div>
 
             <div class="tools-sheet-foot">
-              <button class="tools-clear" id="tools-clear" type="button">Clear filters</button>
-              <button class="tools-done" id="tools-done" type="button">Show results</button>
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
             </div>
           </div>
         </div>
@@ -313,6 +313,9 @@
   <!-- before highlights.js: the highlighter palette renders the pen's row -->
   <script src="js/inkpen.js"></script>
   <script src="js/highlights.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
   <!-- before app.js (which data-loader.js injects): buildTabs() renders the
        Playground tab only if this has registered IQB.playground -->
   <script src="js/playground.js"></script>
