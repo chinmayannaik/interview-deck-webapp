@@ -24,6 +24,16 @@
     getLastTab() { return read("lastTab", "frontend"); },
     setLastTab(v) { write("lastTab", v); },
 
+    /* --- playground scratchpad ---
+       Local only, and deliberately not synced to Firestore: it's a scratchpad,
+       not user content worth reconciling across devices. */
+    getPlaygroundCode() { return read("playgroundCode", ""); },
+    setPlaygroundCode(v) { write("playgroundCode", v); },
+    getPlaygroundInput() { return read("playgroundInput", ""); },
+    setPlaygroundInput(v) { write("playgroundInput", v); },
+    getPlaygroundSplit() { return read("playgroundSplit", 0); },   // editor width %, 0 = default
+    setPlaygroundSplit(v) { write("playgroundSplit", v); },
+
     /* --- bookmarks (array of ids) --- */
     getBookmarks() { return new Set(read("bookmarks", [])); },
     saveBookmarks(set) { write("bookmarks", Array.from(set)); },

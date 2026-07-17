@@ -116,10 +116,15 @@
   box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255, 255, 255, .04);
 }
 
-/* Code blocks are the one surface that should recede rather than lift: on dark,
-   an inset well reads more like code than a raised panel does. */
+/* Code blocks are dark in both themes; on dark they only need to go a shade
+   deeper than the page and pick up the warm neutral hue, so they recede into an
+   inset well rather than lifting like a panel. */
+:root[data-theme="dark"] {
+  --code-bg: #171314;
+  --code-border: #2E2729;
+  --code-muted: #8C8083;
+}
 :root[data-theme="dark"] :is(.code-block pre, .qa-deep pre) {
-  background: #171314;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, .4);
 }
 

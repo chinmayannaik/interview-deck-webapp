@@ -53,6 +53,10 @@
   }));
   const groupOf = (catKey) => GROUPS.find((g) => g.cats.includes(catKey)) || null;
   const isGroup = (key) => GROUPS.some((g) => g.key === key);
+
+  /* A pseudo-tab: it sits in the group tab row but holds no questions, so it
+     never reaches the filter/render path — setCategory() forks before that. */
+  const PLAYGROUND = "playground";
   const catsFor = (key) => {
     if (key === "all") return null; // no restriction
     if (isGroup(key)) return GROUPS.find((g) => g.key === key).cats;
@@ -191,6 +195,18 @@
       ]);
       tabsEl.appendChild(tab);
     });
+
+    if (!window.IQB.playground) return;
+    const pg = el("button", {
+      class: "tab tab-pg", role: "tab", "data-cat": PLAYGROUND,
+      style: "--tab-c: var(--playground)",
+      onclick: () => setCategory(PLAYGROUND, true)
+    }, [
+      el("span", { class: "dot" }),
+      document.createTextNode("Playground"),
+      el("span", { class: "tab-n", text: "JS" })
+    ]);
+    tabsEl.appendChild(pg);
   }
 
   /* progress within a given set of categories */
@@ -353,9 +369,41 @@
   /* ========================================================
      ACTIVE STATE SYNC
      ======================================================== */
+  /* Swaps the whole content column for the playground. body.pg-mode does the
+     hiding in CSS so the sidebar, tools, subnav and mobile dropdowns — none of
+     which mean anything without questions — stay untouched in JS. */
+  function showPlayground(on) {
+    /* The playground fills the viewport below the header, so it can't inherit a
+       collapsed header: the shell is sticky and the scroll handler leaves
+       --header-offset wherever the last scroll left it. Reset both, then lock
+       body scroll so the only scrollers are the editor and the output. */
+    if (on) {
+      window.scrollTo(0, 0);
+      const shell = qs("#header-shell");
+      if (shell) shell.classList.remove("is-collapsed");
+      document.documentElement.style.setProperty("--header-offset", "var(--header-shell-h)");
+    }
+    document.body.classList.toggle("pg-mode", on);
+    const pgEl = qs("#playground");
+    if (pgEl) pgEl.hidden = !on;
+    if (!window.IQB.playground) return;
+    if (on) IQB.playground.onShow();
+    else IQB.playground.onHide();
+  }
+
   function setCategory(key, updateHash) {
     state.category = key;
     store.setLastTab(key);
+
+    if (key === PLAYGROUND) {
+      qsa(".tab", tabsEl).forEach((t) => t.classList.toggle("active", t.dataset.cat === PLAYGROUND));
+      showPlayground(true);
+      if (updateHash) history.replaceState(null, "", "#" + key);
+      const pgTab = qs(".tab.active", tabsEl);
+      if (pgTab) pgTab.scrollIntoView({ inline: "center", block: "nearest" });
+      return;
+    }
+    showPlayground(false);
 
     // light up the parent group tab (a category belongs to one group)
     const parentGroup = isGroup(key) ? key : (groupOf(key) ? groupOf(key).key : GROUPS[0].key);
@@ -481,11 +529,14 @@
 
     // question is plain text — use text (not html) so literal tags like
     // "<!DOCTYPE html>" or "<router-outlet>" render instead of being parsed away.
-    // The number lives in its own span so the highlightable .qa-qtext holds ONLY
-    // the question text — keeps highlight offsets stable regardless of position.
+    // The number is a sibling of .qa-question, not a child, so the highlightable
+    // .qa-qtext holds ONLY the question text — keeps highlight offsets stable.
     const question = el("div", { class: "qa-question" });
-    if (index) question.appendChild(el("span", { class: "qa-qnum", text: index + ". " }));
     question.appendChild(el("span", { class: "qa-qtext", text: q.question }));
+
+    const qnum = index
+      ? el("span", { class: "qa-qnum", "aria-hidden": "true", text: String(index).padStart(2, "0") })
+      : null;
 
     const tags = el("div", { class: "qa-tags" },
       (q.tags || []).slice(0, 5).map((t) =>
@@ -493,7 +544,7 @@
     const foot = el("div", { class: "qa-foot" }, [tags, el("span", { class: "qa-toggle", text: "+" })]);
 
     const head = el("div", {
-      class: "qa-head", role: "button", tabindex: "0", "aria-expanded": "false",
+      class: "qa-head" + (qnum ? " numbered" : ""), role: "button", tabindex: "0", "aria-expanded": "false",
       onclick: () => {
         // don't toggle if the user is selecting/highlighting the question text
         const sel = window.getSelection();
@@ -501,7 +552,7 @@
         toggleCard(card);
       },
       onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleCard(card); } }
-    }, [top, question, foot]);
+    }, [qnum, top, question, foot]);
 
     // reveal button (practice mode)
     const reveal = el("button", {
@@ -679,7 +730,7 @@
     });
     return { totalCompleted: progress.size, totalQuestions: ALL.length, groups: groups };
   }
-  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, setCategory: setCategory };
+  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, setCategory: setCategory, copyText: copyText };
   function updateProgressBar() {
     const fill = qs("#progress-fill", sideEl);
     const label = qs("#progress-label", sideEl);
@@ -773,15 +824,19 @@
   function parseHash() {
     const h = decodeURIComponent(location.hash.replace(/^#/, ""));
     if (!h) return;
+    if (h === PLAYGROUND) { setCategory(PLAYGROUND, false); return; }
     if (h.startsWith("q=")) { openQuestion(h.slice(2), true); return; }
     if (isGroup(h) || CATEGORIES.some((c) => c.key === h)) setCategory(h, false);
   }
 
   function onKeydown(e) {
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
-    if ((e.key === "/" || (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey))) ) {
+    // Ctrl/Cmd+K is unambiguous anywhere; bare "/" must not steal focus while
+    // the user is typing — in the playground editor every comment starts with one.
+    if (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault(); focusSearch(); return;
     }
+    if (e.key === "/" && !typing) { e.preventDefault(); focusSearch(); return; }
     if (e.key === "Escape") {
       if (state.query) { onSearchInput(""); }
       if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
@@ -915,9 +970,16 @@
     document.addEventListener("keydown", onKeydown);
     window.addEventListener("hashchange", parseHash);
 
+    // the playground lives in the content column, next to the question list
+    if (window.IQB.playground) {
+      const main = qs(".main");
+      if (main) main.appendChild(IQB.playground.build());
+    }
+
     // initial state: hash > last tab
     const startTab = store.getLastTab();
-    const validStart = isGroup(startTab) || CATEGORIES.some((c) => c.key === startTab);
+    const validStart = isGroup(startTab) || startTab === PLAYGROUND
+      || CATEGORIES.some((c) => c.key === startTab);
     setCategory(validStart ? startTab : GROUPS[0].key, false);
     parseHash();
 
