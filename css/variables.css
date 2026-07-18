@@ -53,6 +53,8 @@
   /* the Playground pseudo-tab — not a manifest group, so it carries its own
      accent rather than borrowing a category's */
   --playground: #6E56CF;
+  /* My Notes — likewise not a manifest group, so it carries its own accent */
+  --notebook: #0F7B6C;
 
   /* group (main field) colours — same role as --cat-*, for manifest.json groups */
   --group-frontend: #C3002F;

@@ -86,7 +86,13 @@ body.tutor-open .scroll-to-top {
   display: flex; align-items: center; gap: 8px;
   padding: 12px 12px 12px 26px; /* extra left room clears the corner resize grip */
   border-bottom: 1px solid var(--border); background: var(--surface);
+  /* The header doubles as the move handle (js/tutor.js initDrag). */
+  cursor: grab; touch-action: none; user-select: none;
 }
+.tutor-head:focus-visible { outline: none; box-shadow: inset 0 0 0 2px var(--accent); }
+/* The buttons inside it are still buttons, not part of the grab area. */
+.tutor-head .tutor-x { cursor: pointer; }
+body.tutor-dragging, body.tutor-dragging * { cursor: grabbing !important; user-select: none !important; }
 .tutor-title { display: flex; align-items: center; gap: 8px; font-weight: 700; flex: 1; min-width: 0; }
 /* Header controls (restart / expand / close) grouped and pushed to the right —
    .tutor-title's flex:1 takes the slack, so this sits against the panel edge. */
@@ -115,14 +121,28 @@ body.tutor-open .scroll-to-top {
    meant for the header buttons or the composer's textarea just inside them.
    Both stop short of the corner so the corner grip (z-index 4) stays on top. */
 .tutor-edge-t { top: 0; left: 22px; right: 0; height: 7px; cursor: ns-resize; }
-.tutor-edge-l { top: 22px; left: 0; bottom: 0; width: 7px; cursor: ew-resize; }
+/* The LEFT edge is the seam between the page and the chat, so unlike the top
+   edge it is drawn rather than invisible — an edge you are meant to drag has to
+   look like one. Slightly wider, with a grip mark at the vertical centre. */
+.tutor-edge-l {
+  top: 22px; left: 0; bottom: 0; width: 9px; cursor: ew-resize;
+  background: var(--border);
+}
+.tutor-edge-l::before {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  width: 3px; height: 34px; margin: -17px 0 0 -1.5px;
+  border-radius: 3px; background: var(--border-strong);
+  transition: background .15s;
+}
+.tutor-edge-l:hover, .tutor-edge-l:focus-visible { background: var(--accent-soft); }
+.tutor-edge-l:hover::before, .tutor-edge-l:focus-visible::before { background: var(--accent); }
 /* A hairline of accent on hover/focus so an invisible strip still shows it's
    grabbable — and gives keyboard users a visible focus target. */
 .tutor-edge::after {
   content: ""; position: absolute; inset: 0; opacity: 0;
   background: var(--accent); transition: opacity .15s;
 }
-.tutor-edge:hover::after, .tutor-edge:focus-visible::after { opacity: .5; }
+.tutor-edge-t:hover::after, .tutor-edge-t:focus-visible::after { opacity: .5; }
 .tutor-edge:focus-visible { outline: none; }
 
 .tutor-resize {
@@ -217,7 +237,11 @@ body.tutor-resizing-x, body.tutor-resizing-x * { cursor: ew-resize !important; }
   font-size: 1.04em; padding-bottom: 5px; border-bottom: 1px solid var(--border);
 }
 .tutor-bubble h4.tutor-h { font-size: .96em; color: var(--ink-2); }
+/* Same reset.css trap as the notes editor: `ul, ol { list-style: none }` is
+   global, so the coach's bullets and numbers need their markers restored. */
 .tutor-bubble ul, .tutor-bubble ol { margin: 4px 0 11px; padding-left: 22px; }
+.tutor-bubble ul { list-style: disc outside; }
+.tutor-bubble ol { list-style: decimal outside; }
 .tutor-bubble li { margin-bottom: 5px; }
 .tutor-bubble li::marker { color: var(--accent); font-weight: 600; }
 .tutor-hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
@@ -419,6 +443,7 @@ body.tutor-resizing-x, body.tutor-resizing-x * { cursor: ew-resize !important; }
 
 @media (max-width: 480px) {
   .tutor-panel { right: 8px; bottom: 8px; width: calc(100vw - 16px); height: calc(100vh - 74px); }
+  .tutor-head { cursor: default; }
   /* keep clear of .reading-mode-toggle/.scroll-to-top (see the desktop rule
      above) — they sit at the same right:18px column on every breakpoint */
   .tutor-fab { right: 11px; bottom: 121px; }
@@ -430,6 +455,11 @@ body.tutor-resizing-x, body.tutor-resizing-x * { cursor: ew-resize !important; }
    behavior above). 1300px ≈ the site's centered max content width (--maxw)
    plus this panel's width plus enough margin that the grid doesn't cramp. */
 @media (min-width: 1300px) {
+  /* --tutor-dock is written by js/tutor.js from the panel's actual left edge,
+     so dragging the panel's left edge really does rebalance page vs chat. The
+     literal is only a fallback for the first paint. Transition only while NOT
+     dragging, or the content lags a frame behind the handle. */
   .app { transition: margin-right .25s ease; }
-  body.tutor-open .app { margin-right: min(416px, 32vw); }
+  body.tutor-open .app { margin-right: var(--tutor-dock, min(416px, 32vw)); }
+  body.tutor-resizing .app, body.tutor-dragging .app { transition: none; }
 }

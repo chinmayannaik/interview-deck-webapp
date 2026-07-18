@@ -852,7 +852,13 @@ body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
 .qa-deep li { margin: 5px 0; list-style: disc; }
 .qa-deep ol li { list-style: decimal; }
 .qa-deep strong { color: var(--ink); }
-.qa-deep :is(code, .inline) { font-family: var(--mono); font-size: .85em; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--border); color: var(--accent-ink); }
+/* INLINE code only. The :not() is load-bearing: `:is(code, .inline)` takes the
+   specificity of its most specific argument (.inline, a class), so this rule
+   scored higher than `.qa-deep pre code` above and was repainting every line of
+   a deep-dive code BLOCK with the pale inline-code chip styling. Excluding
+   code inside <pre> lets the block rule win, rather than fighting it with
+   !important. */
+.qa-deep :is(code, .inline):not(pre code) { font-family: var(--mono); font-size: .85em; background: var(--surface-2); padding: 1px 6px; border-radius: 5px; border: 1px solid var(--border); color: var(--accent-ink); }
 /* the shared dark block is defined up with .code-block pre — only the flow
    margin differs inside a deep dive */
 .qa-deep pre { margin: 4px 0 12px; padding-right: 18px; }

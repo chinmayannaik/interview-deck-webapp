@@ -1,108 +1,31 @@
 /* ============================================================
-   Personal Notes — an optional, collapsible per-question note.
+   Personal Note — the per-question window onto My Notes.
 
-   Renders the "📝 Personal Note" section inside each question card (below the
-   answer, next to "Study in depth"). Empty → an "Add Note" button; editing →
-   a textarea with Save / Cancel; existing → the note text with Edit / Delete.
+   Renders the "Personal Note" section inside each question card. Since the
+   notebook was unified this file owns NO storage of its own: a question's note
+   is simply a notebook entry carrying that question's id, so anything written
+   here shows up in the My Notes tab and vice versa.
 
-   Persistence is split in two, on purpose, so the feature is future-proof:
+   It uses the same rich-text editor as the notes tab (js/richtext.js). That is
+   not just for consistency — a plain textarea here would flatten a note that
+   was written with headings and code blocks in the notes tab, silently
+   destroying formatting the moment the reader edited it from a card.
 
-     • IQB.cloud  — the GENERIC per-question user-state layer (js/sync.js).
-                    Notes live at users/{uid}/notes/{questionId}, one document
-                    per question. A future Text Highlighting feature reuses the
-                    exact same layer with feature name "highlights" — no schema
-                    change and no refactor here.
-     • IQB.storage — a local mirror (localStorage) so notes work signed-out and
-                     offline; on sign-in the two are merged last-write-wins.
-
-   The card is the owner of "when a question opens"; app.js calls
-   IQB.notes.onCardOpen(questionId, card) to lazily load the note the first time
-   a card is expanded (so we never fan out a Firestore read per rendered card).
+   Storage, sync and migration all live in js/notebook.js.
    ============================================================ */
 (function () {
   window.IQB = window.IQB || {};
-  const { el, qs, toast } = IQB.utils;
-  const store = IQB.storage;
+  const { el, toast } = IQB.utils;
 
-  /* The subcollection / feature name. Future per-question features add their
-     own constant and reuse IQB.cloud + a sibling module like this one. */
-  const FEATURE = "notes";
+  const nb = function () { return window.IQB.notebook || null; };
 
-  const cloud = function () { return window.IQB.cloud || null; }; // may be undefined if Firebase is unconfigured
-  const signedIn = function () { const c = cloud(); return !!(c && c.isSignedIn()); };
-
-  /* Registry of live sections by questionId so we can refresh them in place
-     when auth state changes (sign-in merge, sign-out fallback). */
+  /* Live sections by questionId, so they can be refreshed in place when auth
+     state changes (a sign-in merge can bring down a newer copy). */
   const sections = new Map();
 
-  /* ---- persistence (cloud-first when signed in, always mirror locally) ---- */
-
-  // Resolve the best-known note for a question: cloud if signed in (falling
-  // back to the local mirror when offline), else the local mirror.
-  async function fetchNote(questionId) {
-    if (signedIn()) {
-      try {
-        const remote = await cloud().load(FEATURE, questionId);
-        if (remote && remote.text) {
-          store.setNote(questionId, remote);       // keep the local mirror warm
-          return { text: remote.text, updatedAt: remote.updatedAt || 0 };
-        }
-        // no cloud note → fall through to local (may be an unsynced draft)
-      } catch (e) { /* offline → serve the local mirror */ }
-    }
-    return store.getNote(questionId);
-  }
-
-  async function saveNote(questionId, text) {
-    const note = { text: text, updatedAt: Date.now() };
-    store.setNote(questionId, note);                // local first (never lose a note)
-    if (signedIn()) {
-      try { await cloud().save(FEATURE, questionId, note); }
-      catch (e) { console.warn("[notes] cloud save failed (kept locally):", e); }
-    }
-    return note;
-  }
-
-  async function deleteNote(questionId) {
-    store.deleteNote(questionId);
-    if (signedIn()) {
-      try { await cloud().remove(FEATURE, questionId); }
-      catch (e) { console.warn("[notes] cloud delete failed:", e); }
-    }
-  }
-
-  /* ---- one-time merge when the user signs in ----
-     Reconcile the local mirror with the cloud subcollection, last-write-wins by
-     updatedAt, then refresh any open sections so the UI reflects the winner. */
-  async function mergeOnSignIn() {
-    if (!signedIn()) return;
-    let remote = {};
-    try { remote = await cloud().loadAll(FEATURE); }
-    catch (e) { return; /* offline → leave local as-is, try again next sign-in */ }
-
-    const local = store.getNotes();
-    const ids = new Set(Object.keys(local).concat(Object.keys(remote)));
-
-    for (const id of ids) {
-      const l = store.getNote(id);                              // normalized {text,updatedAt}|null
-      const r = remote[id] && remote[id].text
-        ? { text: remote[id].text, updatedAt: remote[id].updatedAt || 0 } : null;
-
-      if (l && (!r || l.updatedAt > r.updatedAt)) {
-        try { await cloud().save(FEATURE, id, l); } catch (e) { /* keep local */ }
-      } else if (r && (!l || r.updatedAt > l.updatedAt)) {
-        store.setNote(id, r);
-      }
-    }
-    sections.forEach(function (s) { s.reload(); });
-  }
-
-  // React to auth changes: merge up on sign-in; on sign-out just re-render open
-  // sections against the local mirror.
-  if (window.IQB.cloud) {
-    IQB.cloud.onChange(function (user) {
-      if (user) mergeOnSignIn();
-      else sections.forEach(function (s) { s.reload(); });
+  if (window.IQB.notebook) {
+    IQB.notebook.onChange(function () {
+      sections.forEach(function (s) { s.reload(); });
     });
   }
 
@@ -110,9 +33,10 @@
      UI — one collapsible section per card
      ======================================================== */
   function buildSection(questionId) {
-    let note = null;         // { text, updatedAt } | null
-    let loaded = false;      // has this section fetched at least once?
+    let note = null;         // the notebook entry for this question, or null
+    let loaded = false;
     let editing = false;
+    let editor = null;
 
     const toggleBtn = el("button", {
       class: "qa-act pn-toggle", type: "button", "aria-expanded": "false",
@@ -121,146 +45,164 @@
     toggleBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>Personal Note';
 
     const body = el("div", { class: "pn-body", hidden: "" });
-
     const section = el("div", { class: "pn-section", "data-question-id": questionId }, [toggleBtn, body]);
 
     function isOpen() { return !body.hasAttribute("hidden"); }
 
     function toggleOpen() {
       if (isOpen()) {
+        closeEditor();
         body.setAttribute("hidden", "");
         toggleBtn.setAttribute("aria-expanded", "false");
-      } else {
-        body.removeAttribute("hidden");
-        toggleBtn.setAttribute("aria-expanded", "true");
-        // fetch and then either open the editor directly when there is no
-        // existing note, or render the current view when a note exists.
-        ensureLoaded().then(function () {
-          if (!note || !note.text) startEdit(); else paint();
-        });
+        return;
       }
+      body.removeAttribute("hidden");
+      toggleBtn.setAttribute("aria-expanded", "true");
+      ensureLoaded().then(function () {
+        if (!note || !(note.plain || "").trim()) startEdit(); else renderView();
+      });
     }
 
-    // reflect "has a note" on the collapsed toggle without opening it
     function refreshIndicator() {
-      const has = !!(note && note.text);
-      toggleBtn.classList.toggle("has-note", has);
+      toggleBtn.classList.toggle("has-note", !!(note && (note.plain || "").trim()));
     }
 
-    function renderEmpty() {
-      // When no note exists we intentionally keep the collapsed section body
-      // empty — users open the section via the "Personal Note" toggle which
-      // now directly starts the editor. This avoids showing a redundant
-      // "Add Note" button inside the expanded body.
-      body.innerHTML = "";
-    }
-
+    /* Read-only render. Goes through the sanitiser on the way in — this HTML
+       came back from Firestore, which is not a trusted source. */
     function renderView() {
+      closeEditor();
       editing = false;
       body.innerHTML = "";
-      body.appendChild(el("div", { class: "pn-text", text: note.text }));
+      const view = el("div", { class: "pn-text nb-body pn-rich" });
+      view.innerHTML = IQB.richtext.sanitize(note.html || "");
+      IQB.richtext.paintAll(view);
+      body.appendChild(view);
       body.appendChild(el("div", { class: "pn-actions" }, [
-        el("button", { class: "pn-btn", type: "button", onclick: function () { startEdit(); } }, "Edit"),
-        el("button", { class: "pn-btn pn-danger", type: "button", onclick: function () { onDelete(); } }, "Delete")
+        el("button", { class: "pn-btn", type: "button", onclick: startEdit }, "Edit"),
+        el("button", { class: "pn-btn pn-danger", type: "button", onclick: onDelete }, "Delete"),
+        el("button", {
+          class: "pn-btn pn-open", type: "button",
+          title: "Open in My Notes to add tags or Quick Revision",
+          onclick: function () {
+            if (IQB.app && IQB.app.setCategory) IQB.app.setCategory("notes", true);
+            if (IQB.notebookUI) IQB.notebookUI.openForQuestion(questionId);
+          }
+        }, "Open in My Notes")
       ]));
     }
 
     function startEdit() {
       editing = true;
+      closeEditor();
       body.innerHTML = "";
-      const ta = el("textarea", {
-        class: "pn-input", rows: "4",
-        placeholder: "Write a personal note for this question…",
-        onkeydown: function (e) {
-          // Ctrl/Cmd+Enter saves; Escape cancels
-          if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); onSave(ta.value); }
-          else if (e.key === "Escape") { e.preventDefault(); cancelEdit(); }
-        }
-      });
-      ta.value = (note && note.text) || "";
-      body.appendChild(ta);
+
+      const surface = el("div", { class: "pn-input nb-body pn-rich" });
+      body.appendChild(surface);
       body.appendChild(el("div", { class: "pn-actions" }, [
-        el("button", { class: "pn-btn pn-primary", type: "button", onclick: function () { onSave(ta.value); } }, "Save"),
-        el("button", { class: "pn-btn", type: "button", onclick: function () { cancelEdit(); } }, "Cancel")
+        el("button", { class: "pn-btn pn-primary", type: "button", onclick: onSave }, "Save"),
+        el("button", { class: "pn-btn", type: "button", onclick: cancelEdit }, "Cancel")
       ]));
-      ta.focus();
-      ta.setSelectionRange(ta.value.length, ta.value.length);
+
+      editor = IQB.richtext.attach(surface, { onChange: function () {} });
+      editor.setHTML((note && note.html) || "");
+      surface.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); onSave(); }
+        else if (e.key === "Escape") { e.preventDefault(); cancelEdit(); }
+      });
+      editor.focus();
+    }
+
+    /* The editor registers a document-level selectionchange listener, so it has
+       to be released whenever this section stops showing one. */
+    function closeEditor() {
+      if (editor && editor.destroy) editor.destroy();
+      editor = null;
     }
 
     function cancelEdit() {
       editing = false;
-      if (note && note.text) {
-        renderView();
-      } else {
-        // When there is no saved note, cancelling should close the expanded
-        // body instead of leaving an empty visible box. Keep the body
-        // contents empty and collapse the section.
-        renderEmpty();
-        body.setAttribute("hidden", "");
-        toggleBtn.setAttribute("aria-expanded", "false");
-      }
+      closeEditor();
+      if (note && (note.plain || "").trim()) { renderView(); return; }
+      body.innerHTML = "";
+      body.setAttribute("hidden", "");
+      toggleBtn.setAttribute("aria-expanded", "false");
     }
 
-    async function onSave(value) {
-      const text = (value || "").trim();
-      if (!text) { onDelete(); return; }  // empty save == delete
-      note = await saveNote(questionId, text);
+    async function onSave() {
+      if (!editor || !nb()) return;
+      const html = editor.getHTML();
+      const plain = editor.getPlain();
+      if (!plain.trim()) { await onDelete(); return; }   // empty save == delete
+
+      if (note) {
+        note = await nb().update(note.id, { html: html, plain: plain });
+      } else {
+        const q = findQuestion(questionId);
+        note = await nb().create({
+          id: nb().qNoteId(questionId),
+          questionId: questionId,
+          title: q && q.question ? String(q.question).slice(0, 120) : "Note on a question",
+          html: html,
+          plain: plain,
+          tags: q && q.category ? [String(q.category).toLowerCase()] : []
+        });
+      }
+      editing = false;
       refreshIndicator();
       renderView();
       toast("Note saved");
     }
 
     async function onDelete() {
-      await deleteNote(questionId);
+      if (note && nb()) await nb().remove(note.id);
       note = null;
+      editing = false;
+      closeEditor();
       refreshIndicator();
-      renderEmpty();
-      // After deleting the only note, collapse the expanded body so the UI
-      // doesn't show an empty box. Keep the collapsed toggle visible.
+      body.innerHTML = "";
       body.setAttribute("hidden", "");
       toggleBtn.setAttribute("aria-expanded", "false");
     }
 
-    // render whatever state we currently hold (without refetching)
-    function paint() {
-      if (editing) return;             // don't clobber an in-progress edit
-      (note && note.text) ? renderView() : renderEmpty();
-      refreshIndicator();
-    }
-
-    // fetch the note once, then paint
     async function ensureLoaded() {
-      if (loaded) { paint(); return; }
+      if (loaded) return;
       loaded = true;
-      note = await fetchNote(questionId);
-      paint();
-    }
-
-    // re-fetch (used after auth changes); preserves an open editor
-    async function reload() {
-      if (editing) return;
-      note = await fetchNote(questionId);
+      if (nb()) { await nb().ready; note = nb().byQuestion(questionId); }
       refreshIndicator();
-      if (isOpen()) paint();
     }
 
-    // One section per questionId is live at a time; a re-render overwrites the
-    // previous entry (the detached node is GC'd), keeping the registry bounded.
+    async function reload() {
+      if (editing) return;             // never clobber an in-progress edit
+      if (!nb()) return;
+      note = nb().byQuestion(questionId);
+      refreshIndicator();
+      if (isOpen() && note && (note.plain || "").trim()) renderView();
+    }
+
     const api = { el: section, ensureLoaded: ensureLoaded, reload: reload };
     sections.set(questionId, api);
     return api;
   }
 
+  /* Locate a question in the loaded category data, for the note's title/tag.
+     Absent data is tolerated — the questionId link is what actually matters. */
+  function findQuestion(questionId) {
+    const data = window.IQB.data || {};
+    const keys = Object.keys(data);
+    for (let i = 0; i < keys.length; i++) {
+      const list = data[keys[i]];
+      if (!Array.isArray(list)) continue;
+      const hit = list.find(function (q) { return q && q.id === questionId; });
+      if (hit) return Object.assign({ category: keys[i] }, hit);
+    }
+    return null;
+  }
+
   /* ========================================================
-     Public API (used by app.js)
+     Public API (unchanged — js/app.js calls these)
      ======================================================== */
   IQB.notes = {
-    /* Build the notes section element for a question. Returns an HTMLElement to
-       append inside the card body. */
     build: function (questionId) { return buildSection(questionId).el; },
-
-    /* Called by the card when it opens — lazily loads the note the first time
-       so an unopened card never triggers a Firestore read. */
     onCardOpen: function (questionId) {
       const s = sections.get(questionId);
       if (s) s.ensureLoaded();

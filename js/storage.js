@@ -102,7 +102,10 @@
        Safe to call any time: the cloud copy is the source of truth and comes
        back on the next sign-in. */
     clearUserData() {
-      ["bookmarks", "progress", "notes", "highlights", "lastOpened"].forEach(function (k) {
+      // "notebook" MUST be in this list: it is the reader's own writing, and
+      // leaving it behind would show the next person on a shared browser
+      // everything the previous user wrote.
+      ["bookmarks", "progress", "notes", "notebook", "highlights", "lastOpened"].forEach(function (k) {
         try { localStorage.removeItem(PREFIX + k); } catch (e) { /* ignore */ }
       });
     },
@@ -115,6 +118,7 @@
         bookmarks: read("bookmarks", []),
         progress: read("progress", []),
         notes: read("notes", {}),
+        notebook: read("notebook", {}),
         highlights: read("highlights", {})
       }, null, 2);
     },
@@ -123,6 +127,7 @@
       if (Array.isArray(data.bookmarks)) write("bookmarks", data.bookmarks);
       if (Array.isArray(data.progress)) write("progress", data.progress);
       if (data.notes && typeof data.notes === "object") write("notes", data.notes);
+      if (data.notebook && typeof data.notebook === "object") write("notebook", data.notebook);
       if (data.highlights && typeof data.highlights === "object") write("highlights", data.highlights);
       return true;
     }

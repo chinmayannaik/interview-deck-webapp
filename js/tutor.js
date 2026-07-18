@@ -47,6 +47,7 @@
 
   // Persisted panel size (drag-to-resize from the top-left corner).
   const SIZE_STORE = "iqb:tutorSize";
+  const POS_STORE = "iqb:tutorPos";
   const MIN_W = 320, MIN_H = 360;
 
   /* Line-icon set for the welcome action chips — same visual language as the
@@ -181,10 +182,14 @@
       b.classList.remove("spin"); void b.offsetWidth; b.classList.add("spin");
       clearThread();
     });
+    initDrag(panel.querySelector(".tutor-head"));
     initResize(resizeEl, "both");
     initResize(panel.querySelector("#tutor-edge-top"), "y");
     initResize(panel.querySelector("#tutor-edge-left"), "x");
     applySize(loadSize()); // restore the size the user last dragged to
+    // NOT applyPos here: the panel is still hidden at this point, so it
+    // measures 0x0 and the stored position would clamp to zero. openPanel
+    // restores it once the panel is actually on screen.
     // Escape closes the panel from anywhere inside it.
     panel.addEventListener("keydown", function (e) { if (e.key === "Escape") { e.preventDefault(); closePanel(); } });
 
@@ -499,6 +504,9 @@
   function openPanel() {
     if (!panel) buildPanel();
     panel.hidden = false;
+    cbBox = null;   // it could not be measured while hidden
+    applyPos(loadPos());
+    syncDock();
     open = true;
     launcher.classList.add("is-open");
     // Docks the main content aside on wide screens (see css/tutor.css); a no-op
@@ -529,6 +537,7 @@
     try { if (panel.contains(document.activeElement)) launcher.focus(); } catch (e) { /* ignore */ }
     launcher.classList.remove("is-open");
     document.body.classList.remove("tutor-open");
+    document.documentElement.style.removeProperty("--tutor-dock");
   }
 
   /* ---------- drag-to-resize (top-left corner) ----------
@@ -559,7 +568,164 @@
     const h = Math.max(MIN_H, Math.min(size.h, maxH));
     panel.style.width = w + "px";
     panel.style.height = h + "px";
+    syncDock();
     return { w: w, h: h };
+  }
+
+  /* ---------- drag-to-move (by the header) ----------
+     The panel stays ANCHORED TO THE BOTTOM-RIGHT — dragging changes its right/
+     bottom offsets rather than switching to left/top. That matters because the
+     resize handles all grow the panel from the top-left with the bottom-right
+     corner pinned; re-anchoring on move would invert their maths. Moving left
+     simply means a larger `right`.
+
+     Position is per device (a viewport preference, like the size) and clamped
+     so the panel can never be parked off screen where it can't be grabbed back. */
+  function loadPos() {
+    try {
+      const p = JSON.parse(localStorage.getItem(POS_STORE) || "null");
+      if (p && isFinite(p.right) && isFinite(p.bottom)) return p;
+    } catch (e) { /* ignore */ }
+    return null;
+  }
+  function savePos(right, bottom) {
+    try { localStorage.setItem(POS_STORE, JSON.stringify({ right: Math.round(right), bottom: Math.round(bottom) })); }
+    catch (e) { /* ignore */ }
+  }
+
+  /* The box `position: fixed` resolves against is NOT reliably any of
+     window.innerHeight, documentElement.clientHeight, or visualViewport — in an
+     embedded/zoomed viewport they disagree, and clamping against the wrong one
+     parks the panel off screen. So measure it: pin the panel to 0,0 for one
+     frame and read where its edges actually land. Cached, and invalidated on
+     resize, so this costs one extra layout per resize rather than per pointer
+     move. */
+  let cbBox = null;
+  function containingBox() {
+    if (cbBox) return cbBox;
+    if (!panel) return { w: document.documentElement.clientWidth, h: document.documentElement.clientHeight };
+    const prevR = panel.style.right, prevB = panel.style.bottom;
+    panel.style.right = "0px";
+    panel.style.bottom = "0px";
+    const r = panel.getBoundingClientRect();
+    panel.style.right = prevR;
+    panel.style.bottom = prevB;
+    cbBox = { w: r.right, h: r.bottom };
+    return cbBox;
+  }
+  function vw() { return containingBox().w; }
+  /* Asks the SAME question the stylesheet asks, rather than comparing a
+     measured pixel value against a magic number that could drift from the
+     media query in css/tutor.css. */
+  function isNarrow() { return window.matchMedia("(max-width: 480px)").matches; }
+  function vh() { return containingBox().h; }
+
+  function applyPos(pos) {
+    if (!panel || !pos) return null;
+    // Below 480px the panel is full-width by design, so a stored offset would
+    // only push it off screen — see the responsive block in css/tutor.css.
+    if (isNarrow()) { panel.style.right = ""; panel.style.bottom = ""; return null; }
+    const r = panel.getBoundingClientRect();
+    const maxRight = Math.max(0, vw() - r.width);
+    const maxBottom = Math.max(0, vh() - r.height);
+    const right = Math.max(0, Math.min(pos.right, maxRight));
+    const bottom = Math.max(0, Math.min(pos.bottom, maxBottom));
+    panel.style.right = right + "px";
+    panel.style.bottom = bottom + "px";
+    syncDock();
+    return { right: right, bottom: bottom };
+  }
+
+  /* ---------- keep the page's dock in step with the panel ----------
+     The content column used to be pushed aside by a FIXED min(416px, 32vw),
+     which is why dragging the panel's edge appeared to do nothing: the panel
+     got wider, the seam did not move. Now the margin follows the panel's real
+     left edge, so that seam behaves like a splitter between page and chat.
+
+     Only while the panel is parked against the right edge. Once it has been
+     dragged out into the open it is a floating window, and shoving the content
+     sideways for something that is no longer beside it makes no sense. */
+  const DOCK_SNAP = 24;   // px of slack still counted as "against the edge"
+
+  function syncDock() {
+    const root = document.documentElement;
+    if (!panel || panel.hidden || isNarrow()) {
+      root.style.removeProperty("--tutor-dock");
+      return;
+    }
+    const box = containingBox();
+    const r = panel.getBoundingClientRect();
+    const parkedRight = (box.w - r.right) <= DOCK_SNAP;
+    // 0, not "remove": removing falls back to the literal in the stylesheet and
+    // would keep shoving the content aside for a panel that is no longer beside
+    // it. A floating panel overlays the content at full width.
+    if (!parkedRight) { root.style.setProperty("--tutor-dock", "0px"); return; }
+    root.style.setProperty("--tutor-dock", Math.max(0, Math.round(box.w - r.left)) + "px");
+  }
+
+  function initDrag(handle) {
+    if (!handle) return;
+    let startX = 0, startY = 0, startR = 0, startB = 0, dragging = false;
+
+    handle.addEventListener("pointerdown", function (e) {
+      // The header also carries the restart/close buttons — a click on those is
+      // not a drag. Same for the resize strip that overlays its top edge.
+      if (e.target.closest(".tutor-x, .tutor-actions, .tutor-edge, .tutor-resize")) return;
+      if (isNarrow()) return;                 // full-width panel: nowhere to go
+      e.preventDefault();
+      const r = panel.getBoundingClientRect();
+      startX = e.clientX; startY = e.clientY;
+      startR = vw() - r.right;
+      startB = vh() - r.bottom;
+      dragging = true;
+      try { handle.setPointerCapture(e.pointerId); } catch (_) {}
+      document.body.classList.add("tutor-dragging");
+    });
+
+    handle.addEventListener("pointermove", function (e) {
+      if (!dragging) return;
+      // Right/bottom grow as the pointer moves left/up, hence the inversion.
+      applyPos({ right: startR - (e.clientX - startX), bottom: startB - (e.clientY - startY) });
+    });
+
+    function end(e) {
+      if (!dragging) return;
+      dragging = false;
+      try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
+      document.body.classList.remove("tutor-dragging");
+      const r = panel.getBoundingClientRect();
+      savePos(vw() - r.right, vh() - r.bottom);
+    }
+    handle.addEventListener("pointerup", end);
+    handle.addEventListener("pointercancel", end);
+
+    // Double-click the header to send it back to its default corner — the way
+    // out if it ends up somewhere awkward.
+    handle.addEventListener("dblclick", function (e) {
+      if (e.target.closest(".tutor-x, .tutor-actions")) return;
+      panel.style.right = ""; panel.style.bottom = "";
+      try { localStorage.removeItem(POS_STORE); } catch (_) {}
+      syncDock();
+    });
+
+    // Keyboard nudge, so the panel is movable without a pointer.
+    handle.setAttribute("tabindex", "0");
+    handle.addEventListener("keydown", function (e) {
+      const step = e.shiftKey ? 40 : 12;
+      const r = panel.getBoundingClientRect();
+      let right = vw() - r.right, bottom = vh() - r.bottom, hit = true;
+      switch (e.key) {
+        case "ArrowLeft": right += step; break;
+        case "ArrowRight": right -= step; break;
+        case "ArrowUp": bottom += step; break;
+        case "ArrowDown": bottom -= step; break;
+        default: hit = false;
+      }
+      if (!hit) return;
+      e.preventDefault();
+      const applied = applyPos({ right: right, bottom: bottom });
+      if (applied) savePos(applied.right, applied.bottom);
+    });
   }
 
   /* axis: "x" (left edge, width only), "y" (top edge, height only) or "both"
@@ -623,11 +789,14 @@
     });
   }
 
-  // If the viewport shrinks below the saved size, re-clamp so it stays on-screen.
-  // Registered once for the panel, not once per handle.
+  // If the viewport shrinks below the saved size/position, re-clamp so the
+  // panel stays reachable. Registered once for the panel, not once per handle.
   window.addEventListener("resize", function () {
-    if (!panel || panel.hidden || !panel.style.width) return;
-    applySize({ w: parseFloat(panel.style.width), h: parseFloat(panel.style.height) });
+    cbBox = null;                       // the measured box is viewport-specific
+    if (!panel || panel.hidden) return;
+    if (panel.style.width) applySize({ w: parseFloat(panel.style.width), h: parseFloat(panel.style.height) });
+    const pos = loadPos();
+    if (pos) applyPos(pos);
   });
 
   /* ---------- per-question context (Ask AI button on a question card) ---------- */
@@ -1225,73 +1394,12 @@
     return out;
   }
 
-  /* ---------- lightweight syntax highlighting ----------
-     A small self-contained tokenizer (no external library, CSP-safe). It scans
-     RAW code with one ordered master regex and emits <span class="tok-*"> per
-     token with esc()'d text, and esc()'d text for the gaps between — so nothing
-     unescaped ever reaches innerHTML. Good enough to read like a real editor;
-     not a full parser. Markup (HTML/XML) uses a dedicated pass. */
-  const KW = {
-    js: "abstract arguments await break case catch class const continue debugger default delete do else export extends false finally for from function if implements import in instanceof interface let new null of return static super switch this throw true try typeof var void while yield async get set",
-    ts: "abstract any as asserts async await boolean break case catch class const continue declare default delete do else enum export extends false finally for from function get if implements import in infer instanceof interface is keyof let namespace never new null number object of private protected public readonly return set static string super switch symbol this throw true try type typeof undefined unknown var void while yield",
-    py: "and as assert async await break class continue def del elif else except False finally for from global if import in is lambda None nonlocal not or pass raise return True try while with yield self print",
-    java: "abstract assert boolean break byte case catch char class const continue default do double else enum extends final finally float for goto if implements import instanceof int interface long native new package private protected public return short static strictfp super switch synchronized this throw throws transient try void volatile while true false null var record sealed",
-    sql: "select from where insert into values update set delete create table alter drop truncate join inner left right outer full on group by order having limit offset distinct as and or not null is in between like exists union all primary key foreign references index view default cast count sum avg min max case when then else end asc desc"
-  };
-
-  function keywordsFor(lang) {
-    if (/^(ts|typescript|tsx)$/.test(lang)) return KW.ts;
-    if (/^(js|javascript|jsx|node|mjs)$/.test(lang)) return KW.js;
-    if (/^(py|python)$/.test(lang)) return KW.py;
-    if (/^(java|kotlin)$/.test(lang)) return KW.java;
-    if (/^(sql|mysql|postgres|postgresql|sqlite|plsql)$/.test(lang)) return KW.sql;
-    return KW.ts; // superset default
-  }
-
+  /* ---------- syntax highlighting ----------
+     Delegates to js/highlight.js, which is the same tokenizer this file used to
+     carry inline. It moved out so My Notes' code blocks highlight identically —
+     two copies would drift apart. */
   function highlightCode(code, lang) {
-    lang = String(lang || "").toLowerCase();
-    if (/^(html|xml|svg|markup|vue|jsx|tsx)$/.test(lang)) return highlightMarkup(code);
-
-    const isSql = /^(sql|mysql|postgres|postgresql|sqlite|plsql)$/.test(lang);
-    const hashComment = /^(py|python|rb|ruby|bash|sh|shell|zsh|yaml|yml|toml|ini|makefile|dockerfile|r|perl|php)$/.test(lang);
-    const commentAlt = hashComment
-      ? "#[^\\n]*|/\\*[\\s\\S]*?\\*/"
-      : "//[^\\n]*|/\\*[\\s\\S]*?\\*/";
-    const kw = keywordsFor(lang).trim().split(/\s+/).join("|");
-
-    const re = new RegExp(
-      "(" + commentAlt + ")" +                                             // 1 comment
-      "|(\"(?:\\\\.|[^\"\\\\])*\"|'(?:\\\\.|[^'\\\\])*'|`(?:\\\\.|[^`\\\\])*`)" + // 2 string
-      "|\\b(" + kw + ")\\b" +                                              // 3 keyword
-      "|(\\b\\d[\\w.]*\\b)" +                                              // 4 number
-      "|([A-Za-z_$][\\w$]*)(?=\\s*\\()",                                   // 5 function call
-      isSql ? "gi" : "g"
-    );
-
-    let out = "", last = 0, m;
-    while ((m = re.exec(code)) !== null) {
-      if (m.index > last) out += esc(code.slice(last, m.index));
-      const cls = m[1] ? "tok-comment" : m[2] ? "tok-string" : m[3] ? "tok-keyword" : m[4] ? "tok-number" : "tok-fn";
-      out += '<span class="' + cls + '">' + esc(m[0]) + "</span>";
-      last = m.index + m[0].length;
-    }
-    out += esc(code.slice(last));
-    return out;
-  }
-
-  function highlightMarkup(code) {
-    const re = /(<!--[\s\S]*?-->)|("[^"]*"|'[^']*')|(<\/?)([A-Za-z][\w-]*)|(\/?>)/g;
-    let out = "", last = 0, m;
-    while ((m = re.exec(code)) !== null) {
-      if (m.index > last) out += esc(code.slice(last, m.index));
-      if (m[1]) out += '<span class="tok-comment">' + esc(m[1]) + "</span>";
-      else if (m[2]) out += '<span class="tok-string">' + esc(m[2]) + "</span>";
-      else if (m[4]) out += '<span class="tok-punct">' + esc(m[3]) + '</span><span class="tok-tag">' + esc(m[4]) + "</span>";
-      else if (m[5]) out += '<span class="tok-punct">' + esc(m[5]) + "</span>";
-      last = m.index + m[0].length;
-    }
-    out += esc(code.slice(last));
-    return out;
+    return IQB.highlight.code(code, lang);
   }
 
   function wireCopyButtons(root) {

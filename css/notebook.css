@@ -1,0 +1,489 @@
+/* ============================================================
+   My Notes. Built entirely on the existing design tokens (--accent, --surface,
+   --border, --ink, --sans/--mono, --r-*, --step-*) so it inherits both themes
+   with no per-theme overrides, exactly like the tutor panel does.
+
+   Type follows the rest of the app: Plus Jakarta Sans for headings (as the
+   tutor uses), Inter for prose, JetBrains Mono for tags and code.
+   ============================================================ */
+
+/* The notes view replaces the question column, the same swap the playground
+   does. Everything that only means something next to questions is hidden. */
+body.nb-mode { overflow: hidden; }
+body.nb-mode :is(.sidebar, .content, .mobile-controls, .scroll-to-top, .reading-mode-toggle) { display: none; }
+
+/* CRITICAL: .main is a two-column grid (sidebar + content). Hiding the sidebar
+   does NOT reclaim its track — the template still declares it — so a third
+   child lands in the 210px column and the editor pane collapses to 0. Collapse
+   the grid to a single column, exactly as pg-mode does. */
+body.nb-mode .main {
+  max-width: none; grid-template-columns: 1fr; gap: 0;
+  padding: 0 clamp(8px, 1.4vw, 14px) clamp(8px, 1.4vw, 14px);
+  height: calc(100vh - var(--header-shell-h));
+}
+
+.nb {
+  display: grid;
+  /* [list | divider | editor]. --nb-list-w is set by the drag handler; the
+     fallback keeps the original sizing until the reader moves it. */
+  grid-template-columns: var(--nb-list-w, minmax(260px, 340px)) auto 1fr;
+  gap: 0;
+  height: 100%;
+  /* No --maxw cap: this is a workspace, not a reading column, so it takes the
+     width it is given rather than leaving the editor boxed in. */
+  margin: 0;
+  max-width: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.nb[hidden] { display: none !important; }
+
+.nb-pane { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.nb-pane-list { background: var(--bg); }
+
+/* The divider IS the border between the panes — 5px of grabbable width with a
+   1px line drawn down the middle, so it reads as a seam rather than a gap. */
+.nb-split {
+  width: 5px; cursor: col-resize; position: relative;
+  background: var(--border); touch-action: none;
+  transition: background var(--trans);
+}
+.nb-split::after {
+  content: ""; position: absolute; inset: 0 -3px;  /* a forgiving grab target */
+}
+.nb-split:hover, .nb-split:focus-visible { background: var(--accent); outline: none; }
+body.nb-splitting { cursor: col-resize !important; }
+body.nb-splitting * { user-select: none !important; cursor: col-resize !important; }
+
+/* ---------- list pane ---------- */
+.nb-pane-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 16px 12px;
+}
+.nb-title {
+  font-family: "Plus Jakarta Sans", var(--sans);
+  font-size: var(--step-1); font-weight: 700; letter-spacing: -.02em;
+  margin: 0; flex: 1; color: var(--ink);
+}
+.nb-new {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border: none; border-radius: var(--r-pill);
+  background: var(--accent); color: var(--accent-contrast);
+  font-family: var(--sans); font-size: var(--step--1); font-weight: 700;
+  cursor: pointer; transition: var(--trans); white-space: nowrap;
+}
+.nb-new:hover { filter: brightness(1.06); }
+
+.nb-search {
+  position: relative; margin: 0 16px 10px;
+  display: flex; align-items: center;
+}
+.nb-search svg { position: absolute; left: 11px; color: var(--muted); pointer-events: none; }
+.nb-search-input {
+  width: 100%; height: 36px; padding: 0 12px 0 34px;
+  border: 1px solid var(--border); border-radius: var(--r-pill);
+  background: var(--surface); color: var(--ink);
+  font-family: var(--sans); font-size: var(--step--1);
+  transition: border-color var(--trans), box-shadow var(--trans);
+}
+.nb-search-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+
+.nb-chips { display: flex; gap: 6px; padding: 0 16px 10px; flex-wrap: wrap; }
+.nb-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 11px; border: 1px solid var(--border); border-radius: var(--r-pill);
+  background: var(--surface); color: var(--ink-2);
+  font-family: var(--mono); font-size: var(--step--1); cursor: pointer;
+  transition: var(--trans);
+}
+.nb-chip:hover { border-color: var(--accent); color: var(--accent); }
+.nb-chip.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-ink); }
+
+.nb-tagbar {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  padding: 0 16px 12px; max-height: 96px; overflow-y: auto;
+}
+.nb-tagbar[hidden] { display: none; }
+.nb-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 9px; border: 1px solid var(--border); border-radius: var(--r-pill);
+  background: var(--surface-2); color: var(--ink-2);
+  font-family: var(--mono); font-size: 11px; cursor: pointer; transition: var(--trans);
+}
+.nb-tag:hover { border-color: var(--accent); color: var(--accent); }
+.nb-tag.on { background: var(--accent); border-color: var(--accent); color: var(--accent-contrast); }
+.nb-tag-n { opacity: .65; font-variant-numeric: tabular-nums; }
+.nb-tag-none { font-style: italic; border-style: dashed; }
+.nb-tag-none.on { font-style: normal; border-style: solid; }
+
+.nb-list { flex: 1; overflow-y: auto; padding: 0 10px 14px; }
+
+.nb-group {
+  display: flex; align-items: center; gap: 8px;
+  padding: 14px 6px 6px;
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+}
+.nb-group-name { font-weight: 700; }
+.nb-group-n {
+  padding: 1px 6px; border-radius: var(--r-pill);
+  background: var(--surface-3); color: var(--ink-2); letter-spacing: 0;
+}
+
+/* A visible card per note — with a border they read as discrete items rather
+   than a run-on column of text. */
+.nb-rowwrap { position: relative; margin-bottom: 7px; }
+.nb-rowdel {
+  position: absolute; top: 8px; right: 8px; z-index: 2;
+  width: 26px; height: 26px; padding: 0; display: grid; place-items: center;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface); color: var(--muted);
+  cursor: pointer; opacity: 0; transition: var(--trans);
+}
+.nb-rowwrap:hover .nb-rowdel,
+.nb-rowwrap:focus-within .nb-rowdel { opacity: 1; }
+.nb-rowdel:hover { border-color: var(--advanced); color: var(--advanced); background: var(--advanced-soft); }
+.nb-rowdel:focus-visible { opacity: 1; outline: none; box-shadow: var(--focus); }
+
+.nb-row {
+  display: block; width: 100%; text-align: left;
+  padding: 11px 12px;
+  border: 1px solid var(--border); border-radius: var(--r-md);
+  background: var(--surface); cursor: pointer; transition: var(--trans);
+  font-family: var(--sans);
+}
+.nb-row:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.nb-row.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-sm);
+}
+.nb-row-head { display: flex; align-items: center; gap: 8px; padding-right: 26px; }
+.nb-row-title {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-weight: 600; font-size: var(--step-0); color: var(--ink);
+}
+.nb-row-star { color: var(--accent); display: inline-flex; }
+.nb-row-star svg { fill: currentColor; }
+.nb-row-preview {
+  margin-top: 3px; font-size: var(--step--1); color: var(--muted); line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.nb-row-foot { display: flex; align-items: center; gap: 5px; margin-top: 7px; flex-wrap: wrap; }
+.nb-row-tag {
+  padding: 1px 7px; border-radius: var(--r-pill);
+  background: var(--surface-3); color: var(--ink-2);
+  font-family: var(--mono); font-size: 10.5px;
+}
+.nb-row-linked { display: inline-flex; align-items: center; color: var(--accent); background: var(--accent-soft); }
+.nb-row-when { margin-left: auto; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+
+/* ---------- empty states ---------- */
+.nb-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 44px 24px; gap: 2px;
+}
+.nb-empty-editor { height: 100%; }
+.nb-empty-ic {
+  width: 58px; height: 58px; margin-bottom: 12px;
+  border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent);
+}
+.nb-empty-t { margin: 0; font-weight: 700; font-size: var(--step-0); color: var(--ink); }
+.nb-empty-s { margin: 4px 0 14px; font-size: var(--step--1); color: var(--muted); line-height: 1.55; max-width: 260px; }
+
+/* ---------- editor pane ---------- */
+.nb-pane-editor { background: var(--surface); }
+.nb-ed-head {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 14px 16px 10px;
+}
+.nb-back { display: none; }
+.nb-title-input {
+  flex: 1; min-width: 0; border: none; background: transparent; color: var(--ink);
+  font-family: "Plus Jakarta Sans", var(--sans);
+  font-size: var(--step-2); font-weight: 700; letter-spacing: -.02em;
+  padding: 2px 0;
+}
+.nb-title-input:focus { outline: none; }
+.nb-title-input::placeholder { color: var(--border-strong); }
+
+.nb-icon-btn {
+  flex: 0 0 auto; width: 32px; height: 32px; border-radius: var(--r-sm);
+  border: 1px solid var(--border); background: var(--surface); color: var(--ink-2);
+  display: grid; place-items: center; cursor: pointer; transition: var(--trans);
+}
+.nb-icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nb-icon-btn.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.nb-icon-btn.on svg { fill: currentColor; }
+.nb-icon-btn.nb-danger:hover { border-color: var(--advanced); color: var(--advanced); }
+
+/* ---------- tag picker ----------
+   Chips for what's on the note, plus a dropdown of the saved vocabulary. The
+   wrapper is the positioning context for the menu, so the menu tracks the
+   "+ Add tag" button rather than the viewport. */
+/* Sits inline in the header beside the title — the tag decides which group the
+   note lives in, so it belongs with the note's identity. */
+.nb-tags { position: relative; display: flex; align-items: center; flex: 0 0 auto; }
+/* The chip/button live in their own box so repainting them cannot take the
+   open dropdown (a sibling) down with them. */
+.nb-tagfield { display: flex; align-items: center; gap: 6px; }
+.nb-tagchip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 5px 3px 10px; border-radius: var(--r-pill);
+  background: var(--accent-soft); color: var(--accent-ink);
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, transparent);
+  font-family: var(--mono); font-size: 11px;
+}
+.nb-tagchip-x {
+  border: none; background: none; cursor: pointer; padding: 0;
+  width: 15px; height: 15px; border-radius: 50%; line-height: 1;
+  color: var(--accent-ink); opacity: .7; font-size: 13px;
+  display: grid; place-items: center; transition: var(--trans);
+}
+.nb-tagchip-x:hover { opacity: 1; background: color-mix(in srgb, var(--accent) 18%, transparent); }
+.nb-tagadd {
+  padding: 3px 11px; border-radius: var(--r-pill);
+  border: 1px dashed var(--border-strong); background: transparent; color: var(--muted);
+  font-family: var(--mono); font-size: 11px; cursor: pointer; transition: var(--trans);
+}
+.nb-tagadd:hover { border-color: var(--accent); color: var(--accent); border-style: solid; }
+
+.nb-tagmenu {
+  /* Anchored to the RIGHT edge: the tag button sits near the end of the header,
+     so a left-anchored menu would run off screen. Width is fixed rather than
+     a percentage — the button is only ~70px wide, and `100%` of that collapsed
+     the menu into an unreadable column. */
+  position: absolute; top: calc(100% + 6px); right: 0; left: auto; z-index: 20;
+  width: 260px; max-width: 80vw;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-md); box-shadow: var(--shadow-lg);
+  padding: 8px; display: flex; flex-direction: column; gap: 6px;
+}
+.nb-tagmenu-input {
+  width: 100%; padding: 6px 9px;
+  border: 1px solid var(--border); border-radius: var(--r-sm);
+  background: var(--bg); color: var(--ink);
+  font-family: var(--sans); font-size: var(--step--1);
+}
+.nb-tagmenu-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+.nb-tagmenu-list { max-height: 210px; overflow-y: auto; display: flex; flex-direction: column; gap: 1px; }
+.nb-tagmenu-empty { padding: 10px 8px; font-size: var(--step--1); color: var(--muted); text-align: center; }
+/* A row is [pick | rename | delete]. The actions stay invisible until the row
+   is hovered or focused, so the list still scans as a simple tag picker. */
+.nb-tagrow { display: flex; align-items: center; gap: 2px; border-radius: var(--r-sm); }
+.nb-tagrow:hover { background: var(--surface-2); }
+.nb-tagact {
+  flex: 0 0 auto; width: 24px; height: 24px; padding: 0;
+  display: grid; place-items: center;
+  border: none; border-radius: 6px; background: transparent; color: var(--muted);
+  cursor: pointer; opacity: 0; transition: var(--trans);
+}
+.nb-tagrow:hover .nb-tagact,
+.nb-tagrow:focus-within .nb-tagact { opacity: 1; }
+.nb-tagact:hover { background: var(--surface-3); color: var(--ink); }
+.nb-tagact-danger:hover { background: var(--advanced-soft); color: var(--advanced); }
+/* Keyboard users never get a hover, so focus alone must reveal it. */
+.nb-tagact:focus-visible { opacity: 1; outline: none; box-shadow: var(--focus); }
+
+.nb-tagrename {
+  flex: 1; min-width: 0; margin: 2px 0; padding: 5px 8px;
+  border: 1px solid var(--accent); border-radius: var(--r-sm);
+  background: var(--bg); color: var(--ink);
+  font-family: var(--mono); font-size: var(--step--1);
+}
+.nb-tagrename:focus { outline: none; box-shadow: var(--focus); }
+.nb-tagrow-editing { padding: 0 2px; }
+
+.nb-tagopt {
+  display: flex; align-items: center; gap: 9px; flex: 1; min-width: 0; text-align: left;
+  padding: 6px 8px; border: none; border-radius: var(--r-sm);
+  background: transparent; color: var(--ink); cursor: pointer;
+  font-family: var(--mono); font-size: var(--step--1); transition: var(--trans);
+}
+.nb-tagrow .nb-tagopt:hover { background: transparent; }
+.nb-tagopt:hover { background: var(--surface-2); }
+.nb-tagopt-box {
+  width: 14px; height: 14px; flex: 0 0 auto; border-radius: 4px;
+  border: 1.5px solid var(--border-strong); position: relative;
+}
+.nb-tagopt.on .nb-tagopt-box { background: var(--accent); border-color: var(--accent); }
+.nb-tagopt.on .nb-tagopt-box::after {
+  content: ""; position: absolute; left: 4px; top: 1px;
+  width: 4px; height: 8px; border: solid var(--accent-contrast);
+  border-width: 0 2px 2px 0; transform: rotate(45deg);
+}
+.nb-tagopt-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.nb-tagopt-n { color: var(--muted); font-size: 10.5px; font-variant-numeric: tabular-nums; }
+.nb-tagnew { color: var(--accent); font-weight: 600; }
+
+/* toolbar */
+.nb-toolbar {
+  display: flex; align-items: center; gap: 2px; flex-wrap: wrap;
+  padding: 6px 12px; margin: 0 16px;
+  border: 1px solid var(--border); border-radius: var(--r-sm);
+  background: var(--bg);
+}
+.nb-t {
+  min-width: 30px; height: 28px; padding: 0 7px;
+  border: 1px solid transparent; border-radius: 6px;
+  background: transparent; color: var(--ink-2); cursor: pointer;
+  font-family: var(--sans); font-size: var(--step--1); line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: var(--trans);
+}
+.nb-t:hover { background: var(--surface-3); color: var(--ink); }
+.nb-t.on { background: var(--accent-soft); color: var(--accent-ink); }
+.nb-t-b { font-weight: 800; }
+.nb-t-i { font-style: italic; font-family: Georgia, serif; }
+.nb-t-u { text-decoration: underline; }
+.nb-t-s { text-decoration: line-through; }
+.nb-t-sep { width: 1px; height: 18px; background: var(--border); margin: 0 4px; }
+.nb-lang {
+  height: 26px; margin-left: 4px; padding: 0 6px;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--surface); color: var(--ink-2);
+  font-family: var(--mono); font-size: 11px; cursor: pointer;
+}
+.nb-lang[hidden] { display: none; }
+
+/* the editable surface */
+.nb-body {
+  flex: 1; overflow-y: auto;
+  padding: 16px 18px 40px; margin: 10px 16px 0;
+  font-family: var(--sans); font-size: var(--step-0); line-height: 1.68; color: var(--ink);
+}
+.nb-body:focus { outline: none; }
+.nb-body > :first-child { margin-top: 0; }
+.nb-body p { margin: 0 0 10px; }
+.nb-body h2, .nb-body h3, .nb-body h4 {
+  font-family: "Plus Jakarta Sans", var(--sans);
+  font-weight: 700; letter-spacing: -.015em; color: var(--ink);
+  margin: 20px 0 8px; line-height: 1.3;
+}
+.nb-body h2 { font-size: var(--step-1); }
+.nb-body h3 { font-size: var(--step-0); }
+.nb-body h4 { font-size: var(--step--1); color: var(--ink-2); }
+/* reset.css sets `ul, ol { list-style: none }` globally, so markers have to be
+   put back explicitly here — without this, bullets and numbers are invisible
+   the moment they're inserted. */
+.nb-body ul, .nb-body ol { margin: 4px 0 12px; padding-left: 24px; }
+.nb-body ul { list-style: disc outside; }
+.nb-body ul ul { list-style: circle outside; }
+.nb-body ol { list-style: decimal outside; }
+.nb-body ol ol { list-style: lower-alpha outside; }
+.nb-body li { margin-bottom: 5px; }
+.nb-body li::marker { color: var(--accent); }
+.nb-body blockquote {
+  margin: 10px 0; padding: 6px 0 6px 14px;
+  border-left: 3px solid var(--accent); color: var(--ink-2); font-style: italic;
+}
+.nb-body a { color: var(--accent); text-underline-offset: 2px; }
+.nb-body table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: var(--step--1); }
+.nb-body th, .nb-body td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+.nb-body th { background: var(--surface-2); font-weight: 700; }
+
+/* checklists — the box is a pseudo-element, so there is no nested editable
+   node inside the <li> for the caret to get trapped in. */
+.nb-body ul.nb-check { list-style: none; padding-left: 4px; }
+.nb-body ul.nb-check li {
+  position: relative; padding-left: 26px; list-style: none;
+}
+.nb-body ul.nb-check li::before {
+  content: ""; position: absolute; left: 0; top: .35em;
+  width: 15px; height: 15px; border-radius: 4px;
+  border: 1.5px solid var(--border-strong); background: var(--surface);
+  cursor: pointer; transition: var(--trans);
+}
+.nb-body ul.nb-check li[data-checked="true"]::before {
+  background: var(--accent); border-color: var(--accent);
+}
+.nb-body ul.nb-check li[data-checked="true"]::after {
+  content: ""; position: absolute; left: 4.5px; top: calc(.35em + 3px);
+  width: 5px; height: 9px; border: solid var(--accent-contrast);
+  border-width: 0 2px 2px 0; transform: rotate(45deg);
+  pointer-events: none;
+}
+.nb-body ul.nb-check li[data-checked="true"] { color: var(--muted); text-decoration: line-through; }
+
+/* code blocks — the same One Dark surface the tutor and playground use, so a
+   snippet reads as "code" in every corner of the app. */
+.nb-body pre {
+  --od-bg: #282C34; --od-fg: #ABB2BF;
+  margin: 12px 0; padding: 13px 15px;
+  border-radius: var(--r-md); border: 1px solid #1c2027;
+  background: var(--od-bg); color: var(--od-fg);
+  overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+}
+.nb-body pre code {
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.65;
+  color: inherit; background: none; padding: 0; border: none;
+}
+.nb-body code {
+  font-family: var(--mono); font-size: .86em;
+  background: var(--surface-2); color: var(--accent-ink);
+  padding: 1.5px 6px; border-radius: 5px; border: 1px solid var(--border);
+}
+.nb-body pre .tok-comment { color: #7F848E; font-style: italic; }
+.nb-body pre .tok-string  { color: #98C379; }
+.nb-body pre .tok-keyword { color: #C678DD; }
+.nb-body pre .tok-number  { color: #D19A66; }
+.nb-body pre .tok-fn      { color: #61AFEF; }
+.nb-body pre .tok-tag     { color: #E06C75; }
+.nb-body pre .tok-punct   { color: #ABB2BF; }
+
+.nb-savestate {
+  font-family: var(--mono); font-size: 10.5px; white-space: nowrap;
+  padding: 3px 9px; border-radius: var(--r-pill); transition: var(--trans);
+}
+.nb-save-saved { color: var(--beginner); background: var(--beginner-soft); }
+.nb-save-saving { color: var(--intermediate); background: var(--intermediate-soft); }
+.nb-save-dirty { color: var(--muted); background: var(--surface-2); }
+
+.nb-foot {
+  display: flex; align-items: center; gap: 12px;
+  padding: 9px 18px 11px; margin: 0 16px;
+  border-top: 1px solid var(--border);
+}
+.nb-meta {
+  flex: 1; min-width: 0;
+  font-family: var(--mono); font-size: 10.5px; color: var(--muted);
+}
+.nb-savebtn {
+  flex: 0 0 auto; padding: 7px 18px; border: none; border-radius: var(--r-pill);
+  background: var(--accent); color: var(--accent-contrast);
+  font-family: var(--sans); font-size: var(--step--1); font-weight: 700;
+  cursor: pointer; transition: var(--trans);
+}
+.nb-savebtn:hover:not(:disabled) { filter: brightness(1.06); }
+.nb-savebtn:disabled {
+  background: var(--surface-2); color: var(--muted);
+  cursor: default; box-shadow: none;
+}
+
+/* ---------- responsive: two panes become two pages ---------- */
+@media (max-width: 860px) {
+  .nb-split { display: none; }
+  .nb {
+    grid-template-columns: 1fr;
+    height: 100%;
+    border-radius: 0; border-left: none; border-right: none;
+  }
+  .nb-pane-editor {
+    position: absolute; inset: 0; z-index: 5;
+    background: var(--surface);
+    transform: translateX(100%); transition: transform .22s ease;
+  }
+  .nb { position: relative; }
+  body.nb-editing .nb-pane-editor { transform: none; }
+  .nb-back { display: grid; place-items: center; width: 32px; height: 32px; flex: 0 0 auto;
+    border: 1px solid var(--border); border-radius: var(--r-sm);
+    background: var(--surface); color: var(--ink-2); cursor: pointer; }
+  .nb-back:hover { border-color: var(--accent); color: var(--accent); }
+  .nb-title-input { font-size: var(--step-1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nb-pane-editor { transition: none; }
+}

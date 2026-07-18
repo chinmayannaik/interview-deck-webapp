@@ -66,6 +66,9 @@
   /* A pseudo-tab: it sits in the group tab row but holds no questions, so it
      never reaches the filter/render path — setCategory() forks before that. */
   const PLAYGROUND = "playground";
+  /* Same idea as PLAYGROUND: a tab that holds no questions, so setCategory
+     forks before the filter/render path ever sees it. */
+  const NOTEBOOK = "notes";
   const catsFor = (key) => {
     if (key === "all") return null; // no restriction
     if (isGroup(key)) return GROUPS.find((g) => g.key === key).cats;
@@ -229,6 +232,17 @@
       el("span", { class: "tab-n", text: "JS" })
     ]);
     tabsEl.appendChild(pg);
+
+    if (!window.IQB.notebookUI) return;
+    const nb = el("button", {
+      class: "tab tab-nb", role: "tab", "data-cat": NOTEBOOK,
+      style: "--tab-c: var(--notebook)",
+      onclick: () => setCategory(NOTEBOOK, true)
+    }, [
+      el("span", { class: "dot" }),
+      document.createTextNode("My Notes")
+    ]);
+    tabsEl.appendChild(nb);
   }
 
   /* progress within a given set of categories */
@@ -394,6 +408,24 @@
   /* Swaps the whole content column for the playground. body.pg-mode does the
      hiding in CSS so the sidebar, tools, subnav and mobile dropdowns — none of
      which mean anything without questions — stay untouched in JS. */
+  /* Swaps the content column for My Notes. Mirrors showPlayground: body.nb-mode
+     does the hiding in CSS so the sidebar/subnav/toolbars stay untouched here. */
+  function showNotebook(on) {
+    if (on) {
+      window.scrollTo(0, 0);
+      const shell = qs("#header-shell");
+      if (shell) shell.classList.remove("is-collapsed");
+      document.documentElement.style.setProperty("--header-offset", "var(--header-shell-h)");
+    }
+    document.body.classList.toggle("nb-mode", on);
+    if (!on) document.body.classList.remove("nb-editing");
+    const nbEl = qs("#notebook");
+    if (nbEl) nbEl.hidden = !on;
+    if (!window.IQB.notebookUI) return;
+    if (on) IQB.notebookUI.onShow();
+    else IQB.notebookUI.onHide();
+  }
+
   function showPlayground(on) {
     /* The playground fills the viewport below the header, so it can't inherit a
        collapsed header: the shell is sticky and the scroll handler leaves
@@ -426,6 +458,17 @@
     if (updateHash) viewPinned = true;
     // mirror the choice into the reader's cloud profile (no-op when signed out)
     if (window.IQB.sync && IQB.sync.pushSoon) IQB.sync.pushSoon();
+
+    if (key === NOTEBOOK) {
+      qsa(".tab", tabsEl).forEach((t) => t.classList.toggle("active", t.dataset.cat === NOTEBOOK));
+      showPlayground(false);
+      showNotebook(true);
+      if (updateHash) history.replaceState(null, "", "#" + key);
+      const nbTab = qs(".tab.active", tabsEl);
+      if (nbTab) nbTab.scrollIntoView({ inline: "center", block: "nearest" });
+      return;
+    }
+    showNotebook(false);
 
     if (key === PLAYGROUND) {
       qsa(".tab", tabsEl).forEach((t) => t.classList.toggle("active", t.dataset.cat === PLAYGROUND));
@@ -473,8 +516,11 @@
       if (state.completedOnly && !progress.has(item.id)) return false;
       if (state.uncompletedOnly && progress.has(item.id)) return false;
       if (state.hasNoteOnly) {
-        const note = store.getNote(item.id);
-        if (!(note && note.text && note.text.trim())) return false;
+        // Reads the notebook, not the old per-question store: after the
+        // migration in js/notebook.js that is where a question's note lives,
+        // and a note written today never touches the legacy map at all.
+        const note = window.IQB.notebook ? IQB.notebook.byQuestion(item.id) : null;
+        if (!(note && (note.plain || "").trim())) return false;
       }
       if (state.hasHighlightOnly) {
         const hl = store.getHL(item.id);
@@ -715,7 +761,17 @@
     const body = el("div", {
       class: "qa-body",
       onclick: (e) => {
-        const preserve = e.target.closest("button, a, textarea, input, .pn-text, .answer, .code-block, .qa-tip, .qa-deep");
+        /* Clicking the body collapses the card — except inside things the
+           reader is actually working in. `.pn-section` covers the whole
+           Personal Note block (editor, its buttons, and the padding around
+           them): it used to be listed here only as `textarea`, so when the note
+           editor became contenteditable every click in it fell through and shut
+           the card. [contenteditable] is belt-and-braces for any future editor.
+           The action-button row is deliberately NOT preserved, so clicking the
+           empty space beside those buttons still closes the card. */
+        const preserve = e.target.closest(
+          "button, a, textarea, input, [contenteditable], .pn-section, .pn-text, " +
+          ".answer, .code-block, .qa-tip, .qa-deep");
         if (!preserve) toggleCard(card);
       }
     }, [inner]);
@@ -1142,6 +1198,10 @@
     window.addEventListener("hashchange", parseHash);
 
     // the playground lives in the content column, next to the question list
+    if (window.IQB.notebookUI) {
+      const mainNb = qs(".main") || qs("main");
+      if (mainNb) mainNb.appendChild(IQB.notebookUI.build());
+    }
     if (window.IQB.playground) {
       const main = qs(".main");
       if (main) main.appendChild(IQB.playground.build());
