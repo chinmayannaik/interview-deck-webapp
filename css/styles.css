@@ -506,6 +506,16 @@ html { overflow-anchor: none; }
 .chip-filter:hover { border-color: var(--border-strong); }
 .chip-filter.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
+/* The AI Tutor's curated view chip — accented so it reads as distinct from the
+   plain level filters, and carries a count badge of how many questions matched. */
+.chip-filter.ai-suggested { border-color: var(--accent); color: var(--accent); }
+.chip-filter.ai-suggested:hover { border-color: var(--accent); }
+.chip-filter.ai-suggested.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.chip-filter.ai-suggested .chip-n {
+  margin-left: 6px; padding: 0 6px; border-radius: var(--r-pill);
+  background: color-mix(in srgb, currentColor 18%, transparent); font-size: .85em;
+}
+
 /* ---------- JS playground ----------
    One Dark, fixed in both app themes. An editor theme is a thing in its own
    right — people recognise these exact colours — so it deliberately does NOT

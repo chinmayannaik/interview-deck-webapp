@@ -1,0 +1,435 @@
+/* ============================================================
+   AI Tutor widget. Built entirely on the site's existing design tokens
+   (--accent, --surface, --border, --ink, --code-bg, --r-*, --mono …) so it
+   inherits both the light and dark themes with no per-theme overrides.
+   ============================================================ */
+
+/* ---------- launcher FAB ----------
+   Positioned above .reading-mode-toggle (fixed right:18/bottom:20, z-index 120)
+   and .scroll-to-top (fixed right:18/bottom:70, z-index 90, in css/styles.css)
+   — those end at bottom:110, so 132px clears both with a visible gap instead
+   of the FAB sitting on top of them at the same corner. z-index is raised
+   above both (was 70/71) as a second line of defense; the body.tutor-open
+   rules below additionally hide them outright while the panel is open. */
+.tutor-fab {
+  position: fixed; right: 11px; bottom: 121px; z-index: 130;
+  width: 54px; height: 54px; border-radius: 50%;
+  border: none; cursor: pointer;
+  background: var(--accent); color: var(--accent-contrast, #fff);
+  display: grid; place-items: center;
+  box-shadow: var(--shadow-lg, 0 8px 24px rgba(0,0,0,.22));
+  transition: transform .18s ease, opacity .18s ease;
+}
+.tutor-fab:hover { transform: translateY(-2px) scale(1.04); }
+.tutor-fab:active { transform: scale(.96); }
+.tutor-fab.is-open { opacity: 0; pointer-events: none; transform: scale(.9); }
+
+/* Robot mascot: the two eyes blink on a loop so the idle FAB feels alive.
+   transform-box: fill-box makes scaleY pivot around each eye's own centre, so a
+   blink is a quick vertical squash back to a full circle. */
+.tutor-bot-icon { overflow: visible; }
+/* Blinking is opt-in, scoped to the two places the mascot is a single focal
+   point. The same icon also appears on every question card's "Ask AI" button
+   (js/app.js), and a dozen robots blinking down the page at once is a twitchy
+   mess rather than a bit of life. */
+.tutor-fab .tutor-eye,
+.tutor-title-bot .tutor-eye {
+  transform-box: fill-box; transform-origin: center;
+  animation: tutor-blink 2.4s ease-in-out infinite;
+}
+@keyframes tutor-blink {
+  /* eyes open most of the cycle, one quick blink near the end (~every 2.4s) */
+  0%, 88%, 100% { transform: scaleY(1); }
+  92%, 96% { transform: scaleY(0.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tutor-bot-icon .tutor-eye { animation: none; }
+}
+
+/* Hide the site's own bottom-right FABs while the tutor is open — they'd
+   otherwise sit right on top of (or just behind) this panel's corner. */
+body.tutor-open .reading-mode-toggle,
+body.tutor-open .scroll-to-top {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+}
+
+/* ---------- panel ---------- */
+.tutor-panel {
+  position: fixed; right: 0px; bottom: 8px; z-index: 131;
+  width: min(500px, calc(100vw - 32px));
+  height: min(700px, calc(100vh - 67px));
+  display: flex; flex-direction: column;
+  background: var(--bg); color: var(--ink);
+  border: 1px solid var(--border); border-radius: var(--r-lg, 16px);
+  box-shadow: var(--shadow-lg, 0 16px 48px rgba(0,0,0,.28));
+  overflow: hidden;
+  animation: tutor-in .2s ease;
+  /* The coach gets its own display sans — Plus Jakarta Sans — so it reads as a
+     distinct, premium assistant rather than more of the site's Inter body copy.
+     Mono elements (chips, code, inline) still opt into --mono themselves. */
+  font-family: "Plus Jakarta Sans", var(--sans);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+.tutor-title { font-family: "Plus Jakarta Sans", var(--sans); font-weight: 700; letter-spacing: -0.02em; }
+@keyframes tutor-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* CRITICAL: make the `hidden` attribute actually hide these. Both set
+   display:flex above, and an author display rule beats the UA
+   [hidden]{display:none}, so panel.hidden=true would flip the attribute but
+   leave the panel on screen — that is why the close (X) button appeared dead.
+   Restated with attribute specificity (+ !important) so hidden always wins. */
+.tutor-panel[hidden], .tutor-context[hidden] { display: none !important; }
+
+.tutor-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px 12px 12px 26px; /* extra left room clears the corner resize grip */
+  border-bottom: 1px solid var(--border); background: var(--surface);
+}
+.tutor-title { display: flex; align-items: center; gap: 8px; font-weight: 700; flex: 1; min-width: 0; }
+/* Header controls (restart / expand / close) grouped and pushed to the right —
+   .tutor-title's flex:1 takes the slack, so this sits against the panel edge. */
+.tutor-actions { display: flex; align-items: center; gap: 2px; flex-shrink: 0; }
+/* The same robot as the launcher FAB, at header scale — the mascot you tapped
+   is the one now sitting in the title bar. Accent-coloured so it keeps the
+   visual weight the old status dot had. */
+/* No margin nudge needed: the glyph is centred inside its own viewBox now
+   (see the translate in botIcon), so plain flex centring lands it correctly. */
+.tutor-title-bot { flex-shrink: 0; color: var(--accent); }
+.tutor-sub { display: block; font-weight: 400; font-size: var(--step--2, .78rem); color: var(--ink-2); margin-left: 4px; }
+.tutor-x {
+  border: none; background: transparent; color: var(--ink-2); cursor: pointer;
+  width: 32px; height: 32px; border-radius: var(--r-sm, 8px); display: grid; place-items: center;
+  transition: var(--trans, .15s);
+}
+.tutor-x:hover { background: var(--border); color: var(--ink); }
+
+/* ---------- drag-to-resize handles (top edge, left edge, corner) ----------
+   The panel is pinned to the bottom-right, so the top and left sides are the
+   free ones to pull. Three handles: the top edge changes height, the left edge
+   changes width, and the corner grip does both at once (js/tutor.js decides
+   which axes each one moves). The chosen size is saved across sessions. */
+.tutor-edge { position: absolute; z-index: 3; touch-action: none; }
+/* 7px strips hugging each free side — wide enough to grab without eating clicks
+   meant for the header buttons or the composer's textarea just inside them.
+   Both stop short of the corner so the corner grip (z-index 4) stays on top. */
+.tutor-edge-t { top: 0; left: 22px; right: 0; height: 7px; cursor: ns-resize; }
+.tutor-edge-l { top: 22px; left: 0; bottom: 0; width: 7px; cursor: ew-resize; }
+/* A hairline of accent on hover/focus so an invisible strip still shows it's
+   grabbable — and gives keyboard users a visible focus target. */
+.tutor-edge::after {
+  content: ""; position: absolute; inset: 0; opacity: 0;
+  background: var(--accent); transition: opacity .15s;
+}
+.tutor-edge:hover::after, .tutor-edge:focus-visible::after { opacity: .5; }
+.tutor-edge:focus-visible { outline: none; }
+
+.tutor-resize {
+  position: absolute; top: 0; left: 0; z-index: 4;
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  color: var(--ink-2); cursor: nwse-resize; touch-action: none;
+  border-top-left-radius: var(--r-lg, 16px);
+  transition: color .15s, background .15s;
+}
+.tutor-resize svg { transform: translate(1px, 1px); pointer-events: none; }
+.tutor-resize:hover,
+.tutor-resize:focus-visible { color: var(--accent); background: var(--accent-soft, rgba(0,0,0,.05)); outline: none; }
+
+/* While dragging, suppress text selection and force the right resize cursor
+   globally, so a fast drag that outruns a 7px strip doesn't select the page or
+   flicker back to the default arrow. The cursor matches the axis being dragged. */
+body.tutor-resizing, body.tutor-resizing * { user-select: none !important; }
+body.tutor-resizing-both, body.tutor-resizing-both * { cursor: nwse-resize !important; }
+body.tutor-resizing-y, body.tutor-resizing-y * { cursor: ns-resize !important; }
+body.tutor-resizing-x, body.tutor-resizing-x * { cursor: ew-resize !important; }
+
+/* ---------- pinned question context (Ask AI button on a card) ---------- */
+.tutor-context {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-bottom: 1px solid var(--border);
+  background: var(--accent-soft, rgba(0,0,0,.04));
+  font-size: var(--step--2, .78rem);
+}
+.tutor-context-label {
+  flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--accent-ink, var(--ink));
+}
+/* A short text label, not another "×" glyph — the header's own close button
+   sits directly above this bar, and two circular × icons stacked that close
+   together read as duplicates / are easy to mis-click. */
+.tutor-context-clear {
+  border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); cursor: pointer;
+  border-radius: var(--r-pill, 999px); padding: 3px 10px;
+  font-size: var(--step--2, .72rem); line-height: 1.4; flex-shrink: 0;
+}
+.tutor-context-clear:hover { border-color: var(--accent); color: var(--accent); }
+
+/* The subtitle ("Ask about any interview topic") is redundant once a question
+   is pinned in the bar directly below — and on a narrow panel the two
+   together wrap the header to multiple cramped lines. */
+.tutor-panel.has-context .tutor-sub { display: none; }
+
+/* ---------- message list ---------- */
+.tutor-body { flex: 1; overflow-y: auto; padding: 18px 16px; display: flex; flex-direction: column; gap: 14px; }
+.tutor-msg { display: flex; animation: tutor-msg-in .24s cubic-bezier(.2,.7,.3,1) both; }
+@keyframes tutor-msg-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
+.tutor-user { justify-content: flex-end; }
+.tutor-bot { justify-content: flex-start; max-width: 96%; }
+.tutor-bubble {
+  max-width: 86%; padding: 12px 16px; border-radius: 18px;
+  font-size: .9rem; line-height: 1.62; letter-spacing: -0.006em; word-wrap: break-word;
+}
+/* User: a soft crimson gradient with a gentle lift — richer and less flat than
+   the old solid block, and rounded like a modern messenger. */
+.tutor-user .tutor-bubble {
+  /* Deeper "wine" crimson gradient — richer and calmer than the bright flat red,
+     still unmistakably the brand accent. */
+  background: linear-gradient(145deg, #B51D3B 0%, #921530 55%, #6E0F22 100%);
+  color: #fff; border-bottom-right-radius: 6px;
+  box-shadow: 0 5px 16px -6px rgba(146, 21, 48, .55);
+}
+.tutor-user .tutor-bubble a { color: #fff; text-decoration: underline; }
+/* Bot: a clean card — hairline border, whisper of shadow for depth on the page. */
+.tutor-bot .tutor-bubble {
+  background: var(--surface); border: 1px solid var(--border);
+  border-bottom-left-radius: 6px; max-width: 100%;
+  padding: 14px 17px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .035);
+}
+.tutor-bubble strong { font-weight: 650; color: var(--ink); }
+.tutor-bubble a { color: var(--accent); text-underline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .tutor-msg { animation: none; } }
+
+/* structured coaching replies: headings, lists, tables, rules. The bot bubble
+   reads like a compact article, so its rhythm is tuned for that. */
+.tutor-bot .tutor-bubble { line-height: 1.6; }
+.tutor-bubble > :first-child { margin-top: 0; }
+.tutor-bubble > :last-child { margin-bottom: 0; }
+.tutor-bubble p { margin: 0 0 9px; }
+.tutor-bubble h2.tutor-h, .tutor-bubble h3.tutor-h, .tutor-bubble h4.tutor-h {
+  font-weight: 700; line-height: 1.3; color: var(--ink);
+  margin: 16px 0 8px; letter-spacing: -0.01em;
+}
+.tutor-bubble h2.tutor-h { font-size: 1.18em; }
+.tutor-bubble h3.tutor-h {
+  font-size: 1.04em; padding-bottom: 5px; border-bottom: 1px solid var(--border);
+}
+.tutor-bubble h4.tutor-h { font-size: .96em; color: var(--ink-2); }
+.tutor-bubble ul, .tutor-bubble ol { margin: 4px 0 11px; padding-left: 22px; }
+.tutor-bubble li { margin-bottom: 5px; }
+.tutor-bubble li::marker { color: var(--accent); font-weight: 600; }
+.tutor-hr { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.tutor-table-wrap { overflow-x: auto; margin: 6px 0 12px; border-radius: var(--r-sm, 8px); border: 1px solid var(--border); }
+.tutor-table-wrap table { border-collapse: collapse; width: 100%; font-size: var(--step--2, .82rem); }
+.tutor-table-wrap th, .tutor-table-wrap td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 7px 11px; text-align: left; vertical-align: top; }
+.tutor-table-wrap tr:last-child td { border-bottom: none; }
+.tutor-table-wrap th:last-child, .tutor-table-wrap td:last-child { border-right: none; }
+.tutor-table-wrap th { background: var(--surface-2, var(--bg)); font-weight: 700; }
+.tutor-inline {
+  font-family: var(--mono, monospace); font-size: .84em;
+  background: var(--surface-2, rgba(0,0,0,.06)); color: var(--accent-ink, var(--accent));
+  padding: 1.5px 6px; border-radius: 5px; border: 1px solid var(--border);
+}
+
+/* ---------- suggestion chips (Ask AI quick-start menu) ---------- */
+.tutor-suggestions { display: flex; flex-wrap: wrap; gap: 8px; padding-left: 2px; }
+.tutor-chip {
+  border: 1px solid var(--border); background: var(--surface); color: var(--ink);
+  border-radius: var(--r-pill, 999px); padding: 7px 13px;
+  font-size: var(--step--2, .8rem); font-family: inherit; cursor: pointer;
+  transition: var(--trans, .15s);
+}
+.tutor-chip:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft, rgba(0,0,0,.04)); }
+/* Welcome action chips are full sentences, so stack them as a tappable menu
+   rather than wrapping the pill row. Icon + mono label mirror the question
+   cards' .qa-act buttons so the coach reads as the same premium UI. */
+.tutor-welcome-chips { flex-direction: column; align-items: stretch; gap: 7px; margin-top: 4px; animation: tutor-fade-up .28s ease both; }
+.tutor-welcome-chips .tutor-chip {
+  display: flex; align-items: center; gap: 11px;
+  text-align: left; padding: 11px 14px;
+  border-radius: var(--r-md, 10px);
+  font-family: var(--mono, monospace); font-size: var(--step--1, .875rem); font-weight: 500;
+  letter-spacing: -0.01em; color: var(--ink);
+}
+.tutor-welcome-chips .tutor-chip-ic {
+  flex-shrink: 0; display: grid; place-items: center;
+  width: 30px; height: 30px; border-radius: var(--r-sm, 8px);
+  background: var(--accent-soft, rgba(0,0,0,.05)); color: var(--accent);
+  transition: var(--trans, .15s);
+}
+.tutor-welcome-chips .tutor-chip-ic svg { display: block; }
+.tutor-welcome-chips .tutor-chip-label { flex: 1; min-width: 0; }
+.tutor-welcome-chips .tutor-chip:hover { border-color: var(--accent); background: var(--accent-soft, rgba(0,0,0,.04)); color: var(--accent); }
+.tutor-welcome-chips .tutor-chip:hover .tutor-chip-ic { background: var(--accent); color: #fff; }
+@keyframes tutor-fade-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.tutor-chip-loading { font-size: var(--step--2, .8rem); color: var(--ink-2); font-style: italic; }
+
+/* Refresh button spins its icon once per click — visible feedback that the
+   conversation was reset (the welcome + chips re-render beneath it). */
+.tutor-x.spin svg { animation: tutor-spin .5s ease; }
+@keyframes tutor-spin { from { transform: rotate(0); } to { transform: rotate(-360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .tutor-welcome-chips { animation: none; }
+  .tutor-x.spin svg { animation: none; }
+}
+
+/* ---------- code blocks ----------
+   One Dark, fixed in both app themes — the same recognisable editor palette the
+   site's JS Playground uses (see .playground in styles.css). An editor theme is
+   its own thing, so it deliberately does not follow the page light/dark tokens. */
+.tutor-code {
+  --od-bg: #282C34; --od-fg: #ABB2BF;
+  --od-comment: #7F848E; --od-string: #98C379; --od-number: #D19A66;
+  --od-keyword: #C678DD; --od-fn: #61AFEF; --od-tag: #E06C75; --od-punct: #ABB2BF;
+  margin: 12px 0; border-radius: var(--r-md, 10px); overflow: hidden;
+  border: 1px solid #1c2027; box-shadow: 0 1px 3px rgba(0,0,0,.16);
+}
+.tutor-code-head {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 7px 12px; background: #21252B; border-bottom: 1px solid #1c2027;
+  font-family: var(--mono, monospace); font-size: 11px; letter-spacing: .04em;
+  text-transform: uppercase; color: #828a99;
+}
+.tutor-code-lang { font-weight: 700; }
+.tutor-copy {
+  border: 1px solid transparent; background: transparent; color: #9aa4b5; cursor: pointer;
+  font-size: 11px; font-family: var(--mono, monospace); letter-spacing: .04em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 5px; transition: var(--trans, .15s);
+}
+.tutor-copy:hover { background: rgba(255,255,255,.08); color: #fff; }
+.tutor-code pre { margin: 0; padding: 13px 14px; overflow-x: auto; background: var(--od-bg); }
+.tutor-code code {
+  font-family: var(--mono, ui-monospace, monospace); font-size: 12.5px;
+  line-height: 1.65; white-space: pre; color: var(--od-fg); tab-size: 2;
+}
+.tutor-code .tok-comment { color: var(--od-comment); font-style: italic; }
+.tutor-code .tok-string  { color: var(--od-string); }
+.tutor-code .tok-keyword { color: var(--od-keyword); }
+.tutor-code .tok-number  { color: var(--od-number); }
+.tutor-code .tok-fn      { color: var(--od-fn); }
+.tutor-code .tok-tag     { color: var(--od-tag); }
+.tutor-code .tok-punct   { color: var(--od-punct); }
+
+/* typing indicator */
+.tutor-typing { display: inline-flex; gap: 4px; }
+.tutor-typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-2); opacity: .5; animation: tutor-blink 1.2s infinite; }
+.tutor-typing span:nth-child(2) { animation-delay: .2s; }
+.tutor-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes tutor-blink { 0%, 60%, 100% { opacity: .25; } 30% { opacity: .9; } }
+
+/* ---------- access gate ----------
+   One of three full-panel states shown INSTEAD of the chat: a loader while the
+   server answers "is this account whitelisted", a sign-in wall, or a bring-
+   your-own-key wall. The point of taking over the whole panel (rather than the
+   old strip under the thread) is that an unauthorised visitor must not see the
+   conversation or the composer at all — hence the .is-gated rule below. */
+.tutor-gate {
+  flex: 1; min-height: 0; overflow-y: auto;
+  display: flex; align-items: center; justify-content: center;
+  padding: 28px 24px; text-align: center;
+  animation: tutor-fade-up .22s ease both;
+}
+.tutor-gate[hidden] { display: none !important; }
+
+/* The wall is the whole panel: no thread, no pinned question, no input box. */
+.tutor-panel.is-gated .tutor-body,
+.tutor-panel.is-gated .tutor-form,
+.tutor-panel.is-gated .tutor-context { display: none !important; }
+
+.tutor-gate-inner { width: 100%; max-width: 320px; }
+.tutor-gate-ic {
+  width: 62px; height: 62px; margin: 0 auto 16px;
+  border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent-soft, rgba(0,0,0,.05)); color: var(--ink-2);
+}
+.tutor-gate-title { margin: 0 0 6px; font-size: 1.06rem; font-weight: 700; letter-spacing: -0.01em; color: var(--ink); }
+.tutor-gate-sub { margin: 0 0 18px; font-size: var(--step--1, .9rem); line-height: 1.55; color: var(--ink-2); }
+.tutor-gate-btn {
+  min-width: 148px; padding: 10px 22px; border: none; cursor: pointer;
+  border-radius: var(--r-sm, 8px); background: var(--accent); color: var(--accent-contrast, #fff);
+  font-family: inherit; font-size: var(--step--1, .9rem); font-weight: 600;
+  transition: var(--trans, .15s);
+}
+.tutor-gate-btn:hover:not(:disabled) { filter: brightness(1.06); }
+.tutor-gate-btn:disabled { opacity: .6; cursor: default; }
+
+.tutor-spinner {
+  width: 30px; height: 30px; margin: 0 auto 14px;
+  border-radius: 50%;
+  border: 2.5px solid var(--border);
+  border-top-color: var(--accent);
+  animation: tutor-gate-spin .7s linear infinite;
+}
+@keyframes tutor-gate-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .tutor-gate { animation: none; }
+  .tutor-spinner { animation-duration: 2s; }
+}
+
+/* ---------- key entry (inside the gate) ---------- */
+.tutor-key-row { display: flex; gap: 6px; }
+.tutor-key-input {
+  flex: 1; padding: 8px 10px; border-radius: var(--r-sm, 8px);
+  border: 1px solid var(--border); background: var(--bg); color: var(--ink);
+  font-family: var(--mono, monospace); font-size: var(--step--2, .8rem);
+}
+.tutor-key-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus, 0 0 0 3px var(--accent-soft)); }
+.tutor-key-save {
+  padding: 8px 14px; border-radius: var(--r-sm, 8px); border: none;
+  background: var(--accent); color: var(--accent-contrast, #fff); font-weight: 600; cursor: pointer;
+  white-space: nowrap; /* "Checking…" must not reflow the row mid-validation */
+  transition: var(--trans, .15s);
+}
+.tutor-key-save:disabled { opacity: .65; cursor: default; }
+.tutor-key-input:disabled { opacity: .65; }
+
+/* Why the key was refused, shown against the input rather than in the chat —
+   the fix belongs where the field is. */
+.tutor-key-err {
+  margin: 10px 0 0; font-size: var(--step--2, .78rem); line-height: 1.5;
+  color: #b3261e; text-align: left;
+}
+.tutor-key-err[hidden] { display: none; }
+.tutor-key-help { display: inline-block; margin-top: 12px; font-size: var(--step--2, .75rem); color: var(--accent); text-decoration: none; }
+.tutor-key-help:hover { text-decoration: underline; }
+
+/* ---------- status line ---------- */
+.tutor-status { padding: 8px 16px; font-size: var(--step--2, .78rem); border-top: 1px solid var(--border); }
+.tutor-status-ok { color: #157a3b; }
+.tutor-status-warn { color: #a15c00; }
+
+/* ---------- composer ---------- */
+.tutor-form { display: flex; align-items: flex-end; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--border); background: var(--surface); }
+.tutor-input {
+  flex: 1; resize: none; max-height: 140px; padding: 9px 12px;
+  border-radius: var(--r-md, 12px); border: 1px solid var(--border);
+  background: var(--bg); color: var(--ink); font: inherit; font-size: var(--step--1, .9rem); line-height: 1.4;
+}
+.tutor-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus, 0 0 0 3px var(--accent-soft)); }
+.tutor-input:disabled { opacity: .6; }
+.tutor-send {
+  flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--accent); color: var(--accent-contrast, #fff); display: grid; place-items: center;
+  transition: var(--trans, .15s);
+}
+.tutor-send:hover:not(:disabled) { filter: brightness(1.06); }
+.tutor-send:disabled { opacity: .5; cursor: default; }
+
+@media (max-width: 480px) {
+  .tutor-panel { right: 8px; bottom: 8px; width: calc(100vw - 16px); height: calc(100vh - 74px); }
+  /* keep clear of .reading-mode-toggle/.scroll-to-top (see the desktop rule
+     above) — they sit at the same right:18px column on every breakpoint */
+  .tutor-fab { right: 11px; bottom: 121px; }
+}
+
+/* ---------- responsive: dock aside vs. overlay ----------
+   Wide viewports have room to shrink the question list rather than cover it;
+   narrow ones don't, so the panel just floats on top (the pre-existing fixed
+   behavior above). 1300px ≈ the site's centered max content width (--maxw)
+   plus this panel's width plus enough margin that the grid doesn't cramp. */
+@media (min-width: 1300px) {
+  .app { transition: margin-right .25s ease; }
+  body.tutor-open .app { margin-right: min(416px, 32vw); }
+}

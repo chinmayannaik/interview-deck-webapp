@@ -127,7 +127,14 @@
     hasNoteOnly: false,
     hasHighlightOnly: false,
     hasVideoOnly: false,
-    practice: false
+    practice: false,
+    /* AI Tutor "important questions" curation: aiSuggestedIds is the set of
+       question ids the tutor's keywords matched in the current category, and
+       aiOnly is the toggle that narrows the list to just those. Both are wiped
+       when the reader navigates to another category (see setCategory). */
+    aiOnly: false,
+    aiSuggestedIds: null,
+    aiSuggestedKeywords: null
   };
 
   /* True once the reader has expressed an explicit choice this session — opened
@@ -408,6 +415,10 @@
 
   function setCategory(key, updateHash) {
     state.category = key;
+    // A category change abandons any AI-suggested view — its ids belong to the
+    // category the reader just left. applyAiSuggestion re-establishes it right
+    // after, so a tutor-driven switch keeps working.
+    state.aiOnly = false; state.aiSuggestedIds = null; state.aiSuggestedKeywords = null;
     store.setLastTab(key);          // device-local; survives signed-out too
     /* updateHash is only ever true when the reader themselves picked this view
        (a tab, a sidebar category, a dropdown) — boot and the cloud restore pass
@@ -444,6 +455,8 @@
     const activeTab = qs(".tab.active", tabsEl);
     if (activeTab) activeTab.scrollIntoView({ inline: "center", block: "nearest" });
     render();
+    // Let an open AI Coach retarget its welcome chips to this category.
+    if (window.IQB.tutor && IQB.tutor.onCategoryChanged) IQB.tutor.onCategoryChanged();
   }
 
   /* ========================================================
@@ -454,6 +467,7 @@
     const allowed = catsFor(state.category); // null = no category restriction
     return ALL.filter((item) => {
       if (allowed && !allowed.includes(item.category)) return false;
+      if (state.aiOnly && state.aiSuggestedIds && !state.aiSuggestedIds.has(item.id)) return false;
       if (state.difficulty !== "all" && item.difficulty !== state.difficulty) return false;
       if (state.bookmarkedOnly && !bookmarks.has(item.id)) return false;
       if (state.completedOnly && !progress.has(item.id)) return false;
@@ -477,6 +491,7 @@
     renderState.items = items;
     renderState.shown = 0;
     syncFilterCount();
+    syncAiChip();
 
     titleEl.innerHTML = "";
     const titleIc = catIcon(state.category);
@@ -525,6 +540,14 @@
     if (sentinel) listEl.insertBefore(frag, sentinel);
     else listEl.appendChild(frag);
     renderState.shown += next.length;
+  }
+
+  /* Plain-text answer for the AI Tutor's "Ask AI" context — case-preserving
+     (unlike IQB.utils.strip, which lowercases for search indexing). */
+  function stripToText(html) {
+    const d = document.createElement("div");
+    d.innerHTML = html || "";
+    return (d.textContent || "").replace(/\s+/g, " ").trim();
   }
 
   function buildCard(q, index) {
@@ -648,6 +671,32 @@
     linkBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="qa-act-label">Copy<span class="qa-act-word">&nbsp;link</span></span>';
 
     const actions = [doneBtn, linkBtn];
+
+    if (window.IQB.tutor) {
+      const askAiBtn = el("button", {
+        class: "qa-act", "aria-label": "Ask AI about this question",
+        onclick: (e) => {
+          e.stopPropagation();
+          IQB.tutor.askAbout({
+            question: q.question,
+            answer: stripToText(q.answer),
+            code: q.code || "",
+            tags: q.tags || [],
+            difficulty: q.difficulty || "",
+            hasDeep: !!q.deep
+          });
+        }
+      });
+      /* The tutor's own mascot, not a second robot drawn here — the previous
+         inline one was a 0 0 24 24 icon whose body ran to roughly y=28, so it
+         rendered clipped at the bottom and sat visibly low against the other
+         action icons. Stroke 2.2 to hold its weight next to their 2.5. */
+      askAiBtn.innerHTML =
+        IQB.tutor.icon(15, "", 2.2) +
+        '<span class="qa-act-label">Ask AI</span>';
+      actions.push(askAiBtn);
+    }
+
     if (window.IQB.reports) actions.push(IQB.reports.build(card));
     if (q.youtube && q.youtube.trim()) {
       const ytBtn = el("a", {
@@ -772,7 +821,84 @@
     });
     return { totalCompleted: progress.size, totalQuestions: ALL.length, groups: groups };
   }
-  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, setCategory: setCategory, restoreView: restoreView, copyText: copyText };
+  /* The category the reader is currently viewing, as { key, label }. Used by the
+     AI Tutor to tailor its welcome prompts ("Ask me a random {label} question").
+     Returns the single category when one is selected; for a group tab ("frontend")
+     it returns the group's own label ("Frontend"), which still reads naturally.
+     "all"/playground have no single subject, so label comes back empty and the
+     caller can fall back to a generic phrasing. */
+  function currentCategory() {
+    const key = state.category;
+    if (!key || key === "all" || key === PLAYGROUND) return { key: key || "", label: "" };
+    return { key: key, label: labelOf(key) };
+  }
+
+  /* The deduped tag vocabulary for a category (or group), lowercased. Fed to the
+     AI Tutor's "curate" call so the keywords it picks are drawn from terms that
+     actually appear on these questions — otherwise a keyword would match nothing.
+     The "V.Imp" marker tag is dropped: it flags importance, it isn't a topic. */
+  function categoryTags(catKey) {
+    const cats = catsFor(catKey || state.category); // null = all categories
+    const set = new Set();
+    ALL.forEach((q) => {
+      if (cats && !cats.includes(q.category)) return;
+      (q.tags || []).forEach((t) => {
+        const s = String(t).trim().toLowerCase();
+        if (s && !/^v\.?imp$/i.test(s)) set.add(s);
+      });
+    });
+    return Array.from(set);
+  }
+
+  /* Narrow the list to the questions the tutor's keywords match, within a
+     category. A question matches when any keyword appears in one of its tags or
+     in its title (substring, case-insensitive). Switches to catKey first if the
+     suggestion is for a different category than the one on screen. Returns the
+     number of questions matched so the caller can react to an empty result. */
+  function applyAiSuggestion(keywords, catKey) {
+    catKey = catKey || state.category;
+    if (catKey && catKey !== state.category) setCategory(catKey, true);
+    const kws = (keywords || [])
+      .map((k) => String(k).toLowerCase().trim())
+      .filter((k) => k.length >= 2);
+    const cats = catsFor(state.category);
+    const ids = [];
+    ALL.forEach((q) => {
+      if (cats && !cats.includes(q.category)) return;
+      const tags = (q.tags || []).map((t) => String(t).toLowerCase());
+      const title = String(q.question || "").toLowerCase();
+      const hit = kws.some((k) => title.includes(k) || tags.some((t) => t.includes(k)));
+      if (hit) ids.push(q.id);
+    });
+    state.aiSuggestedIds = ids.length ? new Set(ids) : null;
+    state.aiSuggestedKeywords = kws;
+    state.aiOnly = ids.length > 0;
+    syncAiChip();
+    render();
+    return ids.length;
+  }
+
+  /* The "✨ AI Suggested (n)" chip lives at the end of the level-filter row, and
+     only while a suggestion is active. Clicking it toggles the curated view on
+     and off without discarding the suggestion; navigating categories discards it
+     (see setCategory), which removes the chip on the next render. */
+  function syncAiChip() {
+    if (!diffEl) return;
+    let chip = qs("#ai-suggested-chip", diffEl);
+    const count = state.aiSuggestedIds ? state.aiSuggestedIds.size : 0;
+    if (!count) { if (chip) chip.remove(); return; }
+    if (!chip) {
+      chip = el("button", { id: "ai-suggested-chip", class: "chip-filter ai-suggested",
+        title: "Questions the AI Tutor picked as important" });
+      chip.addEventListener("click", () => { state.aiOnly = !state.aiOnly; syncAiChip(); render(); });
+      diffEl.appendChild(chip);
+    }
+    chip.classList.toggle("active", !!state.aiOnly);
+    chip.innerHTML = "";
+    chip.appendChild(document.createTextNode("✨ AI Suggested"));
+    chip.appendChild(el("span", { class: "chip-n", text: String(count) }));
+  }
+  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, setCategory: setCategory, restoreView: restoreView, copyText: copyText, currentCategory: currentCategory, categoryTags: categoryTags, applyAiSuggestion: applyAiSuggestion };
   function updateProgressBar() {
     const fill = qs("#progress-fill", sideEl);
     const label = qs("#progress-label", sideEl);

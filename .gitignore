@@ -1,0 +1,18 @@
+# Vercel CLI link/state
+.vercel
+
+# Installed by `npm install`, and by Vercel at build time — never committed.
+# package.json + package-lock.json are what pin the versions.
+node_modules/
+
+# Secrets: FREE_ACCESS_EMAILS, GROQ_MASTER_API_KEY, FIREBASE_SERVICE_ACCOUNT
+# belong in the Vercel dashboard (or an untracked local .env), never in the repo.
+.env
+.env.*
+!.env.example
+
+# Logs / OS cruft
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db

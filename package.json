@@ -1,0 +1,11 @@
+{
+  "name": "interview-helper-webapp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Interview Helper website + AI Tutor serverless proxy (Vercel).",
+  "type": "module",
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "firebase-admin": "^12.7.0"
+  }
+}

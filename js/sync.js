@@ -39,6 +39,16 @@
     userChangeCbs.forEach(function (cb) { try { cb(user); } catch (e) { /* isolate */ } });
   }
 
+  /* "Auth has settled" — resolves the first time Firebase reports a definitive
+     signed-in/signed-out state (or when the SDK fails to load at all). Distinct
+     from fbReady, which only means the modules downloaded: at that point
+     onAuthStateChanged has not fired yet, so isSignedIn() still reads false for
+     a user who IS signed in. Features that gate their whole UI on auth (the AI
+     tutor) must await this or they'll flash a "please sign in" screen at a
+     signed-in user on every load. */
+  let settleAuth = null;
+  const authSettled = new Promise(function (res) { settleAuth = res; });
+
   if (btn) {
     btn.hidden = false;
     btn.setAttribute("aria-haspopup", "menu");
@@ -65,6 +75,11 @@
   IQB.cloud = {
     isSignedIn: function () { return !!user; },
     getUser: function () { return user; },
+
+    /* Await this before reading isSignedIn()/getUser() to make a decision that
+       is expensive to reverse (rendering a sign-in wall, say). Never rejects —
+       a Firebase that failed to load settles as "signed out". */
+    authReady: function () { return authSettled; },
 
     /* Is the signed-in account allowed to moderate (see js/reports.js)? UI-level
        only — Firestore rules are what actually protect the data. */
@@ -201,7 +216,10 @@
   /* Kept as a promise, not just a flag: a sign-in click can land before the SDK
      modules finish downloading, and signIn() awaits this rather than dropping it. */
   const fbReady = loadFirebase().then(startAuth);
-  fbReady.catch(function (e) { console.warn("[sync] disabled:", e); });
+  fbReady.catch(function (e) {
+    console.warn("[sync] disabled:", e);
+    settleAuth(null); // no SDK => permanently signed out; unblock authReady()
+  });
 
   /* ---------- Firebase ---------- */
   async function loadFirebase() {
@@ -242,6 +260,7 @@
         maybeShowPrompt();
       }
       wasSignedIn = !!user;
+      settleAuth(user); // first call settles authReady(); later calls are no-ops
       emitUserChange(); // notify per-question feature modules (notes, future highlights)
     });
   }

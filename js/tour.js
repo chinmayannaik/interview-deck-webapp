@@ -135,7 +135,11 @@
   }
 
   function endTour() {
-    overlayEl.classList.remove("show");
+    // initTour() skips building overlayEl entirely once the tour is already
+    // completed — end() must stay a safe no-op for a caller (e.g. the AI
+    // Tutor, dismissing any in-progress tour on open) that doesn't know
+    // whether a tour ever started this session.
+    if (overlayEl) overlayEl.classList.remove("show");
     document.body.classList.remove("tour-active");
     localStorage.setItem("iqb_tour_completed", "true");
 
@@ -297,5 +301,7 @@
   });
 
   window.IQB = window.IQB || {};
-  window.IQB.tour = { start: startTour, init: initTour };
+  // exposed so other overlays (e.g. the AI Tutor panel) can dismiss an in-progress
+  // tour instead of fighting it for clicks — endTour() is idempotent if no tour is active
+  window.IQB.tour = { start: startTour, init: initTour, end: endTour };
 })();
