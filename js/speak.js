@@ -382,8 +382,10 @@
     prev: svg('<polygon points="18 5 8 12 18 19 18 5"/><line x1="5" y1="5" x2="5" y2="19"/>', 15, "currentColor"),
     next: svg('<polygon points="6 5 16 12 6 19 6 5"/><line x1="19" y1="5" x2="19" y2="19"/>', 15, "currentColor"),
     close: svg('<line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/>', 14),
-    min: svg('<polyline points="7 10 12 15 17 10"/>', 15),
-    max: svg('<polyline points="7 14 12 9 17 14"/>', 15),
+    /* Standard window-chrome glyphs, not chevrons: a bar collapses, a square
+       restores. Chevrons read as "scroll/next" and were being misread. */
+    min: svg('<line x1="6" y1="17" x2="18" y2="17"/>', 15),
+    max: svg('<rect x="6" y="6" width="12" height="12" rx="1.5"/>', 15),
     list: svg('<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="3.5" cy="6" r="1.2" fill="currentColor"/><circle cx="3.5" cy="12" r="1.2" fill="currentColor"/><circle cx="3.5" cy="18" r="1.2" fill="currentColor"/>', 14)
   };
 

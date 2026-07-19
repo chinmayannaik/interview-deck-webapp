@@ -217,10 +217,19 @@ body.tutor-resizing-x, body.tutor-resizing-x * { cursor: ew-resize !important; }
    .tutor-msg is a row, so a bubble with an action bar has to stack instead.
    Scoped to the modifier rather than applied to every .tutor-bot, so the
    notices and the typing indicator keep their original single-child layout. */
-.tutor-bot.tutor-has-acts { flex-direction: column; align-items: flex-start; }
-.tutor-bot.tutor-has-acts .tutor-bubble { max-width: 100%; }
+.tutor-bot.tutor-has-acts { flex-direction: column; align-items: flex-start; position: relative; }
+/* Full width so the corner controls land on the card's own right edge — a
+   narrow bubble would leave them floating in the gutter beside it. */
+.tutor-bot.tutor-has-acts .tutor-bubble { max-width: 100%; width: 100%; }
 
-.tutor-acts { display: flex; gap: 4px; margin: 3px 0 0 6px; }
+/* Parked in the answer card's top-right corner rather than trailing below it,
+   so the controls sit where the eye lands when the reply finishes rendering.
+   The bubble reserves headroom (see .tutor-bot .tutor-bubble padding-top) so
+   the first line never runs under them. */
+.tutor-acts {
+  display: flex; gap: 2px;
+  position: absolute; top: 6px; right: 8px; z-index: 2;
+}
 .tutor-act {
   display: inline-flex; align-items: center; gap: 5px;
   padding: 3px 8px; border-radius: var(--r-sm, 8px);
@@ -260,6 +269,10 @@ body.tutor-resizing-x, body.tutor-resizing-x * { cursor: ew-resize !important; }
   padding: 14px 17px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, .035);
 }
+/* Headroom for the Copy/Listen row parked in the corner. Must come after the
+   `padding` shorthand above, or the shorthand wins. */
+.tutor-bot.tutor-has-acts .tutor-bubble { padding-top: 34px; }
+
 .tutor-bubble strong { font-weight: 650; color: var(--ink); }
 .tutor-bubble a { color: var(--accent); text-underline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .tutor-msg { animation: none; } }

@@ -47,10 +47,12 @@
     const body = el("div", { class: "pn-body", hidden: "" });
     const section = el("div", { class: "pn-section", "data-question-id": questionId }, [toggleBtn, body]);
 
-    /* Read the note aloud. Pinned top-right of the section, icon-only, to match
-       the deep dive's speaker. Hidden until the note actually has content —
-       there is nothing to read otherwise. Resolved on click, not captured, so
-       it always reads the current text (the view is re-rendered on every save). */
+    /* Read the note aloud. Pinned top-right *inside* the note box, icon-only, to
+       match the deep dive's speaker. Built once and re-parented by renderView on
+       each render, because the body is cleared wholesale there. It is mounted
+       only by renderView — so it exists exactly when there is a saved note to
+       read, and never floats above an empty section or over the editor.
+       Resolved on click, not captured, so it always reads the current text. */
     let speakBtn = null;
     if (window.IQB.speak && IQB.speak.supported) {
       speakBtn = IQB.speak.buildFor({
@@ -61,8 +63,6 @@
         },
         scope: function () { return section; }
       });
-      speakBtn.hidden = true;   // until refreshIndicator confirms there is a note
-      section.appendChild(speakBtn);
     }
 
     function isOpen() { return !body.hasAttribute("hidden"); }
@@ -84,8 +84,6 @@
     function refreshIndicator() {
       const hasText = !!(note && (note.plain || "").trim());
       toggleBtn.classList.toggle("has-note", hasText);
-      // nothing to read from an empty note — don't offer the control
-      if (speakBtn) speakBtn.hidden = !hasText;
       section.classList.toggle("has-note", hasText);
     }
 
@@ -98,6 +96,9 @@
       const view = el("div", { class: "pn-text nb-body pn-rich" });
       view.innerHTML = IQB.richtext.sanitize(note.html || "");
       IQB.richtext.paintAll(view);
+      /* Before the text, so the absolutely-positioned button is a child of the
+         note box itself — this is the only place it gets mounted. */
+      if (speakBtn) body.appendChild(speakBtn);
       body.appendChild(view);
       body.appendChild(el("div", { class: "pn-actions" }, [
         el("button", { class: "pn-btn", type: "button", onclick: startEdit }, "Edit"),

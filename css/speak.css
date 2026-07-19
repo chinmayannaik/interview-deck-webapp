@@ -52,7 +52,7 @@ li.tts-reading { box-shadow: 0 0 0 6px var(--tts-tint), -22px 0 0 6px var(--tts-
    icon-only: .qa-deep is a highlight root keyed on textContent offsets, so a
    text label inside it would shift every saved highlight (js/highlights.js).
    The note matches for consistency. */
-.qa-deep, .pn-section { position: relative; }
+.qa-deep, .pn-body { position: relative; }
 .qa-deep-speak, .pn-speak {
   position: absolute; top: 8px; right: 8px; z-index: 1;
   display: inline-flex; align-items: center; justify-content: center;
@@ -63,6 +63,10 @@ li.tts-reading { box-shadow: 0 0 0 6px var(--tts-tint), -22px 0 0 6px var(--tts-
 .qa-deep-speak:hover, .pn-speak:hover { border-color: var(--accent); color: var(--accent); }
 .qa-deep-speak.on, .pn-speak.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
 .qa-deep-speak.on svg, .pn-speak.on svg { fill: none; }
+
+/* The note's own first line starts at the top-left of the box; keep the text
+   clear of the speaker parked in the corner. */
+.pn-body .pn-text { padding-right: 38px; }
 
 /* The deep dive's own first heading sits at the top-left; reserve the corner so
    a long heading cannot run under the button. */
