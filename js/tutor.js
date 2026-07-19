@@ -1201,9 +1201,97 @@
     else b.innerHTML = renderMarkdown(text);
     wrap.appendChild(b);
     listEl.appendChild(wrap);
-    if (role !== "user") wireCopyButtons(b);
+    if (role !== "user") {
+      wireCopyButtons(b);
+      /* A whole-answer copy, on top of the per-code-block buttons wired above:
+         those take the snippet, this takes the reply. Skipped for the one-line
+         "⚠️ …" notices, where a Copy affordance is just noise. */
+      if (!isNotice(text)) {
+        wrap.classList.add("tutor-has-acts");
+        wrap.appendChild(buildMsgActions(b, text));
+      }
+    }
     scrollDown();
     return wrap;
+  }
+
+  function isNotice(text) { return /^\s*⚠️/.test(String(text || "")); }
+
+  function buildMsgActions(bubble, raw) {
+    const acts = document.createElement("div");
+    acts.className = "tutor-acts";
+
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "tutor-act";
+    btn.title = "Copy this answer";
+    btn.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" ' +
+      'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<rect x="9" y="9" width="12" height="12" rx="2"/>' +
+      '<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy</span>';
+    btn.addEventListener("click", function () { copyAnswer(bubble, raw, btn); });
+
+    acts.appendChild(btn);
+    return acts;
+  }
+
+  /* Two flavours on the clipboard at once:
+
+     text/html  — the rendered answer, so pasting into My Notes or the Quick
+                  Note window keeps the headings, lists and code blocks.
+     text/plain — the original markdown, NOT the bubble's textContent. Reading
+                  text out of the DOM would run the headings and paragraphs
+                  together (textContent inserts no line breaks at block
+                  boundaries) and would also pick up the word "Copy" from each
+                  code block's own button. The source markdown is already the
+                  readable, correctly-broken version of exactly this answer. */
+  function copyAnswer(bubble, raw, btn) {
+    const clone = bubble.cloneNode(true);
+    clone.querySelectorAll(".tutor-copy").forEach(function (n) { n.remove(); });
+    const html = clone.innerHTML;
+    const plain = String(raw || "").trim();
+
+    function flash(ok) {
+      const label = btn.querySelector("span");
+      if (!label) return;
+      label.textContent = ok ? "Copied" : "Copy failed";
+      btn.classList.toggle("is-done", ok);
+      setTimeout(function () { label.textContent = "Copy"; btn.classList.remove("is-done"); }, 1600);
+    }
+
+    function plainOnly() {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(plain).then(function () { flash(true); },
+          function () { flash(legacyCopy(plain)); });
+        return;
+      }
+      flash(legacyCopy(plain));
+    }
+
+    if (navigator.clipboard && navigator.clipboard.write && window.ClipboardItem) {
+      navigator.clipboard.write([new ClipboardItem({
+        "text/html": new Blob([html], { type: "text/html" }),
+        "text/plain": new Blob([plain], { type: "text/plain" })
+      })]).then(function () { flash(true); }, plainOnly);   // Firefox refuses write() — fall back
+      return;
+    }
+    plainOnly();
+  }
+
+  /* Last resort for browsers without the async clipboard (and for insecure
+     origins, where it is unavailable regardless of support). */
+  function legacyCopy(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.cssText = "position:fixed;top:-1000px;opacity:0";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    ta.remove();
+    return ok;
   }
 
   function addTyping() {

@@ -46,13 +46,28 @@
   .tutor-bot-icon .tutor-eye { animation: none; }
 }
 
-/* Hide the site's own bottom-right FABs while the tutor is open — they'd
-   otherwise sit right on top of (or just behind) this panel's corner. */
-body.tutor-open .reading-mode-toggle,
-body.tutor-open .scroll-to-top {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .15s ease;
+/* The site's own FABs live at right:18px, which is exactly where this panel's
+   corner lands. They used to be hidden outright while the tutor was open —
+   but "scroll to top" and "reading mode" are most wanted precisely when the
+   reader is deep in a long answer with the chat beside it.
+
+   So they move to the left edge instead. That column is free: the sidebar is
+   sticky and only ~420px tall, so it ends well above these, and when the chat
+   is open it is a 56px rail anyway (see css/styles.css). */
+@media (min-width: 481px) {
+  body.tutor-open .reading-mode-toggle,
+  body.tutor-open .scroll-to-top { left: 18px; right: auto; }
+}
+
+/* Below 481px the panel is all but fullscreen, so there is no free column to
+   move them to — anywhere they went would be on top of the chat. */
+@media (max-width: 480px) {
+  body.tutor-open .reading-mode-toggle,
+  body.tutor-open .scroll-to-top {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s ease;
+  }
 }
 
 /* ---------- panel ---------- */
@@ -197,6 +212,33 @@ body.tutor-resizing-x, body.tutor-resizing-x * { cursor: ew-resize !important; }
 @keyframes tutor-msg-in { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: none; } }
 .tutor-user { justify-content: flex-end; }
 .tutor-bot { justify-content: flex-start; max-width: 96%; }
+
+/* ---------- per-answer actions ----------
+   .tutor-msg is a row, so a bubble with an action bar has to stack instead.
+   Scoped to the modifier rather than applied to every .tutor-bot, so the
+   notices and the typing indicator keep their original single-child layout. */
+.tutor-bot.tutor-has-acts { flex-direction: column; align-items: flex-start; }
+.tutor-bot.tutor-has-acts .tutor-bubble { max-width: 100%; }
+
+.tutor-acts { display: flex; gap: 4px; margin: 3px 0 0 6px; }
+.tutor-act {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 8px; border-radius: var(--r-sm, 8px);
+  border: 1px solid transparent; background: transparent; color: var(--muted);
+  font-family: var(--sans); font-size: 11px; font-weight: 600; cursor: pointer;
+  /* Resting state is quiet: these sit under every answer in the transcript, so
+     full-contrast buttons would out-shout the answers themselves. */
+  opacity: 0; transition: opacity .15s ease, color var(--trans), border-color var(--trans);
+}
+.tutor-msg:hover .tutor-act,
+.tutor-act:focus-visible,
+.tutor-act.is-done { opacity: 1; }
+.tutor-act:hover { color: var(--accent); border-color: var(--border); }
+.tutor-act.is-done { color: var(--beginner, #1F9254); }
+.tutor-act svg { flex-shrink: 0; }
+
+/* Touch has no hover, so the affordance would never appear. */
+@media (hover: none) { .tutor-act { opacity: 1; } }
 .tutor-bubble {
   max-width: 86%; padding: 12px 16px; border-radius: 18px;
   font-size: .9rem; line-height: 1.62; letter-spacing: -0.006em; word-wrap: break-word;
@@ -444,17 +486,24 @@ body.tutor-resizing-x, body.tutor-resizing-x * { cursor: ew-resize !important; }
 @media (max-width: 480px) {
   .tutor-panel { right: 8px; bottom: 8px; width: calc(100vw - 16px); height: calc(100vh - 74px); }
   .tutor-head { cursor: default; }
-  /* keep clear of .reading-mode-toggle/.scroll-to-top (see the desktop rule
-     above) — they sit at the same right:18px column on every breakpoint */
+  /* keep clear of .reading-mode-toggle/.scroll-to-top, which stay in the
+     right:18px column at this width (the move-to-left rule above is 481px up,
+     and while the panel is open they are hidden here anyway) */
   .tutor-fab { right: 11px; bottom: 121px; }
 }
 
 /* ---------- responsive: dock aside vs. overlay ----------
    Wide viewports have room to shrink the question list rather than cover it;
    narrow ones don't, so the panel just floats on top (the pre-existing fixed
-   behavior above). 1300px ≈ the site's centered max content width (--maxw)
-   plus this panel's width plus enough margin that the grid doesn't cramp. */
-@media (min-width: 1300px) {
+   behavior above).
+
+   The threshold was 1300px — --maxw plus the panel plus room for the grid not
+   to cramp. That left a dead band: on a 1240px laptop the panel did NOT dock
+   and instead covered ~450px of the question column, which is most of what the
+   reader was trying to read alongside the chat. It is 1100px now because the
+   sidebar collapses to a 56px rail whenever the panel is open (see
+   css/styles.css), which is exactly the ~154px the grid was short of. */
+@media (min-width: 1100px) {
   /* --tutor-dock is written by js/tutor.js from the panel's actual left edge,
      so dragging the panel's left edge really does rebalance page vs chat. The
      literal is only a fallback for the first paint. Transition only while NOT

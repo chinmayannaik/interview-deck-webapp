@@ -480,7 +480,13 @@
     }
 
     async function del(r, btn) {
-      if (!window.confirm("Delete this report permanently?")) return;
+      const ok = await IQB.ui.confirm({
+        title: "Delete this report?",
+        message: "It will be removed permanently. This cannot be undone.",
+        confirmLabel: "Delete report",
+        danger: true
+      });
+      if (!ok) return;
       btn.disabled = true;
       try {
         await IQB.shared.remove(COLLECTION, r.id);

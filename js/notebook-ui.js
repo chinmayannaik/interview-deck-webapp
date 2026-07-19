@@ -21,7 +21,7 @@
   let titleEl = null, tagsEl = null, metaEl = null;
   let currentId = null;
   let built = false;
-  let syncToolbarFn = null;   // the live selectionchange listener, so it can be removed
+  let toolbarRef = null;      // the live richtext toolbar, so it can be destroyed
   let selectedTag = null;     // the single tag on the note currently open
   let saveStateEl = null, saveBtnEl = null;
   /* Whether the open note has unsaved edits. Without this, switching notes
@@ -32,8 +32,7 @@
   /* A draft is an editor with no note behind it yet: currentId stays null
      until the first successful save, so abandoning it leaves nothing behind. */
   let draftQuestionId = null;
-  let tagMenuEl = null;       // the open tag dropdown, if any
-  let renamingTag = null;     // tag being renamed inline in the dropdown
+  let tagPickerRef = null;    // the live tag picker (js/tagpicker.js)
 
   /* Tags ARE the organisation here: the list is always grouped by tag, so there
      is no grouping toggle and no second axis to filter on. */
@@ -64,29 +63,9 @@
       'stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0">' + inner + "</svg>";
   }
 
-  /* ---------- toolbar spec ----------
-     `cmd` entries go straight to execCommand — deprecated, but universally
-     supported and the only thing that keeps native undo working. The rest are
-     custom because execCommand has no equivalent (see js/richtext.js). */
-  const TOOLS = [
-    { cmd: "bold", label: "B", title: "Bold (Ctrl+B)", cls: "nb-t-b" },
-    { cmd: "italic", label: "I", title: "Italic (Ctrl+I)", cls: "nb-t-i" },
-    { cmd: "underline", label: "U", title: "Underline (Ctrl+U)", cls: "nb-t-u" },
-    { cmd: "strikeThrough", label: "S", title: "Strikethrough", cls: "nb-t-s" },
-    { sep: true },
-    { cmd: "formatBlock", arg: "h2", label: "H1", title: "Heading" },
-    { cmd: "formatBlock", arg: "h3", label: "H2", title: "Subheading" },
-    { sep: true },
-    { cmd: "insertUnorderedList", label: "•", title: "Bullet list" },
-    { cmd: "insertOrderedList", label: "1.", title: "Numbered list" },
-    { act: "check", label: "☑", title: "Checklist" },
-    { sep: true },
-    { act: "code", label: "&lt;/&gt;", title: "Code block (Ctrl+E)" },
-    { cmd: "formatBlock", arg: "blockquote", label: "❝", title: "Quote" },
-    { act: "link", label: "🔗", title: "Add link", html: ICON.link },
-    { sep: true },
-    { cmd: "removeFormat", label: "⌫", title: "Clear formatting" }
-  ];
+  /* The formatting toolbar's spec and behaviour live in js/richtext.js — the
+     Quick Note window builds the same bar, and one definition is what keeps
+     the two from drifting apart. */
 
   /* ========================================================
      BUILD
@@ -358,8 +337,13 @@
       "aria-label": "Delete " + (n.title || "this note"),
       onclick: async function (e) {
         e.stopPropagation();          // must not also open the note
-        const name = n.title ? '"' + n.title + '"' : "this note";
-        if (!window.confirm("Delete " + name + "? This cannot be undone.")) return;
+        const ok = await IQB.ui.confirm({
+          title: "Delete " + (n.title ? '"' + n.title + '"' : "this note") + "?",
+          message: "This cannot be undone.",
+          confirmLabel: "Delete note",
+          danger: true
+        });
+        if (!ok) return;
         // Deleting the note that is currently open has to clear the editor too,
         // or it would keep editing a record that no longer exists.
         if (n.id === currentId) { dirty = false; renderEmptyEditor(); }
@@ -393,11 +377,12 @@
      they have to be released explicitly — otherwise every note you open leaves
      another listener behind holding a detached editor. */
   function teardownEditor() {
-    closeTagMenu();
+    if (tagPickerRef) tagPickerRef.destroy();
+    tagPickerRef = null;
     saveBtnEl = null; saveStateEl = null;
     if (editor && editor.destroy) editor.destroy();
-    if (syncToolbarFn) document.removeEventListener("selectionchange", syncToolbarFn);
-    syncToolbarFn = null;
+    if (toolbarRef) toolbarRef.destroy();
+    toolbarRef = null;
     editor = null;
   }
 
@@ -416,8 +401,8 @@
 
   /* Opens an empty editor WITHOUT creating anything. The note is created by
      the first save, so clicking "New note" and walking away leaves no trace. */
-  function onNew() {
-    if (!confirmDiscard()) return;
+  async function onNew() {
+    if (!await confirmDiscard()) return;
     currentId = null;
     draftQuestionId = null;
     buildEditor({ title: "", html: "", tags: [] });
@@ -426,8 +411,8 @@
     if (titleEl) titleEl.focus();
   }
 
-  function openNote(id) {
-    if (!confirmDiscard()) return;     // leaving would throw away unsaved edits
+  async function openNote(id) {
+    if (!await confirmDiscard()) return;   // leaving would throw away unsaved edits
     const n = IQB.notebook.get(id);
     if (!n) { renderEmptyEditor(); renderList(); return; }
     currentId = id;
@@ -441,8 +426,8 @@
     editorEl.innerHTML = "";
 
     const back = el("button", { class: "nb-back", type: "button", title: "Back to list",
-      onclick: function () {
-        if (!confirmDiscard()) return;
+      onclick: async function () {
+        if (!await confirmDiscard()) return;
         document.body.classList.remove("nb-editing");
       } });
     back.innerHTML = ICON.back;
@@ -466,7 +451,15 @@
        shows its first; changing it replaces the set. */
     selectedTag = (n.tags && n.tags[0]) || null;
     tagsEl = el("div", { class: "nb-tags" });
-    renderTagField();
+    // manage:true — this is where the reader organises, so rename and delete
+    // belong here. The Quick Note window builds the same picker without them.
+    tagPickerRef = IQB.tagpicker.attach({
+      host: tagsEl,
+      manage: true,
+      getTag: function () { return selectedTag; },
+      onPick: function (tag) { selectedTag = tag; markDirty(); },
+      onVocabChange: function () { refreshTagBar(); renderList(); }
+    });
 
     // Autosave is invisible by design, so the state has to be legible:
     // "Saved" / "Saving…" / "Unsaved changes".
@@ -474,39 +467,12 @@
 
     const head = el("div", { class: "nb-ed-head" }, [back, titleEl, tagsEl, saveStateEl, delBtn]);
 
-    /* Toolbar */
-    const bar = el("div", { class: "nb-toolbar", role: "toolbar", "aria-label": "Formatting" });
-    TOOLS.forEach(function (t) {
-      if (t.sep) { bar.appendChild(el("span", { class: "nb-t-sep" })); return; }
-      const b = el("button", {
-        class: "nb-t" + (t.cls ? " " + t.cls : ""), type: "button", title: t.title,
-        "aria-label": t.title,
-        // mousedown, not click: the caret must not leave the editor before the
-        // command runs, or execCommand has no selection to act on.
-        onmousedown: function (e) {
-          e.preventDefault();
-          if (!editor) return;
-          if (t.cmd) editor.exec(t.cmd, t.arg);
-          else if (t.act === "code") editor.toggleCode();
-          else if (t.act === "check") editor.toggleChecklist();
-          else if (t.act === "link") addLink();
-          markDirty();
-          syncToolbar();
-        }
-      });
-      b.innerHTML = t.html || t.label;
-      bar.appendChild(b);
+    /* Toolbar. `editor` is read through a getter because this function's
+       instance is replaced every time the reader opens another note. */
+    const tb = IQB.richtext.toolbar({
+      getEditor: function () { return editor; },
+      onCommand: markDirty
     });
-
-    // Language picker — only meaningful while the caret sits in a code block.
-    const langSel = el("select", {
-      class: "nb-lang", "aria-label": "Code language", hidden: "",
-      onchange: function (e) { if (editor) editor.setLang(e.target.value); markDirty(); }
-    });
-    IQB.highlight.LANGS.forEach(function (l) {
-      langSel.appendChild(el("option", { value: l.id, text: l.label }));
-    });
-    bar.appendChild(langSel);
 
     const body = el("div", { class: "nb-body", id: "nb-body" });
     metaEl = el("div", { class: "nb-meta" });
@@ -518,7 +484,7 @@
     const foot = el("div", { class: "nb-foot" }, [metaEl, saveBtnEl]);
 
     editorEl.appendChild(head);
-    editorEl.appendChild(bar);
+    editorEl.appendChild(tb.el);
     editorEl.appendChild(body);
     editorEl.appendChild(foot);
 
@@ -528,239 +494,7 @@
     dirty = false;
     setSaveState("saved");   // setHTML fires no change; nothing is dirty yet
 
-    syncToolbarFn = syncToolbar;
-    document.addEventListener("selectionchange", syncToolbar);
-    function syncToolbar() {
-      if (!editor || !body.isConnected) return;
-      const inCode = editor.inCode();
-      langSel.hidden = !inCode;
-      if (inCode) langSel.value = editor.currentLang() || "auto";
-      ["bold", "italic", "underline", "strikeThrough"].forEach(function (c, i) {
-        const btn = bar.children[i];
-        try { btn.classList.toggle("on", document.queryCommandState(c)); } catch (e) { /* ignore */ }
-      });
-    }
-  }
-
-  /* ---------- tag picker ----------
-     The note's tags as removable chips, plus an "Add tag" button that opens a
-     dropdown of every tag the app knows about. Typing in the dropdown filters
-     the list and, if nothing matches, offers to create the tag — so picking an
-     existing tag and inventing a new one are the same gesture, and the reader
-     can't accidentally fork "leetcode" and "LeetCode" by retyping it. */
-  function renderTagField() {
-    if (!tagsEl) return;
-    let field = tagsEl.querySelector(".nb-tagfield");
-    if (!field) {
-      field = el("div", { class: "nb-tagfield" });
-      tagsEl.insertBefore(field, tagsEl.firstChild);
-    }
-    field.innerHTML = "";
-
-    if (selectedTag) {
-      const chip = el("span", { class: "nb-tagchip" }, [document.createTextNode(selectedTag)]);
-      chip.appendChild(el("button", {
-        class: "nb-tagchip-x", type: "button", "aria-label": "Remove tag " + selectedTag,
-        onclick: function (e) {
-          e.stopPropagation();
-          selectedTag = null;
-          renderTagField();
-          markDirty();
-        }
-      }, "×"));
-      // Clicking the chip itself re-opens the picker, so swapping the tag is
-      // one click rather than remove-then-add.
-      chip.addEventListener("click", function (e) { e.stopPropagation(); toggleTagMenu(); });
-      field.appendChild(chip);
-      return;
-    }
-
-    field.appendChild(el("button", {
-      class: "nb-tagadd", type: "button", "aria-haspopup": "listbox",
-      onclick: function (e) { e.stopPropagation(); toggleTagMenu(); }
-    }, "+ Tag"));
-  }
-
-  function closeTagMenu() {
-    renamingTag = null;
-    if (tagMenuEl) { tagMenuEl.remove(); tagMenuEl = null; }
-    document.removeEventListener("click", closeTagMenu);
-  }
-
-  function toggleTagMenu() {
-    if (tagMenuEl) { closeTagMenu(); return; }
-
-    tagMenuEl = el("div", { class: "nb-tagmenu", role: "listbox" });
-    const filter = el("input", {
-      class: "nb-tagmenu-input", type: "text", placeholder: "Find or create a tag…",
-      "aria-label": "Find or create a tag",
-      oninput: function () { paintOptions(filter.value); },
-      onkeydown: function (e) {
-        if (e.key === "Escape") { e.preventDefault(); closeTagMenu(); }
-        if (e.key === "Enter") {
-          e.preventDefault();
-          const typed = filter.value.trim().toLowerCase();
-          if (!typed) return;
-          const first = tagMenuEl.querySelector(".nb-tagopt");
-          if (first && first.dataset.tag && first.dataset.tag === typed) pick(typed);
-          else create(typed);
-        }
-      }
-    });
-    const list = el("div", { class: "nb-tagmenu-list" });
-    tagMenuEl.appendChild(filter);
-    tagMenuEl.appendChild(list);
-    tagsEl.appendChild(tagMenuEl);
-
-    /* Single-select: picking a tag replaces whatever was there, picking the
-       current one clears it. */
-    async function pick(tag) {
-      selectedTag = selectedTag === tag ? null : tag;
-      renderTagField();
-      markDirty();
-      closeTagMenu();
-    }
-
-    async function create(name) {
-      const t = String(name).trim().toLowerCase();
-      if (!t) return;
-      await IQB.notebook.addTag(t);
-      selectedTag = t;
-      renderTagField();
-      refreshTagBar();
-      markDirty();
-      closeTagMenu();
-      toast('Tag "' + t + '" created');
-    }
-
-    /* Renames the tag everywhere: the vocabulary and every note carrying it
-       (IQB.notebook.renameTag does both). The open note's chip follows. */
-    async function commitRename(from, to) {
-      const target = String(to || "").trim().toLowerCase();
-      renamingTag = null;
-      if (!target || target === from) { paintOptions(filter.value); return; }
-      const clash = IQB.notebook.tags().some(function (t) { return t.tag === target; });
-      if (clash && !window.confirm('"' + target + '" already exists. Merge "' + from + '" into it?')) {
-        paintOptions(filter.value);
-        return;
-      }
-      await IQB.notebook.renameTag(from, target);
-      if (selectedTag === from) { selectedTag = target; renderTagField(); }
-      refreshTagBar();
-      renderList();
-      paintOptions(filter.value);
-      toast(clash ? "Tags merged" : 'Renamed to "' + target + '"');
-    }
-
-    /* Deleting a tag detaches it from every note that carries it — the notes
-       survive, they just become untagged. Say how many, because "8 notes" is
-       the difference between a harmless tidy-up and a regret. */
-    async function destroy(tag, count) {
-      const msg = count
-        ? 'Delete the tag "' + tag + '"? It will be removed from ' + count +
-          " note" + (count === 1 ? "" : "s") + ", but the notes themselves are kept."
-        : 'Delete the tag "' + tag + '"?';
-      if (!window.confirm(msg)) return;
-      await IQB.notebook.removeTag(tag);
-      if (selectedTag === tag) { selectedTag = null; renderTagField(); }
-      if (state.tag === tag) state.tag = null;
-      refreshTagBar();
-      renderList();
-      paintOptions(filter.value);
-      toast("Tag deleted");
-    }
-
-    function paintOptions(q) {
-      const query = String(q || "").trim().toLowerCase();
-      const known = IQB.notebook.tags();
-      const shown = known.filter(function (t) { return !query || t.tag.indexOf(query) !== -1; });
-      list.innerHTML = "";
-
-      shown.forEach(function (t) {
-        const on = selectedTag === t.tag;
-
-        // Inline rename: the name cell becomes an input in place, so the reader
-        // can see the other tags while retyping this one.
-        if (renamingTag === t.tag) {
-          const inp = el("input", {
-            class: "nb-tagrename", type: "text", value: t.tag, "aria-label": "Rename tag",
-            onkeydown: function (e) {
-              e.stopPropagation();
-              // `done` stops the blur that follows Enter/Escape from committing
-              // a second time — the first commit already re-rendered the row.
-              if (e.key === "Enter") { e.preventDefault(); inp.dataset.done = "1"; commitRename(t.tag, inp.value); }
-              if (e.key === "Escape") {
-                e.preventDefault(); inp.dataset.done = "1";
-                renamingTag = null; paintOptions(filter.value);
-              }
-            },
-            onblur: function () {
-              if (inp.dataset.done === "1") return;
-              commitRename(t.tag, inp.value);
-            }
-          });
-          const row = el("div", { class: "nb-tagrow nb-tagrow-editing" }, [inp]);
-          list.appendChild(row);
-          setTimeout(function () { inp.focus(); inp.select(); }, 0);
-          return;
-        }
-
-        /* A row, not a single button: the pick target and the two actions are
-           separate controls, and nesting buttons inside a button is invalid. */
-        const pickBtn = el("button", {
-          class: "nb-tagopt" + (on ? " on" : ""), type: "button", role: "option",
-          "aria-selected": String(on), dataset: { tag: t.tag },
-          onclick: function (e) { e.stopPropagation(); pick(t.tag); }
-        }, [
-          el("span", { class: "nb-tagopt-box" }),
-          el("span", { class: "nb-tagopt-name", text: t.tag }),
-          el("span", { class: "nb-tagopt-n", text: String(t.count) })
-        ]);
-
-        const editBtn = el("button", {
-          class: "nb-tagact", type: "button", title: "Rename tag",
-          "aria-label": "Rename tag " + t.tag,
-          onclick: function (e) { e.stopPropagation(); renamingTag = t.tag; paintOptions(filter.value); }
-        });
-        editBtn.innerHTML = ICON.pencil;
-
-        const delBtn = el("button", {
-          class: "nb-tagact nb-tagact-danger", type: "button", title: "Delete tag",
-          "aria-label": "Delete tag " + t.tag,
-          onclick: function (e) { e.stopPropagation(); destroy(t.tag, t.count); }
-        });
-        delBtn.innerHTML = ICON.bin;
-
-        list.appendChild(el("div", { class: "nb-tagrow" }, [pickBtn, editBtn, delBtn]));
-      });
-
-      // Offer creation only when the typed text isn't already a tag.
-      const exact = known.some(function (t) { return t.tag === query; });
-      if (query && !exact) {
-        list.appendChild(el("button", {
-          class: "nb-tagopt nb-tagnew", type: "button",
-          onclick: function (e) { e.stopPropagation(); create(query); }
-        }, 'Create "' + query + '"'));
-      }
-      if (!shown.length && !query) {
-        list.appendChild(el("div", { class: "nb-tagmenu-empty", text: "No tags yet — type to create one." }));
-      }
-    }
-
-    paintOptions("");
-    tagMenuEl.addEventListener("click", function (e) { e.stopPropagation(); });
-    // Any click outside dismisses; registered async so this very click doesn't.
-    setTimeout(function () { document.addEventListener("click", closeTagMenu); }, 0);
-    filter.focus();
-  }
-
-  function addLink() {
-    const url = window.prompt("Link URL");
-    if (!url) return;
-    // sanitize() refuses anything that isn't http(s)/mailto, so a bad scheme is
-    // dropped on save; rejecting it here just gives faster feedback.
-    if (!/^(https?:\/\/|mailto:)/i.test(url.trim())) { toast("Links must start with http:// or https://"); return; }
-    editor.exec("createLink", url.trim());
+    toolbarRef = tb;
   }
 
   function paintMeta(n) {
@@ -844,11 +578,22 @@
     if (announce) toast("Note saved");
   }
 
-  /* Guards a navigation that would throw away unsaved work. Returns false when
-     the reader chooses to stay put. */
-  function confirmDiscard() {
+  /* Guards a navigation that would throw away unsaved work. Resolves false when
+     the reader chooses to stay put.
+
+     Async since the dialog moved off window.confirm(); every caller is an event
+     handler that ignores the return value, so the await costs nothing but the
+     `dirty` check has to stay INSIDE — by the time the reader answers, an
+     autosave may already have cleared it. */
+  async function confirmDiscard() {
     if (!dirty) return true;
-    const ok = window.confirm("This note has unsaved changes. Discard them?");
+    const ok = await IQB.ui.confirm({
+      title: "Discard unsaved changes?",
+      message: "This note has edits that haven't been saved yet.",
+      confirmLabel: "Discard",
+      cancelLabel: "Keep editing",
+      danger: true
+    });
     if (ok) { dirty = false; setSaveState("saved"); }
     return ok;
   }
@@ -862,8 +607,13 @@
     }
     const n = IQB.notebook.get(currentId);
     if (!n) return;
-    const name = n.title ? '"' + n.title + '"' : "this note";
-    if (!window.confirm("Delete " + name + "? This cannot be undone.")) return;
+    const ok = await IQB.ui.confirm({
+      title: "Delete " + (n.title ? '"' + n.title + '"' : "this note") + "?",
+      message: "This cannot be undone.",
+      confirmLabel: "Delete note",
+      danger: true
+    });
+    if (!ok) return;
     await IQB.notebook.remove(currentId);
     renderEmptyEditor();
     renderList();
@@ -890,12 +640,12 @@
     onHide: function () {},
     /* Opens (creating if needed) the note attached to a question — the "open in
        My Notes" path from a question card. */
-    openForQuestion: function (questionId, seedTitle) {
+    openForQuestion: async function (questionId, seedTitle) {
       const existing = IQB.notebook.byQuestion(questionId);
-      if (existing) { openNote(existing.id); return; }
+      if (existing) { await openNote(existing.id); return; }
       // No note yet — open a draft bound to this question. It only becomes a
       // real note if the reader actually writes something and saves.
-      if (!confirmDiscard()) return;
+      if (!await confirmDiscard()) return;
       currentId = null;
       draftQuestionId = questionId;
       buildEditor({ title: seedTitle || "", html: "", tags: [] });

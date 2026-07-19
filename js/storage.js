@@ -92,6 +92,17 @@
     getHLPen() { return read("hlPen", { on: false, color: "yellow" }); },
     setHLPen(v) { write("hlPen", v); },
 
+    /* --- quick note (floating capture window) ---
+       Device-local on purpose. The draft is unfinished writing, and the
+       geometry describes this screen — syncing either would push a half
+       sentence, or a window positioned for a 27" monitor, onto a laptop.
+       A finished quick note is a notebook entry and syncs like any other. */
+    getQuickNoteDraft() { return read("quickNoteDraft", null); },
+    setQuickNoteDraft(v) { write("quickNoteDraft", v); },
+    clearQuickNoteDraft() { try { localStorage.removeItem(PREFIX + "quickNoteDraft"); } catch (e) { /* ignore */ } },
+    getQuickNoteBox() { return read("quickNoteBox", null); },   // { left, top, width, height }
+    setQuickNoteBox(v) { write("quickNoteBox", v); },
+
     /* --- last opened --- */
     setLastOpened(id) { write("lastOpened", id); },
     getLastOpened() { return read("lastOpened", null); },
@@ -105,7 +116,9 @@
       // "notebook" MUST be in this list: it is the reader's own writing, and
       // leaving it behind would show the next person on a shared browser
       // everything the previous user wrote.
-      ["bookmarks", "progress", "notes", "notebook", "highlights", "lastOpened"].forEach(function (k) {
+      // "quickNoteDraft" belongs here for the same reason as "notebook": an
+      // unsaved draft is still the previous user's writing.
+      ["bookmarks", "progress", "notes", "notebook", "highlights", "lastOpened", "quickNoteDraft"].forEach(function (k) {
         try { localStorage.removeItem(PREFIX + k); } catch (e) { /* ignore */ }
       });
     },

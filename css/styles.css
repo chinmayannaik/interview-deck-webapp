@@ -1083,6 +1083,42 @@ mark.hl-underline {
 .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: var(--r-pill); font-size: var(--step--1); font-family: var(--mono); box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transition: .25s; z-index: 60; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+/* ---------- sidebar rail (AI Helper open) ----------
+   With the chat panel docked, the 210px sidebar is the most expendable column
+   on screen — but hiding it outright would strand the reader with no category
+   navigation for as long as the chat is open. It collapses to an icon rail
+   instead: ~154px back, navigation intact, `title` carries the name.
+
+   Scoped above 900px because below that the sidebar is already display:none. */
+@media (min-width: 901px) {
+  body.tutor-open { --sidebar-w: 56px; }
+  body.tutor-open .main { gap: 16px; }
+
+  /* Animating grid-template-columns is not reliably interpolatable across
+     browsers, so the transition rides on the parts that are. */
+  /* The progress tracker goes entirely, rather than being squeezed: its label
+     ("Frontend progress") and its "12 / 395" count are both text that cannot
+     survive a 56px column, and a bar with no numbers beside it says nothing.
+     It is back the moment the chat closes. */
+  body.tutor-open .progress-box,
+  body.tutor-open .sidebar-title,
+  body.tutor-open .side-link-label > span:not(.cat-ic),
+  body.tutor-open .side-link .s-count { display: none; }
+
+  body.tutor-open .side-link {
+    justify-content: center; padding: 9px 0; border-left-width: 0;
+    border-radius: var(--r-sm);
+  }
+  /* The active marker was a left border, which has nowhere to sit once the
+     row is centred — a tinted pill reads better at this width anyway. */
+  body.tutor-open .side-link.active { background: var(--accent-soft); }
+  body.tutor-open .side-link-label { justify-content: center; gap: 0; }
+  body.tutor-open .side-link .cat-ic { width: 19px; height: 19px; }
+
+  .sidebar, .main { transition: gap .25s ease; }
+  .side-link { transition: padding .25s ease, background var(--trans), border-color var(--trans), color var(--trans); }
+}
+
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
   :root { --sidebar-w: 0px; }

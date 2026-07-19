@@ -381,5 +381,180 @@
     };
   }
 
-  IQB.richtext = { sanitize: sanitize, toPlain: toPlain, attach: attach, paintAll: paintAll };
+  /* ========================================================
+     Formatting toolbar
+
+     Lives here rather than in js/notebook-ui.js because there is now more than
+     one editing surface (My Notes and the Quick Note window) and a toolbar that
+     was defined next to one of them would drift from the other: a button added
+     for the notebook would silently be missing from quick capture.
+
+     Emits the same `nb-*` class names it always did, so css/notebook.css styles
+     every instance without change.
+     ======================================================== */
+
+  /* `cmd` entries go straight to execCommand — deprecated, but universally
+     supported and the only thing that keeps native undo working. The rest are
+     custom because execCommand has no equivalent. */
+  /* the commands whose buttons light up when the caret sits inside them */
+  const STATE_CMDS = ["bold", "italic", "underline", "strikeThrough"];
+
+  const TOOLS = [
+    { cmd: "bold", label: "B", title: "Bold (Ctrl+B)", cls: "nb-t-b" },
+    { cmd: "italic", label: "I", title: "Italic (Ctrl+I)", cls: "nb-t-i" },
+    { cmd: "underline", label: "U", title: "Underline (Ctrl+U)", cls: "nb-t-u" },
+    { cmd: "strikeThrough", label: "S", title: "Strikethrough", cls: "nb-t-s" },
+    { sep: true },
+    { cmd: "formatBlock", arg: "h2", label: "H1", title: "Heading" },
+    { cmd: "formatBlock", arg: "h3", label: "H2", title: "Subheading" },
+    { sep: true },
+    { cmd: "insertUnorderedList", label: "•", title: "Bullet list" },
+    { cmd: "insertOrderedList", label: "1.", title: "Numbered list" },
+    { act: "check", label: "☑", title: "Checklist" },
+    { sep: true },
+    { act: "code", label: "&lt;/&gt;", title: "Code block (Ctrl+E)" },
+    { cmd: "formatBlock", arg: "blockquote", label: "❝", title: "Quote" },
+    {
+      act: "link", title: "Add link",
+      label: '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
+    },
+    { sep: true },
+    { cmd: "removeFormat", label: "⌫", title: "Clear formatting" }
+  ];
+
+  /* createLink acts on the live selection, and window.prompt() was the only
+     dialog that left it alone — focusing our own input collapses the caret into
+     that input and the command would have nothing to wrap. So the range is
+     cloned before the dialog opens and put back before the command runs. */
+  async function addLink(editor) {
+    const sel = window.getSelection();
+    const saved = sel && sel.rangeCount ? sel.getRangeAt(0).cloneRange() : null;
+
+    const url = await IQB.ui.prompt({
+      title: "Add link",
+      message: "Paste the address this text should point to.",
+      placeholder: "https://example.com",
+      confirmLabel: "Add link",
+      // sanitize() drops anything that isn't http(s)/mailto on the way into
+      // storage; validating here just says so before the note is written.
+      validate: function (v) {
+        const t = String(v || "").trim();
+        if (!t) return "Enter a URL.";
+        if (!/^(https?:\/\/|mailto:)/i.test(t)) return "Links must start with http://, https:// or mailto:";
+        return null;
+      }
+    });
+    if (url === null) return;                 // cancelled
+
+    editor.focus();
+    if (saved && sel) { sel.removeAllRanges(); sel.addRange(saved); }
+    editor.exec("createLink", url.trim());
+  }
+
+  /* opts.getEditor  — () => editor|null. A getter, not the editor itself: the
+                       notebook swaps editors as the reader moves between notes.
+     opts.onCommand  — called after any command runs (mark dirty, autosave, …).
+     opts.isActive   — () => bool. Skip selection syncing while closed.
+
+     Returns { el, sync, destroy }. destroy() is not optional — sync is bound to
+     a document-level selectionchange listener, so a toolbar that is dropped
+     without it keeps a detached editor alive. */
+  function toolbar(opts) {
+    opts = opts || {};
+    const getEditor = opts.getEditor || function () { return null; };
+    const onCommand = opts.onCommand || function () {};
+    const isActive = opts.isActive || function () { return true; };
+
+    const bar = document.createElement("div");
+    bar.className = "nb-toolbar";
+    bar.setAttribute("role", "toolbar");
+    bar.setAttribute("aria-label", "Formatting");
+
+    const cmdButtons = [];   // index-aligned with the first four TOOLS entries
+
+    TOOLS.forEach(function (t) {
+      if (t.sep) {
+        const s = document.createElement("span");
+        s.className = "nb-t-sep";
+        bar.appendChild(s);
+        return;
+      }
+      const b = document.createElement("button");
+      b.className = "nb-t" + (t.cls ? " " + t.cls : "");
+      b.type = "button";
+      b.title = t.title;
+      b.setAttribute("aria-label", t.title);
+      b.innerHTML = t.label;
+      // mousedown, not click: the caret must not leave the editor before the
+      // command runs, or execCommand has no selection to act on.
+      b.addEventListener("mousedown", function (e) {
+        e.preventDefault();
+        const editor = getEditor();
+        if (!editor) return;
+        // The link flow is async (it opens a dialog), so its dirty-marking and
+        // toolbar sync have to wait for the command to actually land.
+        if (t.act === "link") {
+          addLink(editor).then(function () { onCommand(); sync(); });
+          return;
+        }
+        if (t.cmd) editor.exec(t.cmd, t.arg);
+        else if (t.act === "code") editor.toggleCode();
+        else if (t.act === "check") editor.toggleChecklist();
+        onCommand();
+        sync();
+      });
+      bar.appendChild(b);
+      if (t.cmd && STATE_CMDS.indexOf(t.cmd) !== -1) cmdButtons.push({ cmd: t.cmd, btn: b });
+    });
+
+    // Language picker — only meaningful while the caret sits in a code block.
+    const langSel = document.createElement("select");
+    langSel.className = "nb-lang";
+    langSel.setAttribute("aria-label", "Code language");
+    langSel.hidden = true;
+    if (IQB.highlight && IQB.highlight.LANGS) {
+      IQB.highlight.LANGS.forEach(function (l) {
+        const o = document.createElement("option");
+        o.value = l.id; o.textContent = l.label;
+        langSel.appendChild(o);
+      });
+    }
+    langSel.addEventListener("change", function (e) {
+      const editor = getEditor();
+      if (!editor) return;
+      editor.setLang(e.target.value);
+      onCommand();
+    });
+    bar.appendChild(langSel);
+
+    function sync() {
+      // selectionchange is document-wide and fires for every drag over the page,
+      // including while this toolbar is closed. isActive lets an owner that keeps
+      // its editor in the DOM (the Quick Note window hides rather than destroys)
+      // opt out instead of recomputing command state nobody can see.
+      if (!isActive()) return;
+      const editor = getEditor();
+      if (!editor || !editor.el.isConnected) return;
+      const inCode = editor.inCode();
+      langSel.hidden = !inCode;
+      if (inCode) langSel.value = editor.currentLang() || "auto";
+      cmdButtons.forEach(function (c) {
+        try { c.btn.classList.toggle("on", document.queryCommandState(c.cmd)); }
+        catch (e) { /* ignore */ }
+      });
+    }
+
+    document.addEventListener("selectionchange", sync);
+
+    return {
+      el: bar,
+      sync: sync,
+      destroy: function () { document.removeEventListener("selectionchange", sync); }
+    };
+  }
+
+  IQB.richtext = {
+    sanitize: sanitize, toPlain: toPlain, attach: attach,
+    paintAll: paintAll, toolbar: toolbar
+  };
 })();

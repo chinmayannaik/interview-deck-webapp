@@ -352,7 +352,7 @@ body.nb-splitting * { user-select: none !important; cursor: col-resize !importan
 /* the editable surface */
 .nb-body {
   flex: 1; overflow-y: auto;
-  padding: 16px 18px 40px; margin: 10px 16px 0;
+  padding: 16px 18px 10px; margin: 10px 16px 0;
   font-family: var(--sans); font-size: var(--step-0); line-height: 1.68; color: var(--ink);
 }
 .nb-body:focus { outline: none; }

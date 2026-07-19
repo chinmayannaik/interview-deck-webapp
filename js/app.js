@@ -278,11 +278,21 @@
 
     // group header + "all of this group" link
     sideEl.appendChild(el("p", { class: "sidebar-title", text: group.label }));
+    /* Same shape as the category links below (icon + label + count) rather than
+       a bare label: when the sidebar collapses to an icon rail beside the AI
+       Helper, a link with no icon would collapse to an empty box. `title` is
+       what names it in that state, where the label is not rendered. */
+    const allIc = el("span", { class: "cat-ic", style: `--ic: ${groupColor(group)}` });
+    allIc.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>';
     sideEl.appendChild(el("button", {
       class: "side-link" + (key === group.key ? " active" : ""),
       "data-cat": group.key, style: `--side-c: ${groupColor(group)}`,
+      title: "All " + group.label,
       onclick: () => setCategory(group.key, true)
-    }, [el("span", { text: "All " + group.label }), el("span", { class: "s-count", text: String(c[group.key]) })]));
+    }, [
+      el("span", { class: "side-link-label" }, [allIc, el("span", { text: "All " + group.label })]),
+      el("span", { class: "s-count", text: String(c[group.key]) })
+    ]));
 
     // only this group's categories
     group.cats.forEach((catKey) => {
@@ -291,6 +301,7 @@
       sideEl.appendChild(el("button", {
         class: "side-link side-sub" + (key === catKey ? " active" : ""),
         "data-cat": catKey, style: `--side-c: ${catColor(catKey)}`,
+        title: labelOf(catKey) + " — " + n + " question" + (n === 1 ? "" : "s"),
         onclick: () => setCategory(catKey, true)
       }, [
         el("span", { class: "side-link-label" }, [catIcon(catKey), el("span", { text: labelOf(catKey) })]),
@@ -1057,7 +1068,12 @@
   }
 
   function onKeydown(e) {
-    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName);
+    /* isContentEditable matters as much as the tag test: the notebook, the
+       per-question notes and the Quick Note window all type into a plain div,
+       so without it a note containing the letter "r" jumps the reader to a
+       random question mid-sentence. */
+    const ae = document.activeElement || document.body;
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName) || ae.isContentEditable;
     // Ctrl/Cmd+K is unambiguous anywhere; bare "/" must not steal focus while
     // the user is typing — in the playground editor every comment starts with one.
     if (e.key.toLowerCase() === "k" && (e.ctrlKey || e.metaKey)) {

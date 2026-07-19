@@ -1,0 +1,239 @@
+/* ============================================================
+   Quick Note — the floating capture window.
+
+   A note you can open from the sticky header at any scroll depth, write in,
+   and save without leaving the question you are reading. Deliberately a
+   free-floating panel rather than a modal or a bottom-sheet FAB: the reason it
+   exists is that the AI Tutor panel (z-index 131) is often open on the right
+   when the thought to save arrives, so this has to sit ABOVE it and be
+   draggable out of its way. Anchored UI would fail exactly when it is needed.
+
+   It owns no storage: a saved note goes straight into js/notebook.js, so it
+   lands in My Notes next to everything else. The only local state is the
+   in-progress draft and the panel's geometry (js/storage.js).
+   ============================================================ */
+
+/* ---------- the header trigger ---------- */
+.qn-open-btn { position: relative; }
+
+/* Unsaved work is invisible once the panel is closed, so the trigger carries
+   the signal — otherwise a reader closes the panel mid-thought and never
+   learns the draft survived. */
+.qn-open-btn.has-draft::after {
+  content: ""; position: absolute; top: 5px; right: 5px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 0 2px var(--surface);
+}
+.qn-open-btn.is-active { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- the panel ---------- */
+.qn-panel {
+  position: fixed; z-index: 140;
+  display: flex; flex-direction: column;
+  width: 380px; height: 420px;
+  min-width: 300px; min-height: 260px;
+  max-width: calc(100vw - 16px); max-height: calc(100vh - 16px);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-lg, 0 12px 40px rgba(32, 26, 28, .18));
+  /* Visible, not hidden: the tag dropdown has to be able to escape the panel,
+     and overflow:hidden was also silently clipping the outer 3px of every
+     resize handle. The rounding that hidden used to provide is now done by the
+     bar and the body themselves. */
+  overflow: visible;
+}
+.qn-bar { border-radius: var(--r-lg) var(--r-lg) 0 0; }
+.qn-main { border-radius: 0 0 var(--r-lg) var(--r-lg); }
+.qn-panel[hidden] { display: none; }
+
+/* Dragging or resizing sets .qn-dragging on <html>: it kills text selection
+   everywhere, which otherwise turns a gesture that strays over the page into a
+   highlight. The cursor is pushed through a custom property because the right
+   one depends on which edge is being pulled. */
+html.qn-dragging, html.qn-dragging * {
+  user-select: none !important;
+  cursor: var(--qn-cursor, grabbing) !important;
+}
+
+/* ---------- title bar (the drag handle) ---------- */
+.qn-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 8px 9px 12px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  cursor: grab; touch-action: none; flex: none;
+}
+.qn-bar:active { cursor: grabbing; }
+.qn-bar-title {
+  font-size: var(--step--1); font-weight: 700; color: var(--ink);
+  display: flex; align-items: center; gap: 7px; margin-right: auto;
+}
+.qn-bar-title svg { color: var(--notebook); flex-shrink: 0; }
+
+.qn-bar-btn {
+  display: grid; place-items: center; width: 26px; height: 26px; flex: none;
+  border: 0; border-radius: var(--r-sm); background: transparent;
+  color: var(--muted); cursor: pointer;
+}
+.qn-bar-btn:hover { background: var(--surface-3); color: var(--ink); }
+
+/* ---------- body ---------- */
+.qn-main { display: flex; flex-direction: column; min-height: 0; flex: 1; padding: 10px 12px 0; }
+.qn-panel.is-collapsed .qn-main,
+.qn-panel.is-collapsed .qn-resize { display: none; }
+.qn-panel.is-collapsed { height: auto !important; min-height: 0; }
+
+/* The attach chip. Present only when a question card is open on screen —
+   a note captured while reading Q21 almost always belongs to Q21, but
+   guessing silently would bury notes under questions the reader never meant. */
+.qn-attach {
+  display: flex; align-items: center; gap: 7px; width: 100%;
+  margin-bottom: 8px; padding: 6px 9px;
+  font: inherit; font-size: var(--step--1); text-align: left;
+  color: var(--muted); background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: var(--r-pill);
+  cursor: pointer;
+}
+.qn-attach:hover { border-color: var(--border-strong); }
+.qn-attach[hidden] { display: none; }
+.qn-attach.is-on { color: var(--notebook); background: color-mix(in srgb, var(--notebook) 8%, var(--surface)); border-color: color-mix(in srgb, var(--notebook) 35%, var(--border)); }
+.qn-attach-box {
+  display: grid; place-items: center; width: 15px; height: 15px; flex: none;
+  border: 1.5px solid currentColor; border-radius: 4px;
+}
+.qn-attach-box svg { opacity: 0; }
+.qn-attach.is-on .qn-attach-box { background: var(--notebook); border-color: var(--notebook); color: #fff; }
+.qn-attach.is-on .qn-attach-box svg { opacity: 1; }
+.qn-attach-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Title and tag share a row: the tag decides where the note lands in My Notes,
+   so it reads as part of the note's identity rather than trailing metadata. */
+.qn-titlerow {
+  display: flex; align-items: center; gap: 8px; flex: none;
+  margin-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+.qn-titlerow .qn-name { flex: 1; min-width: 0; margin-bottom: 0; border-bottom: 0; }
+.qn-titlerow .qn-name:focus { border-bottom: 0; }
+/* Focus has to land on the row, since the input no longer owns the border. */
+.qn-titlerow:focus-within { border-bottom-color: var(--accent); }
+
+/* The dropdown is 260px against a panel that can be 300px wide, so it anchors
+   right and is capped to stay inside the window rather than spilling out of
+   the panel's overflow:hidden and getting clipped. */
+.qn-tags { flex: 0 0 auto; }
+.qn-tags .nb-tagmenu { width: 240px; max-width: calc(100vw - 40px); z-index: 30; }
+.qn-tags .nb-tagmenu-list { max-height: 160px; }
+
+.qn-name {
+  width: 100%; margin-bottom: 8px; padding: 6px 2px;
+  font: inherit; font-size: var(--step-0); font-weight: 600; color: var(--ink);
+  background: transparent; border: 0; border-bottom: 1px solid var(--border);
+}
+.qn-name::placeholder { color: var(--muted); font-weight: 500; }
+.qn-name:focus { outline: none; border-bottom-color: var(--accent); }
+
+/* ---------- formatting toolbar ----------
+   Same bar as My Notes (js/richtext.js builds both), retuned for a window a
+   third the width: no page gutters, tighter targets, and it wraps to a second
+   row rather than clipping. Loaded after notebook.css, so these win. */
+.qn-main .nb-toolbar {
+  flex: none; margin: 0 0 8px; padding: 4px 5px; gap: 1px;
+  background: var(--surface-2);
+}
+.qn-main .nb-t { min-width: 26px; height: 25px; padding: 0 5px; }
+.qn-main .nb-t-sep { margin: 0 2px; height: 15px; }
+.qn-main .nb-lang { height: 23px; margin-left: 2px; }
+
+/* .nb-body gives it the same rich-text rendering as My Notes — headings, code
+   blocks and checklists all look identical to where the note ends up. */
+.qn-surface {
+  flex: 1; min-height: 0; overflow-y: auto;
+  padding: 4px 2px; font-size: var(--step-0); line-height: 1.65;
+}
+.qn-surface:empty::before {
+  content: attr(data-placeholder); color: var(--muted); pointer-events: none;
+}
+
+.qn-foot {
+  display: flex; align-items: center; gap: 8px; flex: none;
+  padding: 9px 0; margin-top: 4px; border-top: 1px solid var(--border);
+}
+.qn-hint { font-size: 0.72rem; color: var(--muted); margin-right: auto; }
+.qn-hint kbd {
+  font: inherit; font-family: var(--mono); font-size: 0.68rem;
+  padding: 1px 4px; border: 1px solid var(--border-strong);
+  border-radius: 4px; background: var(--surface-2);
+}
+.qn-btn {
+  padding: 6px 13px; font: inherit; font-size: var(--step--1); font-weight: 600;
+  color: var(--ink-2); background: var(--surface); cursor: pointer;
+  border: 1px solid var(--border-strong); border-radius: var(--r-pill);
+}
+.qn-btn:hover { border-color: var(--ink-2); }
+.qn-btn.qn-primary {
+  color: var(--accent-contrast); background: var(--accent); border-color: var(--accent);
+}
+.qn-btn.qn-primary:hover { background: var(--accent-ink); border-color: var(--accent-ink); }
+
+/* ---------- resize handles ----------
+   Every edge and corner, like any other window. The first version had a single
+   16px corner grip, which sat on top of the Save button and was invisible
+   against it — the gesture existed but nobody could find it. Edges are the
+   thing people actually reach for.
+
+   The strips overhang the panel by 3px so the very border is grabbable; the
+   panel's overflow:hidden would otherwise clip anything drawn outside. */
+.qn-edge { position: absolute; touch-action: none; z-index: 2; }
+
+.qn-edge-n { top: -3px; left: 10px; right: 10px; height: 7px; cursor: ns-resize; }
+.qn-edge-s { bottom: -3px; left: 10px; right: 10px; height: 7px; cursor: ns-resize; }
+.qn-edge-w { left: -3px; top: 10px; bottom: 10px; width: 7px; cursor: ew-resize; }
+.qn-edge-e { right: -3px; top: 10px; bottom: 10px; width: 7px; cursor: ew-resize; }
+
+/* Corners sit above the edges and are deliberately larger — a corner is the
+   only way to change both dimensions at once, so it should be easy to hit. */
+.qn-edge-nw, .qn-edge-ne, .qn-edge-sw, .qn-edge-se { width: 14px; height: 14px; z-index: 3; }
+.qn-edge-nw { top: -3px; left: -3px; cursor: nwse-resize; }
+.qn-edge-ne { top: -3px; right: -3px; cursor: nesw-resize; }
+.qn-edge-sw { bottom: -3px; left: -3px; cursor: nesw-resize; }
+.qn-edge-se { bottom: -3px; right: -3px; cursor: nwse-resize; }
+
+/* The visible hint, drawn inside the SE corner. Purely decorative — the
+   handle above it is what listens. */
+.qn-edge-se::after {
+  content: ""; position: absolute; right: 3px; bottom: 3px; width: 9px; height: 9px;
+  background:
+    linear-gradient(135deg, transparent 55%, var(--border-strong) 55% 70%, transparent 70% 82%, var(--border-strong) 82% 96%, transparent 96%);
+}
+.qn-panel:hover .qn-edge-se::after { background-image:
+    linear-gradient(135deg, transparent 55%, var(--muted) 55% 70%, transparent 70% 82%, var(--muted) 82% 96%, transparent 96%); }
+
+/* Keep the footer buttons out from under the SE corner — the first version put
+   Save directly beneath it, so the two gestures fought over the same pixels. */
+.qn-foot { padding-right: 14px; }
+
+/* ---------- small screens ----------
+   Drag and resize are pointless at this width, and a floating window covers
+   the text it is meant to annotate. Becomes a bottom sheet instead; the JS
+   stops applying stored geometry below this breakpoint. */
+@media (max-width: 640px) {
+  .qn-panel {
+    left: 0 !important; right: 0 !important; bottom: 0 !important; top: auto !important;
+    width: auto !important; height: 60vh !important; max-height: 72vh;
+    border-radius: var(--r-lg) var(--r-lg) 0 0; border-bottom: 0;
+  }
+  .qn-bar { cursor: default; }
+  .qn-edge { display: none; }
+  .qn-foot { padding-right: 0; }
+  /* The header is already carrying four targets at this width, so the trigger
+     moves into the tools sheet (#quicknote-btn-m) instead. */
+  .qn-open-btn { display: none; }
+}
+
+/* The tools-sheet trigger is the mirror image: mobile only. */
+.tool-mobile-only { display: none; }
+@media (max-width: 640px) { .tool-mobile-only { display: inline-flex; } }
+
+/* print: never */
+@media print { .qn-panel, .qn-open-btn { display: none !important; } }

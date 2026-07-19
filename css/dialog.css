@@ -1,0 +1,93 @@
+/* ============================================================
+   Dialogs — styling for IQB.ui.confirm / IQB.ui.prompt (js/dialog.js).
+
+   z-index sits above every floating surface the app owns (tutor 131,
+   Quick Note 140, tour 1000-1002) but below the splash (2000), which is only
+   ever on screen before any of this can be reached.
+   ============================================================ */
+
+.dlg-overlay {
+  position: fixed; inset: 0; z-index: 1600;
+  display: grid; place-items: center;
+  padding: 20px;
+  background: rgba(32, 26, 28, .46);
+  -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  opacity: 0; transition: opacity .16s ease;
+}
+.dlg-overlay.is-open { opacity: 1; }
+.dlg-overlay.is-closing { opacity: 0; }
+
+/* The page must not scroll behind the dialog. */
+html.dlg-open, html.dlg-open body { overflow: hidden; }
+
+.dlg {
+  width: min(400px, 100%);
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg, 16px);
+  box-shadow: 0 18px 60px rgba(32, 26, 28, .28);
+  padding: 20px 20px 16px;
+  transform: translateY(8px) scale(.985);
+  transition: transform .18s cubic-bezier(.2, .7, .3, 1);
+}
+.dlg-overlay.is-open .dlg { transform: none; }
+.dlg-overlay.is-closing .dlg { transform: translateY(4px) scale(.99); }
+
+.dlg-title {
+  font-size: var(--step-1, 1.12rem); font-weight: 700; line-height: 1.3;
+  letter-spacing: -0.01em; margin: 0 0 6px;
+}
+.dlg-msg {
+  margin: 0; font-size: var(--step-0, .94rem); line-height: 1.6; color: var(--ink-2);
+  /* Titles and tag names go in here verbatim and can be long and unbroken. */
+  overflow-wrap: anywhere;
+}
+
+.dlg-input {
+  width: 100%; margin-top: 14px; padding: 9px 11px;
+  font-family: var(--sans); font-size: var(--step-0, .94rem); color: var(--ink);
+  background: var(--bg); border: 1px solid var(--border-strong); border-radius: var(--r-sm, 8px);
+}
+.dlg-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--focus); }
+
+.dlg-err {
+  margin: 8px 0 0; font-size: var(--step--1, .82rem); color: var(--advanced, #C0392B);
+}
+.dlg-err[hidden] { display: none; }
+
+.dlg-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+.dlg-btn {
+  padding: 8px 15px; border-radius: var(--r-pill, 100px);
+  font-family: var(--sans); font-size: var(--step--1, .82rem); font-weight: 600;
+  color: var(--ink-2); background: var(--surface);
+  border: 1px solid var(--border-strong); cursor: pointer;
+  transition: background var(--trans), border-color var(--trans), color var(--trans);
+}
+.dlg-btn:hover { border-color: var(--ink-2); color: var(--ink); }
+.dlg-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+
+.dlg-primary {
+  color: var(--accent-contrast, #fff); background: var(--accent); border-color: var(--accent);
+}
+.dlg-primary:hover { background: var(--accent-ink); border-color: var(--accent-ink); color: var(--accent-contrast, #fff); }
+
+/* Destructive actions get their own colour rather than the brand accent, which
+   is also the colour of every harmless primary button in the app. */
+.dlg-btn-danger {
+  background: var(--advanced, #C0392B); border-color: var(--advanced, #C0392B); color: #fff;
+}
+.dlg-btn-danger:hover { background: #9E2E22; border-color: #9E2E22; color: #fff; }
+
+@media (max-width: 480px) {
+  .dlg-overlay { place-items: end center; padding: 0; }
+  .dlg {
+    width: 100%; border-radius: var(--r-lg, 16px) var(--r-lg, 16px) 0 0;
+    border-bottom: 0; padding-bottom: 22px;
+  }
+  .dlg-foot { flex-direction: column-reverse; }
+  .dlg-btn { width: 100%; padding: 11px 15px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dlg-overlay, .dlg { transition: none; }
+}

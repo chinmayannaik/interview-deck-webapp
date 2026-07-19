@@ -45,6 +45,8 @@
   <link rel="stylesheet" href="css/dark-theme.css" />
   <link rel="stylesheet" href="css/tutor.css" />
   <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
 
   <!-- the splash's own artwork is the only thing it waits on -->
   <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
@@ -130,6 +132,13 @@
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
           <span class="filter-count" id="filter-count" hidden>0</span>
         </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
         <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter - pick a color, then select text to highlight">
           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
         </button>
@@ -181,6 +190,14 @@
               </button>
             </div>
           <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
             <button class="tool" id="random-btn" type="button" title="Random question (R)">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
               Random
@@ -188,10 +205,6 @@
             <button class="tool" id="practice-toggle" type="button" title="Hide answers until revealed">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
               Practice
-            </button>
-            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              Saved
             </button>
             <button class="tool" id="completed-filter" type="button" title="Show completed only">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
@@ -209,10 +222,6 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M7.5 10.5c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5z"/><path d="M11.5 7.5c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5z"/><path d="M16.5 9.5c.828 0 1.5-.672 1.5-1.5s-.672-1.5-1.5-1.5-1.5.672-1.5 1.5.672 1.5 1.5 1.5z"/><path d="M6 14c0-2 2-3 4-3 1 0 3 .5 3 2 0 2.5-4 4.5-7 1z"/></svg>
               Highlights
             </button>
-            <button class="tool" id="video-filter" type="button" title="Show questions with videos">
-              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
-              With Videos
-            </button>
             <button class="tool" id="expand-all" type="button">
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
               Expand all
@@ -224,6 +233,13 @@
             <!-- mobile only: the header has no room for the moon on a phone, so
                  the theme switch rides along with the tools. app.js keeps its
                  icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
             <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
             <input id="import-file" type="file" accept="application/json" hidden />
           </div>
@@ -304,6 +320,9 @@
     //   "https://cdn.jsdelivr.net/gh/chinmayanaik123/interview-helper-question-bank@main/" }; //better to keep this in production
   </script>
   <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
   <script src="js/icons.js"></script>
   <script src="js/select.js"></script>
   <script src="js/storage.js"></script>
@@ -320,8 +339,14 @@
        view and notes.js, which is now just a card-shaped window onto it. -->
   <script src="js/notebook.js"></script>
   <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
   <script src="js/notebook-ui.js"></script>
   <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
   <!-- before highlights.js: the highlighter palette renders the pen's row -->
   <script src="js/inkpen.js"></script>
   <script src="js/highlights.js"></script>
