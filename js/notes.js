@@ -47,6 +47,24 @@
     const body = el("div", { class: "pn-body", hidden: "" });
     const section = el("div", { class: "pn-section", "data-question-id": questionId }, [toggleBtn, body]);
 
+    /* Read the note aloud. Pinned top-right of the section, icon-only, to match
+       the deep dive's speaker. Hidden until the note actually has content —
+       there is nothing to read otherwise. Resolved on click, not captured, so
+       it always reads the current text (the view is re-rendered on every save). */
+    let speakBtn = null;
+    if (window.IQB.speak && IQB.speak.supported) {
+      speakBtn = IQB.speak.buildFor({
+        cls: "pn-speak", title: "Read this note aloud",
+        name: "Personal note",
+        root: function () {
+          return body.querySelector(".pn-text") || body.querySelector(".pn-input") || body;
+        },
+        scope: function () { return section; }
+      });
+      speakBtn.hidden = true;   // until refreshIndicator confirms there is a note
+      section.appendChild(speakBtn);
+    }
+
     function isOpen() { return !body.hasAttribute("hidden"); }
 
     function toggleOpen() {
@@ -64,7 +82,11 @@
     }
 
     function refreshIndicator() {
-      toggleBtn.classList.toggle("has-note", !!(note && (note.plain || "").trim()));
+      const hasText = !!(note && (note.plain || "").trim());
+      toggleBtn.classList.toggle("has-note", hasText);
+      // nothing to read from an empty note — don't offer the control
+      if (speakBtn) speakBtn.hidden = !hasText;
+      section.classList.toggle("has-note", hasText);
     }
 
     /* Read-only render. Goes through the sanitiser on the way in — this HTML

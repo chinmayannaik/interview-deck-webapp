@@ -47,6 +47,7 @@
   <link rel="stylesheet" href="css/notebook.css" />
   <link rel="stylesheet" href="css/quicknote.css" />
   <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
 
   <!-- the splash's own artwork is the only thing it waits on -->
   <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
@@ -353,6 +354,9 @@
   <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
        IQB.reports for each card's "Report Issue" button -->
   <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
   <!-- before app.js (which data-loader.js injects): buildTabs() renders the
        Playground tab only if this has registered IQB.playground -->
   <script src="js/playground.js"></script>

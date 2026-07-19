@@ -457,6 +457,11 @@
   }
 
   function setCategory(key, updateHash) {
+    /* Leaving the view tears down the cards being read, so the player would be
+       narrating a question that is no longer on screen. Every tab, sidebar and
+       dropdown funnels through here, so one call covers them all. */
+    if (window.IQB.speak && key !== state.category) IQB.speak.stop();
+
     state.category = key;
     // A category change abandons any AI-suggested view — its ids belong to the
     // category the reader just left. applyAiSuggestion re-establishes it right
@@ -622,10 +627,17 @@
     });
     star.innerHTML = bookmarks.has(q.id) ? starOnSvg : starOffSvg;
 
+    /* Speaker + star share one right-aligned group (css/speak.css) — the star
+       kept its own margin-left:auto before read-aloud existed. */
+    const topActions = el("div", { class: "qa-top-actions" }, [
+      window.IQB.speak && IQB.speak.supported ? IQB.speak.build(card) : null,
+      star
+    ]);
+
     const top = el("div", { class: "qa-top" }, [
       el("span", { class: "badge cat", text: labelOf(q.category) }),
       q.difficulty ? el("span", { class: "badge diff-" + q.difficulty, text: cap(q.difficulty) }) : null,
-      star
+      topActions
     ]);
 
     // question is plain text — use text (not html) so literal tags like
@@ -704,7 +716,22 @@
         }
       });
       deepBtn.innerHTML = bookSvg + "Study in depth";
+
       inner.appendChild(deepBtn);
+
+      /* The deep dive's speaker sits INSIDE the panel, pinned top-right.
+         It is deliberately icon-only: .qa-deep is a highlight root, and
+         js/highlights.js maps saved highlights to character offsets into its
+         textContent — an <svg> contributes no text, but a "Listen" label would
+         shift every highlight the reader has saved in this section. */
+      if (window.IQB.speak && IQB.speak.supported) {
+        deepContent.classList.add("has-tts");
+        deepContent.appendChild(IQB.speak.buildFor({
+          cls: "qa-deep-speak", title: "Read the deep dive aloud",
+          name: () => q.question,
+          root: () => deepContent
+        }));
+      }
       inner.appendChild(deepContent);
     }
 
@@ -837,6 +864,21 @@
     }
     if (state.completedOnly || state.uncompletedOnly) render();
   }
+  /* Read-aloud expands a card before speaking it (and reveals it in practice
+     mode) so the reader can see the block being highlighted. Same side effects
+     as opening by hand — lazy notes/highlights still need to load. */
+  if (window.IQB.speak) {
+    IQB.speak.openCard = function (card) {
+      if (card.classList.contains("open")) return;
+      card.classList.add("open", "revealed");
+      const head = qs(".qa-head", card);
+      if (head) head.setAttribute("aria-expanded", "true");
+      markOpened(card.dataset.id);
+      if (window.IQB.notes) IQB.notes.onCardOpen(card.dataset.id);
+      if (window.IQB.highlights) IQB.highlights.onCardOpen(card.dataset.id);
+    };
+  }
+
   function markOpened(id) { store.setLastOpened(id); }
 
   /* ---- bridge for the optional cloud-sync module (js/sync.js) ---- */

@@ -1233,6 +1233,19 @@
     btn.addEventListener("click", function () { copyAnswer(bubble, raw, btn); });
 
     acts.appendChild(btn);
+
+    /* Read aloud, beside Copy. The bubble's own code blocks are skipped by the
+       extractor and announced instead — see js/speak.js. The root is resolved
+       on click rather than captured here, because a streamed reply is still
+       filling in when this row is built. */
+    if (window.IQB.speak && IQB.speak.supported) {
+      acts.appendChild(IQB.speak.buildFor({
+        cls: "tutor-act", label: "Listen", title: "Read this answer aloud",
+        name: "AI Tutor",
+        root: function () { return bubble; }
+      }));
+    }
+
     return acts;
   }
 

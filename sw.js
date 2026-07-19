@@ -3,7 +3,7 @@
 
    Questions are served from the shared content repo via the jsDelivr CDN
    (cross-origin), so they're handled by a dedicated runtime rule below. */
-const CACHE = "iqb-v29";
+const CACHE = "iqb-v30";
 
 /* the git-hosted single source of truth (same repo the Flutter app reads) */
 const CONTENT_HOST = "cdn.jsdelivr.net";
@@ -32,6 +32,8 @@ const CORE = [
   "./js/dialog.js",
   "./js/highlights.js",
   "./js/reports.js",
+  "./css/speak.css",
+  "./js/speak.js",
   "./js/inkpen.js",
   "./js/icons.js",
   "./js/select.js",

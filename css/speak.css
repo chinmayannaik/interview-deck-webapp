@@ -1,0 +1,192 @@
+/* Read-aloud — per-card speaker button, reading indicator, floating player.
+   Paired with js/speak.js. */
+
+/* ── the speaker sits beside the star, so the two share a right-aligned
+   group instead of .qa-star carrying margin-left:auto on its own ── */
+.qa-top-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.qa-top-actions .qa-star { margin-left: 0; }
+
+.qa-speak {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: var(--r-sm);
+  color: var(--muted); background: none; transition: var(--trans);
+}
+.qa-speak:hover { color: var(--accent); background: var(--accent-soft); }
+.qa-speak.on { color: var(--accent); background: var(--accent-soft); }
+
+/* ── currently-reading block ──
+   A class only: js/highlights.js maps saved highlights to character offsets
+   into .answer/.qa-deep textContent, so this must never add or remove text.
+   box-shadow rather than border/padding so nothing reflows as it moves.
+
+   The first cut painted an edge-to-edge band with a hard 3px bar jammed against
+   the text, which read as a selection error rather than a reading position.
+   Now: a soft rounded halo (spread shadow, so it bleeds past the box without
+   changing layout) and no bar. Quiet enough to read over, clear enough to
+   track. */
+.tts-reading {
+  --tts-tint: color-mix(in srgb, var(--accent) 10%, transparent);
+  background: var(--tts-tint);
+  box-shadow: 0 0 0 6px var(--tts-tint);
+  border-radius: 5px;
+  transition: background .25s ease, box-shadow .25s ease;
+}
+/* An <li> sits right of its bullet, so the halo would clip the marker — pull it
+   out to enclose the bullet instead of colliding with it. */
+li.tts-reading { box-shadow: 0 0 0 6px var(--tts-tint), -22px 0 0 6px var(--tts-tint); }
+
+/* The question heading is a span, so the halo hugs the line rather than the
+   full column — give it a touch more breathing room and its own weight. */
+.qa-qtext.tts-reading { --tts-tint: color-mix(in srgb, var(--accent) 13%, transparent); }
+
+/* Dark mode needs more tint to register against the darker surface. */
+:root[data-theme="dark"] .tts-reading { --tts-tint: color-mix(in srgb, var(--accent) 20%, transparent); }
+
+@media (prefers-reduced-motion: reduce) { .tts-reading { transition: none; } }
+
+.qa-card.tts-active { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+
+/* ── speakers pinned inside a panel ──
+   The deep dive and the personal note each carry their own speaker in the
+   top-right of the panel, rather than in a button row above it. Both are
+   icon-only: .qa-deep is a highlight root keyed on textContent offsets, so a
+   text label inside it would shift every saved highlight (js/highlights.js).
+   The note matches for consistency. */
+.qa-deep, .pn-section { position: relative; }
+.qa-deep-speak, .pn-speak {
+  position: absolute; top: 8px; right: 8px; z-index: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: var(--r-sm);
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--muted); transition: var(--trans);
+}
+.qa-deep-speak:hover, .pn-speak:hover { border-color: var(--accent); color: var(--accent); }
+.qa-deep-speak.on, .pn-speak.on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+.qa-deep-speak.on svg, .pn-speak.on svg { fill: none; }
+
+/* The deep dive's own first heading sits at the top-left; reserve the corner so
+   a long heading cannot run under the button. */
+.qa-deep.has-tts > :first-child { padding-right: 40px; }
+
+/* ── host-specific fixes ──
+   The notebook fills icons on `.on` (its bookmark/star buttons are solid when
+   active). A speaker filled solid becomes an unreadable blob, so opt out. */
+.nb-icon-btn.tts-trigger.on svg { fill: none; }
+
+/* Tutor action buttons are invisible until the message is hovered — but one
+   that is actively playing must stay visible, or the only way to stop it is to
+   go hunting for the bubble. */
+.tutor-act.tts-trigger.on { opacity: 1; color: var(--accent); border-color: var(--border); }
+
+/* ── floating player ── */
+.tts-bar {
+  position: fixed; left: 50%; bottom: 18px; z-index: 60;
+  transform: translate(-50%, 140%);
+  display: flex; align-items: center; gap: 14px;
+  max-width: min(720px, calc(100vw - 24px));
+  padding: 9px 10px 9px 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-pill); box-shadow: var(--shadow-lg);
+  opacity: 0; pointer-events: none;
+  transition: transform .26s cubic-bezier(.2, .8, .3, 1), opacity .18s ease;
+}
+.tts-bar.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+@media (prefers-reduced-motion: reduce) { .tts-bar { transition: opacity .18s ease; } }
+
+/* ── dragged free of the dock ──
+   Inline left/top take over, so the centring transform must go — otherwise the
+   bar sits half a width left of where it was dropped. Higher specificity than
+   `.tts-bar.show` (and than the mobile override) so it wins in both. */
+.tts-bar.free,
+.tts-bar.free.show { left: auto; top: auto; right: auto; bottom: auto; transform: none; }
+.tts-bar.free {
+  transition: opacity .18s ease, box-shadow .18s ease;
+  /* Docked, the bar is sized by its left/right insets. Free, those become auto
+     and the width is shrink-to-fit — which on a phone let the stacked layout
+     grow WIDER than the screen. The cap has to be restated here, and again in
+     the mobile block below where max-width is otherwise released. */
+  max-width: calc(100vw - 16px);
+}
+
+/* The chrome is the drag handle; the controls inside it are not. */
+.tts-bar { cursor: grab; touch-action: none; }
+.tts-bar.dragging { cursor: grabbing; box-shadow: 0 18px 50px rgba(32, 26, 28, .2); transition: none; user-select: none; }
+.tts-bar button, .tts-bar select { cursor: pointer; }
+
+/* ── minimized ──
+   Drops to play/pause, expand and stop. Everything that is a *setting* (speed,
+   continuous play, voice) belongs to the expanded view — a reader who minimised
+   the player wants it out of the way, not half-useful. */
+.tts-bar.min { padding: 6px; gap: 6px; flex-direction: row; align-items: center; }
+.tts-bar.min .tts-prev,
+.tts-bar.min .tts-next,
+.tts-bar.min .tts-rate,
+.tts-bar.min .tts-all,
+.tts-bar.min .tts-voice { display: none; }
+.tts-bar.min .tts-controls { margin-left: 0; }
+.tts-bar.min .tts-btn { width: 30px; height: 30px; }
+.tts-bar.min .tts-play { width: 34px; height: 34px; }
+
+.tts-controls { display: flex; align-items: center; gap: 2px; }
+.tts-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border-radius: 50%;
+  color: var(--ink-2); background: none; transition: var(--trans);
+}
+.tts-btn:hover { color: var(--accent); background: var(--accent-soft); }
+.tts-play { background: var(--accent); color: #fff; }
+.tts-play:hover { background: var(--accent); color: #fff; filter: brightness(1.06); }
+.tts-rate {
+  width: auto; min-width: 40px; padding: 0 8px; border-radius: var(--r-pill);
+  font-family: var(--mono); font-size: 11.5px; font-weight: 700;
+}
+.tts-all.on { color: var(--accent); background: var(--accent-soft); }
+
+/* The native dropdown arrow is painted INSIDE the box and does not reserve
+   space, so a long voice name ran straight under it. Drop the native chrome and
+   draw the chevron as a background image, with padding-right sized to clear it.
+   The SVG is inlined as a data URI — an external asset would be blocked by the
+   app's offline-first service worker anyway. */
+.tts-voice {
+  max-width: 132px; font-size: 11.5px; font-family: var(--mono);
+  color: var(--ink-2); background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: var(--r-pill);
+  padding: 5px 24px 5px 10px;
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+  text-overflow: ellipsis;   /* a name still too long truncates, never collides */
+}
+/* IE/Edge legacy arrow, and Firefox's focus-highlight of the collapsed value. */
+.tts-voice::-ms-expand { display: none; }
+.tts-voice:-moz-focusring { color: transparent; text-shadow: 0 0 0 var(--ink-2); }
+
+/* keep the last card clear of the bar while it's up */
+body.tts-on #q-list { padding-bottom: 76px; }
+
+@media (max-width: 640px) {
+  /* The voice picker MUST survive here: Android is the one platform that
+     actually ships an en-IN voice (desktop Chrome has no Google Indian English
+     at all), and the phone is the commute device — so this is where choosing a
+     voice matters most. Transport + speed + voice still won't fit one 375px
+     line, so the controls wrap and the voice takes its own row. */
+  .tts-bar {
+    left: 12px; right: 12px; bottom: 12px; max-width: none;
+    transform: translateY(140%);
+    padding: 8px 10px; border-radius: var(--r-lg);
+  }
+  .tts-bar.show { transform: translateY(0); }
+  /* `max-width: none` above is for the docked bar, which is sized by its insets.
+     A dragged one has no insets, so it must keep a cap or it overflows. */
+  .tts-bar.free { max-width: calc(100vw - 16px); }
+  .tts-controls { flex-wrap: wrap; justify-content: center; gap: 4px; width: 100%; }
+  .tts-btn { width: 34px; height: 34px; }   /* touch target */
+  .tts-voice { flex: 1 0 100%; max-width: none; margin: 2px 0 0; text-align: center; }
+  /* Minimized is a handful of buttons — it must not stretch to the full width. */
+  .tts-bar.min { left: auto; right: auto; width: max-content; }
+  .tts-bar.min .tts-controls { width: auto; flex-wrap: nowrap; }
+  /* transport wraps to two rows and the voice takes a third — taller than the
+     desktop pill, so the last card needs more clearance */
+  body.tts-on #q-list { padding-bottom: 150px; }
+}

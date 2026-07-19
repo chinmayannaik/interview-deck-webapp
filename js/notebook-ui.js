@@ -465,7 +465,18 @@
     // "Saved" / "Saving…" / "Unsaved changes".
     saveStateEl = el("span", { class: "nb-savestate", "aria-live": "polite" });
 
-    const head = el("div", { class: "nb-ed-head" }, [back, titleEl, tagsEl, saveStateEl, delBtn]);
+    /* Read the note back. `body` is the live contenteditable, so the button
+       always reads what is on screen now, not what was loaded — and the title
+       is read from the input for the same reason. */
+    const speakBtn = (window.IQB.speak && IQB.speak.supported)
+      ? IQB.speak.buildFor({
+          cls: "nb-icon-btn", title: "Read this note aloud",
+          name: function () { return titleEl.value || "Note"; },
+          root: function () { return body; }
+        })
+      : null;
+
+    const head = el("div", { class: "nb-ed-head" }, [back, titleEl, tagsEl, saveStateEl, speakBtn, delBtn]);
 
     /* Toolbar. `editor` is read through a getter because this function's
        instance is replaced every time the reader opens another note. */
