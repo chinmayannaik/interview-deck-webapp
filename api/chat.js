@@ -5,12 +5,15 @@
    Interview Helper "AI Tutor". It NEVER exposes the master key to the browser.
 
    Dual-mode authentication:
-     1. Internal / free tier: a signed-in Firebase user whose Firestore
-        doc  users/{uid}.hasFreeAccess === true  is served with MY
-        master key (process.env.GROQ_MASTER_API_KEY).
+     1. Internal / free tier: a signed-in Google account that clears
+        isFreeTier() below is served with MY master key
+        (process.env.GROQ_MASTER_API_KEY).
      2. Public / BYO-key tier: everyone else must send their own Groq
         key in the  x-groq-key  header; the request is billed to them
         (against Groq's free tier, or their own paid usage).
+
+   Who counts as tier 1 is decided ONLY by env vars — see isFreeTier(). It is
+   deliberately not a Firestore flag; the reason is documented there.
 
    IMPORTANT: this file must run on the NODE runtime, not Edge. The
    Firebase Admin SDK needs Node crypto. A plain function under /api on a
@@ -316,6 +319,41 @@ function freeAccessEmails() {
     .filter(Boolean);
 }
 
+/* ---------- open enrolment (early-days switch) ------------------------------
+   OPEN_ACCESS_ALL_SIGNED_IN="true" serves the master key to ANY signed-in
+   Google account, ignoring the allowlist. Intended for the early period where
+   the audience is small and hand-inviting people is friction that costs more
+   than the quota does.
+
+   Understand what it actually opens: Google sign-in has no invite step, so
+   this is "anyone who finds the URL", not "my ~20 users". The allowlist stays
+   the default precisely so that opening up is a deliberate act — an env var
+   someone had to type "true" into — rather than something that could drift in
+   by accident.
+
+   Flip it back by setting it to anything else (or deleting it) and redeploying;
+   the allowlist logic below is untouched and resumes immediately. */
+function openAccessEnabled() {
+  return String(process.env.OPEN_ACCESS_ALL_SIGNED_IN || "").trim().toLowerCase() === "true";
+}
+
+/* The single place that decides "may this identity spend my master key?".
+   Both the access probe and the real key resolution route through identify(),
+   which routes through here — so the two can never disagree about who is in. */
+function isFreeTier(decoded) {
+  // A provider-verified email is required in BOTH modes. Without it, an
+  // unverified address on some other provider could impersonate an
+  // allowlisted one — and under open access it is the only thing standing
+  // between the master key and a throwaway identity.
+  if (decoded.email_verified !== true) return false;
+
+  const email = String(decoded.email || "").toLowerCase();
+  if (!email) return false;
+
+  if (openAccessEnabled()) return true;
+  return freeAccessEmails().indexOf(email) !== -1;
+}
+
 /* Resolves a request's identity and whether it is on the allowlist.
      { signedIn, free, uid, checked }
    `checked` is false ONLY when the lookup itself could not be performed — no
@@ -338,14 +376,7 @@ async function identify(userToken) {
     return { signedIn: false, free: false, uid: null, checked: !misconfigured };
   }
 
-  // Only a provider-verified email can be trusted to identify someone. Google
-  // sign-in always sets this; without the check, an unverified address on some
-  // other provider could impersonate an allowlisted one.
-  const email = String(decoded.email || "").toLowerCase();
-  const free = !!email && decoded.email_verified === true &&
-    freeAccessEmails().indexOf(email) !== -1;
-
-  return { signedIn: true, free: free, uid: decoded.uid, checked: true };
+  return { signedIn: true, free: isFreeTier(decoded), uid: decoded.uid, checked: true };
 }
 
 /* ---------- shared auth / key resolution -----------------------------------
