@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# The app fetches its questions from jsDelivr at runtime, so there is nothing
+# useful for a crawler in the local data mirrors or the tutor proxy.
+Disallow: /api/
+Disallow: /shared-data/
+
+Sitemap: https://www.interviewdeck.in/sitemap.xml

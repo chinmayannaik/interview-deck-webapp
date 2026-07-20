@@ -5,24 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>Interview Deck &amp; Interview Questions</title>
+  <!-- Brand first in the title: a search for "InterviewDeck" has to land here and
+       not on the deck-of-cards products that own the two-word phrase. -->
+  <title>InterviewDeck — Coding &amp; Interview Questions</title>
   <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, JavaScript, TypeScript, RxJS, NgRx, HTML, CSS, Java, Spring Boot, SQL and Git. Practice mode, bookmarks and progress tracking." />
-  <meta name="keywords" content="interview questions, coding interview, angular interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git" />
-  <meta name="author" content="Interview Deck" />
-  <link rel="canonical" href="https://interview-questions-bank.netlify.app/" />
+  <meta name="keywords" content="interviewdeck, interview questions, coding interview, angular interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git" />
+  <meta name="author" content="InterviewDeck" />
+  <!-- The live home. The old netlify address only redirects here now, so pointing
+       the canonical there told Google the real page was a redirect stub. -->
+  <link rel="canonical" href="https://www.interviewdeck.in/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Interview Deck" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
   <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://interview-questions-bank.netlify.app/" />
-  <meta property="og:image" content="assets/og-card.png" />
+  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Interview Deck" />
+  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
-  <meta name="twitter:image" content="assets/og-card.png" />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
 
   <!-- icons + manifest -->
   <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" />
