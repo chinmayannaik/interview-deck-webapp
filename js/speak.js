@@ -215,8 +215,16 @@
   let paused = false;
   let keepAlive = null;  // Chrome drops long queues without a periodic resume()
 
+  /* Android routes speech to the platform TTS engine, where pause() is really a
+     stop and resume() a no-op. Everything below that leans on pause/resume has
+     to take a different path there — see startKeepAlive() and holdPause(). */
+  const ANDROID = /Android/.test(navigator.userAgent);
+
   function startKeepAlive() {
     stopKeepAlive();
+    /* The desktop watchdog this defeats does not exist on Android, and running
+       it there would silently kill playback on the first tick. */
+    if (ANDROID) return;
     keepAlive = setInterval(() => {
       if (!synth.speaking || paused) return;
       synth.pause(); synth.resume();
@@ -341,9 +349,29 @@
     syncButtons();
   }
 
+  /* Pause/resume, split out because Android cannot do either. There the queue is
+     cancelled outright and resuming re-speaks the current chunk from its start —
+     chunks are MAX_CHUNK-sized, so at worst the reader hears one sentence twice,
+     which beats a pause button that stops the audio for good. */
+  function holdPause() {
+    if (!cur || paused) return;
+    paused = true;              // set first: it gates the onend that cancel() fires
+    if (ANDROID) synth.cancel();
+    else synth.pause();
+    stopKeepAlive();
+  }
+
+  function releasePause() {
+    if (!cur || !paused) return;
+    paused = false;
+    if (ANDROID) speakAt(cur.i);
+    else synth.resume();
+    startKeepAlive();
+  }
+
   function toggle(src) {
     if (cur && cur.src.id === src.id) {
-      if (paused) { paused = false; synth.resume(); startKeepAlive(); }
+      if (paused) releasePause();
       else stop();
       syncBar(); syncButtons();
       return;
@@ -353,8 +381,8 @@
 
   function togglePause() {
     if (!cur) return;
-    if (paused) { paused = false; synth.resume(); startKeepAlive(); }
-    else { paused = true; synth.pause(); stopKeepAlive(); }
+    if (paused) releasePause();
+    else holdPause();
     syncBar();
   }
 

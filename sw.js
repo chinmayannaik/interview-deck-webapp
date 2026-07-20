@@ -1,9 +1,9 @@
-/* Service worker — offline-first caching for Interview Helper.
+/* Service worker — offline-first caching for Interview Deck.
    Bump CACHE version when you change core files to force an update.
 
    Questions are served from the shared content repo via the jsDelivr CDN
    (cross-origin), so they're handled by a dedicated runtime rule below. */
-const CACHE = "iqb-v30";
+const CACHE = "iqb-v32";
 
 /* the git-hosted single source of truth (same repo the Flutter app reads) */
 const CONTENT_HOST = "cdn.jsdelivr.net";

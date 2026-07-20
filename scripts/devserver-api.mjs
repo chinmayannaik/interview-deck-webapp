@@ -1,5 +1,5 @@
 /* ============================================================
-   Local dev server for the Interview Helper webapp.
+   Local dev server for the Interview Deck webapp.
 
    Unlike scripts/devserver.py (static only), this one ALSO runs the
    /api/chat serverless function locally, so the AI Tutor chatbot works
@@ -166,7 +166,7 @@ const server = createServer(async (req, res) => {
 });
 
 server.listen(PORT, "127.0.0.1", () => {
-  console.log(`Interview Helper dev server: http://localhost:${PORT}`);
+  console.log(`Interview Deck dev server: http://localhost:${PORT}`);
   console.log(`  static  -> ${ROOT}`);
   console.log(`  api     -> POST /api/chat (BYO Groq key via the widget; no env needed)`);
   if (!process.env.GROQ_MASTER_API_KEY) {

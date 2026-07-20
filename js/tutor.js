@@ -215,7 +215,7 @@
       requestSuggestions();
     } else {
       addBubble("model",
-        "#### Welcome to your AI Interview Helper\n\nChoose how you'd like to prepare today.");
+        "#### Welcome to your AI Interview Deck\n\nChoose how you'd like to prepare today.");
       renderWelcomeChips();
     }
   }
@@ -973,7 +973,7 @@
       '<div class="tutor-gate-inner">' +
         '<div class="tutor-gate-ic">' + GATE_ICON.user + '</div>' +
         '<h3 class="tutor-gate-title">Sign in Required</h3>' +
-        '<p class="tutor-gate-sub">Please sign in to use the AI tutor</p>' +
+        '<p class="tutor-gate-sub">Please sign in to use the AI Helper</p>' +
         '<button class="tutor-gate-btn" id="tutor-gate-signin" type="button">Sign In</button>' +
       '</div>';
     const b = gateEl.querySelector("#tutor-gate-signin");

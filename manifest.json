@@ -1,6 +1,6 @@
 {
-  "name": "Interview Helper: Coding & Interview Questions",
-  "short_name": "Interview Helper",
+  "name": "Interview Deck: Coding & Interview Questions",
+  "short_name": "Interview Deck",
   "description": "A searchable bank of coding and interview questions with practice mode, bookmarks and progress tracking.",
   "start_url": "./index.html",
   "scope": "./",

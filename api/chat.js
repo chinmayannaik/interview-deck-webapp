@@ -2,7 +2,7 @@
    /api/chat  —  Vercel Serverless Function (Node runtime)
 
    Secure proxy to the Groq API (OpenAI-compatible chat completions) for the
-   Interview Helper "AI Tutor". It NEVER exposes the master key to the browser.
+   Interview Deck "AI He". It NEVER exposes the master key to the browser.
 
    Dual-mode authentication:
      1. Internal / free tier: a signed-in Google account that clears
@@ -71,7 +71,7 @@ function rateLimited(uid) {
 const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 const SYSTEM_PROMPT =
   "You are a senior software engineer acting as a personal interview coach inside " +
-  "Interview Helper, mentoring candidates preparing for software-engineering interviews " +
+  "Interview Deck, mentoring candidates preparing for software-engineering interviews " +
   "(Angular, JavaScript/TypeScript, Java, Spring Boot, SQL, RxJS, System Design, DSA, and behavioural rounds).\n\n" +
   "PRIMARY GOAL — Make every topic easy to understand. Teach like a senior engineer mentoring a junior developer. " +
   "Prefer clarity over complexity. Explain why something exists, how it works, when to use it, and common mistakes whenever helpful.\n\n" +

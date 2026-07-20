@@ -41,7 +41,7 @@ html { overflow-anchor: none; }
   gap: 10px;
 }
 .header-shell.is-collapsed .brand-name {
-  font-size: 1.05rem;
+  font-size: 20px;
 }
 .header-shell.is-collapsed .header-search {
   max-width: 280px;
@@ -85,7 +85,7 @@ html { overflow-anchor: none; }
     display: block;
     flex-shrink: 0;
 }
-.brand-name { font-size: var(--step-2); }
+.brand-name { font-size: 26px; }
 .brand-name span { color: var(--accent); }
 .header-count {
   font-family: var(--mono); font-size: var(--step--1); color: var(--muted);

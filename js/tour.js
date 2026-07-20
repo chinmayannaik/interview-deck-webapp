@@ -7,7 +7,7 @@
 
   const steps = [
     {
-      title: "Welcome to Interview Helper",
+      title: "Welcome to Interview Deck!",
       desc: "Master interviews with an interactive question bank.<br><br>Let's take a quick 30-second tour to see the key features.",
       target: null,
       nextText: "Start Tour",
