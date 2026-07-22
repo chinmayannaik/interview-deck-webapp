@@ -7,7 +7,7 @@ const CACHE = "iqb-v33";
 
 /* the git-hosted single source of truth (same repo the Flutter app reads) */
 const CONTENT_HOST = "cdn.jsdelivr.net";
-const CONTENT_PATH = "/gh/chinmayanaik123/interview-helper-question-bank@";
+const CONTENT_PATH = "/gh/chinmayannaik/interview-deck-questions@";
 
 const CORE = [
   "./",
