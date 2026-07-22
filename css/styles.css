@@ -270,21 +270,24 @@ html { overflow-anchor: none; }
 @media (max-width: 900px) {
   .login-prompt {
     top: 50%; left: 50%; right: auto; bottom: auto;
-    z-index: 130; /* over .reading-mode-toggle so the dim covers it too */
+    z-index: 1001;
     width: min(360px, calc(100vw - 32px));
     padding: 20px 18px 16px;
     border-color: var(--accent);
     transform: translate(-50%, calc(-50% + 14px)) scale(.97);
     box-shadow:
       0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent),
-      var(--shadow-lg),
-      0 0 0 9999px rgba(15, 23, 42, .55);
+      var(--shadow-lg);
   }
   .login-prompt.show { transform: translate(-50%, -50%) scale(1); }
+  .login-prompt.show::before {
+    content: ""; position: fixed; inset: 0; z-index: -1;
+    background: rgba(15, 23, 42, .55);
+  }
   .lp-title { font-size: var(--step-1); }
-  /* stack full-width so the primary action leads and nothing is cramped */
   .lp-actions { flex-direction: column; align-items: stretch; gap: 9px; }
   .lp-signin, .lp-later { width: 100%; padding: 12px; }
+  body.login-prompt-open { overflow: hidden; touch-action: none; }
 }
 
 /* ---------- hero ---------- */

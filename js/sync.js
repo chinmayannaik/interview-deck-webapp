@@ -473,7 +473,7 @@
   }
 
   function showPrompt() {
-    if (promptEl) { promptEl.hidden = false; requestAnimationFrame(function () { promptEl.classList.add("show"); }); return; }
+    if (promptEl) { promptEl.hidden = false; requestAnimationFrame(function () { promptEl.classList.add("show"); document.body.classList.add("login-prompt-open"); }); return; }
     const p = document.createElement("div");
     p.className = "login-prompt";
     p.id = "login-prompt";
@@ -492,10 +492,10 @@
     p.querySelector("#lp-signin").addEventListener("click", function (ev) { signIn(ev.currentTarget); });
     p.querySelector("#lp-later").addEventListener("click", dismissPrompt);
     p.querySelector("#lp-close").addEventListener("click", dismissPrompt);
-    requestAnimationFrame(function () { p.classList.add("show"); });
+    requestAnimationFrame(function () { p.classList.add("show"); document.body.classList.add("login-prompt-open"); });
   }
 
-  function hidePrompt() { if (promptEl) { promptEl.classList.remove("show"); promptEl.hidden = true; } }
+  function hidePrompt() { if (promptEl) { promptEl.classList.remove("show"); promptEl.hidden = true; document.body.classList.remove("login-prompt-open"); } }
   function dismissPrompt() {
     try { localStorage.setItem(PROMPT_KEY, "1"); } catch (e) { /* ignore */ }
     hidePrompt();
