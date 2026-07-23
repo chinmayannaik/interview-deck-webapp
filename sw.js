@@ -3,7 +3,7 @@
 
    Questions are served from the shared content repo via the jsDelivr CDN
    (cross-origin), so they're handled by a dedicated runtime rule below. */
-const CACHE = "iqb-v33";
+const CACHE = "iqb-v35";
 
 /* the git-hosted single source of truth (same repo the Flutter app reads) */
 const CONTENT_HOST = "cdn.jsdelivr.net";
@@ -12,6 +12,7 @@ const CONTENT_PATH = "/gh/chinmayannaik/interview-deck-questions@";
 const CORE = [
   "./",
   "./index.html",
+  "./privacy.html",
   "./manifest.json",
   "./css/variables.css",
   "./css/reset.css",

@@ -7,7 +7,7 @@
 
   const steps = [
     {
-      title: "Welcome to Interview Deck!",
+      title: "Welcome to InterviewDeck!",
       desc: "Master interviews with an interactive question bank.<br><br>Let's take a quick 30-second tour to see the key features.",
       target: null,
       nextText: "Start Tour",
@@ -52,7 +52,7 @@
     },
     {
       title: "Step 4 – Reading Mode & Full Screen",
-      desc: "<b>Distraction-Free Reading</b><br><br>Hide the sidebar and filters to focus only on the current question.<br><br><i>For the best experience, press <b>F11</b> to enter your browser's full-screen mode (and F12 is recommended for developer console if needed).</i>",
+      desc: "<b>Distraction-Free Reading</b><br><br>Hide the sidebar and filters to focus only on the current question.<br><br><i>For the best experience, press <b>F11</b> to enter your browser's full-screen mode.</i>",
       target: "#reading-mode-toggle",
       nextText: "Finish Tour",
       setup: function () {

@@ -114,7 +114,7 @@
     launcher.className = "tutor-fab";
     launcher.id = "tutor-fab";
     launcher.type = "button";
-    launcher.setAttribute("aria-label", "Open AI Interview Coach");
+    launcher.setAttribute("aria-label", "Open AI Helper");
     launcher.innerHTML = botIcon(26);
     launcher.addEventListener("click", openPanel);
     document.body.appendChild(launcher);
@@ -513,6 +513,10 @@
     // overlay on narrow ones. Also hides the site's reading-mode/scroll-to-top
     // FABs, which otherwise sit in the same bottom-right corner as this panel.
     document.body.classList.add("tutor-open");
+    // Collapse the sidebar to its icon rail to make room for the docked panel.
+    // Just a default, not a lock: #sidebar-collapse (app.js) can re-expand it
+    // while the chat stays open.
+    document.body.classList.add("sidebar-rail");
     // A first-time visitor's onboarding tour overlay sits above every other
     // element (z-index 1000) and swallows clicks meant for this panel — dismiss
     // it rather than let it fight the tutor. Best-effort: never let a quirk here
@@ -537,6 +541,8 @@
     try { if (panel.contains(document.activeElement)) launcher.focus(); } catch (e) { /* ignore */ }
     launcher.classList.remove("is-open");
     document.body.classList.remove("tutor-open");
+    // the full sidebar is the desktop default, so closing the chat restores it
+    document.body.classList.remove("sidebar-rail");
     document.documentElement.style.removeProperty("--tutor-dock");
   }
 
@@ -972,7 +978,7 @@
     gateEl.innerHTML =
       '<div class="tutor-gate-inner">' +
         '<div class="tutor-gate-ic">' + GATE_ICON.user + '</div>' +
-        '<h3 class="tutor-gate-title">Sign in Required</h3>' +
+        '<h3 class="tutor-gate-title">Sign In Required</h3>' +
         '<p class="tutor-gate-sub">Please sign in to use the AI Helper</p>' +
         '<button class="tutor-gate-btn" id="tutor-gate-signin" type="button">Sign In</button>' +
       '</div>';
@@ -1241,7 +1247,7 @@
     if (window.IQB.speak && IQB.speak.supported) {
       acts.appendChild(IQB.speak.buildFor({
         cls: "tutor-act", label: "Listen", title: "Read this answer aloud",
-        name: "AI Tutor",
+        name: "AI Helper",
         root: function () { return bubble; }
       }));
     }

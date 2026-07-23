@@ -5,14 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <!-- Brand first in the title: a search for "InterviewDeck" has to land here and
-       not on the deck-of-cards products that own the two-word phrase. -->
   <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, JavaScript, TypeScript, RxJS, NgRx, HTML, CSS, Java, Spring Boot, SQL and Git. Practice mode, bookmarks and progress tracking." />
-  <meta name="keywords" content="interviewdeck, interview questions, coding interview, angular interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git" />
+  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <!-- The live home. The old netlify address only redirects here now, so pointing
-       the canonical there told Google the real page was a redirect stub. -->
   <link rel="canonical" href="https://www.interviewdeck.in/" />
 
   <!-- Open Graph -->
@@ -175,7 +171,7 @@
         <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
         </button>
-        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter - pick a color, then select text to highlight">
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
         </button>
         <!-- mobile only: expands .header-search across the header row -->
@@ -206,6 +202,12 @@
     <!-- ===== main ===== -->
     <main class="main">
       <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
         <nav id="sidebar-nav"></nav>
       </aside>
 
@@ -298,6 +300,13 @@
     </main>
 
     <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </footer>
   </div>
 
   <!-- Scroll to Top -->
@@ -349,11 +358,8 @@
        shared with the Flutter app), served via jsDelivr. data-loader.js fetches
        the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
   <script>
-     window.IQB = { DATA_BASE:
-    "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" }; // use for testing
-
-    // window.IQB = { DATA_BASE:
-    //   "https://cdn.jsdelivr.net/gh/chinmayannaik/interview-deck-questions@main/" }; //better to keep this in production
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
   </script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the

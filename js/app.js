@@ -998,7 +998,7 @@
     if (!count) { if (chip) chip.remove(); return; }
     if (!chip) {
       chip = el("button", { id: "ai-suggested-chip", class: "chip-filter ai-suggested",
-        title: "Questions the AI Tutor picked as important" });
+        title: "Questions the AI Helper picked as important" });
       chip.addEventListener("click", () => { state.aiOnly = !state.aiOnly; syncAiChip(); render(); });
       diffEl.appendChild(chip);
     }
@@ -1282,6 +1282,7 @@
     initMobileSearch();
     initToolsSheet();
     initReadingMode();
+    initSidebarToggle();
     if (window.IQB.tour && typeof window.IQB.tour.init === "function") {
       window.IQB.tour.init();
     }
@@ -1425,16 +1426,46 @@
   function initReadingMode() {
     const btn = qs("#reading-mode-toggle");
     if (!btn) return;
-    const enter = () => {
-      document.body.classList.add("reading-mode");
-      btn.classList.add("on");
-      // scroll to top of list for a reading session
-      const list = qs("#q-list"); if (list) list.scrollIntoView({ behavior: "instant" });
+
+    /* Toggling the mode hides/restores the header shell and sidebar, which
+       shifts the whole document under the scroll position. Anchor on the
+       topmost visible card and put it back at the same viewport offset, so
+       the reader stays exactly where they were in the list. */
+    const toggle = (on) => {
+      const list = qs("#q-list");
+      const anchor = list && Array.from(list.children).find((c) => c.getBoundingClientRect().bottom > 0);
+      const before = anchor ? anchor.getBoundingClientRect().top : 0;
+      document.body.classList.toggle("reading-mode", on);
+      btn.classList.toggle("on", on);
+      /* "instant" overrides the page's scroll-behavior:smooth — this is a
+         correction, not a scroll the user should see animate */
+      if (anchor) window.scrollBy({ top: anchor.getBoundingClientRect().top - before, behavior: "instant" });
     };
-    const exit = () => { document.body.classList.remove("reading-mode"); btn.classList.remove("on"); };
-    btn.addEventListener("click", () => { document.body.classList.toggle("reading-mode") ? enter() : exit(); });
+
+    btn.addEventListener("click", () => toggle(!document.body.classList.contains("reading-mode")));
     // allow Esc to exit reading mode
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && document.body.classList.contains("reading-mode")) exit(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && document.body.classList.contains("reading-mode")) toggle(false); });
+  }
+
+  /* Desktop sidebar collapse. body.sidebar-rail (see styles.css) squeezes the
+     210px sidebar to a 56px icon rail. The AI Helper adds/removes the class on
+     its own open/close (js/tutor.js); this button toggles it freely, so the
+     reader can bring the full sidebar back while the chat is docked. The
+     MutationObserver keeps the button's label truthful no matter who last
+     flipped the class. */
+  function initSidebarToggle() {
+    const btn = qs("#sidebar-collapse");
+    if (!btn) return;
+    const sync = () => {
+      const rail = document.body.classList.contains("sidebar-rail");
+      btn.setAttribute("aria-expanded", String(!rail));
+      const label = rail ? "Expand sidebar" : "Collapse sidebar";
+      btn.setAttribute("aria-label", label);
+      btn.title = label;
+    };
+    btn.addEventListener("click", () => { document.body.classList.toggle("sidebar-rail"); sync(); });
+    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    sync();
   }
 
   function initCollapsibleHeader() {

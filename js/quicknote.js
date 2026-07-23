@@ -159,7 +159,7 @@
 
     const surface = el("div", {
       class: "qn-surface nb-body",
-      "data-placeholder": "Write, paste a snippet, or drop the tutor's answer here…"
+      "data-placeholder": "Write, paste a snippet, or drop the AI Helper's answer here…"
     });
 
     const foot = el("div", { class: "qn-foot" }, [

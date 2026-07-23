@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Privacy Policy — InterviewDeck</title>
+  <meta name="description" content="Privacy policy for InterviewDeck — what data the site stores, what is optional, and how to reach us." />
+  <link rel="canonical" href="https://www.interviewdeck.in/privacy.html" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- icons -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- shared design tokens (light + dark) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+
+  <!-- same theme bootstrap as index.html so the toggle choice carries over -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <style>
+    /* Page-local layout. styles.css is skipped on purpose — it is the app
+       shell's stylesheet and assumes the app's DOM; this page only needs the
+       tokens above. */
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: var(--step-0);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page-header {
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .page-header .inner {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px clamp(16px, 4vw, 24px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      font-weight: 700;
+      font-size: var(--step-1);
+      color: var(--ink);
+      text-decoration: none;
+      letter-spacing: -0.01em;
+    }
+    .brand span { color: var(--accent); }
+    .back-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: var(--step--1);
+      font-weight: 600;
+    }
+    .back-link:hover { text-decoration: underline; }
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: clamp(24px, 5vw, 48px) clamp(16px, 4vw, 24px) 64px;
+    }
+    h1 {
+      font-size: var(--step-3);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .updated {
+      color: var(--muted);
+      font-size: var(--step--1);
+      margin-bottom: 32px;
+    }
+    h2 {
+      font-size: var(--step-1);
+      font-weight: 700;
+      margin: 34px 0 10px;
+      letter-spacing: -0.01em;
+    }
+    p { margin: 0 0 12px; color: var(--ink-2); }
+    ul { margin: 0 0 12px; padding-left: 22px; color: var(--ink-2); }
+    li { margin-bottom: 6px; }
+    a { color: var(--accent); }
+    strong { color: var(--ink); font-weight: 600; }
+    .contact-card {
+      margin-top: 12px;
+      padding: 18px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+    }
+    .contact-card p { margin: 0; }
+    .site-footer {
+      border-top: 1px solid var(--border);
+      padding: 26px clamp(16px, 4vw, 24px);
+      color: var(--muted);
+      font-size: var(--step--1);
+    }
+    .site-footer .fi {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 18px;
+      align-items: center;
+    }
+    .site-footer a { color: var(--accent); text-decoration: none; }
+    .site-footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+
+<body>
+  <header class="page-header">
+    <div class="inner">
+      <a class="brand" href="./">interview<span>Deck</span></a>
+      <a class="back-link" href="./">&larr; Back to questions</a>
+    </div>
+  </header>
+
+  <main>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: 23 July 2026</p>
+
+    <p>InterviewDeck (<a href="https://www.interviewdeck.in">www.interviewdeck.in</a>) is a free, searchable bank of coding and interview questions, operated by Chinmay Naik. This page explains what data the site handles, what is optional, and how to reach us. The short version: <strong>no account is required, nothing is sold, and there are no ads or third-party analytics trackers.</strong></p>
+
+    <h2>1. Data stored on your device</h2>
+    <p>Most of what InterviewDeck remembers stays in your own browser (localStorage) and never leaves your device unless you choose to sign in:</p>
+    <ul>
+      <li>Bookmarks, completed-question progress, and filters</li>
+      <li>Personal notes, quick notes, tags, and text highlights</li>
+      <li>Theme preference (light/dark) and other UI settings</li>
+    </ul>
+    <p>You can remove all of this at any time by clearing your browser's site data for interviewdeck.in.</p>
+
+    <h2>2. Optional Google Sign-In &amp; sync</h2>
+    <p>Signing in is entirely optional — every feature works without it. If you choose to sign in with Google (to sync bookmarks, notes, and progress across devices), we receive your basic Google profile (name, email address, and profile picture) through Firebase Authentication, and your synced content is stored in Google Firebase (Firestore) under your account. We use this data only to provide sync; it is never sold or shared for marketing.</p>
+    <p>To remove your synced data, email us (address below) from the Google account you signed in with and we will delete it.</p>
+
+    <h2>3. AI Helper</h2>
+    <p>If you use the AI Helper, the messages you type (and the question being discussed) are sent through our server to a third-party AI provider (Groq) to generate the response. Conversations are used only to answer your query. Please don't include personal or sensitive information in AI Helper chats.</p>
+
+    <h2>4. Issue reports</h2>
+    <p>If you report an issue on a question, the report text you submit is stored so we can review and fix the content. Reports are not linked to you unless you are signed in.</p>
+
+    <h2>5. Third-party services</h2>
+    <p>The site relies on a few external services, each of which may see standard technical data (such as your IP address) as part of serving requests:</p>
+    <ul>
+      <li><strong>Vercel</strong> — hosts the website</li>
+      <li><strong>Google Firebase</strong> — optional sign-in and sync (see section 2)</li>
+      <li><strong>Groq</strong> — AI Helper responses (see section 3)</li>
+      <li><strong>GitHub / jsDelivr</strong> — serves the question content</li>
+      <li><strong>Google Fonts</strong> — serves the webfonts</li>
+    </ul>
+    <p>Each service processes data under its own privacy policy. We do not run advertising networks or third-party analytics trackers on this site.</p>
+
+    <h2>6. Cookies</h2>
+    <p>InterviewDeck itself does not set tracking cookies. Firebase may use cookies or similar storage strictly to keep you signed in if you use Google Sign-In.</p>
+
+    <h2>7. Children's privacy</h2>
+    <p>The site is a general-audience study tool and does not knowingly collect personal information from children under 13.</p>
+
+    <h2>8. Changes to this policy</h2>
+    <p>If this policy changes, the updated version will be posted on this page with a new "last updated" date.</p>
+
+    <h2>9. Contact us</h2>
+    <p>Questions, feedback, data-deletion requests, or anything else — reach out any time:</p>
+    <div class="contact-card">
+      <p><strong>Email:</strong> <a href="mailto:chinmayannaik@gmail.com">chinmayannaik@gmail.com</a></p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="fi">
+      <span>&copy; 2026 InterviewDeck</span>
+      <a href="./">Back to questions</a>
+      <a href="mailto:chinmayannaik@gmail.com">Contact</a>
+    </div>
+  </footer>
+</body>
+</html>

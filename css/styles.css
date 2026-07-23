@@ -1077,47 +1077,69 @@ mark.hl-underline {
 /* footer */
 .site-footer { border-top: 1px solid var(--border); padding: 26px clamp(14px, 3vw, 28px); color: var(--muted); font-size: var(--step--1); }
 .site-footer .fi { max-width: var(--maxw); margin: 0 auto; display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
-.site-footer a { color: var(--accent); }
+.site-footer a { color: var(--accent); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+/* pushes the links to the right edge on wide screens; collapses when the row wraps */
+.site-footer .footer-spacer { flex: 1; min-width: 0; }
 
 /* toast */
 .toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: var(--r-pill); font-size: var(--step--1); font-family: var(--mono); box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transition: .25s; z-index: 60; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* ---------- sidebar rail (AI Helper open) ----------
+/* ---------- sidebar rail ----------
    With the chat panel docked, the 210px sidebar is the most expendable column
    on screen — but hiding it outright would strand the reader with no category
    navigation for as long as the chat is open. It collapses to an icon rail
    instead: ~154px back, navigation intact, `title` carries the name.
 
+   The class is owned by JS: the AI Helper adds it on open (js/tutor.js), and
+   #sidebar-collapse toggles it freely — so the reader can re-expand the full
+   sidebar while the chat is docked, or collapse to the rail without it.
+
    Scoped above 900px because below that the sidebar is already display:none. */
 @media (min-width: 901px) {
-  body.tutor-open { --sidebar-w: 56px; }
-  body.tutor-open .main { gap: 16px; }
+  body.sidebar-rail { --sidebar-w: 56px; }
+  body.sidebar-rail .main { gap: 16px; }
 
   /* Animating grid-template-columns is not reliably interpolatable across
      browsers, so the transition rides on the parts that are. */
   /* The progress tracker goes entirely, rather than being squeezed: its label
      ("Frontend progress") and its "12 / 395" count are both text that cannot
      survive a 56px column, and a bar with no numbers beside it says nothing.
-     It is back the moment the chat closes. */
-  body.tutor-open .progress-box,
-  body.tutor-open .sidebar-title,
-  body.tutor-open .side-link-label > span:not(.cat-ic),
-  body.tutor-open .side-link .s-count { display: none; }
+     It is back the moment the rail expands. */
+  body.sidebar-rail .progress-box,
+  body.sidebar-rail .sidebar-title,
+  body.sidebar-rail .side-link-label > span:not(.cat-ic),
+  body.sidebar-rail .side-link .s-count { display: none; }
 
-  body.tutor-open .side-link {
+  body.sidebar-rail .side-link {
     justify-content: center; padding: 9px 0; border-left-width: 0;
     border-radius: var(--r-sm);
   }
   /* The active marker was a left border, which has nowhere to sit once the
      row is centred — a tinted pill reads better at this width anyway. */
-  body.tutor-open .side-link.active { background: var(--accent-soft); }
-  body.tutor-open .side-link-label { justify-content: center; gap: 0; }
-  body.tutor-open .side-link .cat-ic { width: 19px; height: 19px; }
+  body.sidebar-rail .side-link.active { background: var(--accent-soft); }
+  body.sidebar-rail .side-link-label { justify-content: center; gap: 0; }
+  body.sidebar-rail .side-link .cat-ic { width: 19px; height: 19px; }
 
   .sidebar, .main { transition: gap .25s ease; }
   .side-link { transition: padding .25s ease, background var(--trans), border-color var(--trans), color var(--trans); }
+
+  /* the collapse/expand toggle riding at the top of the sidebar */
+  .side-collapse {
+    display: flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; margin: 0 4px 6px auto;
+    border-radius: var(--r-sm); color: var(--muted);
+  }
+  .side-collapse:hover { background: var(--surface-2); color: var(--ink); }
+  .side-collapse svg { transition: transform .25s ease; }
+  body.sidebar-rail .side-collapse { margin: 0 auto 6px; }
+  body.sidebar-rail .side-collapse svg { transform: rotate(180deg); }
 }
+/* the sidebar itself is display:none under 901px, but reading/playground modes
+   hide only .sidebar's siblings' context — keep the button from ever showing
+   outside a visible sidebar */
+@media (max-width: 900px) { .side-collapse { display: none; } }
 
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
