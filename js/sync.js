@@ -38,6 +38,10 @@
      a fresh visit starts compact). No entry = default: open when it is the
      only group, collapsed otherwise. */
   const openGroups = {};
+  /* The whole Learning Progress block starts collapsed — the menu is mostly
+     opened for the focus pack or sign-out, and the progress list made those
+     scroll on short screens. In-memory only: each fresh visit collapses again. */
+  let progressOpen = false;
   const userChangeCbs = [];
   function emitUserChange() {
     userChangeCbs.forEach(function (cb) { try { cb(user); } catch (e) { /* isolate */ } });
@@ -402,18 +406,61 @@
         '<div class="auth-id"><div class="auth-name" id="auth-name"></div>' +
         '<div class="auth-email" id="auth-email"></div></div>' +
       '</div>' +
-      '<div class="auth-progress">' +
-        '<div class="auth-progress-title">✓ Learning progress</div>' +
-        '<div class="auth-total"><span>Total completed</span><strong id="auth-total-n">0</strong></div>' +
-        '<div class="auth-rows" id="auth-rows"></div>' +
+      '<div class="auth-progress" id="auth-progress">' +
+        '<button class="auth-progress-title" id="auth-progress-toggle" type="button" aria-expanded="false">' +
+          '<span class="auth-group-chev auth-title-chev" aria-hidden="true">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>' +
+          '</span>' +
+          '<span class="auth-sec-ic auth-sec-ic--progress" aria-hidden="true">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' +
+          '</span>' +
+          '<span>Learning progress</span>' +
+          '<span class="auth-progress-n" id="auth-progress-n"></span>' +
+        '</button>' +
+        '<div class="auth-progress-body" id="auth-progress-body" hidden>' +
+          '<div class="auth-total"><span>Total completed</span><strong id="auth-total-n">0</strong></div>' +
+          '<div class="auth-rows" id="auth-rows"></div>' +
+        '</div>' +
       '</div>' +
-      '<button class="auth-link" id="auth-myreports" type="button" hidden>My reported issues</button>' +
-      '<button class="auth-link auth-admin" id="auth-admin" type="button" hidden>Issue reports</button>' +
-      '<button class="auth-signout" id="auth-signout" type="button">⏻ Sign out</button>';
+      '<div class="auth-pack" id="auth-pack" hidden>' +
+        '<div class="auth-pack-title">' +
+          '<span class="auth-sec-ic auth-sec-ic--pack" aria-hidden="true">' +
+            '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>' +
+          '</span>' +
+          '<span>Focus pack</span>' +
+        '</div>' +
+        '<p class="auth-pack-hint">Load role-specific questions</p>' +
+        '<div class="auth-select-wrap">' +
+          '<select class="auth-pack-select" id="auth-pack-select" aria-label="Focus pack"></select>' +
+        '</div>' +
+      '</div>' +
+      '<div class="auth-actions">' +
+        '<button class="auth-link" id="auth-myreports" type="button" hidden>' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>' +
+          '<span>My reported issues</span>' +
+        '</button>' +
+        '<button class="auth-link auth-admin" id="auth-admin" type="button" hidden>' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>' +
+          '<span>Issue reports</span>' +
+        '</button>' +
+        '<button class="auth-signout" id="auth-signout" type="button">' +
+          '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>' +
+          '<span>Sign out</span>' +
+        '</button>' +
+      '</div>';
     document.body.appendChild(m);
+    m.querySelector("#auth-progress-toggle").addEventListener("click", function (e) {
+      e.stopPropagation();
+      progressOpen = !progressOpen;
+      renderMenu();
+    });
     m.querySelector("#auth-signout").addEventListener("click", function () {
       closeMenu();
       if (fb) fb.signOut(fb.auth);
+    });
+    m.querySelector("#auth-pack-select").addEventListener("change", function (e) {
+      if (window.IQB.app && IQB.app.setFocusPack) IQB.app.setFocusPack(e.target.value || null);
+      renderMenu();
     });
     m.querySelector("#auth-myreports").addEventListener("click", function () {
       closeMenu();
@@ -446,6 +493,39 @@
     const adminBtn = menuEl.querySelector("#auth-admin");
     if (adminBtn) adminBtn.hidden = !(IQB.cloud.isAdmin() && window.IQB.reports);
 
+    /* Focus pack picker — only rendered when the content actually ships packs
+       (IQB.packs comes from the manifest via data-loader.js). */
+    var packBox = menuEl.querySelector("#auth-pack");
+    if (packBox) {
+      var packs = (window.IQB.app && IQB.app.getFocusPacks) ? IQB.app.getFocusPacks() : [];
+      packBox.hidden = !packs.length;
+      if (packs.length) {
+        var packSel = packBox.querySelector("#auth-pack-select");
+        var activePk = (IQB.app.getActiveFocusPack && IQB.app.getActiveFocusPack()) || null;
+        packSel.innerHTML = "";
+        var off = document.createElement("option");
+        off.value = "";
+        off.textContent = "All questions";
+        packSel.appendChild(off);
+        packs.forEach(function (p) {
+          var o = document.createElement("option");
+          o.value = p.id;
+          o.textContent = p.label + " (" + p.count + " questions)";
+          if (p.description) o.title = p.description;
+          packSel.appendChild(o);
+        });
+        packSel.value = activePk ? activePk.id : "";
+        /* The native <select>'s open list is OS-drawn and ignores the theme —
+           swap it for the site's own combobox (same component as the mobile
+           filters). enhance() is a one-time upgrade; syncAll() re-reads the
+           options we just rebuilt. */
+        if (window.IQB.select) {
+          IQB.select.enhance(packSel);
+          IQB.select.syncAll();
+        }
+      }
+    }
+
     /* Started categories only (app.js getProgressSummary), grouped under their
        main field as collapsible sections — an Angular reader sees Angular, not
        "Frontend 12/430" padded with frameworks they never opened, and a reader
@@ -454,6 +534,16 @@
        hidden" undo rather than per-row memory. */
     const sum = (IQB.app && IQB.app.getProgressSummary) ? IQB.app.getProgressSummary() : { totalCompleted: 0, groups: [], hiddenCount: 0 };
     menuEl.querySelector("#auth-total-n").textContent = String(sum.totalCompleted);
+
+    /* Collapsed by default; the header still shows the completed count so the
+       number the reader cares about survives the fold. */
+    const progBox = menuEl.querySelector("#auth-progress");
+    const progBody = menuEl.querySelector("#auth-progress-body");
+    const progToggle = menuEl.querySelector("#auth-progress-toggle");
+    progBox.classList.toggle("open", progressOpen);
+    progBody.hidden = !progressOpen;
+    progToggle.setAttribute("aria-expanded", String(progressOpen));
+    menuEl.querySelector("#auth-progress-n").textContent = String(sum.totalCompleted);
     const rows = menuEl.querySelector("#auth-rows");
     rows.innerHTML = "";
     if (!sum.groups.length) {

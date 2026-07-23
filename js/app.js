@@ -148,6 +148,33 @@
   let bookmarks = store.getBookmarks();
   let progress = store.getProgress();
 
+  /* ---- focus pack: a role-based subset of the whole bank ----
+     A pack (from the content repo's packs/*.json, loaded into IQB.packs by
+     data-loader.js) names whole categories plus cherry-picked question ids.
+     When one is active every count, list and progress figure narrows to the
+     pack's questions — the rest of the app needs no awareness beyond inPack():
+     tabs, sidebar, dropdowns and empty-category hiding all derive from
+     counts(), which already skips zero-count entries. */
+  let activePack = null;   // the pack object, or null = off
+  let packSet = null;      // Set of question ids, or null = off
+  function resolvePackSet(pack) {
+    const set = new Set(pack.questionIds || []);
+    (pack.categories || []).forEach((cat) => {
+      (IQB.data[cat] || []).forEach((q) => set.add(q.id));
+    });
+    return set;
+  }
+  const inPack = (q) => !packSet || packSet.has(q.id);
+  (function restoreFocusPack() {
+    const saved = store.getFocusPack();
+    if (saved && window.IQB.packs && IQB.packs[saved]) {
+      activePack = IQB.packs[saved];
+      packSet = resolvePackSet(activePack);
+    } else if (saved) {
+      store.setFocusPack(null); // stale pack id from an older content version
+    }
+  })();
+
   /* ---- element refs (created/queried in init) ---- */
   let listEl, titleEl, tabsEl, sideEl, subnavEl, diffEl, searchEls = [], progFill, progLabel;
   let mCatEl, mTopicEl, mDiffEl; // mobile dropdowns (section / topic / level)
@@ -197,8 +224,12 @@
      BUILD STATIC UI (tabs, sidebar, difficulty filter)
      ======================================================== */
   function counts() {
-    const map = { all: ALL.length };
-    ALL.forEach((q) => { map[q.category] = (map[q.category] || 0) + 1; });
+    const map = { all: 0 };
+    ALL.forEach((q) => {
+      if (!inPack(q)) return;
+      map.all++;
+      map[q.category] = (map[q.category] || 0) + 1;
+    });
     GROUPS.forEach((g) => { map[g.key] = g.cats.reduce((n, c) => n + (map[c] || 0), 0); });
     return map;
   }
@@ -242,6 +273,7 @@
   function progressFor(cats) {
     let total = 0, done = 0;
     ALL.forEach((q) => {
+      if (!inPack(q)) return;
       if (cats.includes(q.category)) { total++; if (progress.has(q.id)) done++; }
     });
     return { done, total };
@@ -253,7 +285,7 @@
      reported in. An Angular reader who never opens React should never see React
      in a denominator. */
   function isStarted(cat) {
-    return ALL.some((q) => q.category === cat && (progress.has(q.id) || bookmarks.has(q.id)));
+    return ALL.some((q) => inPack(q) && q.category === cat && (progress.has(q.id) || bookmarks.has(q.id)));
   }
 
   /* What the sidebar tracker reports for the current selection. A single
@@ -315,7 +347,7 @@
       onclick: () => setCategory(group.key, true)
     }, [
       el("span", { class: "side-link-label" }, [allIc, el("span", { text: "All " + group.label })]),
-      el("span", { class: "s-count", text: String(c[group.key]) })
+      el("span", { class: "s-count", text: String(c[group.key] || 0) })
     ]));
 
     // only this group's categories
@@ -393,11 +425,12 @@
 
   /* ---- mobile dropdowns: native <select>s that replace the tab / topic /
      level chip rows on small screens (built once; kept in sync on change) ---- */
-  function buildMobileControls() {
+  /* Section (top-level group) options only — split out of buildMobileControls
+     so a focus-pack toggle can rebuild the list (groups appear/vanish with
+     their pack counts) without re-binding the change listeners. */
+  function renderMobileSections() {
     if (!mCatEl) return;
     const c = counts();
-
-    // section (top-level groups)
     mCatEl.innerHTML = "";
     GROUPS.forEach((g) => {
       const n = c[g.key] || 0;
@@ -409,6 +442,13 @@
        notebook at all (the tab it used to live in sits in the desktop-only
        strip). */
     if (window.IQB.notebookUI) mCatEl.appendChild(el("option", { value: NOTEBOOK, text: "My Notes" }));
+  }
+
+  function buildMobileControls() {
+    if (!mCatEl) return;
+
+    // section (top-level groups)
+    renderMobileSections();
     mCatEl.addEventListener("change", () => setCategory(mCatEl.value, true));
 
     // level
@@ -563,6 +603,7 @@
     const q = state.query.trim().toLowerCase();
     const allowed = catsFor(state.category); // null = no category restriction
     return ALL.filter((item) => {
+      if (!inPack(item)) return false;
       if (allowed && !allowed.includes(item.category)) return false;
       if (state.aiOnly && state.aiSuggestedIds && !state.aiSuggestedIds.has(item.id)) return false;
       if (state.difficulty !== "all" && item.difficulty !== state.difficulty) return false;
@@ -804,6 +845,7 @@
             answer: stripToText(q.answer),
             code: q.code || "",
             tags: q.tags || [],
+            category: q.category || "",
             difficulty: q.difficulty || "",
             hasDeep: !!q.deep
           });
@@ -1001,6 +1043,117 @@
     const h = store.getHiddenProgress(); h.add(key); store.saveHiddenProgress(h);
   }
   function unhideProgress() { store.saveHiddenProgress(new Set()); }
+
+  /* ========================================================
+     FOCUS PACK (role-based question subset)
+     ======================================================== */
+  /* Switch the active focus pack (a pack id, or null/"" = off) and rebuild
+     everything whose contents derive from counts(): tabs, sidebar, subnav,
+     mobile dropdowns. Falls back to the first non-empty group when the
+     current view holds no pack questions. */
+  function setFocusPack(id) {
+    const pack = id ? (window.IQB.packs || {})[id] : null;
+    if (id && !pack) { toast("Unknown focus pack"); return false; }
+    activePack = pack;
+    packSet = pack ? resolvePackSet(pack) : null;
+    store.setFocusPack(pack ? pack.id : null);
+    saveFocusPackCloud(pack ? pack.id : "");
+
+    buildTabs();
+    renderMobileSections();
+
+    const c = counts();
+    let key = state.category;
+    if (key !== PLAYGROUND && key !== NOTEBOOK) {
+      const n = key === "all" ? c.all : (c[key] || 0);
+      if (!n) key = (GROUPS.find((g) => c[g.key] > 0) || GROUPS[0]).key;
+    }
+    setCategory(key, false);
+    updatePackChip();
+    toast(pack
+      ? "Focus pack on — " + pack.label + " (" + c.all + " questions)"
+      : "Focus pack off — all questions");
+    return true;
+  }
+  function getFocusPacks() {
+    return Object.values(window.IQB.packs || {}).map((p) => ({
+      id: p.id, label: p.label, description: p.description || "", count: p.count
+    }));
+  }
+
+  /* ---- focus pack ⇄ account sync ----
+     The device-local iqb:focusPack made the choice vanish on a new device or
+     a cleared browser. The account is the durable copy: users/{uid}/prefs/
+     focusPack {id} via the generic IQB.cloud layer. On sign-in the cloud
+     value wins (that's what "log in and get my setup back" means); a cloud
+     with no preference yet inherits whatever this device had selected while
+     signed out. applyingRemotePack stops the sign-in apply from immediately
+     echoing the same value back up. */
+  let applyingRemotePack = false;
+
+  function saveFocusPackCloud(id) {
+    if (applyingRemotePack) return;
+    if (!(window.IQB.cloud && IQB.cloud.isSignedIn && IQB.cloud.isSignedIn())) return;
+    IQB.cloud.save("prefs", "focusPack", { id: id || "", updatedAt: Date.now() })
+      .catch(() => { /* offline write — localStorage still has it */ });
+  }
+
+  if (window.IQB.cloud && IQB.cloud.onChange) {
+    IQB.cloud.onChange(async (u) => {
+      if (!u) return; // sign-out keeps the local choice — nothing to restore
+      // Auth can settle before the manifest/packs arrive — wait for them so a
+      // valid cloud id isn't mistaken for a stale one and skipped.
+      for (let i = 0; i < 100 && !window.IQB.packs; i++) {
+        await new Promise((r) => setTimeout(r, 100));
+      }
+      if (!window.IQB.packs) return;
+      try {
+        const doc = await IQB.cloud.load("prefs", "focusPack");
+        const cur = activePack ? activePack.id : "";
+        if (doc && typeof doc.id === "string") {
+          const want = doc.id;
+          // A cloud id from a newer content version this client hasn't seen
+          // yet simply doesn't apply — don't clear the account's preference.
+          if (want !== cur && (!want || (window.IQB.packs || {})[want])) {
+            applyingRemotePack = true;
+            try { setFocusPack(want || null); } finally { applyingRemotePack = false; }
+          }
+        } else if (cur) {
+          saveFocusPackCloud(cur); // first sign-in on this device: seed the account
+        }
+      } catch (e) { /* Firestore unreachable — local behaviour unchanged */ }
+    });
+  }
+  function getActiveFocusPack() {
+    return activePack ? { id: activePack.id, label: activePack.label } : null;
+  }
+
+  /* A pinned chip above the list naming the active pack, with its own off
+     switch — a narrowed list with no visible reason is exactly how a mode
+     gets forgotten (same argument as syncFilterCount). */
+  function updatePackChip() {
+    let chip = qs("#pack-chip");
+    if (!activePack) { if (chip) chip.remove(); return; }
+    const head = qs(".content-head");
+    if (!head) return;
+    if (!chip) {
+      chip = el("div", { class: "pack-chip", id: "pack-chip" });
+      head.insertBefore(chip, qs(".tools-panel", head));
+    }
+    chip.innerHTML = "";
+    chip.append(
+      el("span", {
+        class: "pack-chip-ic", "aria-hidden": "true",
+        html: '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>'
+      }),
+      el("span", { class: "pack-chip-label", text: "Focus: " + activePack.label }),
+      el("button", {
+        class: "pack-chip-x", type: "button",
+        title: "Turn off focus pack", "aria-label": "Turn off focus pack",
+        onclick: () => setFocusPack(null)
+      }, "×")
+    );
+  }
   /* The category the reader is currently viewing, as { key, label }. Used by the
      AI Tutor to tailor its welcome prompts ("Ask me a random {label} question").
      Returns the single category when one is selected; for a group tab ("frontend")
@@ -1078,7 +1231,7 @@
     chip.appendChild(document.createTextNode("✨ AI Suggested"));
     chip.appendChild(el("span", { class: "chip-n", text: String(count) }));
   }
-  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, hideProgressRow: hideProgressRow, unhideProgress: unhideProgress, setCategory: setCategory, restoreView: restoreView, copyText: copyText, currentCategory: currentCategory, categoryTags: categoryTags, applyAiSuggestion: applyAiSuggestion };
+  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, hideProgressRow: hideProgressRow, unhideProgress: unhideProgress, setCategory: setCategory, restoreView: restoreView, copyText: copyText, currentCategory: currentCategory, categoryTags: categoryTags, applyAiSuggestion: applyAiSuggestion, setFocusPack: setFocusPack, getFocusPacks: getFocusPacks, getActiveFocusPack: getActiveFocusPack };
   function updateProgressBar() {
     const prog = sidebarProgress(state.category);
     const fill = qs("#progress-fill", sideEl);
@@ -1343,7 +1496,16 @@
     const startTab = store.getLastTab();
     const validStart = isGroup(startTab) || startTab === PLAYGROUND
       || CATEGORIES.some((c) => c.key === startTab);
-    setCategory(validStart ? startTab : GROUPS[0].key, false);
+    let startKey = validStart ? startTab : GROUPS[0].key;
+    /* an active focus pack may have emptied the remembered view — land on the
+       first group that still has questions rather than an empty list */
+    if (packSet && startKey !== PLAYGROUND && startKey !== NOTEBOOK) {
+      const c0 = counts();
+      const n0 = startKey === "all" ? c0.all : (c0[startKey] || 0);
+      if (!n0) startKey = (GROUPS.find((g) => c0[g.key] > 0) || GROUPS[0]).key;
+    }
+    setCategory(startKey, false);
+    updatePackChip();
     parseHash();
 
     // register service worker (PWA) — only over http(s)

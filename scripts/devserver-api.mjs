@@ -120,8 +120,17 @@ async function serveStatic(req, res) {
   const urlPath = decodeURIComponent(new URL(req.url, "http://x").pathname);
   // Resolve within ROOT and block path traversal.
   let rel = normalize(urlPath).replace(/^([/\\])+/, "");
-  let filePath = join(ROOT, rel);
-  if (!filePath.startsWith(ROOT)) {
+  let base = ROOT;
+  /* /questions-data/* serves the sibling content repo, so unpushed question or
+     pack edits can be previewed: in the browser console run
+       localStorage.setItem("iqb:devDataBase", "questions-data/")
+     and reload (remove the key to go back to the production CDN content). */
+  if (rel.startsWith("questions-data")) {
+    base = join(ROOT, "..", "interview-deck-questions");
+    rel = rel.slice("questions-data".length).replace(/^([/\\])+/, "");
+  }
+  let filePath = join(base, rel);
+  if (!filePath.startsWith(base)) {
     res.statusCode = 403;
     return res.end("Forbidden");
   }

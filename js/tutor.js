@@ -212,7 +212,7 @@
       addBubble("model",
         "What would you like to know about **" + truncate(currentContext.question, 70) +
         "**? Pick one below, or just type your own question.");
-      requestSuggestions();
+      renderPinnedChips();
     } else {
       addBubble("model",
         "#### Welcome to your AI Interview Deck\n\nChoose how you'd like to prepare today.");
@@ -314,6 +314,86 @@
     });
     listEl.appendChild(wrap);
     scrollDown();
+  }
+
+  /* ---------- pinned-question study chips ----------
+     Fixed, deterministic chips for the greet under a pinned question — replaces
+     the old model-generated suggestions there, which came back as vague
+     tangents ("How is Queue used in real projects") instead of the study
+     actions readers actually want. Two sets: conceptual questions get
+     detail/examples/revision/V.Imp; coding questions get problem/solution/
+     dry-run/complexity. Short label on the chip, fuller instruction sent to
+     the model (same pattern as the welcome chips); the pinned Q&A context is
+     folded into the outgoing message by sendMessage(). Model-generated chips
+     still power the post-reply follow-ups (requestFollowups). */
+  const CODING_CATEGORIES = ["coding", "leetcode", "ngcoding", "fluttercoding"];
+
+  function isCodingContext(ctx) {
+    if (!ctx) return false;
+    if (ctx.category && CODING_CATEGORIES.indexOf(ctx.category) !== -1) return true;
+    // Fallback for contexts pinned without a category: treat as coding only
+    // when it walks and quacks like an exercise (has code AND task-style tags).
+    const t = ctx.tags || [];
+    return !!ctx.code && t.some(function (x) {
+      return /^(coding|algorithm|dsa|classic|two-pointer|sliding-window|recursion)$/.test(x);
+    });
+  }
+
+  function renderPinnedChips() {
+    const ctx = currentContext;
+    if (!ctx) return;
+    const items = isCodingContext(ctx) ? [
+      {
+        label: "Explain the Problem Simply",
+        prompt: "Explain this problem in simple words, as if to a beginner: what exactly is " +
+          "being asked, with one small sample input and its expected output. Don't reveal " +
+          "the solution yet."
+      },
+      {
+        label: "Solution Step by Step",
+        prompt: "Give a detailed step-by-step explanation of the solution: the approach and " +
+          "the intuition behind it, then walk through the code line by line, and end with " +
+          "time and space complexity."
+      },
+      {
+        label: "Dry Run an Example",
+        prompt: "Do a dry run of the solution on a small example input: show how the " +
+          "variables change at each step in a simple trace, so I can follow exactly how " +
+          "the code reaches the answer."
+      },
+      {
+        label: "Mistakes & Complexity",
+        prompt: "List the common mistakes and edge cases candidates get wrong on this " +
+          "problem in an interview, and explain its time and space complexity — including " +
+          "what a naive solution would cost and why this one is better."
+      }
+    ] : [
+      {
+        label: "Explain in Detail",
+        prompt: "Explain this question in detail: how it works internally, why it matters " +
+          "in real projects, and a concrete example — go deeper than the official answer " +
+          "shown on the card."
+      },
+      {
+        label: "Give More Examples",
+        prompt: "Give me more examples for this concept — different real-world scenarios " +
+          "and short code samples beyond the one in the official answer, so I can " +
+          "recognise it in any form the interviewer asks."
+      },
+      {
+        label: "Quick Revision Points",
+        prompt: "Give me quick revision points for this question: a crisp bullet list I " +
+          "can revise in 30 seconds before an interview — definitions, key differences, " +
+          "and the one-line answer I should lead with."
+      },
+      {
+        label: "V.Imp — Must Remember",
+        prompt: "What are the MOST important things to remember about this question for an " +
+          "interview? The traps, the follow-up questions interviewers ask, and the exact " +
+          "points that separate a strong answer from an average one."
+      }
+    ];
+    renderActionChips(items);
   }
 
   /* ---------- "important questions" curation ----------
@@ -817,6 +897,7 @@
       answer: opts.answer || "",
       code: opts.code || "",
       tags: opts.tags || [],
+      category: opts.category || "",
       difficulty: opts.difficulty || "",
       hasDeep: !!opts.hasDeep
     };

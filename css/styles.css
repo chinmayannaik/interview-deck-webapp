@@ -177,11 +177,33 @@ html { overflow-anchor: none; }
 .auth-name { font-weight: 700; color: var(--ink); font-size: var(--step-0); line-height: 1.2; }
 .auth-email { font-size: var(--step--1); color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-.auth-progress { padding: 14px 16px 4px; }
-.auth-progress-title {
-  font-family: var(--mono); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
-  color: var(--beginner); font-weight: 700; margin-bottom: 10px;
+.auth-progress { padding: 8px 16px 8px; }
+/* shared leading icon for section headers — the icon carries the section's
+   colour so the label text can stay a consistent neutral across sections */
+.auth-sec-ic {
+  flex: 0 0 auto; display: grid; place-items: center;
+  width: 22px; height: 22px; border-radius: 6px;
 }
+.auth-sec-ic--progress { color: var(--beginner); background: color-mix(in srgb, var(--beginner) 12%, transparent); }
+.auth-sec-ic--pack { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+/* the whole section folds — collapsed by default, the title row is the toggle */
+.auth-progress-title {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 6px 0; border: none; background: none; cursor: pointer; text-align: left;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-2); font-weight: 700;
+}
+.auth-progress-title:hover { color: var(--ink); }
+.auth-progress-n {
+  margin-left: auto; font-family: var(--mono); font-size: 11px;
+  color: var(--muted); font-variant-numeric: tabular-nums; letter-spacing: 0;
+}
+/* the title's own chevron — a full-size SVG, unlike the small text chevrons
+   the group rows inside carry */
+.auth-group-chev.auth-title-chev { display: grid; place-items: center; color: var(--ink-2); font-size: 0; }
+.auth-progress-title:hover .auth-title-chev { color: var(--ink); }
+.auth-progress-title[aria-expanded="true"] .auth-group-chev { transform: rotate(90deg); }
+.auth-progress-body { padding-top: 8px; }
 .auth-total {
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 14px; margin-bottom: 12px; border-radius: var(--r-md);
@@ -236,22 +258,80 @@ html { overflow-anchor: none; }
 }
 .auth-unhide:hover { color: var(--accent); text-decoration: underline; }
 
+/* ---------- focus pack (profile picker + list chip) ---------- */
+.auth-pack { padding: 12px 16px 16px; border-top: 1px solid var(--border); }
+.auth-pack[hidden] { display: none; }
+.auth-pack-title {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-2); font-weight: 700; margin-bottom: 4px;
+}
+.auth-pack-hint { font-size: var(--step--1); color: var(--muted); margin: 0 0 10px 30px; line-height: 1.5; }
+/* wrapper doubles as the .sel-host anchor once js/select.js enhances the
+   picker — the combobox button + panel position against it */
+.auth-select-wrap { position: relative; }
+/* Fallback styling for the raw <select> — visible only in the instant before
+   js/select.js enhances it (or if that script ever fails to load). */
+.auth-pack-select {
+  appearance: none; -webkit-appearance: none;
+  width: 100%; padding: 10px 36px 10px 12px; border-radius: var(--r-sm);
+  border: 1.5px solid color-mix(in srgb, var(--ink) 16%, var(--border));
+  background: var(--surface); color: var(--ink);
+  font: inherit; font-size: var(--step--1); font-weight: 600; cursor: pointer;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  transition: var(--trans);
+}
+/* Once IQB.select.enhance() upgrades it, the native control leaves the page
+   (same contract as .m-select in the mobile filters). */
+.sel-host .auth-pack-select { display: none; }
+/* Inside the profile menu the floating .sel-panel misbehaves twice over: its
+   280px max-width ellipsizes the pack labels, and anything past the menu's
+   bottom edge is clipped until scrolled. Joining the menu's normal flow fixes
+   both — options take the full menu width and push the actions below down,
+   so the scrollable menu simply grows. */
+.auth-select-wrap .sel-panel {
+  position: static; width: 100%; min-width: 0; max-width: none;
+  margin-top: 6px; box-shadow: none;
+  border-color: color-mix(in srgb, var(--accent) 22%, var(--border));
+}
+.auth-select-wrap .sel-opt { white-space: normal; }
+
+/* the always-visible reminder that a pack is narrowing the list — sits in
+   .content-head next to the title, with its own off switch */
+.pack-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 6px 5px 11px; border-radius: 100px;
+  border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+  color: var(--accent); font-weight: 700; font-size: var(--step--1);
+}
+.pack-chip-ic { display: grid; place-items: center; }
+.pack-chip-label { white-space: nowrap; }
+.pack-chip-x {
+  width: 20px; height: 20px; display: grid; place-items: center;
+  border: none; background: none; cursor: pointer; border-radius: 50%;
+  color: var(--accent); font-size: 15px; line-height: 1; opacity: .65; transition: var(--trans);
+}
+.pack-chip-x:hover { background: color-mix(in srgb, var(--accent) 15%, transparent); opacity: 1; }
+
 /* entries into the reports panels (js/reports.js) — "My reported issues" for
    any signed-in reader, "Issue reports" for an allowlisted admin */
-.auth-link {
-  width: 100%; padding: 13px; border: none; border-top: 1px solid var(--border);
-  background: none; color: var(--ink); font-weight: 700; font-size: var(--step--1);
-  text-align: left;
-  cursor: pointer; transition: var(--trans);
+.auth-actions { border-top: 1px solid var(--border); padding: 6px; }
+.auth-link,
+.auth-signout {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; padding: 11px 12px; border: none; border-radius: var(--r-sm);
+  background: none; color: var(--ink); font-weight: 600; font-size: var(--step--1);
+  text-align: left; cursor: pointer; transition: var(--trans);
 }
+.auth-link svg,
+.auth-signout svg { flex: 0 0 auto; }
+.auth-link svg { color: var(--muted); transition: var(--trans); }
 .auth-link:hover { background: var(--surface-2); color: var(--accent); }
+.auth-link:hover svg { color: var(--accent); }
 .auth-link[hidden] { display: none; }
 
-.auth-signout {
-  width: 100%; padding: 13px; border: none; border-top: 1px solid var(--border);
-  background: none; color: var(--advanced); font-weight: 700; font-size: var(--step--1);
-  cursor: pointer; transition: var(--trans);
-}
+.auth-signout { color: var(--advanced); }
 .auth-signout:hover { background: color-mix(in srgb, var(--advanced) 8%, transparent); }
 
 /* ---------- sign-in prompt (dismissible) ---------- */
@@ -973,7 +1053,9 @@ body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
   background: var(--surface); color: var(--ink-2); transition: var(--trans);
 }
 .pn-add:hover { border-color: var(--cat, var(--accent)); color: var(--cat, var(--accent)); }
-.pn-text { font-size: var(--step-0); color: var(--ink); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+/* Notes are rich HTML now — pre-wrap (a leftover from the plain-textarea era)
+   turned the whitespace between pasted block elements into visible blank gaps. */
+.pn-text { font-size: var(--step-0); color: var(--ink); line-height: 1.6; word-break: break-word; }
 .pn-input {
   width: 100%; font-family: inherit; font-size: var(--step-0); line-height: 1.55;
   color: var(--ink); background: var(--surface); border: 1px solid var(--border-strong);

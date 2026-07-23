@@ -376,6 +376,17 @@
   <script>
     window.IQB = { DATA_BASE:
       "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
   </script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the

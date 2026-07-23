@@ -356,6 +356,12 @@ body.nb-splitting * { user-select: none !important; cursor: col-resize !importan
   font-family: var(--sans); font-size: var(--step-0); line-height: 1.68; color: var(--ink);
 }
 .nb-body:focus { outline: none; }
+/* Inside a Personal Note the outer .pn-body already draws the frame and its own
+   padding — nb-body's notebook-tab gutters would stack on top and push the text
+   far in from the sides. Strip them; the editing surface keeps a slim inset of
+   its own so the caret doesn't touch its border. */
+.pn-body .nb-body { margin: 0; padding: 0; overflow-y: visible; }
+.pn-body .pn-input.nb-body { padding: 10px 12px; }
 .nb-body > :first-child { margin-top: 0; }
 .nb-body p { margin: 0 0 10px; }
 .nb-body h2, .nb-body h3, .nb-body h4 {

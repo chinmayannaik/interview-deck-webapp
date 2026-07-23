@@ -56,8 +56,30 @@
   function sanitize(html) {
     const doc = document.implementation.createHTMLDocument("s");
     doc.body.innerHTML = String(html == null ? "" : html);
+    normalizeTutor(doc);
     walk(doc.body, doc);
     return doc.body.innerHTML;
+  }
+
+  /* A paste from the AI Helper carries its chrome: each code block is a
+     .tutor-code wrapper whose header holds the language label and a Copy
+     button. Generic unwrapping would keep the label's TEXT ("java", "Copy")
+     as stray words above the code. So before the walk, known tutor markup is
+     rewritten to what the note actually wants: a bare <pre data-lang="…">,
+     with the language carried over so highlighting survives the trip. */
+  function normalizeTutor(doc) {
+    doc.body.querySelectorAll(".tutor-code").forEach(function (wrap) {
+      const pre = wrap.querySelector("pre");
+      if (!pre) { wrap.remove(); return; }
+      const langEl = wrap.querySelector(".tutor-code-lang");
+      const label = langEl ? langEl.textContent.trim().toLowerCase() : "";
+      const known = (IQB.highlight && IQB.highlight.LANGS || [])
+        .some(function (l) { return l.id === label; });
+      pre.setAttribute("data-lang", known ? label : "auto");
+      wrap.replaceWith(pre);
+    });
+    // Any straggler copy buttons (a hand-made selection can catch one).
+    doc.body.querySelectorAll(".tutor-copy").forEach(function (b) { b.remove(); });
   }
 
   function walk(root, doc) {

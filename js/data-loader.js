@@ -49,6 +49,21 @@
         splash().step();
       }
     }));
+
+    /* Focus packs (role-based collections of existing question ids).
+       Optional and tiny — a pack that fails to load simply doesn't appear
+       in the picker, it must never block the app from booting. */
+    IQB.packs = {};
+    await Promise.all((manifest.packs || []).map(async (p) => {
+      try {
+        const res = await fetch(url(p.file));
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const pack = await res.json();
+        IQB.packs[p.id] = { ...pack, label: pack.label || p.label || p.id, count: p.count };
+      } catch (e) {
+        console.warn("[data] failed to load pack", p.file, e);
+      }
+    }));
     return manifest;
   }
 

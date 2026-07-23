@@ -34,6 +34,12 @@
     getPlaygroundSplit() { return read("playgroundSplit", 0); },   // editor width %, 0 = default
     setPlaygroundSplit(v) { write("playgroundSplit", v); },
 
+    /* --- focus pack (a pack id from the manifest, or null = off) ---
+       Device-local like the theme: which role you're preparing for is a
+       per-device study mode, not synced user content. */
+    getFocusPack() { return read("focusPack", null); },
+    setFocusPack(v) { write("focusPack", v || null); },
+
     /* --- bookmarks (array of ids) --- */
     getBookmarks() { return new Set(read("bookmarks", [])); },
     saveBookmarks(set) { write("bookmarks", Array.from(set)); },
