@@ -500,10 +500,12 @@
      the conversation actually is. Works with or without a pinned question. */
   function requestFollowups(lastUserText, lastReplyText) {
     const gen = ++contextGen;
-    renderLoadingChips();
+    // scroll:false — these chips sit below the answer; scrolling to them would
+    // undo the scroll-to-answer-start that sendMessage just did for long replies.
+    renderLoadingChips(false);
     fetchSuggestions({ question: lastUserText, answer: lastReplyText, code: "" }).then(function (list) {
       if (gen !== contextGen) return; // user already sent something else
-      if (list && list.length) renderSuggestionChips(list);
+      if (list && list.length) renderSuggestionChips(list, false);
       else removeSuggestionChips();
     });
   }
@@ -541,17 +543,20 @@
     }
   }
 
-  function renderLoadingChips() {
+  /* scroll defaults to true (jump to the chips). After a long answer we pass
+     false so the follow-up chips appended below don't yank the view back down
+     from the answer's start we just scrolled to. */
+  function renderLoadingChips(scroll) {
     removeSuggestionChips();
     const wrap = document.createElement("div");
     wrap.className = "tutor-suggestions";
     wrap.id = "tutor-suggestions";
     wrap.innerHTML = '<span class="tutor-chip-loading">Thinking of quick prompts…</span>';
     listEl.appendChild(wrap);
-    scrollDown();
+    if (scroll !== false) scrollDown();
   }
 
-  function renderSuggestionChips(list) {
+  function renderSuggestionChips(list, scroll) {
     removeSuggestionChips();
     if (!list || !list.length) return;
     const wrap = document.createElement("div");
@@ -566,7 +571,7 @@
       wrap.appendChild(chip);
     });
     listEl.appendChild(wrap);
-    scrollDown();
+    if (scroll !== false) scrollDown();
   }
 
   function removeSuggestionChips() {
@@ -1251,9 +1256,13 @@
       }
 
       if (data.tier === "free") verifiedFree = true;
-      addBubble("model", data.reply);
+      const answerWrap = addBubble("model", data.reply);
       pushHistory("model", data.reply);
       requestFollowups(text, data.reply); // keep the coaching going — see below
+      // A long reply scrolled the view to its END; bring the reader back to its
+      // START so they read top-down instead of scrolling up. Done after the
+      // follow-up chips are queued (they no longer scroll, so the position holds).
+      scrollBubbleToTop(answerWrap);
     } catch (err) {
       if (currentContext) contextPending = true; // network failure — context never reached the model
       typing.remove();
@@ -1445,6 +1454,18 @@
   }
 
   function scrollDown() { if (listEl) listEl.scrollTop = listEl.scrollHeight; }
+
+  /* Bring the START of a just-added answer to the top of the view. Only worth
+     doing when the answer is taller than the visible area — otherwise the whole
+     reply already fits and the default scroll-to-bottom shows it fine. A small
+     gap leaves the tail of the user's question peeking above, for context. */
+  function scrollBubbleToTop(wrap) {
+    if (!listEl || !wrap) return;
+    if (wrap.getBoundingClientRect().height <= listEl.clientHeight) return; // fits — leave it
+    const delta = wrap.getBoundingClientRect().top - listEl.getBoundingClientRect().top - 12;
+    const max = listEl.scrollHeight - listEl.clientHeight;
+    listEl.scrollTop = Math.max(0, Math.min(listEl.scrollTop + delta, max));
+  }
   function autosize() {
     if (!inputEl) return;
     inputEl.style.height = "auto";

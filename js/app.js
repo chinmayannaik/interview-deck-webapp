@@ -691,6 +691,22 @@
     return (d.textContent || "").replace(/\s+/g, " ").trim();
   }
 
+  /* A bottom "collapse" affordance for long expandable regions (the card, the
+     deep dive, a personal note), so the reader can close from where they
+     finished reading instead of scrolling back up to the top control. It's
+     labelled with an up-chevron — a bare icon at the foot of long content is
+     hard to discover. Shared shape; each caller supplies what "collapse" means. */
+  function collapseFoot(label, onClick) {
+    const btn = el("button", {
+      class: "collapse-foot", type: "button", "aria-label": label, title: label,
+      onclick: (e) => { e.stopPropagation(); onClick(e); }
+    });
+    btn.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>' +
+      '<span>' + label + '</span>';
+    return btn;
+  }
+
   function buildCard(q, index) {
     const card = el("article", {
       class: "qa-card" + (progress.has(q.id) ? " done" : ""),
@@ -706,11 +722,23 @@
     });
     star.innerHTML = bookmarks.has(q.id) ? starOnSvg : starOffSvg;
 
-    /* Speaker + star share one right-aligned group (css/speak.css) — the star
-       kept its own margin-left:auto before read-aloud existed. */
+    /* The one, unambiguous open/close control — an icon-only chevron button in
+       the top action row (never the card body), so a stray tap on the answer
+       can't collapse it. Down when closed, up when open (CSS rotates on
+       .qa-card.open). */
+    const toggleBtn = el("button", {
+      class: "qa-toggle", type: "button", "aria-label": "Show answer", title: "Show answer",
+      onclick: (e) => { e.stopPropagation(); toggleCard(card); }
+    });
+    toggleBtn.innerHTML =
+      '<svg class="qa-toggle-chev" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+
+    /* Speaker + star + expand share one right-aligned group (css/speak.css) — the
+       star kept its own margin-left:auto before read-aloud existed. */
     const topActions = el("div", { class: "qa-top-actions" }, [
       window.IQB.speak && IQB.speak.supported ? IQB.speak.build(card) : null,
-      star
+      star,
+      toggleBtn
     ]);
 
     const top = el("div", { class: "qa-top" }, [
@@ -730,21 +758,26 @@
       ? el("span", { class: "qa-qnum", "aria-hidden": "true", text: String(index).padStart(2, "0") })
       : null;
 
-    const tags = el("div", { class: "qa-tags" },
-      (q.tags || []).slice(0, 5).map((t) =>
-        el("span", { class: "qa-tag" + (/^v\.?imp$/i.test(t) ? " vimp" : ""), text: t })));
-    const foot = el("div", { class: "qa-foot" }, [tags, el("span", { class: "qa-toggle", text: "+" })]);
+    // Tags are internal metadata (they drive search, packs and V.Imp weighting)
+    // — deliberately NOT rendered on the card; the list stays clean.
 
     const head = el("div", {
       class: "qa-head" + (qnum ? " numbered" : ""), role: "button", tabindex: "0", "aria-expanded": "false",
+      // Tapping the question only ever OPENS — closing is the chevron's job alone,
+      // so re-reading the question (or a stray tap) can never collapse the card.
       onclick: () => {
-        // don't toggle if the user is selecting/highlighting the question text
+        if (card.classList.contains("open")) return;
+        // don't open if the user is selecting/highlighting the question text
         const sel = window.getSelection();
         if (sel && !sel.isCollapsed && sel.anchorNode && head.contains(sel.anchorNode)) return;
         toggleCard(card);
       },
-      onkeydown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleCard(card); } }
-    }, [qnum, top, question, foot]);
+      onkeydown: (e) => {
+        if ((e.key === "Enter" || e.key === " ") && !card.classList.contains("open")) {
+          e.preventDefault(); toggleCard(card);
+        }
+      }
+    }, [qnum, top, question]);
 
     // reveal button (practice mode)
     const reveal = el("button", {
@@ -752,6 +785,8 @@
       onclick: () => {
         card.classList.add("open", "revealed");
         head.setAttribute("aria-expanded", "true");
+        toggleBtn.setAttribute("aria-label", "Hide answer");
+        toggleBtn.setAttribute("title", "Hide answer");
         markOpened(q.id);
         if (window.IQB.notes) IQB.notes.onCardOpen(q.id);
         if (window.IQB.highlights) IQB.highlights.onCardOpen(q.id);
@@ -796,6 +831,14 @@
       });
       deepBtn.innerHTML = bookSvg + "Study in depth";
 
+      // Close the deep dive from its own foot, then bring its open/close button
+      // back into view so the reader keeps their place in the card.
+      const collapseDeep = () => {
+        deepContent.setAttribute("hidden", "");
+        deepBtn.innerHTML = bookSvg + "Study in depth";
+        deepBtn.scrollIntoView({ block: "nearest" });
+      };
+
       inner.appendChild(deepBtn);
 
       /* The deep dive's speaker sits INSIDE the panel, pinned top-right.
@@ -811,6 +854,7 @@
           root: () => deepContent
         }));
       }
+      deepContent.appendChild(collapseFoot("Hide deep dive", collapseDeep));
       inner.appendChild(deepContent);
     }
 
@@ -874,25 +918,23 @@
       actions.push(ytBtn);
     }
 
+    /* A second exit for long answers — an icon-only up-chevron pushed to the
+       right of the action row, so the reader can collapse without scrolling back
+       to the top chevron. Mirrors that chevron's look (see .qa-collapse-act). */
+    const collapseAct = el("button", {
+      class: "qa-collapse-act", type: "button", "aria-label": "Collapse", title: "Collapse",
+      onclick: (e) => { e.stopPropagation(); toggleCard(card); }
+    });
+    collapseAct.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>';
+    actions.push(collapseAct);
+
     inner.appendChild(el("div", { class: "qa-body-actions" }, actions));
 
-    const body = el("div", {
-      class: "qa-body",
-      onclick: (e) => {
-        /* Clicking the body collapses the card — except inside things the
-           reader is actually working in. `.pn-section` covers the whole
-           Personal Note block (editor, its buttons, and the padding around
-           them): it used to be listed here only as `textarea`, so when the note
-           editor became contenteditable every click in it fell through and shut
-           the card. [contenteditable] is belt-and-braces for any future editor.
-           The action-button row is deliberately NOT preserved, so clicking the
-           empty space beside those buttons still closes the card. */
-        const preserve = e.target.closest(
-          "button, a, textarea, input, [contenteditable], .pn-section, .pn-text, " +
-          ".answer, .code-block, .qa-tip, .qa-deep");
-        if (!preserve) toggleCard(card);
-      }
-    }, [inner]);
+    /* The body no longer closes the card on click — that was the source of
+       accidental collapses (a tap meant to select answer text or scroll would
+       shut the whole card). Closing is now the top chevron or this button. */
+    const body = el("div", { class: "qa-body" }, [inner]);
 
     card.append(head, reveal, body);
 
@@ -907,6 +949,12 @@
     const open = card.classList.toggle("open");
     const head = qs(".qa-head", card);
     if (head) head.setAttribute("aria-expanded", String(open));
+    const tog = qs(".qa-toggle", card);
+    if (tog) {
+      const lbl = open ? "Hide answer" : "Show answer";
+      tog.setAttribute("aria-label", lbl);
+      tog.setAttribute("title", lbl);
+    }
     if (open) {
       card.classList.add("revealed"); // header click reveals in practice mode too
       markOpened(card.dataset.id);

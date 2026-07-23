@@ -849,6 +849,9 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 .qa-card.done { border-left: 3px solid var(--beginner); }
 
 .qa-head { width: 100%; text-align: left; padding: 15px 16px; display: grid; gap: 9px; cursor: pointer; user-select: text; -webkit-user-select: text; }
+/* Open cards close only via the chevron, so the header is no longer a button —
+   drop the pointer cursor that would suggest otherwise. */
+.qa-card.open .qa-head { cursor: default; }
 /* numbered cards get a left gutter for the .qa-qnum medallion; everything else
    stacks in column 2 so the badges, question and tags stay flush with each other */
 .qa-head.numbered { grid-template-columns: 36px 1fr; column-gap: 14px; }
@@ -887,28 +890,28 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 
 .qa-question { font-size: var(--step-1); font-weight: 650; color: var(--ink); }
 .qa-question :is(code, .inline) { font-family: var(--mono); font-size: .82em; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; border: 1px solid var(--border); color: var(--accent-ink); }
-.qa-foot { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.qa-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-/* Tags earn their place in the list, where they help you scan; once a card is
-   open you've already chosen the question and they're just a line between it and
-   the answer. So they go on open cards — every width, reading mode or not.
+/* Tags are internal metadata now (search / packs / V.Imp weighting) and are not
+   rendered on cards — the .qa-tags / .qa-foot / .qa-tag rules were removed with
+   them. */
 
-   The whole foot goes, not only .qa-tags: the +/✕ toggle shares that row and
-   holds it at full height, so hiding the tags alone would reclaim 0px. Nothing
-   becomes unreachable — .qa-head is itself the click target that closes the
-   card, and an open card is self-evident from its answer being visible. */
-.qa-card.open .qa-foot { display: none; }
-.qa-tag { font-family: var(--mono); font-size: 11px; color: var(--muted); }
-.qa-tag::before { content: "#"; opacity: .55; }
-/* "V.Imp" flag — a high-priority marker that stands out from ordinary #tags */
-.qa-tag.vimp {
-  color: var(--accent); font-weight: 700; letter-spacing: .02em;
-  background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  padding: 1px 7px; border-radius: var(--r-pill);
+/* The open/close control — an icon-only chevron button living in the top action
+   row beside the speaker and star. Round, 34px hit target, accent-tinted so it
+   reads as the card's primary action; the chevron flips down→up when open. */
+.qa-toggle {
+  flex: none; display: inline-grid; place-items: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--cat, var(--accent)) 30%, var(--border));
+  background: color-mix(in srgb, var(--cat, var(--accent)) 8%, var(--surface));
+  color: var(--cat, var(--accent));
+  cursor: pointer; transition: var(--trans); -webkit-tap-highlight-color: transparent;
 }
-.qa-tag.vimp::before { content: "★ "; opacity: 1; }
-.qa-toggle { margin-left: auto; font-family: var(--mono); font-size: 19px; line-height: 1; color: var(--muted); transition: transform var(--trans), color var(--trans); }
-.qa-card.open .qa-toggle { transform: rotate(45deg); color: var(--cat, var(--accent)); }
+.qa-toggle:hover {
+  background: color-mix(in srgb, var(--cat, var(--accent)) 16%, var(--surface));
+  border-color: color-mix(in srgb, var(--cat, var(--accent)) 55%, var(--border));
+}
+.qa-toggle:focus-visible { outline: none; box-shadow: var(--focus); }
+.qa-toggle-chev { flex: none; transition: transform var(--trans); }
+.qa-card.open .qa-toggle-chev { transform: rotate(180deg); }
 
 /* body — collapsed by default, shown when the card is open */
 .qa-body { display: none; padding: 0 16px 16px; border-top: 1px solid var(--border); }
@@ -1190,7 +1193,43 @@ mark.hl-underline {
 .hl-menu-del { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; margin-left: 4px; border-left: 1px solid rgba(255,255,255,.16); border-top: none; border-right: none; border-bottom: none; padding-left: 8px; border-radius: 0; background: none; color: #f3b4b4; cursor: pointer; transition: var(--trans); }
 .hl-menu-del:hover { color: #ff7a7a; }
 
-.qa-body-actions { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; user-select: none; -webkit-user-select: none; }
+.qa-body-actions { display: flex; align-items: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; user-select: none; -webkit-user-select: none; }
+
+/* Collapse control at the right end of the action row — a bare chevron, no
+   circle/border/background (the top-right .qa-toggle keeps the pill look; this
+   one stays quiet so it doesn't compete with the action buttons beside it).
+   margin-left:auto floats it away from those buttons. */
+.qa-collapse-act {
+  margin-left: auto; flex: none; display: inline-grid; place-items: center;
+  width: 34px; height: 34px; padding: 0;
+  border: 0; background: none; color: var(--cat, var(--accent));
+  cursor: pointer; transition: var(--trans); -webkit-tap-highlight-color: transparent;
+}
+.qa-collapse-act:hover { color: color-mix(in srgb, var(--cat, var(--accent)) 70%, var(--ink)); }
+.qa-collapse-act:hover svg { transform: translateY(-1px); }
+.qa-collapse-act svg { transition: transform var(--trans); }
+.qa-collapse-act:focus-visible { outline: none; box-shadow: var(--focus); border-radius: var(--r-sm); }
+
+/* Bottom "collapse" affordance shared by the card, the deep dive and personal
+   notes — a full-width, quiet bar (up-chevron + label) that separates from the
+   content above with a hairline and warms to the section's accent on hover.
+   Deliberately understated so it reads as a secondary exit, not a call to action. */
+.collapse-foot {
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  width: 100%; margin-top: 14px; padding: 9px 10px;
+  border: 0; border-top: 1px solid var(--border);
+  background: none; color: var(--muted);
+  font-family: var(--mono); font-size: var(--step--1); font-weight: 600; letter-spacing: .01em;
+  cursor: pointer; transition: var(--trans); -webkit-tap-highlight-color: transparent;
+}
+.collapse-foot:hover { color: var(--cat, var(--accent)); }
+.collapse-foot:focus-visible { outline: none; box-shadow: var(--focus); border-radius: var(--r-sm); }
+.collapse-foot svg { flex: none; transition: transform var(--trans); }
+.collapse-foot:hover svg { transform: translateY(-1px); }
+/* Inside the tinted deep-dive / note panels the hairline reads better as the
+   panel's own border colour, and the foot hugs the panel's inner padding. */
+.qa-deep .collapse-foot,
+.pn-body .collapse-foot { border-top-color: color-mix(in srgb, var(--cat, var(--accent)) 22%, var(--border)); }
 .qa-act { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: var(--step--1); padding: 6px 11px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans); }
 .qa-act:hover { border-color: var(--accent); color: var(--accent); }
 /* Responsive labels — the short form only exists below 560px (see that block). */
@@ -1522,13 +1561,6 @@ mark.hl-underline {
   .qa-act-long { display: none; }
   .qa-act-short { display: inline; }
   .qa-act-word { display: none; }
-  /* Tags are dropped outright on a phone: they wrap to their own line under
-     every question and cost more room than they earn at this width. The row
-     itself stays for the +/✕ expand hint, so this trades noise rather than
-     height — open cards drop the whole row anyway (see .qa-card.open .qa-foot).
-     NOTE this takes the ★ V.IMP marker with them — see .qa-tag.vimp. */
-  .qa-tags { display: none; }
-
   /* The number medallion's gutter costs 50px (36px column + 14px gap) of a
      ~343px card, squeezing the question into what's left. Shrink both together:
      the column width and .qa-qnum are one measurement in two places, and
@@ -2001,7 +2033,7 @@ body.rp-open { overflow: hidden; }
 
 /* ---------- print ---------- */
 @media print {
-  .site-header, .tabs-wrap, .sidebar, .hero-pills, .content-tools, .filter-row, .qa-star, .qa-toggle, .copy-btn, .qa-body-actions, .reveal-btn, .site-footer, .icon-btn, .toast, .scroll-to-top, .tour-overlay, .tour-spotlight, .tour-tooltip, .rp-overlay, .rp-admin-overlay { display: none !important; }
+  .site-header, .tabs-wrap, .sidebar, .hero-pills, .content-tools, .filter-row, .qa-star, .qa-toggle, .qa-collapse-act, .collapse-foot, .copy-btn, .qa-body-actions, .reveal-btn, .site-footer, .icon-btn, .toast, .scroll-to-top, .tour-overlay, .tour-spotlight, .tour-tooltip, .rp-overlay, .rp-admin-overlay { display: none !important; }
   .main { display: block; }
   .qa-body { display: block !important; }
   .qa-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; margin-bottom: 8px; }

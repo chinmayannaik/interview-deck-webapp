@@ -47,6 +47,19 @@
     const body = el("div", { class: "pn-body", hidden: "" });
     const section = el("div", { class: "pn-section", "data-question-id": questionId }, [toggleBtn, body]);
 
+    /* A collapse control at the note's foot mirrors the question card and deep
+       dive — close from the bottom without reaching back up to the header
+       toggle. Built once and re-appended by each render (the body is cleared
+       wholesale), so it always sits last, below the note's action buttons. */
+    const collapseFoot = el("button", {
+      class: "collapse-foot pn-collapse", type: "button",
+      "aria-label": "Close note", title: "Close note",
+      onclick: function (e) { e.stopPropagation(); toggleOpen(); }
+    });
+    collapseFoot.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>' +
+      '<span>Close</span>';
+
     /* Read the note aloud. Pinned top-right *inside* the note box, icon-only, to
        match the deep dive's speaker. Built once and re-parented by renderView on
        each render, because the body is cleared wholesale there. It is mounted
@@ -112,6 +125,7 @@
           }
         }, "Open in My Notes")
       ]));
+      body.appendChild(collapseFoot);
     }
 
     function startEdit() {
@@ -125,6 +139,7 @@
         el("button", { class: "pn-btn pn-primary", type: "button", onclick: onSave }, "Save"),
         el("button", { class: "pn-btn", type: "button", onclick: cancelEdit }, "Cancel")
       ]));
+      body.appendChild(collapseFoot);
 
       editor = IQB.richtext.attach(surface, { onChange: function () {} });
       editor.setHTML((note && note.html) || "");

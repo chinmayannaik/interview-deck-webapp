@@ -3,7 +3,7 @@
 
 /* ── the speaker sits beside the star, so the two share a right-aligned
    group instead of .qa-star carrying margin-left:auto on its own ── */
-.qa-top-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.qa-top-actions { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 .qa-top-actions .qa-star { margin-left: 0; }
 
 .qa-speak {

@@ -6,8 +6,11 @@
 
    Dual-mode authentication:
      1. Internal / free tier: a signed-in Google account that clears
-        isFreeTier() below is served with MY master key
-        (process.env.GROQ_MASTER_API_KEY).
+        isFreeTier() below is served with MY master key. There can be up to
+        THREE master keys (GROQ_MASTER_API_KEY, _2, _3) from separate Groq
+        accounts; withMasterRotation() cycles to the next one when a key hits
+        Groq's daily token cap (429), so the free tier's effective daily quota
+        is the sum of all three. See masterKeys() / withMasterRotation().
      2. Public / BYO-key tier: everyone else must send their own Groq
         key in the  x-groq-key  header; the request is billed to them
         (against Groq's free tier, or their own paid usage).
@@ -379,6 +382,60 @@ async function identify(userToken) {
   return { signedIn: true, free: isFreeTier(decoded), uid: decoded.uid, checked: true };
 }
 
+/* ---------- master-key rotation --------------------------------------------
+   Groq's free tier caps tokens-per-DAY per account, and a busy day exhausts a
+   single key well before midnight. To multiply that ceiling, the free tier can
+   be backed by up to three keys from three separate Groq accounts, set as
+   GROQ_MASTER_API_KEY, GROQ_MASTER_API_KEY_2, GROQ_MASTER_API_KEY_3. Order is
+   the priority order; only the first is required. */
+function masterKeys() {
+  return [
+    process.env.GROQ_MASTER_API_KEY,
+    process.env.GROQ_MASTER_API_KEY_2,
+    process.env.GROQ_MASTER_API_KEY_3
+  ]
+    .map((k) => (k || "").trim())
+    .filter(Boolean);
+}
+
+/* Which master key to start from. Remembered per warm instance so that once a
+   key is spent we don't re-hit it on every request — the NEXT request (any
+   user's) starts straight at the key that last worked. Best-effort only:
+   Vercel may run several instances, each with its own cursor, so in the worst
+   case each instance wastes one failed call per key per day discovering the
+   exhausted keys. Same soft-state caveat as the rate limiter above. */
+let masterKeyCursor = 0;
+
+/* Runs fn(apiKey) against the master keys, starting at the remembered cursor
+   and walking the ring. A 429 means THAT key hit Groq's quota, so we advance
+   and retry the SAME request on the next key — the user still gets their
+   answer. The cursor sticks on whichever key resolves. Any non-429 error is a
+   real fault (bad request, decommissioned model, revoked key) that rotating
+   can't fix, so it's rethrown at once instead of burning the other keys. When
+   every key is rate-limited, the last 429 propagates and the user is asked to
+   wait — exactly as with a single key today. */
+async function withMasterRotation(fn) {
+  const keys = masterKeys();
+  if (!keys.length) {
+    throw Object.assign(new Error("No master key configured"), { status: 500 });
+  }
+
+  let lastErr;
+  for (let i = 0; i < keys.length; i++) {
+    const idx = (masterKeyCursor + i) % keys.length;
+    try {
+      const out = await fn(keys[idx]);
+      masterKeyCursor = idx; // this key worked — begin here next time
+      return out;
+    } catch (e) {
+      if (e.status !== 429) throw e; // not a quota problem — rotation won't help
+      lastErr = e;
+      masterKeyCursor = (idx + 1) % keys.length; // skip the spent key next time
+    }
+  }
+  throw lastErr; // all keys exhausted for the day
+}
+
 /* ---------- shared auth / key resolution -----------------------------------
    Used by both chat replies and suggestion generation — an allowlisted signed-
    in user gets the master key either way; everyone else needs their own. */
@@ -390,7 +447,11 @@ async function resolveApiKey(req) {
   const who = await identify(userToken);
   if (who.free) {
     if (rateLimited(who.uid)) return { rateLimited: true };
-    return { apiKey: process.env.GROQ_MASTER_API_KEY || null, tier: "free" };
+    // useMaster => the call is run through withMasterRotation() rather than
+    // bound to one key. Fall through to NEED_KEY only if no master key exists
+    // at all (misconfigured server), preserving the prior behaviour.
+    if (masterKeys().length) return { useMaster: true, tier: "free" };
+    return { apiKey: null, tier: null };
   }
 
   if (customKey) return { apiKey: customKey, tier: "byok" };
@@ -473,20 +534,27 @@ export default async function handler(req, res) {
   if (resolved.rateLimited) {
     return res.status(429).json({ error: "Rate limit reached, please wait a minute." });
   }
-  if (!resolved.apiKey) {
+  if (!resolved.apiKey && !resolved.useMaster) {
     return res.status(401).json({ error: "API key required", code: "NEED_KEY" });
   }
 
+  // Free tier runs through the key-rotation ring; BYO-key users are bound to
+  // their single key. Both expose the same "give me a key, I'll make the call"
+  // shape so the mode branches below don't care which tier they're on.
+  const run = resolved.useMaster
+    ? (fn) => withMasterRotation(fn)
+    : (fn) => fn(resolved.apiKey);
+
   try {
     if (mode === "suggest") {
-      const suggestions = await callGroqSuggest(resolved.apiKey, body.question, body.answer || "", body.code || "");
+      const suggestions = await run((key) => callGroqSuggest(key, body.question, body.answer || "", body.code || ""));
       return res.status(200).json({ suggestions, tier: resolved.tier });
     }
     if (mode === "curate") {
-      const keywords = await callGroqCurate(resolved.apiKey, body.category, body.tags || []);
+      const keywords = await run((key) => callGroqCurate(key, body.category, body.tags || []));
       return res.status(200).json({ keywords, tier: resolved.tier });
     }
-    const reply = await callGroq(resolved.apiKey, history, message);
+    const reply = await run((key) => callGroq(key, history, message));
     return res.status(200).json({ reply, tier: resolved.tier });
   } catch (e) {
     console.error("[chat] groq error:", e.message);

@@ -84,7 +84,7 @@
      card (see blocksForCard), which is the whole point of having written it.
      Only the section's furniture — its toggle, Edit/Delete/Save buttons — is
      skipped, and `button` already covers those. */
-  const MUTE_SEL = ".qa-body-actions, .qa-foot, .qa-tags, .qa-act, .copy-btn, button, .rpt-wrap, .pn-actions";
+  const MUTE_SEL = ".qa-body-actions, .qa-act, .copy-btn, button, .rpt-wrap, .pn-actions";
 
   const BLOCK_SEL = "p, li, h1, h2, h3, h4, h5, h6, blockquote, dt, dd, figcaption";
 

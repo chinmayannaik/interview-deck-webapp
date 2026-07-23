@@ -58,7 +58,36 @@
     doc.body.innerHTML = String(html == null ? "" : html);
     normalizeTutor(doc);
     walk(doc.body, doc);
+    stitchOrderedLists(doc.body);
     return doc.body.innerHTML;
+  }
+
+  /* Markdown from the AI Helper turns "1. … / - sub-bullet / 2. … / - sub-bullet"
+     into a SEPARATE <ol> per numbered item (each broken off by the bullets
+     between them). Every <ol> then restarts at 1, so a saved note reads
+     "1. / 1. / 1." instead of "1. / 2. / 3.". Here we stitch such a run back
+     into one list: following <ul> sub-bullets nest into the item they belong to,
+     and following <ol> items append — giving correct numbering in every view.
+     Runs separated by a paragraph or heading are left alone (genuinely distinct
+     lists). Applied on every sanitize, so existing notes heal on next render. */
+  function stitchOrderedLists(body) {
+    var ols = Array.prototype.slice.call(body.querySelectorAll("ol"));
+    ols.forEach(function (ol) {
+      if (!ol.parentNode) return;              // already absorbed by an earlier run
+      var cursor = ol.nextElementSibling;
+      while (cursor && (cursor.tagName === "UL" || cursor.tagName === "OL")) {
+        var next = cursor.nextElementSibling;
+        if (cursor.tagName === "UL") {
+          var lastLi = ol.querySelector(":scope > li:last-child");
+          if (!lastLi) break;
+          lastLi.appendChild(cursor);          // sub-bullets belong to this item
+        } else {                                // a broken-off continuation of the list
+          while (cursor.firstElementChild) ol.appendChild(cursor.firstElementChild);
+          cursor.remove();
+        }
+        cursor = next;
+      }
+    });
   }
 
   /* A paste from the AI Helper carries its chrome: each code block is a
