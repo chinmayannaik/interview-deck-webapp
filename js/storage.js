@@ -103,6 +103,12 @@
     getQuickNoteBox() { return read("quickNoteBox", null); },   // { left, top, width, height }
     setQuickNoteBox(v) { write("quickNoteBox", v); },
 
+    /* --- progress rows dismissed from the profile (array of category keys) ---
+       Device-local on purpose: "stop showing me SQL" is a display preference
+       for this screen, not user content worth reconciling across devices. */
+    getHiddenProgress() { return new Set(read("hiddenProgress", [])); },
+    saveHiddenProgress(set) { write("hiddenProgress", Array.from(set)); },
+
     /* --- last opened --- */
     setLastOpened(id) { write("lastOpened", id); },
     getLastOpened() { return read("lastOpened", null); },
@@ -118,7 +124,9 @@
       // everything the previous user wrote.
       // "quickNoteDraft" belongs here for the same reason as "notebook": an
       // unsaved draft is still the previous user's writing.
-      ["bookmarks", "progress", "notes", "notebook", "highlights", "lastOpened", "quickNoteDraft"].forEach(function (k) {
+      // "hiddenProgress" rides along: it describes the previous user's
+      // categories, so it would only confuse the next reader's profile.
+      ["bookmarks", "progress", "notes", "notebook", "highlights", "lastOpened", "quickNoteDraft", "hiddenProgress"].forEach(function (k) {
         try { localStorage.removeItem(PREFIX + k); } catch (e) { /* ignore */ }
       });
     },

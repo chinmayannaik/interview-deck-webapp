@@ -34,6 +34,10 @@
 
   let fb = null, user = null, unsub = null, pushTimer = null, wasSignedIn = false;
   let menuEl = null, promptEl = null, signingIn = false;
+  /* which progress groups are expanded in the profile menu (session-only —
+     a fresh visit starts compact). No entry = default: open when it is the
+     only group, collapsed otherwise. */
+  const openGroups = {};
   const userChangeCbs = [];
   function emitUserChange() {
     userChangeCbs.forEach(function (cb) { try { cb(user); } catch (e) { /* isolate */ } });
@@ -442,23 +446,83 @@
     const adminBtn = menuEl.querySelector("#auth-admin");
     if (adminBtn) adminBtn.hidden = !(IQB.cloud.isAdmin() && window.IQB.reports);
 
-    const sum = (IQB.app && IQB.app.getProgressSummary) ? IQB.app.getProgressSummary() : { totalCompleted: 0, groups: [] };
+    /* Started categories only (app.js getProgressSummary), grouped under their
+       main field as collapsible sections — an Angular reader sees Angular, not
+       "Frontend 12/430" padded with frameworks they never opened, and a reader
+       with many started topics gets one compact line per field instead of a
+       screen-long list. Rows are dismissible (the ✕), with a single "show
+       hidden" undo rather than per-row memory. */
+    const sum = (IQB.app && IQB.app.getProgressSummary) ? IQB.app.getProgressSummary() : { totalCompleted: 0, groups: [], hiddenCount: 0 };
     menuEl.querySelector("#auth-total-n").textContent = String(sum.totalCompleted);
     const rows = menuEl.querySelector("#auth-rows");
     rows.innerHTML = "";
+    if (!sum.groups.length) {
+      const empty = document.createElement("p");
+      empty.className = "auth-empty";
+      empty.textContent = sum.hiddenCount
+        ? "All progress rows are hidden."
+        : "Complete or bookmark a question and its topic will start tracking here.";
+      rows.appendChild(empty);
+    }
     sum.groups.forEach(function (g) {
-      const pct = g.total ? Math.round((g.done / g.total) * 100) : 0;
-      const row = document.createElement("div");
-      row.className = "auth-row";
-      row.innerHTML =
-        '<div class="auth-row-top">' +
-          '<span class="auth-dot" style="background:' + g.color + '"></span>' +
-          '<span class="auth-row-label">' + g.label + '</span>' +
-          '<span class="auth-row-n">' + g.done + " / " + g.total + '</span>' +
-        '</div>' +
-        '<div class="auth-bar"><div class="auth-bar-fill" style="width:' + pct + '%;background:' + g.color + '"></div></div>';
-      rows.appendChild(row);
+      const open = (g.key in openGroups) ? openGroups[g.key] : sum.groups.length === 1;
+      const sec = document.createElement("div");
+      sec.className = "auth-group" + (open ? " open" : "");
+      const head = document.createElement("button");
+      head.type = "button";
+      head.className = "auth-group-head";
+      head.setAttribute("aria-expanded", String(open));
+      head.innerHTML =
+        '<span class="auth-group-chev" aria-hidden="true">▸</span>' +
+        '<span class="auth-dot" style="background:' + g.color + '"></span>' +
+        '<span class="auth-row-label">' + g.label + '</span>' +
+        '<span class="auth-row-n">' + g.done + " / " + g.total + '</span>';
+      head.addEventListener("click", function (e) {
+        e.stopPropagation();   // renderMenu() detaches this button — see the ✕ note below
+        openGroups[g.key] = !open;
+        renderMenu();
+      });
+      sec.appendChild(head);
+      if (open) {
+        const body = document.createElement("div");
+        body.className = "auth-group-body";
+        g.cats.forEach(function (c) {
+          const pct = c.total ? Math.round((c.done / c.total) * 100) : 0;
+          const row = document.createElement("div");
+          row.className = "auth-row" + (c.complete ? " is-done" : "");
+          row.innerHTML =
+            '<div class="auth-row-top">' +
+              '<span class="auth-dot" style="background:' + c.color + '"></span>' +
+              '<span class="auth-row-label">' + c.label + '</span>' +
+              (c.complete ? '<span class="auth-row-check" title="Topic completed">✓</span>' : '') +
+              '<span class="auth-row-n">' + c.done + " / " + c.total + '</span>' +
+              '<button class="auth-row-x" type="button" title="Hide from profile" aria-label="Hide ' + c.label + ' progress">×</button>' +
+            '</div>' +
+            '<div class="auth-bar"><div class="auth-bar-fill" style="width:' + pct + '%;background:' + c.color + '"></div></div>';
+          row.querySelector(".auth-row-x").addEventListener("click", function (e) {
+            /* stopPropagation is load-bearing: renderMenu() detaches this button,
+               so by the time the document's close-on-outside-click handler runs,
+               menuEl.contains(e.target) is false and the menu would close. */
+            e.stopPropagation();
+            if (IQB.app && IQB.app.hideProgressRow) { IQB.app.hideProgressRow(c.key); renderMenu(); }
+          });
+          body.appendChild(row);
+        });
+        sec.appendChild(body);
+      }
+      rows.appendChild(sec);
     });
+    if (sum.hiddenCount) {
+      const undo = document.createElement("button");
+      undo.type = "button";
+      undo.className = "auth-unhide";
+      undo.textContent = "Show " + sum.hiddenCount + " hidden " + (sum.hiddenCount === 1 ? "topic" : "topics");
+      undo.addEventListener("click", function (e) {
+        e.stopPropagation();   // same detached-node trap as the ✕ above
+        if (IQB.app && IQB.app.unhideProgress) { IQB.app.unhideProgress(); renderMenu(); }
+      });
+      rows.appendChild(undo);
+    }
   }
 
   /* ---------- sign-in prompt (dismissible, skippable) ---------- */

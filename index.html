@@ -168,6 +168,13 @@
              any scroll depth, and above the tutor panel so it stays reachable
              while a chat answer is on screen. Hidden under 640px (see
              css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
         <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
           <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
         </button>
@@ -183,9 +190,18 @@
         <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
       </header>
 
-      <!-- category tabs (sticky within the header shell) -->
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
       <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
         <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
       </div>
 
     </div>

@@ -232,17 +232,10 @@
       el("span", { class: "tab-n", text: "JS" })
     ]);
     tabsEl.appendChild(pg);
-
-    if (!window.IQB.notebookUI) return;
-    const nb = el("button", {
-      class: "tab tab-nb", role: "tab", "data-cat": NOTEBOOK,
-      style: "--tab-c: var(--notebook)",
-      onclick: () => setCategory(NOTEBOOK, true)
-    }, [
-      el("span", { class: "dot" }),
-      document.createTextNode("My Notes")
-    ]);
-    tabsEl.appendChild(nb);
+    /* My Notes is deliberately NOT a tab any more: as the last entry of a
+       scrollable strip it spent its life pushed off-screen, and a personal
+       space isn't a question category anyway. It opens from #mynotes-btn in
+       the header (desktop) and a section-dropdown entry (mobile). */
   }
 
   /* progress within a given set of categories */
@@ -254,6 +247,34 @@
     return { done, total };
   }
 
+  /* A category the reader has actually engaged with: >=1 question completed or
+     bookmarked. Derived from data that already syncs, so it costs nothing to
+     store and can never go stale — this, not the group, is the unit progress is
+     reported in. An Angular reader who never opens React should never see React
+     in a denominator. */
+  function isStarted(cat) {
+    return ALL.some((q) => q.category === cat && (progress.has(q.id) || bookmarks.has(q.id)));
+  }
+
+  /* What the sidebar tracker reports for the current selection. A single
+     category speaks for itself. A group is scoped to the reader's STARTED
+     categories only — "finish all of Frontend" was never anyone's goal, so
+     the group bar answers "how far into MY frontend topics am I?" instead.
+     Returns null when nothing is started yet: the box is omitted entirely
+     rather than opening with a demoralising 0 / 430. */
+  function sidebarProgress(key) {
+    if (!isGroup(key) && key !== "all") {
+      return { label: labelOf(key) + " progress", ...progressFor([key]) };
+    }
+    const cats = (catsFor(key) || GROUPS[0].cats).filter(isStarted);
+    if (!cats.length) return null;
+    /* "Your progress", not "Your Frontend progress": the group is already named
+       by the sidebar title directly beneath, and the longer label wrapped to a
+       second line — so the box changed height between category and group views
+       and the whole nav jumped on every switch. */
+    return { label: "Your progress", ...progressFor(cats) };
+  }
+
   /* the sidebar is contextual: it shows ONLY the active group's categories,
      plus a progress tracker scoped to the current selection */
   function renderSidebar(key) {
@@ -262,19 +283,22 @@
     const group = GROUPS.find((g) => g.key === groupKey);
     sideEl.innerHTML = "";
 
-    // progress tracker for the current selection (a category, or the whole group)
-    const selCats = catsFor(key) || group.cats;
-    const { done, total } = progressFor(selCats);
-    const pct = total ? Math.round((done / total) * 100) : 0;
-    sideEl.appendChild(el("div", { class: "progress-box", style: `--side-c: ${groupColor(group)}` }, [
-      el("div", { class: "pl" }, [
-        el("span", { text: labelOf(key) + " progress" }),
-        el("span", { class: "prog-num", id: "progress-label", text: done + " / " + total })
-      ]),
-      el("div", { class: "progress-track" }, [
-        el("div", { class: "progress-fill", id: "progress-fill", style: "width:" + pct + "%" })
-      ])
-    ]));
+    // progress tracker for the current selection — a category, or (on a group
+    // tab) the reader's started categories within it. Absent until something
+    // is started: see sidebarProgress().
+    const prog = sidebarProgress(key);
+    if (prog) {
+      const pct = prog.total ? Math.round((prog.done / prog.total) * 100) : 0;
+      sideEl.appendChild(el("div", { class: "progress-box", style: `--side-c: ${groupColor(group)}` }, [
+        el("div", { class: "pl" }, [
+          el("span", { text: prog.label }),
+          el("span", { class: "prog-num", id: "progress-label", text: prog.done + " / " + prog.total })
+        ]),
+        el("div", { class: "progress-track" }, [
+          el("div", { class: "progress-fill", id: "progress-fill", style: "width:" + pct + "%" })
+        ])
+      ]));
+    }
 
     // group header + "all of this group" link
     sideEl.appendChild(el("p", { class: "sidebar-title", text: group.label }));
@@ -335,8 +359,12 @@
       }, [catIcon(catKey), document.createTextNode(labelOf(catKey)), el("span", { class: "subchip-n", text: String(n) })]));
     });
 
+    /* "nearest", never "center": centering scrolls the strip even when the
+       chip is already fully visible, dragging the row out from under the
+       pointer on every click. Nearest is a no-op unless the chip is actually
+       cut off at an edge — and then it moves the minimum distance. */
     const active = qs(".subchip.active", subnavEl);
-    if (active) active.scrollIntoView({ inline: "center", block: "nearest" });
+    if (active) active.scrollIntoView({ inline: "nearest", block: "nearest" });
   }
 
   function buildDifficultyFilter() {
@@ -376,6 +404,11 @@
       if (n === 0) return;
       mCatEl.appendChild(el("option", { value: g.key, text: g.label + " (" + n + ")" }));
     });
+    /* My Notes rides in the section dropdown on phones: the header button is
+       hidden under 640px, and before this entry a phone had NO path to the
+       notebook at all (the tab it used to live in sits in the desktop-only
+       strip). */
+    if (window.IQB.notebookUI) mCatEl.appendChild(el("option", { value: NOTEBOOK, text: "My Notes" }));
     mCatEl.addEventListener("change", () => setCategory(mCatEl.value, true));
 
     // level
@@ -475,13 +508,17 @@
     // mirror the choice into the reader's cloud profile (no-op when signed out)
     if (window.IQB.sync && IQB.sync.pushSoon) IQB.sync.pushSoon();
 
+    // the header's My Notes button carries the active state a tab would have
+    const nbBtn = qs("#mynotes-btn");
+    if (nbBtn) nbBtn.classList.toggle("active", key === NOTEBOOK);
+
     if (key === NOTEBOOK) {
       qsa(".tab", tabsEl).forEach((t) => t.classList.toggle("active", t.dataset.cat === NOTEBOOK));
       showPlayground(false);
       showNotebook(true);
       if (updateHash) history.replaceState(null, "", "#" + key);
       const nbTab = qs(".tab.active", tabsEl);
-      if (nbTab) nbTab.scrollIntoView({ inline: "center", block: "nearest" });
+      if (nbTab) nbTab.scrollIntoView({ inline: "nearest", block: "nearest" });
       return;
     }
     showNotebook(false);
@@ -491,7 +528,7 @@
       showPlayground(true);
       if (updateHash) history.replaceState(null, "", "#" + key);
       const pgTab = qs(".tab.active", tabsEl);
-      if (pgTab) pgTab.scrollIntoView({ inline: "center", block: "nearest" });
+      if (pgTab) pgTab.scrollIntoView({ inline: "nearest", block: "nearest" });
       return;
     }
     showPlayground(false);
@@ -511,8 +548,9 @@
     if (window.IQB.select) IQB.select.syncAll();
 
     if (updateHash) history.replaceState(null, "", "#" + key);
+    // "nearest", never "center" — see renderSubnav for why
     const activeTab = qs(".tab.active", tabsEl);
-    if (activeTab) activeTab.scrollIntoView({ inline: "center", block: "nearest" });
+    if (activeTab) activeTab.scrollIntoView({ inline: "nearest", block: "nearest" });
     render();
     // Let an open AI Coach retarget its welcome chips to this category.
     if (window.IQB.tutor && IQB.tutor.onCategoryChanged) IQB.tutor.onCategoryChanged();
@@ -850,6 +888,8 @@
     else { bookmarks.add(id); btn.classList.add("on"); btn.innerHTML = starOnSvg; }
     store.saveBookmarks(bookmarks);
     syncPush();
+    // a bookmark can start (or un-start) a category, which moves the group bar
+    updateProgressBar();
     if (state.bookmarkedOnly) render();
   }
   function toggleDone(id, btn, card) {
@@ -923,13 +963,44 @@
     for (const x of a) if (!b.has(x)) return false;
     return true;
   }
+  /* Profile progress, one row per STARTED category (see isStarted), grouped
+     under its main field so the popover can collapse a long list. The group
+     line's numbers are scoped to the reader's started topics — never the raw
+     "Frontend 430" syllabus: "Angular 57/57 ✓" is a goal a person can finish.
+     Rows the reader dismissed (the ✕ in the profile menu) stay out until
+     unhideProgress(); hiddenCount only counts hides that would otherwise
+     render, so "Show n hidden" never advertises rows that couldn't come back. */
   function getProgressSummary() {
-    const groups = GROUPS.map((g) => {
-      const p = progressFor(g.cats);
-      return { key: g.key, label: g.label, color: g.color, done: p.done, total: p.total };
+    const hidden = store.getHiddenProgress();
+    const groups = [];
+    let hiddenCount = 0;
+    GROUPS.forEach((g) => {
+      const cats = [];
+      g.cats.forEach((key) => {
+        if (!isStarted(key)) return;
+        if (hidden.has(key)) { hiddenCount++; return; }
+        const p = progressFor([key]);
+        if (!p.total) return;
+        cats.push({
+          key: key, label: labelOf(key), color: catColor(key),
+          done: p.done, total: p.total, complete: p.done === p.total
+        });
+      });
+      if (!cats.length) return;
+      cats.sort((a, b) => (b.done / b.total) - (a.done / a.total));
+      groups.push({
+        key: g.key, label: g.label, color: groupColor(g),
+        done: cats.reduce((s, c) => s + c.done, 0),
+        total: cats.reduce((s, c) => s + c.total, 0),
+        cats: cats
+      });
     });
-    return { totalCompleted: progress.size, totalQuestions: ALL.length, groups: groups };
+    return { totalCompleted: progress.size, totalQuestions: ALL.length, groups: groups, hiddenCount: hiddenCount };
   }
+  function hideProgressRow(key) {
+    const h = store.getHiddenProgress(); h.add(key); store.saveHiddenProgress(h);
+  }
+  function unhideProgress() { store.saveHiddenProgress(new Set()); }
   /* The category the reader is currently viewing, as { key, label }. Used by the
      AI Tutor to tailor its welcome prompts ("Ask me a random {label} question").
      Returns the single category when one is selected; for a group tab ("frontend")
@@ -1007,15 +1078,18 @@
     chip.appendChild(document.createTextNode("✨ AI Suggested"));
     chip.appendChild(el("span", { class: "chip-n", text: String(count) }));
   }
-  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, setCategory: setCategory, restoreView: restoreView, copyText: copyText, currentCategory: currentCategory, categoryTags: categoryTags, applyAiSuggestion: applyAiSuggestion };
+  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, hideProgressRow: hideProgressRow, unhideProgress: unhideProgress, setCategory: setCategory, restoreView: restoreView, copyText: copyText, currentCategory: currentCategory, categoryTags: categoryTags, applyAiSuggestion: applyAiSuggestion };
   function updateProgressBar() {
+    const prog = sidebarProgress(state.category);
     const fill = qs("#progress-fill", sideEl);
+    /* Completing the first question of a fresh group (or un-completing the
+       last) is exactly when the box has to appear or go — a full sidebar
+       rebuild is the cheapest correct answer there. */
+    if (!!prog !== !!fill) { renderSidebar(state.category); return; }
+    if (!prog || !fill) return;
+    fill.style.width = (prog.total ? Math.round((prog.done / prog.total) * 100) : 0) + "%";
     const label = qs("#progress-label", sideEl);
-    if (!fill) return;
-    const selCats = catsFor(state.category) || GROUPS[0].cats;
-    const { done, total } = progressFor(selCats);
-    fill.style.width = (total ? Math.round((done / total) * 100) : 0) + "%";
-    if (label) label.textContent = done + " / " + total;
+    if (label) label.textContent = prog.done + " / " + prog.total;
   }
 
   /* ========================================================
@@ -1283,6 +1357,13 @@
     initToolsSheet();
     initReadingMode();
     initSidebarToggle();
+    initTabsScrollHint();
+    // My Notes lives in the header, not the tab strip — see buildTabs
+    const nbBtn = qs("#mynotes-btn");
+    if (nbBtn) {
+      if (window.IQB.notebookUI) nbBtn.addEventListener("click", () => setCategory(NOTEBOOK, true));
+      else nbBtn.hidden = true;
+    }
     if (window.IQB.tour && typeof window.IQB.tour.init === "function") {
       window.IQB.tour.init();
     }
@@ -1445,6 +1526,26 @@
     btn.addEventListener("click", () => toggle(!document.body.classList.contains("reading-mode")));
     // allow Esc to exit reading mode
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && document.body.classList.contains("reading-mode")) toggle(false); });
+  }
+
+  /* The tab strip scrolls with its scrollbar hidden, so a tab pushed past the
+     edge (My Notes sits last) was invisible AND undiscoverable. Each arrow
+     shows only while something is actually cut off on its side. Re-checked on
+     scroll/resize and once the webfonts land — font swap changes tab widths. */
+  function initTabsScrollHint() {
+    const left = qs("#tabs-arrow-left"), right = qs("#tabs-arrow-right");
+    if (!left || !right || !tabsEl) return;
+    const sync = () => {
+      const max = tabsEl.scrollWidth - tabsEl.clientWidth;
+      left.hidden = tabsEl.scrollLeft <= 2;
+      right.hidden = tabsEl.scrollLeft >= max - 2;
+    };
+    left.addEventListener("click", () => tabsEl.scrollBy({ left: -240, behavior: "smooth" }));
+    right.addEventListener("click", () => tabsEl.scrollBy({ left: 240, behavior: "smooth" }));
+    tabsEl.addEventListener("scroll", sync, { passive: true });
+    window.addEventListener("resize", sync);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
+    sync();
   }
 
   /* Desktop sidebar collapse. body.sidebar-rail (see styles.css) squeezes the
