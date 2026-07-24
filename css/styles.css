@@ -879,6 +879,12 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 .badge {
   font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .03em;
   text-transform: uppercase; padding: 3px 8px; border-radius: 6px; white-space: nowrap;
+  /* Not selectable — same as the .qa-qnum medallion. The category/difficulty
+     badges sit beside the question text but outside its highlight region
+     (.qa-qtext); if a text selection started on a badge, its common ancestor
+     fell outside that region and the highlighter refused the selection. Taking
+     them (and the number) out of selection keeps drags anchored in the text. */
+  user-select: none; -webkit-user-select: none;
 }
 .badge.cat { background: color-mix(in srgb, var(--cat) 14%, var(--surface)); color: var(--cat); }
 .badge.diff-beginner { background: var(--beginner-soft); color: var(--beginner); }
@@ -887,6 +893,21 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 .qa-star { margin-left: auto; font-size: 17px; line-height: 1; color: var(--muted); transition: var(--trans); background: none; }
 .qa-star:hover { color: var(--intermediate); transform: scale(1.12); }
 .qa-star.on { color: var(--intermediate); }
+
+/* Header "mark complete" circle — empty ring when pending, filled green check
+   when done. Shares the card's `progress` state with the footer done button. */
+.qa-done {
+  flex: none; display: inline-grid; place-items: center;
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid var(--border); background: transparent;
+  color: transparent; cursor: pointer; transition: var(--trans);
+  -webkit-tap-highlight-color: transparent;
+}
+.qa-done:hover { border-color: var(--beginner); color: color-mix(in srgb, var(--beginner) 45%, transparent); }
+.qa-done:focus-visible { outline: none; box-shadow: var(--focus); }
+.qa-done .qa-done-check { flex: none; transition: opacity var(--trans); }
+.qa-done.on { background: var(--beginner); border-color: var(--beginner); color: #fff; }
+.qa-done.on:hover { color: #fff; filter: brightness(1.04); }
 
 .qa-question { font-size: var(--step-1); font-weight: 650; color: var(--ink); }
 .qa-question :is(code, .inline) { font-family: var(--mono); font-size: .82em; background: var(--surface-2); padding: 1px 5px; border-radius: 5px; border: 1px solid var(--border); color: var(--accent-ink); }

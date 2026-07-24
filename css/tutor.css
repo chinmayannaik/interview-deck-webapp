@@ -54,14 +54,14 @@
    So they move to the left edge instead. That column is free: the sidebar is
    sticky and only ~420px tall, so it ends well above these, and when the chat
    is open it is a 56px rail anyway (see css/styles.css). */
-@media (min-width: 481px) {
+@media (min-width: 701px) {
   body.tutor-open .reading-mode-toggle,
   body.tutor-open .scroll-to-top { left: 18px; right: auto; }
 }
 
-/* Below 481px the panel is all but fullscreen, so there is no free column to
+/* At/below 700px the panel is a full-width sheet, so there is no free column to
    move them to — anywhere they went would be on top of the chat. */
-@media (max-width: 480px) {
+@media (max-width: 700px) {
   body.tutor-open .reading-mode-toggle,
   body.tutor-open .scroll-to-top {
     opacity: 0;
@@ -73,7 +73,7 @@
 /* ---------- panel ---------- */
 .tutor-panel {
   position: fixed; right: 0px; bottom: 8px; z-index: 131;
-  width: min(500px, calc(100vw - 32px));
+  width: clamp(340px, 40vw, 500px);
   height: min(700px, calc(100vh - 67px));
   display: flex; flex-direction: column;
   background: var(--bg); color: var(--ink);
@@ -496,32 +496,56 @@ body.tutor-resizing-x, body.tutor-resizing-x * { cursor: ew-resize !important; }
 .tutor-send:hover:not(:disabled) { filter: brightness(1.06); }
 .tutor-send:disabled { opacity: .5; cursor: default; }
 
-@media (max-width: 480px) {
+/* ---------- voice input (mic) ----------
+   A ghost/secondary sibling of the send button: same 40px circle, but outlined
+   rather than filled so send stays the primary action. While listening it turns
+   red and pulses so it's obvious the mic is live. */
+.tutor-mic {
+  flex: 0 0 auto; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+  border: 1px solid var(--border); background: var(--bg); color: var(--ink-2, var(--ink));
+  display: grid; place-items: center; transition: var(--trans, .15s);
+}
+.tutor-mic[hidden] { display: none; }
+.tutor-mic:hover { border-color: var(--accent); color: var(--accent); }
+.tutor-mic:focus-visible { outline: none; border-color: var(--accent); box-shadow: var(--focus, 0 0 0 3px var(--accent-soft)); }
+.tutor-mic.is-listening {
+  background: #d92d20; border-color: #d92d20; color: #fff;
+  animation: tutor-mic-pulse 1.4s ease-out infinite;
+}
+@keyframes tutor-mic-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(217, 45, 32, .45); }
+  70%  { box-shadow: 0 0 0 8px rgba(217, 45, 32, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(217, 45, 32, 0); }
+}
+@media (prefers-reduced-motion: reduce) { .tutor-mic.is-listening { animation: none; } }
+
+@media (max-width: 700px) {
   .tutor-panel { right: 8px; bottom: 8px; width: calc(100vw - 16px); height: calc(100vh - 74px); }
   .tutor-head { cursor: default; }
   /* keep clear of .reading-mode-toggle/.scroll-to-top, which stay in the
-     right:18px column at this width (the move-to-left rule above is 481px up,
+     right:18px column at this width (the move-to-left rule above is 701px up,
      and while the panel is open they are hidden here anyway) */
   .tutor-fab { right: 11px; bottom: 121px; }
 }
 
 /* ---------- responsive: dock aside vs. overlay ----------
-   Wide viewports have room to shrink the question list rather than cover it;
-   narrow ones don't, so the panel just floats on top (the pre-existing fixed
-   behavior above).
+   The panel should never awkwardly cover half the page. Above 700px there is
+   room to sit the panel beside the content and reflow the page to fit it, so we
+   do exactly that; at/below 700px there is not, so the panel becomes a
+   full-width sheet (the block above) instead of a half-cover.
 
-   The threshold was 1300px — --maxw plus the panel plus room for the grid not
-   to cramp. That left a dead band: on a 1240px laptop the panel did NOT dock
-   and instead covered ~450px of the question column, which is most of what the
-   reader was trying to read alongside the chat. It is 1100px now because the
-   sidebar collapses to a 56px rail whenever the panel is open (see
-   css/styles.css), which is exactly the ~154px the grid was short of. */
-@media (min-width: 1100px) {
+   The threshold was 1300px, then 1100px — both left a dead band where a
+   mid-width laptop/tablet neither docked nor went full-width, so the panel
+   covered ~half the question column the reader was trying to read alongside it.
+   700px removes that band: the panel is responsive across every width. The
+   panel width is itself fluid (clamp(340px, 40vw, 500px)) so the content column
+   always keeps a readable share of the viewport once docked. */
+@media (min-width: 701px) {
   /* --tutor-dock is written by js/tutor.js from the panel's actual left edge,
      so dragging the panel's left edge really does rebalance page vs chat. The
      literal is only a fallback for the first paint. Transition only while NOT
      dragging, or the content lags a frame behind the handle. */
   .app { transition: margin-right .25s ease; }
-  body.tutor-open .app { margin-right: var(--tutor-dock, min(416px, 32vw)); }
+  body.tutor-open .app { margin-right: var(--tutor-dock, clamp(340px, 40vw, 500px)); }
   body.tutor-resizing .app, body.tutor-dragging .app { transition: none; }
 }

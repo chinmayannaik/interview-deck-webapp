@@ -160,6 +160,12 @@
       '<form class="tutor-form" id="tutor-form">' +
         '<textarea class="tutor-input" id="tutor-input" rows="1" placeholder="Ask a question" ' +
           'autocomplete="off"></textarea>' +
+        // Voice input — revealed by initSpeech() only when the browser supports
+        // the Web Speech API (Chrome/Edge/Android). Dictates straight into the
+        // textarea; the user still reviews/edits and presses send themselves.
+        '<button class="tutor-mic" id="tutor-mic" type="button" aria-label="Speak your question" title="Speak your question" hidden>' +
+          '<svg class="tutor-mic-on" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>' +
+        '</button>' +
         '<button class="tutor-send" id="tutor-send" type="submit" aria-label="Send">' +
           '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>' +
         '</button>' +
@@ -175,6 +181,7 @@
     resizeEl = panel.querySelector("#tutor-resize");
 
     formEl.addEventListener("submit", onSubmit);
+    initSpeech(panel.querySelector("#tutor-mic"));
     panel.querySelector("#tutor-close").addEventListener("click", closePanel);
     panel.querySelector("#tutor-restart").addEventListener("click", function (e) {
       // Spin the icon once so a refresh reads as a deliberate, visible action.
@@ -369,16 +376,16 @@
       }
     ] : [
       {
+        label: "Explain in simple words",
+        prompt: "Explain this question in simple, plain words, as if to a beginner — no " +
+          "jargon. Use a short everyday analogy and one small, concrete example so the " +
+          "core idea is easy to grasp."
+      },
+      {
         label: "Explain in Detail",
         prompt: "Explain this question in detail: how it works internally, why it matters " +
           "in real projects, and a concrete example — go deeper than the official answer " +
           "shown on the card."
-      },
-      {
-        label: "Give More Examples",
-        prompt: "Give me more examples for this concept — different real-world scenarios " +
-          "and short code samples beyond the one in the official answer, so I can " +
-          "recognise it in any form the interviewer asks."
       },
       {
         label: "Quick Revision Points",
@@ -591,6 +598,7 @@
     panel.hidden = false;
     cbBox = null;   // it could not be measured while hidden
     applyPos(loadPos());
+    snapIfDocked();  // heal a stale/near-edge stored position so it opens flush right
     syncDock();
     open = true;
     launcher.classList.add("is-open");
@@ -708,7 +716,7 @@
   /* Asks the SAME question the stylesheet asks, rather than comparing a
      measured pixel value against a magic number that could drift from the
      media query in css/tutor.css. */
-  function isNarrow() { return window.matchMedia("(max-width: 480px)").matches; }
+  function isNarrow() { return window.matchMedia("(max-width: 700px)").matches; }
   function vh() { return containingBox().h; }
 
   function applyPos(pos) {
@@ -754,9 +762,32 @@
     root.style.setProperty("--tutor-dock", Math.max(0, Math.round(box.w - r.left)) + "px");
   }
 
+  /* Re-dock flush to the default corner when the panel is sitting near the
+     right/bottom edge, and forget the stored position so it stays flush. This
+     is what keeps the panel "exactly on the right side": an accidental nudge of
+     the header (or a position saved on a differently-sized screen) used to leave
+     a permanent gap on the right. Anything dropped clearly out into the open —
+     past the right third of its horizontal travel — is treated as an
+     intentional float and left alone. Returns true when it snapped. */
+  function snapIfDocked() {
+    if (!panel || isNarrow()) return false;
+    const r = panel.getBoundingClientRect();
+    const rightGap = vw() - r.right;
+    const bottomGap = vh() - r.bottom;
+    const travel = Math.max(1, vw() - r.width);
+    if (rightGap <= travel / 3 && bottomGap <= 56) {
+      panel.style.right = ""; panel.style.bottom = "";   // fall back to the CSS default corner
+      try { localStorage.removeItem(POS_STORE); } catch (_) {}
+      syncDock();
+      return true;
+    }
+    return false;
+  }
+
   function initDrag(handle) {
     if (!handle) return;
-    let startX = 0, startY = 0, startR = 0, startB = 0, dragging = false;
+    let startX = 0, startY = 0, startR = 0, startB = 0, dragging = false, moved = false;
+    const DRAG_SLOP = 4;   // px the pointer must travel before it counts as a drag
 
     handle.addEventListener("pointerdown", function (e) {
       // The header also carries the restart/close buttons — a click on those is
@@ -768,13 +799,17 @@
       startX = e.clientX; startY = e.clientY;
       startR = vw() - r.right;
       startB = vh() - r.bottom;
-      dragging = true;
+      dragging = true; moved = false;
       try { handle.setPointerCapture(e.pointerId); } catch (_) {}
       document.body.classList.add("tutor-dragging");
     });
 
     handle.addEventListener("pointermove", function (e) {
       if (!dragging) return;
+      // A click that jitters a pixel or two is not a move — only past the slop do
+      // we start repositioning, so a tap on the header never saves a new spot.
+      if (!moved && Math.abs(e.clientX - startX) < DRAG_SLOP && Math.abs(e.clientY - startY) < DRAG_SLOP) return;
+      moved = true;
       // Right/bottom grow as the pointer moves left/up, hence the inversion.
       applyPos({ right: startR - (e.clientX - startX), bottom: startB - (e.clientY - startY) });
     });
@@ -784,6 +819,11 @@
       dragging = false;
       try { handle.releasePointerCapture(e.pointerId); } catch (_) {}
       document.body.classList.remove("tutor-dragging");
+      if (!moved) return;                     // a click, not a drag — leave position untouched
+      // Snap back to the right edge if it landed near it; otherwise remember the
+      // floated position. Either way the panel never keeps a small gap it can't
+      // shake off.
+      if (snapIfDocked()) return;
       const r = panel.getBoundingClientRect();
       savePos(vw() - r.right, vh() - r.bottom);
     }
@@ -1470,6 +1510,99 @@
     if (!inputEl) return;
     inputEl.style.height = "auto";
     inputEl.style.height = Math.min(inputEl.scrollHeight, 140) + "px";
+  }
+
+  /* ---------- voice input (Web Speech API) ----------
+     Dictation straight into the composer. Uses the browser's built-in
+     SpeechRecognition — no key, no backend — so it simply isn't there in
+     browsers that lack it (Firefox, older Safari): the button stays hidden and
+     typing is unaffected. Recognition is on-demand and English (en-US); the
+     transcript lands in the textarea for the user to review and send, we never
+     auto-submit a spoken message. */
+  function initSpeech(micBtn) {
+    if (!micBtn) return;
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return;                      // unsupported → leave the mic hidden
+    micBtn.hidden = false;
+
+    let recog = null, listening = false, baseText = "", manualStop = false, fatal = false;
+
+    // Glue spoken text onto whatever is already typed, with exactly one space.
+    function join(a, b) {
+      a = (a || "").replace(/\s+$/, ""); b = (b || "").replace(/^\s+/, "");
+      if (!a) return b;
+      if (!b) return a;
+      return a + " " + b;
+    }
+
+    function setListening(on) {
+      listening = on;
+      micBtn.classList.toggle("is-listening", on);
+      micBtn.setAttribute("aria-label", on ? "Stop listening" : "Speak your question");
+      micBtn.setAttribute("title", on ? "Stop listening" : "Speak your question");
+    }
+
+    function finish() {
+      inputEl.value = baseText;            // drop any dangling interim text
+      autosize();
+      setListening(false);
+      recog = null;
+      try { inputEl.focus(); } catch (_) {}
+    }
+
+    // Tapping the mic again is the only thing that ends a session.
+    function stop() { manualStop = true; if (recog) { try { recog.stop(); } catch (_) {} } }
+
+    function begin() {
+      recog = new SR();
+      recog.lang = "en-US";
+      recog.interimResults = true;        // live text as they speak
+      // Keep the mic open for a whole train of thought, not one sentence. The
+      // browser still auto-ends on a long silence, so onend re-arms it below —
+      // the session only really stops when the user taps the mic again.
+      recog.continuous = true;
+      recog.maxAlternatives = 1;
+
+      recog.onresult = function (e) {
+        let interim = "", finalText = "";
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          const t = e.results[i][0].transcript;
+          if (e.results[i].isFinal) finalText += t; else interim += t;
+        }
+        if (finalText) baseText = join(baseText, finalText);
+        inputEl.value = interim ? join(baseText, interim) : baseText;
+        autosize();
+      };
+      recog.onerror = function (e) {
+        const err = e && e.error;
+        // Permission problems are terminal — don't fight them with restarts.
+        if (err === "not-allowed" || err === "service-not-allowed") {
+          fatal = true;
+          setStatus("Microphone access is blocked. Allow it in your browser to use voice input.", "warn");
+        }
+        // "no-speech"/"aborted"/"network" are transient: onend re-arms unless
+        // the user has stopped or a fatal error occurred.
+      };
+      recog.onend = function () {
+        inputEl.value = baseText;
+        autosize();
+        // Re-arm through the browser's silence timeout so a long pause doesn't
+        // quietly kill dictation. Only the user (manualStop) or a fatal error ends it.
+        if (listening && !manualStop && !fatal) {
+          try { recog.start(); return; } catch (_) { /* fall through to finish */ }
+        }
+        finish();
+      };
+
+      try { recog.start(); setListening(true); }
+      catch (_) { setListening(false); recog = null; }
+    }
+
+    function start() { manualStop = false; fatal = false; baseText = inputEl.value; begin(); }
+
+    micBtn.addEventListener("click", function () {
+      if (listening) stop(); else start();
+    });
   }
 
   /* ---------- minimal, safe markdown ----------

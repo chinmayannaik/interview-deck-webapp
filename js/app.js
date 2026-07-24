@@ -733,11 +733,25 @@
     toggleBtn.innerHTML =
       '<svg class="qa-toggle-chev" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
 
-    /* Speaker + star + expand share one right-aligned group (css/speak.css) — the
-       star kept its own margin-left:auto before read-aloud existed. */
+    /* A one-tap "mark complete" circle right in the header, so the reader can tick
+       a question off without opening it. Empty ring when pending, filled green
+       check when done — shares the same `progress` state as the footer button
+       (toggleDone syncs both). */
+    const doneToggle = el("button", {
+      class: "qa-done" + (progress.has(q.id) ? " on" : ""), type: "button",
+      "aria-label": progress.has(q.id) ? "Marked complete — tap to undo" : "Mark as complete",
+      "aria-pressed": progress.has(q.id) ? "true" : "false", title: "Mark as complete",
+      onclick: (e) => { e.stopPropagation(); toggleDone(q.id, card); }
+    });
+    doneToggle.innerHTML =
+      '<svg class="qa-done-check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+
+    /* Speaker + star + done + expand share one right-aligned group (css/speak.css)
+       — the star kept its own margin-left:auto before read-aloud existed. */
     const topActions = el("div", { class: "qa-top-actions" }, [
       window.IQB.speak && IQB.speak.supported ? IQB.speak.build(card) : null,
       star,
+      doneToggle,
       toggleBtn
     ]);
 
@@ -863,11 +877,11 @@
     if (window.IQB.notes) inner.appendChild(IQB.notes.build(q.id));
 
     const doneBtn = el("button", {
-      class: "qa-act" + (progress.has(q.id) ? " on" : ""),
+      class: "qa-act qa-act-done" + (progress.has(q.id) ? " on" : ""),
       /* explicit, so the accessible name stays whole where the visible label
          shortens to "Done" on a phone */
       "aria-label": progress.has(q.id) ? "Completed" : "Mark as done",
-      onclick: (e) => { e.stopPropagation(); toggleDone(q.id, doneBtn, card); }
+      onclick: (e) => { e.stopPropagation(); toggleDone(q.id, card); }
     });
     doneBtn.innerHTML = progress.has(q.id) ? doneOnHtml : doneOffHtml;
 
@@ -982,10 +996,25 @@
     updateProgressBar();
     if (state.bookmarkedOnly) render();
   }
-  function toggleDone(id, btn, card) {
+  function toggleDone(id, card) {
     const isCompleted = !progress.has(id);
-    if (progress.has(id)) { progress.delete(id); btn.classList.remove("on"); btn.innerHTML = doneOffHtml; btn.setAttribute("aria-label", "Mark as done"); card.classList.remove("done"); }
-    else { progress.add(id); btn.classList.add("on"); btn.innerHTML = doneOnHtml; btn.setAttribute("aria-label", "Completed"); card.classList.add("done"); }
+    if (isCompleted) progress.add(id); else progress.delete(id);
+    card.classList.toggle("done", isCompleted);
+    // Keep both entry points in sync: the footer "Mark as done" button and the
+    // header circle toggle share one `progress` state, so a tap on either
+    // updates the other.
+    const act = qs(".qa-act-done", card);
+    if (act) {
+      act.classList.toggle("on", isCompleted);
+      act.innerHTML = isCompleted ? doneOnHtml : doneOffHtml;
+      act.setAttribute("aria-label", isCompleted ? "Completed" : "Mark as done");
+    }
+    const circle = qs(".qa-done", card);
+    if (circle) {
+      circle.classList.toggle("on", isCompleted);
+      circle.setAttribute("aria-pressed", String(isCompleted));
+      circle.setAttribute("aria-label", isCompleted ? "Marked complete — tap to undo" : "Mark as complete");
+    }
     store.saveProgress(progress);
     syncPush();
     updateProgressBar();
