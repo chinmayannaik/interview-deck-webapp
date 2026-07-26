@@ -6,8 +6,7 @@
   "type": "module",
   "engines": { "node": ">=18" },
   "scripts": {
-    "prerender": "node scripts/prerender.mjs",
-    "build": "node scripts/prerender.mjs"
+    "prerender": "node scripts/prerender.mjs"
   },
   "dependencies": {
     "firebase-admin": "^12.7.0"
