@@ -157,13 +157,17 @@
           <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
         </div>
 
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
         <!-- Playground. Used to ride the category tab strip (often scrolled off);
              fixed header spot with the other tools. Hidden under 640px —
              phones open it from the section dropdown. -->
         <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
-          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          <span class="pg-header-label">Playground</span>
-          <span class="pg-header-js">JS</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
         </button>
         <!-- mobile only. Sits in the sticky header (not the content head) so the
              filters stay reachable no matter how far the list is scrolled. The

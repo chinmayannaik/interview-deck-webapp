@@ -163,6 +163,7 @@
      counts(), which already skips zero-count entries. */
   let activePack = null;   // the pack object, or null = off
   let packSet = null;      // Set of question ids, or null = off
+  let focusMenuRender = null; // set by initFocusMenu; re-renders the open picker
   function resolvePackSet(pack) {
     const set = new Set(pack.questionIds || []);
     (pack.categories || []).forEach((cat) => {
@@ -1491,6 +1492,11 @@
      switch — a narrowed list with no visible reason is exactly how a mode
      gets forgotten (same argument as syncFilterCount). */
   function updatePackChip() {
+    // keep the header focus button lit while a pack is active
+    const fBtn = qs("#focus-btn");
+    if (fBtn) fBtn.classList.toggle("active", !!activePack);
+    // refresh the picker popover if it happens to be open
+    if (focusMenuRender) focusMenuRender();
     let chip = qs("#pack-chip");
     if (!activePack) { if (chip) chip.remove(); return; }
     const head = qs(".content-head");
@@ -1512,6 +1518,76 @@
         onclick: () => setFocusPack(null)
       }, "×")
     );
+  }
+
+  /* Focus-pack picker — a header popover behind the target-icon button. Lives
+     here (not in the account menu) so it's reachable signed out. Only shown
+     when the content ships packs. */
+  function initFocusMenu() {
+    const btn = qs("#focus-btn");
+    if (!btn) return;
+    const packs = getFocusPacks();
+    if (!packs.length) { btn.hidden = true; return; }
+    btn.hidden = false;
+    if (activePack) btn.classList.add("active");
+
+    const menu = el("div", {
+      class: "focus-menu", id: "focus-menu", role: "dialog",
+      "aria-label": "Focus pack", hidden: true
+    });
+    document.body.appendChild(menu);
+    let open = false;
+
+    const checkSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    const targetSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>';
+
+    function render() {
+      const active = getActiveFocusPack();
+      menu.innerHTML = "";
+      menu.append(
+        el("div", { class: "focus-menu-head" }, [
+          el("span", { class: "focus-menu-ic", "aria-hidden": "true", html: targetSvg }),
+          el("span", { text: "Focus pack" })
+        ]),
+        el("p", { class: "focus-menu-hint", text: "Load role-specific questions" })
+      );
+      const list = el("div", { class: "focus-menu-list" });
+      [{ id: "", label: "All questions", count: null }].concat(packs).forEach((p) => {
+        const on = p.id ? (active && active.id === p.id) : !active;
+        list.append(el("button", {
+          class: "focus-opt" + (on ? " is-active" : ""), type: "button",
+          onclick: () => { setFocusPack(p.id || null); close(); }
+        }, [
+          el("span", {
+            class: "focus-opt-label",
+            text: p.count != null ? p.label + " (" + p.count + ")" : p.label
+          }),
+          on ? el("span", { class: "focus-opt-check", "aria-hidden": "true", html: checkSvg }) : null
+        ].filter(Boolean)));
+      });
+      menu.append(list);
+    }
+    focusMenuRender = () => { if (open) render(); };
+
+    function position() {
+      const r = btn.getBoundingClientRect();
+      menu.style.top = (r.bottom + 8) + "px";
+      menu.style.right = Math.max(8, window.innerWidth - r.right) + "px";
+    }
+    function openMenu() {
+      render(); menu.hidden = false; position();
+      open = true; btn.setAttribute("aria-expanded", "true"); btn.classList.add("active");
+    }
+    function close() {
+      menu.hidden = true; open = false; btn.setAttribute("aria-expanded", "false");
+      if (!getActiveFocusPack()) btn.classList.remove("active");
+    }
+    btn.addEventListener("click", (e) => { e.stopPropagation(); open ? close() : openMenu(); });
+    document.addEventListener("click", (e) => {
+      if (open && !menu.contains(e.target) && !btn.contains(e.target)) close();
+    });
+    document.addEventListener("keydown", (e) => { if (open && e.key === "Escape") close(); });
+    window.addEventListener("resize", () => { if (open) position(); });
   }
   /* The category the reader is currently viewing, as { key, label }. Used by the
      AI Tutor to tailor its welcome prompts ("Ask me a random {label} question").
@@ -1928,6 +2004,7 @@
         });
       } else nbBtn.hidden = true;
     }
+    initFocusMenu();
     if (window.IQB.tour && typeof window.IQB.tour.init === "function") {
       window.IQB.tour.init();
     }

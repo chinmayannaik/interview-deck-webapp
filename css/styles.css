@@ -473,14 +473,13 @@ html { overflow-anchor: none; }
 
 /* Playground header button — compact pill; lit in playground purple when open */
 .pg-header-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  height: 34px; padding: 0 10px 0 9px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; padding: 0;
   border-radius: var(--r-pill);
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--ink-2);
-  font-family: var(--mono); font-size: var(--step--1); font-weight: 600;
-  white-space: nowrap; cursor: pointer; transition: var(--trans);
+  cursor: pointer; transition: var(--trans);
 }
 .pg-header-btn:hover {
   border-color: color-mix(in srgb, var(--playground) 40%, var(--border));
@@ -502,6 +501,43 @@ html { overflow-anchor: none; }
   background: rgba(255, 255, 255, .2);
   opacity: 1;
 }
+
+/* Focus-pack popover — opened from the header target-icon button (#focus-btn),
+   relocated here from the account menu so it's reachable signed out. */
+.focus-btn.active {
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  color: var(--accent);
+}
+.focus-menu {
+  position: fixed; z-index: 80; width: min(300px, calc(100vw - 24px));
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r-lg); box-shadow: var(--shadow-lg);
+  padding: 6px; overflow: hidden;
+}
+.focus-menu-head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 10px 2px; font-weight: 700; color: var(--ink);
+}
+.focus-menu-ic { display: inline-flex; color: var(--accent); }
+.focus-menu-hint {
+  margin: 0; padding: 0 10px 8px; font-size: var(--step--1); color: var(--ink-2);
+}
+.focus-menu-list { display: flex; flex-direction: column; gap: 2px; }
+.focus-opt {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  width: 100%; text-align: left; padding: 9px 10px;
+  border: 0; background: transparent; border-radius: var(--r-sm);
+  color: var(--ink); font: inherit; font-size: var(--step--1);
+  cursor: pointer; transition: var(--trans);
+}
+.focus-opt:hover { background: color-mix(in srgb, var(--ink) 6%, var(--surface)); }
+.focus-opt.is-active {
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  color: var(--accent); font-weight: 600;
+}
+.focus-opt-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.focus-opt-check { display: inline-flex; color: var(--accent); flex: none; }
 
 /* My Notes header button — lit in the notebook's own teal while its view is
    open, standing in for the active state its old tab used to carry */

@@ -422,18 +422,6 @@
           '<div class="auth-rows" id="auth-rows"></div>' +
         '</div>' +
       '</div>' +
-      '<div class="auth-pack" id="auth-pack" hidden>' +
-        '<div class="auth-pack-title">' +
-          '<span class="auth-sec-ic auth-sec-ic--pack" aria-hidden="true">' +
-            '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>' +
-          '</span>' +
-          '<span>Focus pack</span>' +
-        '</div>' +
-        '<p class="auth-pack-hint">Load role-specific questions</p>' +
-        '<div class="auth-select-wrap">' +
-          '<select class="auth-pack-select" id="auth-pack-select" aria-label="Focus pack"></select>' +
-        '</div>' +
-      '</div>' +
       '<div class="auth-actions">' +
         '<button class="auth-link" id="auth-myreports" type="button" hidden>' +
           '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>' +
@@ -457,10 +445,6 @@
     m.querySelector("#auth-signout").addEventListener("click", function () {
       closeMenu();
       if (fb) fb.signOut(fb.auth);
-    });
-    m.querySelector("#auth-pack-select").addEventListener("change", function (e) {
-      if (window.IQB.app && IQB.app.setFocusPack) IQB.app.setFocusPack(e.target.value || null);
-      renderMenu();
     });
     m.querySelector("#auth-myreports").addEventListener("click", function () {
       closeMenu();
@@ -493,38 +477,9 @@
     const adminBtn = menuEl.querySelector("#auth-admin");
     if (adminBtn) adminBtn.hidden = !(IQB.cloud.isAdmin() && window.IQB.reports);
 
-    /* Focus pack picker — only rendered when the content actually ships packs
-       (IQB.packs comes from the manifest via data-loader.js). */
-    var packBox = menuEl.querySelector("#auth-pack");
-    if (packBox) {
-      var packs = (window.IQB.app && IQB.app.getFocusPacks) ? IQB.app.getFocusPacks() : [];
-      packBox.hidden = !packs.length;
-      if (packs.length) {
-        var packSel = packBox.querySelector("#auth-pack-select");
-        var activePk = (IQB.app.getActiveFocusPack && IQB.app.getActiveFocusPack()) || null;
-        packSel.innerHTML = "";
-        var off = document.createElement("option");
-        off.value = "";
-        off.textContent = "All questions";
-        packSel.appendChild(off);
-        packs.forEach(function (p) {
-          var o = document.createElement("option");
-          o.value = p.id;
-          o.textContent = p.label + " (" + p.count + " questions)";
-          if (p.description) o.title = p.description;
-          packSel.appendChild(o);
-        });
-        packSel.value = activePk ? activePk.id : "";
-        /* The native <select>'s open list is OS-drawn and ignores the theme —
-           swap it for the site's own combobox (same component as the mobile
-           filters). enhance() is a one-time upgrade; syncAll() re-reads the
-           options we just rebuilt. */
-        if (window.IQB.select) {
-          IQB.select.enhance(packSel);
-          IQB.select.syncAll();
-        }
-      }
-    }
+    /* The focus-pack picker moved out of this menu to a dedicated header
+       button (#focus-btn, wired in app.js) so it's reachable without signing
+       in. Nothing to render here anymore. */
 
     /* Started categories only (app.js getProgressSummary), grouped under their
        main field as collapsible sections — an Angular reader sees Angular, not
