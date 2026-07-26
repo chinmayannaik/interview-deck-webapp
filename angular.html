@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Angular Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="96 Angular interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/angular" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Angular Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="96 Angular interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/angular" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Angular Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Angular and how is it different from AngularJS?","acceptedAnswer":{"@type":"Answer","text":"Angular (v2+) is a TypeScript-based, component-driven SPA framework by Google. It ships a full platform: components, dependency injection, routing, forms, HTTP, and RxJS. AngularJS (v1.x) was JavaScript-based and used controllers, scopes, and two-way digest-cycle binding. Angular is a complete rewrite: component architecture, a hierarchical injector, AOT compilation, and far better performance."}},{"@type":"Question","name":"Lifecycle hooks — order and what each is for.","acceptedAnswer":{"@type":"Answer","text":"Order: constructor → ngOnChanges → ngOnInit → ngDoCheck → ngAfterContentInit → ngAfterContentChecked → ngAfterViewInit → ngAfterViewChecked → ngOnDestroy . ngOnChanges — runs when an @Input changes (receives SimpleChanges ). ngOnInit — one-time init; fetch data here, not in the constructor. ngAfterViewInit — view and @ViewChild refs are ready. ngOnDestroy — cleanup: unsubscribe, clear timers."}},{"@type":"Question","name":"What are the types of data binding?","acceptedAnswer":{"@type":"Answer","text":"Interpolation — {{ value }} (component → view). Property binding — [src]=\"url\" (component → view). Event binding — (click)=\"fn()\" (view → component). Two-way binding — [(ngModel)]=\"name\" (both directions; the \"banana in a box\")."}},{"@type":"Question","name":"What is the Change Detection (CD) Tree in Angular?","acceptedAnswer":{"@type":"Answer","text":"The Change Detection (CD) Tree is Angular's internal tree of component views. Every component becomes a node in this tree. During change detection, Angular starts at the root component and traverses the tree, checking each component for data changes and updating the DOM when necessary. Components using the OnPush strategy can skip change detection unless they are explicitly marked for checking or one of their inputs changes, making the CD tree traversal more efficient."}},{"@type":"Question","name":"What are the types of directives?","acceptedAnswer":{"@type":"Answer","text":"Component — a directive with a template (the most common). Structural — change DOM layout: *ngIf , *ngFor , *ngSwitch (v17+: @if , @for ). Attribute — change appearance/behaviour: ngClass , ngStyle , or your own."}},{"@type":"Question","name":"How do components communicate with each other?","acceptedAnswer":{"@type":"Answer","text":"Parent → child : @Input() . Child → parent : @Output() with an EventEmitter . Unrelated components : a shared service with a BehaviorSubject (or a signal / NgRx store). Parent accessing child : @ViewChild ."}},{"@type":"Question","name":"Explain Dependency Injection (DI) and providedIn: 'root' in Angular.","acceptedAnswer":{"@type":"Answer","text":"Dependency Injection (DI) is a design pattern where Angular automatically creates and provides the objects (dependencies) a class needs instead of the class creating them itself. Angular uses a hierarchical injector to manage these dependencies. @Injectable({ providedIn: 'root' }) registers a service in the application's root injector, making it a singleton shared across the entire application. It is also tree-shakable, so unused services are removed from production builds."}},{"@type":"Question","name":"Template-driven vs Reactive forms — which and why?","acceptedAnswer":{"@type":"Answer","text":"Template-driven — logic lives in the template via ngModel ; quick, good for simple forms. Reactive — the form model is defined in the TS class ( FormGroup , FormControl , FormBuilder ); explicit, testable, and better for complex or dynamic validation."}},{"@type":"Question","name":"Explain routing: lazy loading, guards, and resolvers.","acceptedAnswer":{"@type":"Answer","text":"Lazy loading — load a feature only when visited via loadChildren / loadComponent . Smaller initial bundle, faster first paint. Guards — CanActivate (auth), CanDeactivate (unsaved-changes prompt), CanMatch . Resolver — pre-fetch data before the route activates so the component opens with data ready."}},{"@type":"Question","name":"What are HTTP interceptors used for?","acceptedAnswer":{"@type":"Answer","text":"HTTP Interceptors are middleware that intercept every outgoing HTTP request and incoming HTTP response in an Angular application. They allow you to add, modify, or handle requests and responses globally without changing individual service methods. Common uses include attaching JWT tokens, adding custom headers, logging, displaying global loaders, handling errors, retrying failed requests, and refreshing expired access tokens."}},{"@type":"Question","name":"Explain content projection (ng-content) and ViewChild/ContentChild.","acceptedAnswer":{"@type":"Answer","text":"ng-content projects markup that a parent passes into a child (like slots) — key for reusable UI such as cards and modals. @ViewChild references an element/component in this template; @ContentChild references projected content. They're ready in ngAfterViewInit and ngAfterContentInit respectively."}},{"@type":"Question","name":"How does change detection work? Default vs OnPush.","acceptedAnswer":{"@type":"Answer","text":"zone.js patches async APIs and tells Angular to re-check the component tree after events. The Default strategy checks every component each cycle. OnPush only re-checks a component when: an @Input reference changes, an event fires inside it, or an async pipe emits. Combined with immutable data it drastically cuts re-renders. (Signals push toward zone-less change detection.)"}},{"@type":"Question","name":"List concrete performance optimisations in Angular.","acceptedAnswer":{"@type":"Answer","text":"ChangeDetectionStrategy.OnPush + immutable data. trackBy in *ngFor (or track in @for ) to reuse DOM nodes. Lazy load feature routes; add a preloading strategy for the rest. Pure pipes instead of method calls in templates. Virtual scrolling ( cdk-virtual-scroll ) for long lists. async pipe to avoid manual-subscription leaks."}},{"@type":"Question","name":"Pure vs impure pipes — and what is a pipe?","acceptedAnswer":{"@type":"Answer","text":"A pipe transforms a value in the template ( {{ date | date:'short' }} ). Pure (default) — recomputes only when the input reference changes; cheap. Impure — runs every change-detection cycle (e.g. async , or a filter over a mutating array); powerful but costly, use sparingly."}},{"@type":"Question","name":"What are Signals? How do they differ from RxJS?","acceptedAnswer":{"@type":"Answer","text":"Signals (v16+) are a fine-grained reactivity primitive: a wrapper around a value that notifies consumers when it changes, enabling precise, zone-less change detection. vs RxJS: signals are synchronous, always hold a current value, and are ideal for local component state . RxJS is for streams / async events over time . They interoperate via toSignal / toObservable ."}},{"@type":"Question","name":"What are Standalone Components and the new Angular Control Flow?","acceptedAnswer":{"@type":"Answer","text":"Standalone Components are Angular components that don't require an NgModule . Instead, they declare their own dependencies using the imports property, making applications simpler, easier to maintain, and better suited for lazy loading. Angular's new built-in control flow ( @if , @for , @switch , @let , and @defer ) replaces structural directives like *ngIf and *ngFor with a faster, more readable syntax."}},{"@type":"Question","name":"What is View Encapsulation?","acceptedAnswer":{"@type":"Answer","text":"Controls how a component's styles are scoped: Emulated (default) — Angular adds attribute selectors so styles don't leak; no real Shadow DOM. ShadowDom — uses native Shadow DOM for true isolation. None — styles are global."}},{"@type":"Question","name":"AOT vs JIT compilation.","acceptedAnswer":{"@type":"Answer","text":"AOT (Ahead-of-Time) compiles templates at build time — smaller bundles, faster rendering, template errors caught early, safer. It's the default for production. JIT (Just-in-Time) compiles in the browser at runtime — historically used in development."}},{"@type":"Question","name":"What does the static flag on @ViewChild do?","acceptedAnswer":{"@type":"Answer","text":"@ViewChild(ref, { static: true }) resolves the query before change detection, so it's available in ngOnInit — use only for elements that are always present. static: false (default) resolves after the view initialises, available in ngAfterViewInit — required if the element is inside an *ngIf / *ngFor ."}},{"@type":"Question","name":"What are @HostListener and @HostBinding?","acceptedAnswer":{"@type":"Answer","text":"@HostListener listens to events on the host element and executes a method when the event occurs. @HostBinding binds a property, attribute, class, or style of the host element to a class property. They are commonly used in custom directives to interact with the host element without directly manipulating the DOM."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Angular interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Angular Interview Questions and Answers</h1>
+      <p>96 hand-picked Angular interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Angular and how is it different from AngularJS?</h2>
+          <div class="seo-a"><p><strong>Angular</strong> (v2+) is a TypeScript-based, component-driven SPA framework by Google. It ships a full platform: components, dependency injection, routing, forms, HTTP, and RxJS.</p><p><strong>AngularJS</strong> (v1.x) was JavaScript-based and used controllers, scopes, and two-way digest-cycle binding. Angular is a complete rewrite: component architecture, a hierarchical injector, AOT compilation, and far better performance.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Lifecycle hooks — order and what each is for.</h2>
+          <div class="seo-a"><p>Order: <code class="inline">constructor</code> → <code class="inline">ngOnChanges</code> → <code class="inline">ngOnInit</code> → <code class="inline">ngDoCheck</code> → <code class="inline">ngAfterContentInit</code> → <code class="inline">ngAfterContentChecked</code> → <code class="inline">ngAfterViewInit</code> → <code class="inline">ngAfterViewChecked</code> → <code class="inline">ngOnDestroy</code>.</p><ul><li><strong>ngOnChanges</strong> — runs when an <code class="inline">@Input</code> changes (receives <code class="inline">SimpleChanges</code>).</li><li><strong>ngOnInit</strong> — one-time init; fetch data here, not in the constructor.</li><li><strong>ngAfterViewInit</strong> — view and <code class="inline">@ViewChild</code> refs are ready.</li><li><strong>ngOnDestroy</strong> — cleanup: unsubscribe, clear timers.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the types of data binding?</h2>
+          <div class="seo-a"><ul><li><strong>Interpolation</strong> — <code class="inline">{{ value }}</code> (component → view).</li><li><strong>Property binding</strong> — <code class="inline">[src]="url"</code> (component → view).</li><li><strong>Event binding</strong> — <code class="inline">(click)="fn()"</code> (view → component).</li><li><strong>Two-way binding</strong> — <code class="inline">[(ngModel)]="name"</code> (both directions; the "banana in a box").</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the Change Detection (CD) Tree in Angular?</h2>
+          <div class="seo-a"><p>The <strong>Change Detection (CD) Tree</strong> is Angular's internal tree of component views. Every component becomes a node in this tree. During change detection, Angular starts at the root component and traverses the tree, checking each component for data changes and updating the DOM when necessary.</p><p>Components using the <code class="inline">OnPush</code> strategy can skip change detection unless they are explicitly marked for checking or one of their inputs changes, making the CD tree traversal more efficient.</p></div>
+          <pre><code>AppComponent
+├── HeaderComponent
+├── DashboardComponent
+│   ├── UserCardComponent
+│   └── ChartComponent
+└── FooterComponent</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the types of directives?</h2>
+          <div class="seo-a"><ul><li><strong>Component</strong> — a directive with a template (the most common).</li><li><strong>Structural</strong> — change DOM layout: <code class="inline">*ngIf</code>, <code class="inline">*ngFor</code>, <code class="inline">*ngSwitch</code> (v17+: <code class="inline">@if</code>, <code class="inline">@for</code>).</li><li><strong>Attribute</strong> — change appearance/behaviour: <code class="inline">ngClass</code>, <code class="inline">ngStyle</code>, or your own.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do components communicate with each other?</h2>
+          <div class="seo-a"><ul><li><strong>Parent → child</strong>: <code class="inline">@Input()</code>.</li><li><strong>Child → parent</strong>: <code class="inline">@Output()</code> with an <code class="inline">EventEmitter</code>.</li><li><strong>Unrelated components</strong>: a shared service with a <code class="inline">BehaviorSubject</code> (or a signal / NgRx store).</li><li><strong>Parent accessing child</strong>: <code class="inline">@ViewChild</code>.</li></ul></div>
+          <pre><code>@Output() saved = new EventEmitter&lt;Item&gt;();
+onSave() { this.saved.emit(this.item); }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain Dependency Injection (DI) and providedIn: 'root' in Angular.</h2>
+          <div class="seo-a"><p><strong>Dependency Injection (DI)</strong> is a design pattern where Angular automatically creates and provides the objects (dependencies) a class needs instead of the class creating them itself. Angular uses a hierarchical injector to manage these dependencies.</p><p><code class="inline">@Injectable({ providedIn: 'root' })</code> registers a service in the application's root injector, making it a singleton shared across the entire application. It is also tree-shakable, so unused services are removed from production builds.</p></div>
+          <pre><code>@Injectable({
+  providedIn: 'root'
+})
+export class UserService {
+  users = ['John', 'Alice'];
+}
+
+@Component({...})
+export class HomeComponent {
+  constructor(private userService: UserService) {}
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Template-driven vs Reactive forms — which and why?</h2>
+          <div class="seo-a"><p><strong>Template-driven</strong> — logic lives in the template via <code class="inline">ngModel</code>; quick, good for simple forms.</p><p><strong>Reactive</strong> — the form model is defined in the TS class (<code class="inline">FormGroup</code>, <code class="inline">FormControl</code>, <code class="inline">FormBuilder</code>); explicit, testable, and better for complex or dynamic validation.</p></div>
+          <pre><code>form = this.fb.group({
+  email: ['', [Validators.required, Validators.email]],
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain routing: lazy loading, guards, and resolvers.</h2>
+          <div class="seo-a"><ul><li><strong>Lazy loading</strong> — load a feature only when visited via <code class="inline">loadChildren</code> / <code class="inline">loadComponent</code>. Smaller initial bundle, faster first paint.</li><li><strong>Guards</strong> — <code class="inline">CanActivate</code> (auth), <code class="inline">CanDeactivate</code> (unsaved-changes prompt), <code class="inline">CanMatch</code>.</li><li><strong>Resolver</strong> — pre-fetch data before the route activates so the component opens with data ready.</li></ul></div>
+          <pre><code>{ path: 'admin', loadComponent: () =&gt;
+  import('./admin.component').then(m =&gt; m.AdminComponent) }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are HTTP interceptors used for?</h2>
+          <div class="seo-a"><p><strong>HTTP Interceptors</strong> are middleware that intercept every outgoing HTTP request and incoming HTTP response in an Angular application. They allow you to add, modify, or handle requests and responses globally without changing individual service methods. Common uses include attaching JWT tokens, adding custom headers, logging, displaying global loaders, handling errors, retrying failed requests, and refreshing expired access tokens.</p></div>
+          <pre><code>@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+
+  intercept(req: HttpRequest&lt;any&gt;, next: HttpHandler): Observable&lt;HttpEvent&lt;any&gt;&gt; {
+    const token = localStorage.getItem('token');
+
+    const clonedReq = req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    return next.handle(clonedReq);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain content projection (ng-content) and ViewChild/ContentChild.</h2>
+          <div class="seo-a"><p><strong>ng-content</strong> projects markup that a parent passes into a child (like slots) — key for reusable UI such as cards and modals.</p><p><strong>@ViewChild</strong> references an element/component in <em>this</em> template; <strong>@ContentChild</strong> references projected content. They're ready in <code class="inline">ngAfterViewInit</code> and <code class="inline">ngAfterContentInit</code> respectively.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does change detection work? Default vs OnPush.</h2>
+          <div class="seo-a"><p><code class="inline">zone.js</code> patches async APIs and tells Angular to re-check the component tree after events. The <strong>Default</strong> strategy checks every component each cycle.</p><p><strong>OnPush</strong> only re-checks a component when: an <code class="inline">@Input</code> reference changes, an event fires inside it, or an <code class="inline">async</code> pipe emits. Combined with <strong>immutable data</strong> it drastically cuts re-renders. (Signals push toward zone-less change detection.)</p></div>
+          <pre><code>@Component({ changeDetection: ChangeDetectionStrategy.OnPush })</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>List concrete performance optimisations in Angular.</h2>
+          <div class="seo-a"><ul><li><code class="inline">ChangeDetectionStrategy.OnPush</code> + immutable data.</li><li><code class="inline">trackBy</code> in <code class="inline">*ngFor</code> (or <code class="inline">track</code> in <code class="inline">@for</code>) to reuse DOM nodes.</li><li><strong>Lazy load</strong> feature routes; add a preloading strategy for the rest.</li><li><strong>Pure pipes</strong> instead of method calls in templates.</li><li><strong>Virtual scrolling</strong> (<code class="inline">cdk-virtual-scroll</code>) for long lists.</li><li><strong>async pipe</strong> to avoid manual-subscription leaks.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Pure vs impure pipes — and what is a pipe?</h2>
+          <div class="seo-a"><p>A <strong>pipe</strong> transforms a value in the template (<code class="inline">{{ date | date:'short' }}</code>).</p><p><strong>Pure</strong> (default) — recomputes only when the input reference changes; cheap. <strong>Impure</strong> — runs every change-detection cycle (e.g. <code class="inline">async</code>, or a filter over a mutating array); powerful but costly, use sparingly.</p></div>
+          <pre><code>@Pipe({ name: 'myFilter', pure: false })</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Signals? How do they differ from RxJS?</h2>
+          <div class="seo-a"><p><strong>Signals</strong> (v16+) are a fine-grained reactivity primitive: a wrapper around a value that notifies consumers when it changes, enabling precise, zone-less change detection.</p><p><strong>vs RxJS:</strong> signals are synchronous, always hold a current value, and are ideal for <em>local component state</em>. RxJS is for <em>streams / async events over time</em>. They interoperate via <code class="inline">toSignal</code> / <code class="inline">toObservable</code>.</p></div>
+          <pre><code>count = signal(0);
+double = computed(() =&gt; this.count() * 2);
+effect(() =&gt; console.log(this.count()));
+this.count.set(1); // or .update(v =&gt; v + 1)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Standalone Components and the new Angular Control Flow?</h2>
+          <div class="seo-a"><p><strong>Standalone Components</strong> are Angular components that don't require an <code class="inline">NgModule</code>. Instead, they declare their own dependencies using the <code class="inline">imports</code> property, making applications simpler, easier to maintain, and better suited for lazy loading.</p><p>Angular's new built-in control flow (<code class="inline">@if</code>, <code class="inline">@for</code>, <code class="inline">@switch</code>, <code class="inline">@let</code>, and <code class="inline">@defer</code>) replaces structural directives like <code class="inline">*ngIf</code> and <code class="inline">*ngFor</code> with a faster, more readable syntax.</p></div>
+          <pre><code>@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
+    @if (users.length) {
+      &lt;ul&gt;
+        @for (user of users; track user.id) {
+          &lt;li&gt;{{ user.name }}&lt;/li&gt;
+        }
+      &lt;/ul&gt;
+    } @else {
+      &lt;p&gt;No users found.&lt;/p&gt;
+    }
+  `
+})
+export class HomeComponent {}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is View Encapsulation?</h2>
+          <div class="seo-a"><p>Controls how a component's styles are scoped:</p><ul><li><strong>Emulated</strong> (default) — Angular adds attribute selectors so styles don't leak; no real Shadow DOM.</li><li><strong>ShadowDom</strong> — uses native Shadow DOM for true isolation.</li><li><strong>None</strong> — styles are global.</li></ul></div>
+          <pre><code>@Component({ encapsulation: ViewEncapsulation.Emulated })</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>AOT vs JIT compilation.</h2>
+          <div class="seo-a"><p><strong>AOT</strong> (Ahead-of-Time) compiles templates at <em>build</em> time — smaller bundles, faster rendering, template errors caught early, safer. It's the default for production.</p><p><strong>JIT</strong> (Just-in-Time) compiles in the browser at runtime — historically used in development.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does the static flag on @ViewChild do?</h2>
+          <div class="seo-a"><p><code class="inline">@ViewChild(ref, { static: true })</code> resolves the query <strong>before</strong> change detection, so it's available in <code class="inline">ngOnInit</code> — use only for elements that are always present.</p><p><code class="inline">static: false</code> (default) resolves after the view initialises, available in <code class="inline">ngAfterViewInit</code> — required if the element is inside an <code class="inline">*ngIf</code>/<code class="inline">*ngFor</code>.</p></div>
+          <pre><code>@ViewChild('chart', { static: false }) chart!: ElementRef;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are @HostListener and @HostBinding?</h2>
+          <div class="seo-a"><p><strong>@HostListener</strong> listens to events on the host element and executes a method when the event occurs. <strong>@HostBinding</strong> binds a property, attribute, class, or style of the host element to a class property. They are commonly used in custom directives to interact with the host element without directly manipulating the DOM.</p></div>
+          <pre><code>@HostBinding('class.open') isOpen = false;
+
+@HostListener('click')
+toggle() {
+  this.isOpen = !this.isOpen;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Difference between ng-template, ng-container, and ng-content?</h2>
+          <div class="seo-a"><ul><li><strong>ng-template</strong> defines a template that is not rendered until Angular explicitly creates it.</li><li><strong>ng-container</strong> groups elements without creating an extra DOM element, making it useful with structural directives.</li><li><strong>ng-content</strong> projects content provided by a parent component into a child component.</li></ul></div>
+          <pre><code>&lt;ng-container *ngIf=&quot;isLoggedIn&quot;&gt;
+  &lt;h2&gt;Welcome&lt;/h2&gt;
+&lt;/ng-container&gt;
+
+&lt;ng-template #loading&gt;
+  Loading...
+&lt;/ng-template&gt;
+
+&lt;!-- Child Component --&gt;
+&lt;ng-content&gt;&lt;/ng-content&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why is the async pipe preferred over manual subscription?</h2>
+          <div class="seo-a"><p>The <code class="inline">async</code> pipe subscribes to an Observable/Promise, renders the latest value, and <strong>automatically unsubscribes</strong> when the component is destroyed — eliminating a whole class of memory leaks.</p><p>It also plays well with <code class="inline">OnPush</code>: an emission marks the component for check.</p></div>
+          <pre><code>&lt;div *ngIf=&quot;user$ | async as user&quot;&gt;{{ user.name }}&lt;/div&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why use Renderer2 instead of direct DOM access?</h2>
+          <div class="seo-a"><p><code class="inline">Renderer2</code> abstracts DOM manipulation so your code works in environments without a real DOM (server-side rendering, web workers) and keeps Angular's security model intact.</p><p>Avoid <code class="inline">document</code> / <code class="inline">nativeElement.innerHTML</code> directly — they break SSR and open XSS risks.</p></div>
+          <pre><code>constructor(private r: Renderer2, private el: ElementRef) {}
+ngOnInit() { this.r.addClass(this.el.nativeElement, 'active'); }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is an NgModule and what are its main metadata fields?</h2>
+          <div class="seo-a"><p>An <code class="inline">@NgModule</code> groups related code into a cohesive block. Key fields:</p><ul><li><strong>declarations</strong> — components, directives, pipes owned by this module.</li><li><strong>imports</strong> — other modules whose exports this module needs.</li><li><strong>exports</strong> — what this module makes available to importers.</li><li><strong>providers</strong> — services (module-level DI).</li><li><strong>bootstrap</strong> — the root component (AppModule only).</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does ChangeDetectorRef do (markForCheck, detectChanges, detach)?</h2>
+          <div class="seo-a"><p><code class="inline">ChangeDetectorRef</code> gives you manual control over change detection, mainly with OnPush:</p><ul><li><strong>markForCheck()</strong> — marks this component and ancestors to be checked in the next cycle (async data updated outside Angular).</li><li><strong>detectChanges()</strong> — runs change detection on this component subtree immediately.</li><li><strong>detach() / reattach()</strong> — remove/add the component from the CD tree for extreme perf tuning.</li></ul></div>
+          <pre><code>constructor(private cdr: ChangeDetectorRef) {}
+update() { this.data = next; this.cdr.markForCheck(); }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is an InjectionToken and why use one?</h2>
+          <div class="seo-a"><p><code class="inline">InjectionToken</code> is a unique dependency injection token used for values that don't have a runtime class, such as interfaces, configuration objects, strings, numbers or feature flags. Since interfaces are removed during TypeScript compilation, Angular cannot use them as DI tokens. <code class="inline">InjectionToken</code> provides a type-safe way to inject these values.</p></div>
+          <pre><code>export const API_URL = new InjectionToken&lt;string&gt;('API_URL');
+
+providers: [
+  {
+    provide: API_URL,
+    useValue: 'https://api.example.com'
+  }
+];
+
+constructor(@Inject(API_URL) private apiUrl: string) {}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain useClass, useValue, useExisting, useFactory.</h2>
+          <div class="seo-a"><p>Angular providers tell the Dependency Injection (DI) system <strong>what object or value to provide</strong> when a dependency is requested.</p><ul><li><strong>useClass</strong> – Create an instance of the specified class. Useful for replacing one service implementation with another.</li><li><strong>useValue</strong> – Provide a fixed value such as a configuration object, string, or number.</li><li><strong>useExisting</strong> – Make one token use an existing service instance instead of creating a new one.</li><li><strong>useFactory</strong> – Call a factory function to create the value. Useful when the value depends on runtime conditions or other services.</li></ul><p>Use <code class="inline">multi: true</code> when multiple providers should be registered under the same token, such as HTTP interceptors.</p></div>
+          <pre><code>// useClass
+{ provide: Logger, useClass: ConsoleLogger }
+
+// useValue
+{ provide: API_URL, useValue: 'https://api.example.com' }
+
+// useExisting
+{ provide: OldLogger, useExisting: Logger }
+
+// useFactory
+{
+  provide: API_URL,
+  useFactory: () =&gt; environment.apiUrl
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you create a custom pipe?</h2>
+          <div class="seo-a"><p>Create a class that implements <code class="inline">PipeTransform</code> and decorate it with <code class="inline">@Pipe</code>. Implement the <code class="inline">transform()</code> method to receive the input value and optional arguments, then return the transformed result. Custom pipes should be pure and free of side effects.</p></div>
+          <pre><code>@Pipe({
+  name: 'truncate',
+  standalone: true
+})
+export class TruncatePipe implements PipeTransform {
+  transform(value: string, max = 20): string {
+    return value.length &gt; max ? value.slice(0, max) + '...' : value;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you build a custom attribute directive?</h2>
+          <div class="seo-a"><p>Create a class decorated with <code class="inline">@Directive</code> and provide a selector. Attribute directives modify the appearance or behavior of an existing element. Use <code class="inline">@HostListener</code> to respond to host events, <code class="inline">@HostBinding</code> to update the host element, and <code class="inline">@Input</code> to accept values from the parent component.</p></div>
+          <pre><code>@Directive({
+  selector: '[appHighlight]',
+  standalone: true
+})
+export class HighlightDirective {
+
+  @HostBinding('style.backgroundColor')
+  background = '';
+
+  @HostListener('mouseenter')
+  onMouseEnter() {
+    this.background = 'yellow';
+  }
+
+  @HostListener('mouseleave')
+  onMouseLeave() {
+    this.background = '';
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do custom structural directives work (TemplateRef + ViewContainerRef)?</h2>
+          <div class="seo-a"><p>A structural directive changes the DOM by adding or removing elements. Angular passes the directive a <code class="inline">TemplateRef</code>, which represents the HTML template, and a <code class="inline">ViewContainerRef</code>, which represents the place where that template should be rendered. The directive can then decide whether to create or remove the view. This is how <code class="inline">*ngIf</code> works internally.</p></div>
+          <pre><code>@Directive({
+  selector: '[appIf]',
+  standalone: true
+})
+export class IfDirective {
+  constructor(
+    private template: TemplateRef&lt;any&gt;,
+    private viewContainer: ViewContainerRef
+  ) {}
+
+  @Input() set appIf(show: boolean) {
+    this.viewContainer.clear();
+
+    if (show) {
+      this.viewContainer.createEmbeddedView(this.template);
+    }
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Input setter vs ngOnChanges — when to react to input changes?</h2>
+          <div class="seo-a"><p>Both are used to react when an <code class="inline">@Input</code> value changes. An <strong>Input setter</strong> is ideal for handling or transforming a single input. <strong>ngOnChanges</strong> receives a <code class="inline">SimpleChanges</code> object containing all changed inputs, making it the better choice when logic depends on multiple inputs.</p></div>
+          <pre><code>private _id = 0;
+
+@Input()
+set id(value: number) {
+  this._id = value;
+  this.reload(value);
+}
+
+get id() {
+  return this._id;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you make a custom two-way bindable property?</h2>
+          <div class="seo-a"><p>A custom two-way binding is created using an <code class="inline">@Input()</code> property and an <code class="inline">@Output()</code> event named <code class="inline">&lt;property&gt;Change</code>. Angular's <code class="inline">[(property)]</code> syntax is simply a shortcut for combining property binding and event binding. In Angular 17.2+, the <code class="inline">model()</code> API provides a simpler way to create two-way bindable properties.</p></div>
+          <pre><code>// child.component.ts
+@Input() value = 0;
+@Output() valueChange = new EventEmitter&lt;number&gt;();
+
+update(newValue: number) {
+  this.value = newValue;
+  this.valueChange.emit(newValue);
+}
+
+// parent.component.html
+&lt;app-counter [(value)]=&quot;count&quot;&gt;&lt;/app-counter&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a FormArray and when do you use it?</h2>
+          <div class="seo-a"><p><code class="inline">FormArray</code> is a collection of form controls or form groups stored as an indexed array. It is used when the number of form fields is dynamic and can change at runtime, such as multiple phone numbers, addresses, or order items. You can add or remove controls using methods like <code class="inline">push()</code> and <code class="inline">removeAt()</code>.</p></div>
+          <pre><code>phones = this.fb.array([
+  this.fb.control('')
+]);
+
+addPhone() {
+  this.phones.push(this.fb.control(''));
+}
+
+removePhone(index: number) {
+  this.phones.removeAt(index);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you write sync and async custom validators?</h2>
+          <div class="seo-a"><p>A <strong>synchronous (sync) validator</strong> immediately checks a form control and returns either <code class="inline">ValidationErrors</code> or <code class="inline">null</code>. An <strong>asynchronous (async) validator</strong> performs validation that takes time, such as calling a server, and returns an <code class="inline">Observable</code> or <code class="inline">Promise</code> that eventually emits <code class="inline">ValidationErrors</code> or <code class="inline">null</code>. Sync validators are used for local validation, while async validators are commonly used to check values like whether a username or email already exists.</p></div>
+          <pre><code>// Sync validator
+function noSpaces(control: AbstractControl): ValidationErrors | null {
+  return /\s/.test(control.value)
+    ? { spaces: true }
+    : null;
+}
+
+const username = new FormControl('', {
+  validators: [Validators.required, noSpaces]
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you read route params — snapshot vs observable?</h2>
+          <div class="seo-a"><p>Inject <code class="inline">ActivatedRoute</code> to access route parameters. Use <code class="inline">snapshot.paramMap</code> when the parameter is read only once during component initialization. Use the <code class="inline">paramMap</code> observable when the same component can remain active while route parameters change, allowing the component to react automatically.</p></div>
+          <pre><code>// One-time read
+const id = this.route.snapshot.paramMap.get('id');
+
+// React to parameter changes
+this.route.paramMap.subscribe(params =&gt; {
+  const id = params.get('id');
+  this.load(id);
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does a modern functional route guard look like?</h2>
+          <div class="seo-a"><p>Modern Angular applications use <code class="inline">CanActivateFn</code> to create functional route guards. Instead of a class, a guard is simply a function that uses <code class="inline">inject()</code> to access services. A guard can return <code class="inline">true</code>, <code class="inline">false</code>, a <code class="inline">UrlTree</code>, an <code class="inline">Observable</code>, or a <code class="inline">Promise</code>.</p></div>
+          <pre><code>export const authGuard: CanActivateFn = () =&gt; {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+
+  return auth.isLoggedIn()
+    ? true
+    : router.createUrlTree(['/login']);
+};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle HttpClient errors and retries?</h2>
+          <div class="seo-a"><p>Pipe the request through <code class="inline">retry(n)</code> for transient failures and <code class="inline">catchError</code> to map/handle the error (log, show a message, return a fallback). Centralise cross-cutting handling in an HTTP interceptor.</p></div>
+          <pre><code>this.http.get&lt;User&gt;(url).pipe(
+  retry(2),
+  catchError(err =&gt; { this.notify(err); return of(null); })
+)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are route preloading strategies?</h2>
+          <div class="seo-a"><p>Lazy routes load on demand. A <strong>preloading strategy</strong> fetches some lazy bundles in the background after the app boots, so navigation feels instant. Built-in <code class="inline">PreloadAllModules</code>, or a custom strategy that preloads only routes flagged in their <code class="inline">data</code>.</p></div>
+          <pre><code>provideRouter(routes, withPreloading(PreloadAllModules))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>ViewChild vs ViewChildren (and QueryList).</h2>
+          <div class="seo-a"><p><code class="inline">@ViewChild</code> retrieves the first matching element, directive, or component from the view. <code class="inline">@ViewChildren</code> returns a <code class="inline">QueryList</code> containing all matching elements. <code class="inline">QueryList</code> automatically updates when the view changes, and you can subscribe to its <code class="inline">changes</code> observable to react to items being added or removed.</p></div>
+          <pre><code>@ViewChildren(ItemComponent)
+items!: QueryList&lt;ItemComponent&gt;;
+
+ngAfterViewInit() {
+  this.items.changes.subscribe(() =&gt; {
+    console.log(this.items.length);
+  });
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you load a component dynamically?</h2>
+          <div class="seo-a"><p>Normally, components are declared in the template. Dynamic component loading allows Angular to create a component at runtime instead. This is useful when the component to display is not known until the application is running, such as dialogs, dashboards, or plugin systems. In modern Angular, use <code class="inline">ViewContainerRef.createComponent()</code> to create the component. The older <code class="inline">ComponentFactoryResolver</code> approach is deprecated.</p></div>
+          <pre><code>@ViewChild('container', { read: ViewContainerRef })
+container!: ViewContainerRef;
+
+const ref = this.container.createComponent(MyWidgetComponent);
+ref.setInput('title', 'Hello');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Angular's animation system work?</h2>
+          <div class="seo-a"><p>Angular animations are created using <code class="inline">@angular/animations</code>. You define animation <code class="inline">trigger</code>s with <code class="inline">state</code>s and <code class="inline">transition</code>s, then bind them in the template using <code class="inline">[@triggerName]</code>. Special transitions like <code class="inline">:enter</code> and <code class="inline">:leave</code> are commonly used for elements being added or removed from the DOM.</p></div>
+          <pre><code>trigger('fade', [
+  transition(':enter', [
+    style({ opacity: 0 }),
+    animate('200ms ease-in', style({ opacity: 1 }))
+  ])
+])</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is SSR (Server-Side Rendering) and Hydration in Angular?</h2>
+          <div class="seo-a"><p><strong>Server-Side Rendering (SSR)</strong> renders an Angular application into HTML on the server before sending it to the browser. This improves SEO, reduces the time to display content, and provides a faster initial page load. <strong>Hydration</strong> is the process where the browser reuses the HTML generated by the server and attaches Angular's event listeners instead of rebuilding the entire page. This avoids unnecessary DOM recreation and prevents UI flickering.</p></div>
+          <pre><code>// Enable client hydration
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideClientHydration()
+  ]
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are deferrable views (@defer)?</h2>
+          <div class="seo-a"><p><code class="inline">@defer</code> (introduced in Angular 17) delays loading and rendering part of a template until it is needed. Instead of downloading everything during the initial page load, Angular loads deferred content later based on triggers such as <code class="inline">on viewport</code>, <code class="inline">on idle</code>, <code class="inline">on interaction</code>, or <code class="inline">on hover</code>. This reduces the initial bundle size and improves application performance.</p></div>
+          <pre><code>@defer (on viewport) {
+  &lt;heavy-chart /&gt;
+} @placeholder {
+  &lt;div&gt;Loading chart...&lt;/div&gt;
+} @loading {
+  &lt;div&gt;Please wait...&lt;/div&gt;
+} @error {
+  &lt;div&gt;Failed to load chart.&lt;/div&gt;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are signal inputs (input()) in Angular?</h2>
+          <div class="seo-a"><p><code class="inline">input()</code> is the signal-based replacement for <code class="inline">@Input()</code>. It creates a read-only signal that automatically updates when the parent passes a new value. Because it is a signal, it works naturally with <code class="inline">computed()</code> and <code class="inline">effect()</code>, reducing the need for <code class="inline">ngOnChanges</code>.</p></div>
+          <pre><code>name = input.required&lt;string&gt;();
+
+fullName = computed(() =&gt;
+  `Hello ${this.name()}`
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are signal queries in Angular?</h2>
+          <div class="seo-a"><p>Signal queries are the signal-based versions of <code class="inline">@ViewChild</code>, <code class="inline">@ViewChildren</code>, <code class="inline">@ContentChild</code>, and <code class="inline">@ContentChildren</code>. Instead of decorators, they return signals whose values automatically update when the queried element or component changes.</p></div>
+          <pre><code>button = viewChild&lt;ElementRef&gt;('btn');
+
+effect(() =&gt; {
+  console.log(this.button());
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Angular protect against XSS?</h2>
+          <div class="seo-a"><p><strong>Cross-Site Scripting (XSS)</strong> is an attack where malicious JavaScript is injected into a web page. Angular helps prevent XSS by treating all bound values as untrusted and automatically sanitizing them based on the binding context (HTML, URL, Style, etc.). Interpolation ({{ }}) automatically escapes HTML, and bindings such as <code class="inline">[innerHTML]</code> are sanitized before being rendered. Only use <code class="inline">DomSanitizer.bypassSecurityTrust...</code> when you completely trust the content.</p></div>
+          <pre><code>// Angular sanitizes the HTML before rendering
+&lt;div [innerHTML]=&quot;userHtml&quot;&gt;&lt;/div&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Smart (container) vs dumb (presentational) components.</h2>
+          <div class="seo-a"><p><strong>Smart/container</strong> components fetch data, hold state, and talk to services/the store. <strong>Dumb/presentational</strong> components just take <code class="inline">@Input</code>s and emit <code class="inline">@Output</code>s — no dependencies, easy to test and reuse. This separation keeps UI reusable and logic centralised.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is ControlValueAccessor and when do you implement it?</h2>
+          <div class="seo-a"><p><code class="inline">ControlValueAccessor (CVA)</code> is an Angular interface that allows a custom component to behave like a built-in form control such as an input or select. After implementing it, the component works with <code class="inline">[(ngModel)]</code>, <code class="inline">formControl</code>, <code class="inline">formControlName</code>, validation, and form APIs.</p><p>It requires four methods: <strong>writeValue()</strong> updates the view from the model, <strong>registerOnChange()</strong> notifies Angular when the value changes, <strong>registerOnTouched()</strong> marks the control as touched, and <strong>setDisabledState()</strong> updates the disabled state.</p></div>
+          <pre><code>@Component({
+  selector: 'app-rating',
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: RatingComponent,
+    multi: true
+  }]
+})
+export class RatingComponent implements ControlValueAccessor {
+  value = 0;
+
+  onChange = (_: number) =&gt; {};
+  onTouched = () =&gt; {};
+
+  writeValue(value: number): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    // update disabled state
+  }
+
+  setRating(value: number) {
+    this.value = value;
+    this.onChange(value);
+    this.onTouched();
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you validate across multiple fields (e.g. password match)?</h2>
+          <div class="seo-a"><p>Cross-field validation is used when a validation rule depends on more than one form field, such as checking whether the password and confirm password match. Since a single <code class="inline">FormControl</code> can only access its own value, the validator should be added to the <code class="inline">FormGroup</code>, where it can access all sibling controls.</p></div>
+          <pre><code>function matchPasswords(group: AbstractControl): ValidationErrors | null {
+  const password = group.get('password')?.value;
+  const confirm = group.get('confirmPassword')?.value;
+
+  return password === confirm
+    ? null
+    : { passwordMismatch: true };
+}
+
+const form = this.fb.group(
+  {
+    password: [''],
+    confirmPassword: ['']
+  },
+  {
+    validators: matchPasswords
+  }
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are typed reactive forms (v14+)?</h2>
+          <div class="seo-a"><p>Since Angular 14, reactive forms are strongly typed. <code class="inline">FormControl</code>, <code class="inline">FormGroup</code>, and <code class="inline">FormArray</code> preserve the value types, providing better type safety, autocomplete, and compile-time error checking. Use <code class="inline">nonNullable: true</code> to prevent a control's value from being <code class="inline">null</code>.</p></div>
+          <pre><code>email = new FormControl('', {
+  nonNullable: true,
+  validators: [Validators.email]
+});
+
+// email.value is string</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you react to form changes reactively?</h2>
+          <div class="seo-a"><p>Every control/group exposes <code class="inline">valueChanges</code> and <code class="inline">statusChanges</code> as Observables. Pipe them (e.g. <code class="inline">debounceTime</code> + <code class="inline">switchMap</code>) for autosave, dependent fields, or live search. Set <code class="inline">updateOn: 'blur'</code> to reduce noise.</p></div>
+          <pre><code>this.form.get('country')!.valueChanges.pipe(
+  switchMap(c =&gt; this.api.getCities(c))
+).subscribe(cities =&gt; this.cities = cities);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does updateOn: 'blur' | 'submit' do?</h2>
+          <div class="seo-a"><p>The <code class="inline">updateOn</code> option controls when a form control updates its value and runs validation. By default (<code class="inline">'change'</code>), updates happen on every keystroke. With <code class="inline">'blur'</code>, updates occur when the input loses focus. With <code class="inline">'submit'</code>, updates and validation run only when the form is submitted.</p></div>
+          <pre><code>const email = new FormControl('', {
+  validators: [Validators.required, Validators.email],
+  updateOn: 'blur'
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a selector in Angular and why use it?</h2>
+          <div class="seo-a"><p>The <code class="inline">selector</code> is a property in the <code class="inline">@Component</code> decorator that defines how the component is identified in a template. It acts like a custom HTML tag, so Angular knows where to render the component.</p><p>Selectors can be an element (<code class="inline">app-user</code>), an attribute (<code class="inline">[appHighlight]</code>), or a class.</p></div>
+          <pre><code>@Component({ selector: 'app-user', templateUrl: './user.html' })
+// used as: &lt;app-user&gt;&lt;/app-user&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the entry point of an Angular application?</h2>
+          <div class="seo-a"><p><code class="inline">main.ts</code> is the entry point. It <strong>bootstraps</strong> the app — historically <code class="inline">platformBrowserDynamic().bootstrapModule(AppModule)</code>, and in modern standalone Angular <code class="inline">bootstrapApplication(AppComponent)</code>. This initialises the root and renders the app into the browser.</p></div>
+          <pre><code>// modern standalone bootstrap
+bootstrapApplication(AppComponent, { providers: [provideRouter(routes)] });</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the use of router-outlet?</h2>
+          <div class="seo-a"><p><code class="inline">&lt;router-outlet&gt;</code> is a placeholder in a template where the router renders the component that matches the current route. As the URL changes, Angular swaps the component shown at that outlet. You can also have named/nested outlets.</p></div>
+          <pre><code>&lt;nav&gt;…&lt;/nav&gt;
+&lt;router-outlet&gt;&lt;/router-outlet&gt; &lt;!-- routed component renders here --&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you call a REST API in Angular?</h2>
+          <div class="seo-a"><p>Use the <code class="inline">HttpClient</code> service (provide it with <code class="inline">provideHttpClient()</code>). Wrap the calls in a dedicated <strong>service</strong> that returns Observables, and handle the HTTP verbs (GET/POST/PUT/DELETE) with proper error handling via <code class="inline">catchError</code>. Components subscribe (ideally through the <code class="inline">async</code> pipe).</p></div>
+          <pre><code>@Injectable({ providedIn: 'root' })
+export class UserService {
+  constructor(private http: HttpClient) {}
+  getUsers() { return this.http.get&lt;User[]&gt;('/api/users'); }
+  create(u: User) { return this.http.post&lt;User&gt;('/api/users', u); }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you make an API call that depends on another call's response?</h2>
+          <div class="seo-a"><p>Chain them with <code class="inline">switchMap</code> so the second request uses the first's result (and stale first-calls are cancelled). For independent parallel calls use <code class="inline">forkJoin</code>; for ordered writes use <code class="inline">concatMap</code>.</p></div>
+          <pre><code>this.api.getUser(id).pipe(
+  switchMap(user =&gt; this.api.getOrders(user.id))
+).subscribe(orders =&gt; this.orders = orders);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between a component and a directive?</h2>
+          <div class="seo-a"><p>A <strong>component</strong> is a directive <em>with a template</em> — it controls a view. A <strong>directive</strong> has <em>no template</em>; it adds behaviour or changes the appearance/structure of existing elements (attribute directives like <code class="inline">ngClass</code>, structural directives like <code class="inline">*ngIf</code>).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why do we use services in Angular?</h2>
+          <div class="seo-a"><ul><li>Encapsulate <strong>reusable business logic</strong> and API calls.</li><li><strong>Share data/state</strong> between components (often via a BehaviorSubject).</li><li>Provide a <strong>single instance</strong> (singleton) through dependency injection.</li><li>Enforce <strong>separation of concerns</strong> — keep components focused on the view.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are Angular route guards and their types?</h2>
+          <div class="seo-a"><p>Guards control access to and navigation between routes.</p><ul><li><strong>CanActivate</strong> — allow/deny entering a route (auth).</li><li><strong>CanDeactivate</strong> — confirm leaving (e.g. unsaved-changes prompt).</li><li><strong>Resolve</strong> — pre-fetch data before the route activates.</li><li><strong>CanMatch / CanLoad</strong> — control whether a lazy route is even loaded.</li></ul></div>
+          <pre><code>export const authGuard: CanActivateFn = () =&gt;
+  inject(AuthService).isLoggedIn() || inject(Router).createUrlTree(['/login']);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you debug &quot;Cannot read properties of undefined&quot; in Angular?</h2>
+          <div class="seo-a"><p>It means you accessed a property on something that isn't ready/loaded yet (often async data rendered before it arrives). Fixes:</p><ul><li>Guard the template with <code class="inline">*ngIf="data"</code> or the <strong>safe-navigation operator</strong> <code class="inline">data?.name</code>.</li><li>Initialise the variable before use; check the async flow with the <code class="inline">async</code> pipe.</li><li>Use the browser devtools/stack trace to find the exact line and inspect the value.</li></ul></div>
+          <pre><code>&lt;div&gt;{{ user?.profile?.name }}&lt;/div&gt;
+&lt;div *ngIf=&quot;user as u&quot;&gt;{{ u.name }}&lt;/div&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the options for state management in Angular?</h2>
+          <div class="seo-a"><ul><li><strong>Service + BehaviorSubject</strong> — simple shared state for small/medium apps.</li><li><strong>Signals</strong> — modern, fine-grained local/shared state.</li><li><strong>NgRx / NgRx SignalStore</strong> — structured Redux-style store for large apps needing traceability and DevTools.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>constructor vs ngOnInit — what's the difference?</h2>
+          <div class="seo-a"><p>The <strong>constructor</strong> is a TypeScript/JS class feature that runs when the class is instantiated — Angular uses it only to <strong>inject dependencies</strong>. <strong>ngOnInit</strong> is an Angular lifecycle hook that runs <em>after</em> the first change detection, once <code class="inline">@Input</code> values are set.</p><p>Rule of thumb: <strong>inject in the constructor, initialise in ngOnInit</strong> (data fetching, setup that needs inputs).</p></div>
+          <pre><code>constructor(private api: ApiService) {}   // DI only
+ngOnInit() { this.user = this.api.getUser(this.id); } // id is ready here</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is trackBy in *ngFor and why use it?</h2>
+          <div class="seo-a"><p>By default <code class="inline">*ngFor</code> tracks list items by object identity, so if the array reference changes (e.g. after an HTTP refresh) Angular destroys and recreates <em>every</em> DOM node. A <strong>trackBy</strong> function tells Angular how to identify an item (usually by <code class="inline">id</code>), so it only re-renders the rows that actually changed.</p></div>
+          <pre><code>&lt;li *ngFor=&quot;let u of users; trackBy: trackById&quot;&gt;{{ u.name }}&lt;/li&gt;
+
+trackById(index: number, u: User) { return u.id; }
+// v17 control flow: @for (u of users; track u.id) { ... }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>forRoot() vs forChild() — what's the difference?</h2>
+          <div class="seo-a"><p><code class="inline">forRoot()</code> is called once in the root module to register singleton services and application-wide configuration. <code class="inline">forChild()</code> is used in feature modules to register routes or components without creating another instance of those services.</p><p>A common example is <code class="inline">RouterModule.forRoot()</code> in the root module and <code class="inline">RouterModule.forChild()</code> in feature modules.</p></div>
+          <pre><code>// app.module.ts
+RouterModule.forRoot(appRoutes)
+
+// feature.module.ts
+RouterModule.forChild(featureRoutes)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What causes ExpressionChangedAfterItHasBeenCheckedError?</h2>
+          <div class="seo-a"><p>In dev mode Angular runs change detection twice and compares. If a bound value <strong>changed between the two passes</strong> — usually because you mutated it in a lifecycle hook like <code class="inline">ngAfterViewInit</code> that runs after the view was already checked — it throws this error to warn of an inconsistent view.</p></div>
+          <pre><code>// Fixes:
+// 1) move the update earlier (ngOnInit)
+// 2) defer it: setTimeout(() =&gt; this.value = x) or a microtask
+// 3) cdRef.detectChanges() after the change</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Observable vs Promise — what's the difference?</h2>
+          <div class="seo-a"><ul><li><strong>Promise</strong> — a single future value; eager (runs immediately); not cancellable; no operators.</li><li><strong>Observable</strong> — a stream of 0..∞ values over time; lazy (runs only on <code class="inline">subscribe</code>); cancellable via <code class="inline">unsubscribe</code>; rich operators (<code class="inline">map</code>, <code class="inline">switchMap</code>, <code class="inline">debounceTime</code>).</li></ul><p>Angular's <code class="inline">HttpClient</code> returns Observables, which is why they dominate Angular apps.</p></div>
+          <pre><code>// promise: fires now, one value
+fetch('/api').then(r =&gt; r.json());
+// observable: fires on subscribe, cancellable
+this.http.get('/api').subscribe(data =&gt; ...);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you handle rapid user actions (e.g. live search or AI analysis requests) to avoid multiple API calls and outdated results?</h2>
+          <div class="seo-a"><p>Use <code class="inline">debounceTime()</code> to wait until the user stops typing or clicking for a short duration, reducing unnecessary API calls. Then use <code class="inline">switchMap()</code> to automatically cancel any previous pending request whenever a new request is triggered. This ensures that only the latest response is processed and displayed.</p></div>
+          <pre><code>this.search$.pipe(
+  debounceTime(300),
+  distinctUntilChanged(),
+  switchMap(query =&gt; this.api.search(query))
+).subscribe(result =&gt; {
+  this.results = result;
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Your page displays 10,000 records and scrolling becomes very slow. How would you optimize it?</h2>
+          <div class="seo-a"><p>First, use <code class="inline">trackBy</code> so Angular reuses existing DOM elements instead of recreating them. For very large datasets, use <strong>CDK Virtual Scroll</strong> so only the visible items are rendered. Combine this with <code class="inline">ChangeDetectionStrategy.OnPush</code> to reduce unnecessary change detection.</p></div>
+          <pre><code>&lt;cdk-virtual-scroll-viewport itemSize=&quot;50&quot; class=&quot;viewport&quot;&gt;
+  &lt;div *cdkVirtualFor=&quot;let user of users; trackBy: trackById&quot;&gt;
+    {{ user.name }}
+  &lt;/div&gt;
+&lt;/cdk-virtual-scroll-viewport&gt;
+
+trackById(index: number, user: User) {
+  return user.id;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you prevent memory leaks caused by RxJS subscriptions?</h2>
+          <div class="seo-a"><p>Always unsubscribe from long-lived Observables when the component is destroyed. In modern Angular, the recommended approach is using <code class="inline">takeUntilDestroyed()</code>. In older versions, use <code class="inline">takeUntil()</code> with a Subject or rely on the <code class="inline">async</code> pipe whenever possible.</p></div>
+          <pre><code>this.userService.users$
+  .pipe(takeUntilDestroyed())
+  .subscribe(users =&gt; this.users = users);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you prevent users from submitting the same form multiple times by clicking the Save button repeatedly?</h2>
+          <div class="seo-a"><p>Disable the Save button while the request is in progress or use <code class="inline">exhaustMap()</code>. It ignores subsequent button clicks until the current request completes, preventing duplicate submissions.</p></div>
+          <pre><code>fromEvent(saveBtn, 'click')
+  .pipe(
+    exhaustMap(() =&gt; this.api.save(data))
+  )
+  .subscribe();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you share data between unrelated Angular components?</h2>
+          <div class="seo-a"><p>For unrelated components, avoid directly referencing each other. Use a shared service with an RxJS <code class="inline">BehaviorSubject</code> or use NgRx if the state is shared across multiple features. Parent-child communication should still use <code class="inline">@Input()</code> and <code class="inline">@Output()</code>.</p></div>
+          <pre><code>@Injectable({ providedIn: 'root' })
+export class UserService {
+  private userSubject = new BehaviorSubject&lt;User | null&gt;(null);
+  user$ = this.userSubject.asObservable();
+
+  setUser(user: User) {
+    this.userSubject.next(user);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Your Angular application has become slow because the initial bundle size is very large. How would you improve the loading performance?</h2>
+          <div class="seo-a"><p>I would split the application into feature modules and lazy load them using the Angular Router. This ensures only the modules required for the current route are downloaded initially, reducing the bundle size and improving the application's startup time.</p></div>
+          <pre><code>const routes: Routes = [
+  {
+    path: 'admin',
+    loadChildren: () =&gt; import('./admin/admin.module')
+      .then(m =&gt; m.AdminModule)
+  }
+];</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Multiple components call the same API, causing duplicate network requests. How would you optimize it?</h2>
+          <div class="seo-a"><p>I would cache the API response inside a shared service using <code class="inline">shareReplay(1)</code>. The first component triggers the HTTP request, while subsequent subscribers receive the cached response without making additional network calls.</p></div>
+          <pre><code>users$ = this.http.get&lt;User[]&gt;('/api/users').pipe(
+  shareReplay(1)
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you prevent unauthenticated users from accessing protected pages?</h2>
+          <div class="seo-a"><p>I would use an Angular Route Guard such as <code class="inline">CanActivate</code>. Before navigation, the guard checks whether the user is authenticated. If not, it redirects the user to the login page.</p></div>
+          <pre><code>export const authGuard: CanActivateFn = () =&gt; {
+  const auth = inject(AuthService);
+  const router = inject(Router);
+
+  return auth.isLoggedIn()
+    ? true
+    : router.createUrlTree(['/login']);
+};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>A component is re-rendering frequently and performance is poor. How would you optimize Angular Change Detection?</h2>
+          <div class="seo-a"><p>I would use <code class="inline">ChangeDetectionStrategy.OnPush</code>. With OnPush, Angular checks the component only when an <code class="inline">@Input()</code> reference changes, an event occurs, or an Observable emits. This significantly reduces unnecessary change detection cycles.</p></div>
+          <pre><code>@Component({
+  selector: 'app-users',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class UsersComponent {}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you implement an auto-save feature for a form without sending an API request on every keystroke?</h2>
+          <div class="seo-a"><p>I would subscribe to <code class="inline">form.valueChanges</code>, apply <code class="inline">debounceTime()</code> to wait until the user stops typing, use <code class="inline">distinctUntilChanged()</code> to avoid duplicate requests, and finally use <code class="inline">switchMap()</code> to cancel any pending save request when new changes occur.</p></div>
+          <pre><code>this.form.valueChanges.pipe(
+  debounceTime(1000),
+  distinctUntilChanged(),
+  switchMap(value =&gt; this.api.saveDraft(value))
+).subscribe();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you handle HTTP errors consistently across the entire Angular application?</h2>
+          <div class="seo-a"><p>I would create an <strong>HTTP Interceptor</strong>. It centralizes error handling, logging, authentication failures, and token refresh logic instead of duplicating the same code inside every component or service.</p></div>
+          <pre><code>intercept(req: HttpRequest&lt;any&gt;, next: HttpHandler) {
+  return next.handle(req).pipe(
+    catchError(error =&gt; {
+      console.error(error);
+      return throwError(() =&gt; error);
+    })
+  );
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you handle an expired JWT token without forcing the user to log in again?</h2>
+          <div class="seo-a"><p>I would detect a <code class="inline">401 Unauthorized</code> response inside an HTTP Interceptor, call the Refresh Token API, store the new access token, retry the original request, and only redirect to login if the refresh request also fails.</p></div>
+          <pre><code>401 Error
+↓
+Refresh Token API
+↓
+New Access Token
+↓
+Retry Original Request</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you display upload progress while uploading a large file?</h2>
+          <div class="seo-a"><p>Angular's <code class="inline">HttpClient</code> supports upload progress events. By enabling <code class="inline">reportProgress</code> and <code class="inline">observe: 'events'</code>, I can calculate the upload percentage and display a progress bar to the user.</p></div>
+          <pre><code>this.http.post(url, file, {
+  reportProgress: true,
+  observe: 'events'
+}).subscribe(event =&gt; {
+  if (event.type === HttpEventType.UploadProgress) {
+    const progress = Math.round(100 * event.loaded / event.total!);
+  }
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are microfrontends and how do they differ from a normal frontend?</h2>
+          <div class="seo-a"><p>A <strong>microfrontend</strong> architecture splits one web app into independently built, tested and <strong>deployed</strong> pieces, each owned end-to-end by a different team, and composed together in the browser at runtime.</p><p>A <strong>normal (monolithic) frontend</strong> is one codebase, one build, one deploy — every team's change ships in the same bundle, on the same release train.</p><p>The real difference isn't technical, it's <strong>organisational</strong>: microfrontends trade runtime and tooling complexity for <em>independent deployability</em>. In Angular this is usually done with <strong>Module Federation</strong> (Webpack 5 / Native Federation), where a <em>shell</em> loads <em>remotes</em> at runtime.</p></div>
+          <pre><code>// shell — webpack.config.js
+new ModuleFederationPlugin({
+  remotes: {
+    orders: 'orders@https://orders.app.com/remoteEntry.js'
+  },
+  shared: {
+    '@angular/core':   { singleton: true, strictVersion: true },
+    '@angular/router': { singleton: true, strictVersion: true }
+  }
+});
+
+// shell route — the remote is fetched only when visited
+{
+  path: 'orders',
+  loadChildren: () =&gt; import('orders/Module').then(m =&gt; m.OrdersModule)
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you build a scalable enterprise Angular application?</h2>
+          <div class="seo-a"><p>First, <strong>define the axis</strong> — this is the trap. On a frontend, "scalable" almost never means server traffic; it means the <strong>codebase and the team</strong> can keep growing without the app rotting.</p><ul><li><strong>Code scale</strong> — feature-based structure with enforced boundaries, so 200k lines stay navigable.</li><li><strong>Team scale</strong> — clear ownership; teams don't collide in the same files.</li><li><strong>Runtime scale</strong> — lazy loading, OnPush, virtual scrolling, performance budgets so it stays fast as features pile on.</li><li><strong>Data scale</strong> — pagination and virtualisation; never render 10k rows.</li></ul></div>
+          <pre><code>// Nx — enforce boundaries so 'scalable' is checked by the linter, not a wiki page
+&quot;@nx/enforce-module-boundaries&quot;: [&quot;error&quot;, {
+  &quot;depConstraints&quot;: [
+    { &quot;sourceTag&quot;: &quot;scope:orders&quot;, &quot;onlyDependOnLibsWithTags&quot;: [&quot;scope:orders&quot;, &quot;scope:shared&quot;] },
+    { &quot;sourceTag&quot;: &quot;type:feature&quot;, &quot;onlyDependOnLibsWithTags&quot;: [&quot;type:ui&quot;, &quot;type:data-access&quot;] }
+  ]
+}]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Walk me through the architecture of your Angular application.</h2>
+          <div class="seo-a"><p>Answer in <strong>layers</strong>, and give a reason for each choice — the interviewer is testing whether you <em>designed</em> it or inherited it.</p><ul><li><strong>Structure</strong> — <code class="inline">core/</code> (singletons: auth, interceptors, error handling), <code class="inline">shared/</code> (dumb reusable UI), <code class="inline">features/</code> (one lazy-loaded folder per domain).</li><li><strong>Components</strong> — smart/container components fetch data; dumb/presentational ones take <code class="inline">@Input</code> and emit <code class="inline">@Output</code>, so they're trivially testable.</li><li><strong>Services + DI</strong> — HTTP and business logic live in services, never components.</li><li><strong>State</strong> — local first; a store only where state is genuinely shared.</li><li><strong>Cross-cutting</strong> — interceptors for auth/errors, guards for routes.</li></ul></div>
+          <pre><code>src/app/
+  core/            # provided once: interceptors, guards, auth
+  shared/          # dumb UI, pipes, directives — no feature imports
+  features/
+    orders/
+      data-access/   # OrdersService, models
+      feature-list/  # smart component (routed)
+      ui/            # dumb components
+  app.routes.ts    # lazy: loadChildren / loadComponent</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What's new in Angular 14, 15 and 16? What did migrating between them involve?</h2>
+          <div class="seo-a"><ul><li><strong>Angular 14</strong> — <strong>standalone components</strong> (developer preview), <strong>typed reactive forms</strong>, the <code class="inline">inject()</code> function usable in functions, protected route guards as plain functions, extended template diagnostics.</li><li><strong>Angular 15</strong> — standalone APIs <strong>stable</strong> (loadComponent routing, functional guards/interceptors become the norm), directive composition API, NgOptimizedImage stable, MDC-based Material.</li><li><strong>Angular 16</strong> — <strong>Signals</strong> (developer preview), <code class="inline">takeUntilDestroyed</code> + <code class="inline">DestroyRef</code>, <strong>required inputs</strong> (<code class="inline">@Input({required: true})</code>), route params as component inputs, esbuild dev server preview, non-destructive hydration for SSR.</li></ul><p>Migration is <code class="inline">ng update @angular/core@15 @angular/cli@15</code> per major — schematics rewrite most breaking changes; the practical work is usually TypeScript/Node version bumps, Material MDC style breakages (v15), and dependency alignment.</p></div>
+          <pre><code># one major at a time, run the schematics
+ng update @angular/core@15 @angular/cli@15
+ng update @angular/material@15   # the usual pain point (MDC)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>*ngIf vs [hidden] — what's the difference?</h2>
+          <div class="seo-a"><p><code class="inline">*ngIf</code> <strong>adds/removes the element from the DOM</strong>: when false, the component is destroyed (ngOnDestroy runs, subscriptions in it die, no change detection cost). <code class="inline">[hidden]</code> just toggles <code class="inline">display: none</code> — the element stays in the DOM, stays instantiated, and <strong>keeps being change-detected</strong>.</p><ul><li>Expensive component, rarely shown → <code class="inline">*ngIf</code>.</li><li>Cheap element toggled constantly (avoid re-init cost / preserve internal state like scroll or form input) → <code class="inline">[hidden]</code>.</li></ul></div>
+          <pre><code>&lt;heavy-chart *ngIf=&quot;showChart&quot;&gt;&lt;/heavy-chart&gt;      &lt;!-- destroyed when false --&gt;
+&lt;div [hidden]=&quot;collapsed&quot;&gt;cheap, keeps DOM state&lt;/div&gt; &lt;!-- display:none only --&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>setValue vs patchValue?</h2>
+          <div class="seo-a"><p>Both write values into a FormGroup/FormControl:</p><ul><li><code class="inline">setValue(obj)</code> — <strong>strict, full shape required</strong>: the object must contain a value for <em>every</em> control; missing or extra keys throw. Use when the payload should exactly match the form.</li><li><code class="inline">patchValue(obj)</code> — <strong>lenient, partial update</strong>: sets what's provided, silently ignores the rest (including typos in key names!).</li></ul><p>Both fire <code class="inline">valueChanges</code>; pass <code class="inline">{ emitEvent: false }</code> to update silently (crucial when writing from inside a valueChanges handler to avoid loops).</p></div>
+          <pre><code>this.form.setValue({ name: u.name, email: u.email });   // must be complete
+this.form.patchValue({ email: u.email });               // partial is fine
+this.form.patchValue({ email: x }, { emitEvent: false }); // no valueChanges loop</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>dirty vs touched vs pristine? valid/invalid/pending? How do you enable/disable controls reactively?</h2>
+          <div class="seo-a"><p>Two independent state axes on every AbstractControl:</p><ul><li><strong>Value axis</strong>: <code class="inline">pristine</code> (never changed) ↔ <code class="inline">dirty</code> (value changed by the user).</li><li><strong>Visit axis</strong>: <code class="inline">untouched</code> ↔ <code class="inline">touched</code> (control was blurred).</li></ul><p><strong>Validity</strong>: <code class="inline">valid</code> / <code class="inline">invalid</code> / <code class="inline">pending</code> (async validator running) / <code class="inline">disabled</code> (excluded from validation <em>and</em> from <code class="inline">form.value</code>!).</p><p>Enable/disable via API — <code class="inline">ctrl.disable()</code> / <code class="inline">ctrl.enable()</code>, typically inside a <code class="inline">valueChanges</code> subscription; never <code class="inline">[disabled]</code> in the template with reactive forms (Angular warns).</p></div>
+          <pre><code>this.form.get('country')!.valueChanges.subscribe(c =&gt; {
+  const state = this.form.get('state')!;
+  c === 'IN' ? state.enable() : state.disable();   // reactive, not [disabled]
+});
+
+// template:
+// &lt;div *ngIf=&quot;email.invalid &amp;&amp; (email.dirty || email.touched)&quot;&gt;...</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>routerLink vs router.navigate() vs navigateByUrl()?</h2>
+          <div class="seo-a"><ul><li><strong>routerLink</strong> — declarative, in templates: renders a real <code class="inline">&lt;a href&gt;</code> (middle-click/SEO friendly); pairs with <code class="inline">routerLinkActive</code>.</li><li><strong>router.navigate(['users', id])</strong> — programmatic, takes a <strong>commands array</strong>; supports relative navigation via <code class="inline">{ relativeTo: this.route }</code>, plus queryParams, fragment, state.</li><li><strong>router.navigateByUrl('/users/42')</strong> — programmatic, takes an <strong>absolute URL string</strong>, always from root; query params go inside the string.</li></ul><p>Rule of thumb: template link → routerLink; navigate after logic (form saved, login done) → navigate(); redirect to a fully-formed URL (e.g. stored returnUrl) → navigateByUrl.</p></div>
+          <pre><code>// after login: go back where the guard bounced from
+const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/';
+this.router.navigateByUrl(returnUrl);
+
+// relative: /orders/42 -&gt; /orders/42/items
+this.router.navigate(['items'], { relativeTo: this.route });</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Child routes, named (auxiliary) outlets, and the wildcard route — how do they work?</h2>
+          <div class="seo-a"><p><strong>Child routes</strong> — nested <code class="inline">children: []</code> render into the <em>parent component's own</em> <code class="inline">&lt;router-outlet&gt;</code>: layout stays, only the inner area swaps (tabs, master-detail).</p><p><strong>Named outlets</strong> — <code class="inline">&lt;router-outlet name="panel"&gt;</code> + <code class="inline">outlet: 'panel'</code> on the route lets independent content (chat sidebar, preview pane) have its own URL segment: <code class="inline">/inbox(panel:compose)</code>.</p><p><strong>Wildcard</strong> — <code class="inline">path: '**'</code> catches everything unmatched (404 page). <strong>Route order matters</strong>: first match wins, so <code class="inline">**</code> must be last and specific paths go before parameterized ones.</p></div>
+          <pre><code>const routes: Routes = [
+  { path: 'orders', component: OrdersShell, children: [
+      { path: '', component: OrderList },
+      { path: ':id', component: OrderDetail },   // renders inside OrdersShell's outlet
+  ]},
+  { path: 'compose', component: ComposeCmp, outlet: 'panel' },
+  { path: '**', component: NotFoundCmp },        // ALWAYS last
+];</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>PathLocationStrategy vs HashLocationStrategy?</h2>
+          <div class="seo-a"><ul><li><strong>PathLocationStrategy</strong> (default) — clean URLs (<code class="inline">/users/42</code>) via the HTML5 History API. Requires the <strong>server to serve index.html for every route</strong> (a rewrite/fallback rule) — otherwise a refresh or deep link on <code class="inline">/users/42</code> is a 404.</li><li><strong>HashLocationStrategy</strong> — routes after a hash (<code class="inline">/#/users/42</code>). The browser never sends the fragment to the server, so <strong>no server config needed</strong> — but URLs are uglier, and SEO/SSR are out.</li></ul></div>
+          <pre><code># nginx fallback for PathLocationStrategy
+location / {
+  try_files $uri $uri/ /index.html;
+}
+
+// hash only when you can't touch the server (file://, legacy hosting):
+provideRouter(routes, withHashLocation())</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you pass data between routes? And what is RouteReuseStrategy?</h2>
+          <div class="seo-a"><p>Options by durability:</p><ul><li><strong>Route/query params</strong> — survives refresh and sharing; the default for identity (<code class="inline">/orders/42?tab=items</code>). Pass ids, not objects.</li><li><strong>Navigation state</strong> — <code class="inline">router.navigate([...], { state: { draft } })</code>, read via <code class="inline">history.state</code>. Invisible in the URL but <strong>lost on refresh</strong> — good for optional context only.</li><li><strong>Shared service / store</strong> — for real data; the target route should still be able to fetch by id if state is empty.</li><li><strong>Route data / resolvers</strong> — static config or prefetched data attached to the route.</li></ul><p><strong>RouteReuseStrategy</strong> (awareness): by default Angular destroys a component on leave and recreates on return; a custom strategy can <strong>detach and store</strong> the component (e.g. keep a filtered list's state and scroll when going list → detail → back).</p></div>
+          <pre><code>// list -&gt; detail keeping context out of the URL
+this.router.navigate(['/orders', id], { state: { from: 'search' } });
+// detail:
+const from = this.router.getCurrentNavigation()?.extras.state?.['from']
+          ?? history.state.from;   // after refresh: undefined -&gt; fall back gracefully</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What's the order of multiple interceptors? And the HttpParams/HttpHeaders immutability common Mistakes?</h2>
+          <div class="seo-a"><p>Interceptors run <strong>in registration order for requests, reverse order for responses</strong> — an onion: first registered = outermost layer. Register auth before logging and the log sees the token; order is the array order in <code class="inline">withInterceptors([auth, logging])</code> (or multi-provider order for class-based ones).</p><p><strong>Immutability gotcha</strong>: <code class="inline">HttpRequest</code>, <code class="inline">HttpHeaders</code>, <code class="inline">HttpParams</code> are all immutable — <code class="inline">headers.set(...)</code> and <code class="inline">params.append(...)</code> <strong>return a new object</strong>. Calling them without using the return value silently does nothing.</p></div>
+          <pre><code>// WRONG — result thrown away:
+// req.headers.set('Authorization', token);
+
+// RIGHT — clone with the new immutable pieces:
+const authed = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
+return next(authed);
+
+let params = new HttpParams().set('page', '1');
+params = params.set('size', '20');   // reassign!</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is NgZone.runOutsideAngular() and when do you use it? (And web workers?)</h2>
+          <div class="seo-a"><p>Zone.js triggers change detection after <em>every</em> patched async event. <code class="inline">runOutsideAngular(fn)</code> runs code where those events <strong>don't trigger CD</strong> — for high-frequency work that doesn't change bound state on every tick: <code class="inline">mousemove</code>/<code class="inline">scroll</code> listeners, <code class="inline">requestAnimationFrame</code> loops, polling timers, third-party libs (charts, maps).</p><p>When a result <em>does</em> need to reach the UI, re-enter with <code class="inline">zone.run(() =&gt; ...)</code>.</p><p><strong>Web workers</strong> (awareness): for CPU-heavy computation (parsing, crunching) move the work off the main thread entirely — <code class="inline">ng generate web-worker</code> scaffolds one; communication is postMessage.</p></div>
+          <pre><code>constructor(private zone: NgZone) {}
+
+ngOnInit() {
+  this.zone.runOutsideAngular(() =&gt; {
+    fromEvent(window, 'mousemove').pipe(throttleTime(50)).subscribe(e =&gt; {
+      this.updateCanvas(e);                       // no CD per event
+      if (this.crossedThreshold(e))
+        this.zone.run(() =&gt; this.showHint = true); // CD only when UI must change
+    });
+  });
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a PWA? How does the Angular service worker cache assets vs API calls?</h2>
+          <div class="seo-a"><p>A Progressive Web App is a web app that's <strong>installable, offline-capable and fast</strong>, built on three pillars: HTTPS, a <strong>web app manifest</strong> (name, icons — enables install), and a <strong>service worker</strong> (a background script that intercepts network requests and serves from cache).</p><p><code class="inline">ng add @angular/pwa</code> wires Angular's service worker, configured via <code class="inline">ngsw-config.json</code>:</p><ul><li><strong>assetGroups</strong> — app shell files (js/css/index.html): <code class="inline">prefetch</code> (download all at install) or <code class="inline">lazy</code>; versioned by content hash, updated as a whole so the app is always a consistent build.</li><li><strong>dataGroups</strong> — API responses: strategy <code class="inline">freshness</code> (network-first with timeout fallback to cache) or <code class="inline">performance</code> (cache-first until maxAge), with maxSize/maxAge per group.</li></ul></div>
+          <pre><code>// ngsw-config.json
+&quot;dataGroups&quot;: [{
+  &quot;name&quot;: &quot;api-catalog&quot;,
+  &quot;urls&quot;: [&quot;/api/catalog/**&quot;],
+  &quot;cacheConfig&quot;: {
+    &quot;strategy&quot;: &quot;performance&quot;,     // cache-first
+    &quot;maxSize&quot;: 100, &quot;maxAge&quot;: &quot;1d&quot;
+  }
+}]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Which Angular CLI commands do you use daily? What does ng build --configuration production actually do?</h2>
+          <div class="seo-a"><p>Daily: <code class="inline">ng serve</code> (dev server + HMR/watch), <code class="inline">ng generate component|service|guard</code>, <code class="inline">ng test</code>, <code class="inline">ng lint</code>, <code class="inline">ng build</code>, <code class="inline">ng update</code>, <code class="inline">ng add</code> (install + run a library's setup schematic).</p><p><code class="inline">ng build --configuration production</code>: <strong>AOT compilation</strong>, <strong>tree-shaking + minification</strong>, style/script <strong>optimization</strong>, output hashing for cache-busting, source maps off, budgets enforced (build fails if bundles exceed angular.json limits), <code class="inline">fileReplacements</code> swapping in environment.prod.ts.</p><p><strong>Schematics</strong> (awareness) are the code generators behind ng generate/add/update — libraries ship them so <code class="inline">ng add @angular/material</code> can edit your project, and ng update runs migration schematics.</p></div>
+          <pre><code>ng build --configuration production
+ng build --stats-json &amp;&amp; npx source-map-explorer dist/**/*.js  # what's IN the bundle
+ng update @angular/core@16 @angular/cli@16                     # migration schematics</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the DI resolution modifiers @Self, @Optional, @SkipSelf, @Host?</h2>
+          <div class="seo-a"><p>They tune <em>where</em> the injector search looks and what happens on a miss (default: walk up from the component's own injector to root, throw if not found):</p><ul><li><strong>@Optional()</strong> — inject <code class="inline">null</code> instead of throwing. For "use it if present" dependencies.</li><li><strong>@Self()</strong> — only this component/directive's own injector; don't walk up.</li><li><strong>@SkipSelf()</strong> — start from the <em>parent</em> injector; skip your own. Classic for a directive finding a parent instance of itself (nested menus), or a service checking it isn't provided twice.</li><li><strong>@Host()</strong> — stop the search at the host component (a directive may look at its component but not beyond).</li></ul></div>
+          <pre><code>// directive grabs its OWN ngModel, not an ancestor's:
+constructor(@Self() private ngControl: NgControl) {}
+
+// guard against double forRoot():
+constructor(@Optional() @SkipSelf() parent?: CoreModule) {
+  if (parent) throw new Error('CoreModule imported twice');
+}</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="angular";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Microfrontends Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="18 Microfrontends interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/microfrontends" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Microfrontends Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="18 Microfrontends interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/microfrontends" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Microfrontends Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are microfrontends and why do teams adopt them?","acceptedAnswer":{"@type":"Answer","text":"Microfrontends extend the microservices idea to the browser: a large web UI is split into smaller, independently owned front-end applications that compose into one product experience. Each MFE is typically owned by a squad, has its own repo (or workspace package), build pipeline, and release cadence. A shell / host loads and orchestrates them at runtime or build time. Teams adopt MFEs to scale delivery — multiple Angular squads can ship without blocking each other on a single monolithic SPA release."}},{"@type":"Question","name":"How do microfrontends differ from a monolithic Angular SPA?","acceptedAnswer":{"@type":"Answer","text":"A monolithic SPA is one Angular workspace: one build, one deploy artifact, shared AppModule or standalone bootstrap, and lazy-loaded feature modules inside the same bundle graph. Microfrontends are separate deployable apps. Each has its own build output; the shell stitches them together at runtime (Module Federation) or via an orchestrator (single-spa). Monolith SPA Microfrontends One repo / one pipeline Multiple repos or packages, multiple pipelines Shared DI tree by default Separate Angular platforms; integration is explicit Simpler routing &amp; state Cross-MFE routing and shared libs need design One version of Angular Version alignment becomes a governance topic"}},{"@type":"Question","name":"What is the shell (host) vs a remote MFE in Angular?","acceptedAnswer":{"@type":"Answer","text":"The shell / host is the container application users land in first. It usually owns: Global layout, header, sidebar, and branding Authentication bootstrap and route guards Loading remote bundles and mounting them in the DOM Shared design system and cross-cutting concerns A remote is a standalone Angular app exposed as a federated module or registered micro-app. It focuses on a domain (e.g. \"Partner Onboarding\") and is consumed by the host — it does not own the full page chrome."}},{"@type":"Question","name":"Explain Webpack Module Federation and how it works with Angular.","acceptedAnswer":{"@type":"Answer","text":"Module Federation (Webpack 5+, supported in Angular via @angular-architects/module-federation or Nx) lets a host dynamically import JavaScript from a remote at runtime. The remote publishes a remoteEntry.js manifest. The host declares remotes in webpack.config / federation.config.js and loads exposed modules (routes, components, NgModules) on demand. Shared dependencies (e.g. @angular/core ) can be configured as singletons so only one copy runs in the browser."}},{"@type":"Question","name":"What is single-spa and when would you use it over Module Federation?","acceptedAnswer":{"@type":"Answer","text":"single-spa is a framework-agnostic orchestrator. It registers multiple micro-apps (Angular, React, Vue) and mounts/unmounts them based on URL activity functions — not tied to Webpack. Each Angular app is wrapped with single-spa-angular , exposing bootstrap/mount/unmount lifecycles. A root config decides which app is active for a route. Use single-spa when you need multi-framework composition or a central runtime router across heterogeneous apps. Prefer Module Federation when all squads are Angular and you want native lazy route integration with less wrapper code."}},{"@type":"Question","name":"How do you manage shared dependencies and Angular version alignment across MFEs?","acceptedAnswer":{"@type":"Answer","text":"Shared libraries ( @angular/* , RxJS, your design system) must be singletons at runtime — duplicate Angular cores break DI, change detection, and routing. Strategies: Aligned versions — pin the same Angular minor across host and remotes (recommended for 0–4 YOE teams). Module Federation shared config — singleton , strictVersion , requiredVersion . Internal npm feed — publish @company/ui-kit and @company/auth as versioned packages. Monorepo (Nx) — one lockfile, affected builds, consistent deps with federated deploy targets."}},{"@type":"Question","name":"How does routing work across microfrontends in an Angular shell?","acceptedAnswer":{"@type":"Answer","text":"The host owns the top-level router . Each route segment delegates to a remote's child routes via dynamic loadChildren / loadRemoteModule . Pattern: host defines /catalog/** → loads Catalog remote routes; /orders/** → Order remote. Remotes export a Routes array with paths relative to their mount point. Deep links and browser back/forward must work — URL is the contract between teams. Avoid remotes registering conflicting root paths."}},{"@type":"Question","name":"How can microfrontends communicate without tight coupling?","acceptedAnswer":{"@type":"Answer","text":"Prefer loose integration over shared mutable singletons when domains are independent. Custom events — window.dispatchEvent(new CustomEvent('cart:item-added', { detail })) ; other MFEs subscribe. Framework-agnostic and boundary-friendly. URL / query params — share context via router state (bookmarkable, debuggable). Shared event bus service — thin RxJS Subject in a federated shared lib (use sparingly). Backend as source of truth — MFEs sync via APIs/WebSockets, not in-memory cross-app state."}},{"@type":"Question","name":"Can NgRx be shared across Angular microfrontends? What are the pitfalls?","acceptedAnswer":{"@type":"Answer","text":"Technically yes — provide a shared Store via a federated singleton library — but it's risky for loosely coupled domains. Better patterns: Shell store for true cross-cutting state — auth user, tenant, theme, locale only. Feature stores inside each remote — catalog slice lives in catalog MFE. Event-driven sync — custom events or message bus instead of one giant global store. Pitfalls: remotes importing each other's selectors creates hidden coupling; lazy-loaded remotes may register duplicate feature keys if not namespaced."}},{"@type":"Question","name":"How does independent deployment work for microfrontends?","acceptedAnswer":{"@type":"Answer","text":"Each MFE has its own CI/CD pipeline producing its own artifacts (e.g. remoteEntry.js + chunks) deployed to a unique URL or CDN path. The host references remotes by URL from environment config or a runtime manifest service — so a catalog squad can deploy v2.3 without rebuilding the shell. Guardrails: contract tests, shared lib semver, and canary URLs. Rollback is per-MFE. Coordinate breaking changes to exposed modules via API versioning ( ./CatalogRoutesV2 )."}},{"@type":"Question","name":"How do you prevent CSS conflicts between microfrontends?","acceptedAnswer":{"@type":"Answer","text":"Angular's default emulated encapsulation scopes component styles, but global stylesheets and third-party CSS can still leak across MFEs loaded into one page. Design system with prefixed utility classes — nc-btn-primary namespace. Shadow DOM ( ViewEncapsulation.ShadowDom ) for high-risk widgets. CSS Modules / BEM in shared libs. Strict rule: no global styles.css overrides in remotes except tokens. iframes — strongest isolation, worst UX/integration cost (use only when necessary)."}},{"@type":"Question","name":"How do Angular standalone components and routes fit into a microfrontend architecture?","acceptedAnswer":{"@type":"Answer","text":"Modern Angular MFEs favor standalone bootstraps — no NgModule shell in remotes. A remote typically: Bootstraps locally for dev ( bootstrapApplication ). Exports Routes or standalone components via Module Federation for the host. Production remotes often skip full self-bootstrap and expose export const CATALOG_ROUTES: Routes = [...] consumed by the host's provideRouter tree — cleaner than sharing NgModules."}},{"@type":"Question","name":"What are the main pros and cons of microfrontends?","acceptedAnswer":{"@type":"Answer","text":"Pros Independent deploys and faster squad velocity at scale Clear domain ownership and smaller codebases per team Incremental upgrades (Angular version per remote — with governance) Technology flexibility at integration boundaries Cons Higher operational complexity (orchestration, shared deps, observability) Duplicated tooling and inconsistent UX without a strong platform team Performance overhead — multiple bundles, runtime loading Cross-cutting concerns (auth, analytics, i18n) need central design Testing integration is harder than a monolith"}},{"@type":"Question","name":"When should you NOT use microfrontends?","acceptedAnswer":{"@type":"Answer","text":"Avoid MFEs when: Small team / small app — a well-structured monolith with lazy routes is simpler. Tight UI coupling — features constantly share live state and components across domains. No DevOps maturity — independent deploys without CI contracts cause production breakage. Performance-critical single flow — checkout-like flows needing minimal JS may suffer from federation overhead. Organisation isn't aligned to domains — MFEs won't fix Conway's law; they'll amplify coordination cost. Start monolith → modular monolith → extract MFEs when team scale and release pain justify it."}},{"@type":"Question","name":"How do you test microfrontends effectively?","acceptedAnswer":{"@type":"Answer","text":"Use a testing pyramid per MFE plus integration layers: Unit tests — components, services, NgRx inside each remote (unchanged). Integration tests — remote boots with mocked host providers / shared libs. Contract tests — verify exposed federation modules export expected routes/components and semver. E2E (Cypress/Playwright) — run against composed environment (host + real remote URLs or stubs). Visual regression — per-MFE Storybook + optional full-shell snapshots for chrome consistency. Stub remotes in host CI with module-federation dev-server proxies or mock remoteEntry.js for fast PR checks."}},{"@type":"Question","name":"How would you apply microfrontends in a large enterprise portal (e.g. Netcracker-style BSS/OSS)?","acceptedAnswer":{"@type":"Answer","text":"Enterprise telecom/BSS portals are classic MFE candidates: many domains (catalog, quoting, inventory, billing), multiple squads, long-lived Angular codebases. Recommended shape: Platform shell — SSO, tenant context, global nav, design system, audit logging. Domain remotes — Product Catalog, Order Capture, Service Activation as federated Angular apps. Shared libraries — auth SDK, API clients, UI kit published internally with semver. Governance — architecture guild defines routing prefixes, event naming ( nc:* ), Angular upgrade windows. Observability — correlate traceId across MFE loads for support tickets. Align MFE boundaries to business capabilities , not org chart politics."}},{"@type":"Question","name":"Compare runtime integration patterns: Module Federation vs iframes vs build-time composition.","acceptedAnswer":{"@type":"Answer","text":"Pattern Deploy independence Integration Best for Module Federation High Shared DOM/router; needs version discipline Angular-only squads, SPA UX iframes Very high Strong isolation; clunky routing, height, messaging Legacy embeds, third-party widgets Build-time (npm packages) Low — host rebuild Simplest DX, type-safe imports Modular monolith stepping stone Web Components Medium–high Framework-neutral custom elements Mixed stacks, embeddable widgets Most Angular enterprise portals pick runtime federation for deploy independence with a single-router UX."}},{"@type":"Question","name":"What performance considerations apply to Angular microfrontends?","acceptedAnswer":{"@type":"Answer","text":"MFEs add runtime loading cost — each remote is an extra network round-trip for remoteEntry.js and chunks. Lazy load on route — never fetch all remotes at bootstrap. CDN + HTTP caching — hash filenames; long cache for chunks, short for remoteEntry. Shared dependency deduplication — federation shared config prevents duplicate Angular. Prefetch — host prefetches likely next remote after idle (optional). Budgets per MFE — enforce max bundle size in CI. One Angular zone — multiple bootstrapped platforms hurt performance and UX."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Microfrontends interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Microfrontends Interview Questions and Answers</h1>
+      <p>18 hand-picked Microfrontends interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What are microfrontends and why do teams adopt them?</h2>
+          <div class="seo-a"><p><strong>Microfrontends</strong> extend the microservices idea to the browser: a large web UI is split into smaller, independently owned front-end applications that compose into one product experience.</p><p>Each MFE is typically owned by a squad, has its own repo (or workspace package), build pipeline, and release cadence. A <strong>shell / host</strong> loads and orchestrates them at runtime or build time.</p><p>Teams adopt MFEs to scale delivery — multiple Angular squads can ship without blocking each other on a single monolithic SPA release.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do microfrontends differ from a monolithic Angular SPA?</h2>
+          <div class="seo-a"><p>A <strong>monolithic SPA</strong> is one Angular workspace: one build, one deploy artifact, shared <code class="inline">AppModule</code> or standalone bootstrap, and lazy-loaded feature modules inside the same bundle graph.</p><p><strong>Microfrontends</strong> are separate deployable apps. Each has its own build output; the shell stitches them together at runtime (Module Federation) or via an orchestrator (single-spa).</p><table><thead><tr><th>Monolith SPA</th><th>Microfrontends</th></tr></thead><tbody><tr><td>One repo / one pipeline</td><td>Multiple repos or packages, multiple pipelines</td></tr><tr><td>Shared DI tree by default</td><td>Separate Angular platforms; integration is explicit</td></tr><tr><td>Simpler routing &amp; state</td><td>Cross-MFE routing and shared libs need design</td></tr><tr><td>One version of Angular</td><td>Version alignment becomes a governance topic</td></tr></tbody></table></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the shell (host) vs a remote MFE in Angular?</h2>
+          <div class="seo-a"><p>The <strong>shell / host</strong> is the container application users land in first. It usually owns:</p><ul><li>Global layout, header, sidebar, and branding</li><li>Authentication bootstrap and route guards</li><li>Loading remote bundles and mounting them in the DOM</li><li>Shared design system and cross-cutting concerns</li></ul><p>A <strong>remote</strong> is a standalone Angular app exposed as a federated module or registered micro-app. It focuses on a domain (e.g. "Partner Onboarding") and is consumed by the host — it does not own the full page chrome.</p></div>
+          <pre><code>// Host routes (conceptual)
+{
+  path: 'catalog',
+  loadChildren: () =&gt;
+    loadRemoteModule({
+      type: 'module',
+      remoteEntry: 'https://catalog.example.com/remoteEntry.js',
+      exposedModule: './CatalogRoutes'
+    }).then(m =&gt; m.CATALOG_ROUTES)
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain Webpack Module Federation and how it works with Angular.</h2>
+          <div class="seo-a"><p><strong>Module Federation</strong> (Webpack 5+, supported in Angular via <code class="inline">@angular-architects/module-federation</code> or Nx) lets a <strong>host</strong> dynamically import JavaScript from a <strong>remote</strong> at runtime.</p><p>The remote publishes a <code class="inline">remoteEntry.js</code> manifest. The host declares remotes in <code class="inline">webpack.config</code> / <code class="inline">federation.config.js</code> and loads exposed modules (routes, components, NgModules) on demand.</p><p>Shared dependencies (e.g. <code class="inline">@angular/core</code>) can be configured as <strong>singletons</strong> so only one copy runs in the browser.</p></div>
+          <pre><code>// federation.config.js (remote)
+module.exports = withModuleFederationPlugin({
+  name: 'catalog',
+  exposes: {
+    './CatalogRoutes': './src/app/catalog.routes.ts',
+  },
+  shared: {
+    '@angular/core': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+    '@angular/router': { singleton: true, strictVersion: true, requiredVersion: 'auto' },
+  },
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is single-spa and when would you use it over Module Federation?</h2>
+          <div class="seo-a"><p><strong>single-spa</strong> is a framework-agnostic orchestrator. It registers multiple micro-apps (Angular, React, Vue) and mounts/unmounts them based on URL activity functions — not tied to Webpack.</p><p>Each Angular app is wrapped with <code class="inline">single-spa-angular</code>, exposing bootstrap/mount/unmount lifecycles. A root config decides which app is active for a route.</p><p>Use <strong>single-spa</strong> when you need multi-framework composition or a central runtime router across heterogeneous apps. Prefer <strong>Module Federation</strong> when all squads are Angular and you want native lazy route integration with less wrapper code.</p></div>
+          <pre><code>// single-spa root config (simplified)
+registerApplication({
+  name: '@org/catalog',
+  app: () =&gt; System.import('https://cdn.example.com/catalog/main.js'),
+  activeWhen: ['/catalog'],
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you manage shared dependencies and Angular version alignment across MFEs?</h2>
+          <div class="seo-a"><p>Shared libraries (<code class="inline">@angular/*</code>, RxJS, your design system) must be <strong>singletons</strong> at runtime — duplicate Angular cores break DI, change detection, and routing.</p><p>Strategies:</p><ul><li><strong>Aligned versions</strong> — pin the same Angular minor across host and remotes (recommended for 0–4 YOE teams).</li><li><strong>Module Federation shared config</strong> — <code class="inline">singleton</code>, <code class="inline">strictVersion</code>, <code class="inline">requiredVersion</code>.</li><li><strong>Internal npm feed</strong> — publish <code class="inline">@company/ui-kit</code> and <code class="inline">@company/auth</code> as versioned packages.</li><li><strong>Monorepo (Nx)</strong> — one lockfile, affected builds, consistent deps with federated deploy targets.</li></ul></div>
+          <pre><code>shared: {
+  '@angular/core': { singleton: true, strictVersion: true, requiredVersion: '^19.0.0' },
+  '@company/design-system': { singleton: true, requiredVersion: '^2.4.0' },
+  rxjs: { singleton: true, strictVersion: false },
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does routing work across microfrontends in an Angular shell?</h2>
+          <div class="seo-a"><p>The <strong>host owns the top-level router</strong>. Each route segment delegates to a remote's child routes via dynamic <code class="inline">loadChildren</code> / <code class="inline">loadRemoteModule</code>.</p><p>Pattern: host defines <code class="inline">/catalog/**</code> → loads Catalog remote routes; <code class="inline">/orders/**</code> → Order remote. Remotes export a <code class="inline">Routes</code> array with paths relative to their mount point.</p><p>Deep links and browser back/forward must work — URL is the contract between teams. Avoid remotes registering conflicting root paths.</p></div>
+          <pre><code>// Host app.routes.ts
+export const APP_ROUTES: Routes = [
+  { path: '', component: ShellLayoutComponent, children: [
+    { path: 'catalog', loadChildren: () =&gt; loadRemoteModule({...}).then(m =&gt; m.CATALOG_ROUTES) },
+    { path: 'orders', loadChildren: () =&gt; loadRemoteModule({...}).then(m =&gt; m.ORDER_ROUTES) },
+  ]},
+];</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How can microfrontends communicate without tight coupling?</h2>
+          <div class="seo-a"><p>Prefer <strong>loose integration</strong> over shared mutable singletons when domains are independent.</p><ul><li><strong>Custom events</strong> — <code class="inline">window.dispatchEvent(new CustomEvent('cart:item-added', { detail }))</code>; other MFEs subscribe. Framework-agnostic and boundary-friendly.</li><li><strong>URL / query params</strong> — share context via router state (bookmarkable, debuggable).</li><li><strong>Shared event bus service</strong> — thin RxJS <code class="inline">Subject</code> in a federated shared lib (use sparingly).</li><li><strong>Backend as source of truth</strong> — MFEs sync via APIs/WebSockets, not in-memory cross-app state.</li></ul></div>
+          <pre><code>// Publisher (Catalog MFE)
+window.dispatchEvent(new CustomEvent('nc:product-selected', {
+  detail: { productId: 'SKU-42' },
+  bubbles: true,
+}));
+
+// Subscriber (Order MFE)
+window.addEventListener('nc:product-selected', (e: Event) =&gt; {
+  const { productId } = (e as CustomEvent).detail;
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Can NgRx be shared across Angular microfrontends? What are the pitfalls?</h2>
+          <div class="seo-a"><p>Technically yes — provide a <strong>shared Store</strong> via a federated singleton library — but it's risky for loosely coupled domains.</p><p><strong>Better patterns:</strong></p><ul><li><strong>Shell store for true cross-cutting state</strong> — auth user, tenant, theme, locale only.</li><li><strong>Feature stores inside each remote</strong> — catalog slice lives in catalog MFE.</li><li><strong>Event-driven sync</strong> — custom events or message bus instead of one giant global store.</li></ul><p>Pitfalls: remotes importing each other's selectors creates hidden coupling; lazy-loaded remotes may register duplicate feature keys if not namespaced.</p></div>
+          <pre><code>// Shared lib (federated singleton)
+export const sharedStoreProviders = [
+  provideStore({ session: sessionReducer }),
+  provideState('session', sessionReducer),
+];
+
+// Host bootstrap
+bootstrapApplication(AppComponent, {
+  providers: [...sharedStoreProviders, provideRouter(APP_ROUTES)],
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does independent deployment work for microfrontends?</h2>
+          <div class="seo-a"><p>Each MFE has its own CI/CD pipeline producing its own artifacts (e.g. <code class="inline">remoteEntry.js</code> + chunks) deployed to a unique URL or CDN path.</p><p>The host references remotes by URL from <strong>environment config</strong> or a <strong>runtime manifest</strong> service — so a catalog squad can deploy v2.3 without rebuilding the shell.</p><p>Guardrails: contract tests, shared lib semver, and canary URLs. Rollback is per-MFE. Coordinate breaking changes to exposed modules via API versioning (<code class="inline">./CatalogRoutesV2</code>).</p></div>
+          <pre><code>// environment.prod.ts (host)
+export const environment = {
+  remotes: {
+    catalog: 'https://cdn.example.com/catalog/v2.3/remoteEntry.js',
+    orders: 'https://cdn.example.com/orders/v1.8/remoteEntry.js',
+  },
+};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you prevent CSS conflicts between microfrontends?</h2>
+          <div class="seo-a"><p>Angular's default <strong>emulated encapsulation</strong> scopes component styles, but global stylesheets and third-party CSS can still leak across MFEs loaded into one page.</p><ul><li><strong>Design system with prefixed utility classes</strong> — <code class="inline">nc-btn-primary</code> namespace.</li><li><strong>Shadow DOM</strong> (<code class="inline">ViewEncapsulation.ShadowDom</code>) for high-risk widgets.</li><li><strong>CSS Modules / BEM</strong> in shared libs.</li><li><strong>Strict rule:</strong> no global <code class="inline">styles.css</code> overrides in remotes except tokens.</li><li><strong>iframes</strong> — strongest isolation, worst UX/integration cost (use only when necessary).</li></ul></div>
+          <pre><code>@Component({
+  selector: 'app-risky-widget',
+  encapsulation: ViewEncapsulation.ShadowDom,
+  template: `&lt;button class=&quot;primary&quot;&gt;Buy&lt;/button&gt;`,
+  styles: [`:host { display: block; } .primary { ... }`],
+})</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do Angular standalone components and routes fit into a microfrontend architecture?</h2>
+          <div class="seo-a"><p>Modern Angular MFEs favor <strong>standalone</strong> bootstraps — no NgModule shell in remotes. A remote typically:</p><ol><li>Bootstraps locally for dev (<code class="inline">bootstrapApplication</code>).</li><li><strong>Exports</strong> <code class="inline">Routes</code> or standalone components via Module Federation for the host.</li></ol><p>Production remotes often skip full self-bootstrap and expose <code class="inline">export const CATALOG_ROUTES: Routes = [...]</code> consumed by the host's <code class="inline">provideRouter</code> tree — cleaner than sharing NgModules.</p></div>
+          <pre><code>// catalog.routes.ts (exposed by remote)
+export const CATALOG_ROUTES: Routes = [
+  { path: '', component: CatalogShellComponent, children: [
+    { path: 'products', loadComponent: () =&gt; import('./product-list.component') },
+  ]},
+];</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the main pros and cons of microfrontends?</h2>
+          <div class="seo-a"><p><strong>Pros</strong></p><ul><li>Independent deploys and faster squad velocity at scale</li><li>Clear domain ownership and smaller codebases per team</li><li>Incremental upgrades (Angular version per remote — with governance)</li><li>Technology flexibility at integration boundaries</li></ul><p><strong>Cons</strong></p><ul><li>Higher operational complexity (orchestration, shared deps, observability)</li><li>Duplicated tooling and inconsistent UX without a strong platform team</li><li>Performance overhead — multiple bundles, runtime loading</li><li>Cross-cutting concerns (auth, analytics, i18n) need central design</li><li>Testing integration is harder than a monolith</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>When should you NOT use microfrontends?</h2>
+          <div class="seo-a"><p>Avoid MFEs when:</p><ul><li><strong>Small team / small app</strong> — a well-structured monolith with lazy routes is simpler.</li><li><strong>Tight UI coupling</strong> — features constantly share live state and components across domains.</li><li><strong>No DevOps maturity</strong> — independent deploys without CI contracts cause production breakage.</li><li><strong>Performance-critical single flow</strong> — checkout-like flows needing minimal JS may suffer from federation overhead.</li><li><strong>Organisation isn't aligned to domains</strong> — MFEs won't fix Conway's law; they'll amplify coordination cost.</li></ul><p>Start monolith → modular monolith → extract MFEs when team scale and release pain justify it.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you test microfrontends effectively?</h2>
+          <div class="seo-a"><p>Use a <strong>testing pyramid per MFE</strong> plus integration layers:</p><ul><li><strong>Unit tests</strong> — components, services, NgRx inside each remote (unchanged).</li><li><strong>Integration tests</strong> — remote boots with mocked host providers / shared libs.</li><li><strong>Contract tests</strong> — verify exposed federation modules export expected routes/components and semver.</li><li><strong>E2E (Cypress/Playwright)</strong> — run against composed environment (host + real remote URLs or stubs).</li><li><strong>Visual regression</strong> — per-MFE Storybook + optional full-shell snapshots for chrome consistency.</li></ul><p>Stub remotes in host CI with <code class="inline">module-federation dev-server</code> proxies or mock <code class="inline">remoteEntry.js</code> for fast PR checks.</p></div>
+          <pre><code>// Contract test idea (Jest)
+it('exposes catalog routes', async () =&gt; {
+  const mod = await import('catalog/CatalogRoutes');
+  expect(mod.CATALOG_ROUTES).toBeDefined();
+  expect(mod.CATALOG_ROUTES[0].path).toBe('');
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you apply microfrontends in a large enterprise portal (e.g. Netcracker-style BSS/OSS)?</h2>
+          <div class="seo-a"><p>Enterprise telecom/BSS portals are classic MFE candidates: many domains (catalog, quoting, inventory, billing), multiple squads, long-lived Angular codebases.</p><p><strong>Recommended shape:</strong></p><ul><li><strong>Platform shell</strong> — SSO, tenant context, global nav, design system, audit logging.</li><li><strong>Domain remotes</strong> — Product Catalog, Order Capture, Service Activation as federated Angular apps.</li><li><strong>Shared libraries</strong> — auth SDK, API clients, UI kit published internally with semver.</li><li><strong>Governance</strong> — architecture guild defines routing prefixes, event naming (<code class="inline">nc:*</code>), Angular upgrade windows.</li><li><strong>Observability</strong> — correlate <code class="inline">traceId</code> across MFE loads for support tickets.</li></ul><p>Align MFE boundaries to <strong>business capabilities</strong>, not org chart politics.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Compare runtime integration patterns: Module Federation vs iframes vs build-time composition.</h2>
+          <div class="seo-a"><table><thead><tr><th>Pattern</th><th>Deploy independence</th><th>Integration</th><th>Best for</th></tr></thead><tbody><tr><td><strong>Module Federation</strong></td><td>High</td><td>Shared DOM/router; needs version discipline</td><td>Angular-only squads, SPA UX</td></tr><tr><td><strong>iframes</strong></td><td>Very high</td><td>Strong isolation; clunky routing, height, messaging</td><td>Legacy embeds, third-party widgets</td></tr><tr><td><strong>Build-time (npm packages)</strong></td><td>Low — host rebuild</td><td>Simplest DX, type-safe imports</td><td>Modular monolith stepping stone</td></tr><tr><td><strong>Web Components</strong></td><td>Medium–high</td><td>Framework-neutral custom elements</td><td>Mixed stacks, embeddable widgets</td></tr></tbody></table><p>Most Angular enterprise portals pick <strong>runtime federation</strong> for deploy independence with a single-router UX.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What performance considerations apply to Angular microfrontends?</h2>
+          <div class="seo-a"><p>MFEs add <strong>runtime loading cost</strong> — each remote is an extra network round-trip for <code class="inline">remoteEntry.js</code> and chunks.</p><ul><li><strong>Lazy load on route</strong> — never fetch all remotes at bootstrap.</li><li><strong>CDN + HTTP caching</strong> — hash filenames; long cache for chunks, short for remoteEntry.</li><li><strong>Shared dependency deduplication</strong> — federation shared config prevents duplicate Angular.</li><li><strong>Prefetch</strong> — host prefetches likely next remote after idle (optional).</li><li><strong>Budgets per MFE</strong> — enforce max bundle size in CI.</li><li><strong>One Angular zone</strong> — multiple bootstrapped platforms hurt performance and UX.</li></ul></div>
+          
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="microfrontends";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -12,13 +12,14 @@
   window.IQB = window.IQB || {};
   IQB.data = IQB.data || {};
 
-  /* Where the shared-data lives. Default = same-origin folder (keeps the
-     service worker's offline caching simple). To receive content updates
-     WITHOUT redeploying the site, point this at the standalone content
-     repo through a CDN, e.g. (set it BEFORE this script runs):
-       window.IQB = { DATA_BASE: "https://cdn.jsdelivr.net/gh/USER/interview-questions-data@main/" };
-     (if you do, also teach sw.js to cache that cross-origin host — see notes). */
-  IQB.DATA_BASE = IQB.DATA_BASE || "shared-data/";
+  /* Where the content lives. index.html sets IQB.DATA_BASE to the standalone
+     content repo (GitHub raw) BEFORE this script runs, so questions update
+     WITHOUT redeploying the site. This literal is only a self-sufficiency
+     fallback for the (never-hit) case where nothing set it first; keep it in
+     sync with the base in index.html. The service worker caches whatever host
+     is fetched, so offline works either way. */
+  IQB.DATA_BASE = IQB.DATA_BASE ||
+    "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/";
 
   const url = (f) => IQB.DATA_BASE.replace(/\/?$/, "/") + f;
 

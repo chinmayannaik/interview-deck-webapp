@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>NgRx Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="34 NgRx interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/ngrx" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="NgRx Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="34 NgRx interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/ngrx" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="NgRx Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Explain the NgRx flow: store, action, reducer, selector, effect.","acceptedAnswer":{"@type":"Answer","text":"A Redux pattern with one-way data flow : Store — single immutable source of truth. Action — a plain event describing what happened. Reducer — pure function (state, action) → new state , no side effects. Selector — memoised query to read a slice of state. Effect — handles side effects (API calls); listens for an action, does async work, dispatches success/failure. Component dispatches → effect calls API → dispatches success → reducer updates store → selector pushes the new value to the component."}},{"@type":"Question","name":"When would you NOT use NgRx?","acceptedAnswer":{"@type":"Answer","text":"NgRx adds boilerplate. Skip it for small apps or local state — a simple service with a BehaviorSubject (or Signals) is enough. Reach for NgRx when state is large, shared across many features, and needs traceability / undo / debugging ."}},{"@type":"Question","name":"Why must reducers be pure and immutable?","acceptedAnswer":{"@type":"Answer","text":"Purity (same input → same output, no side effects) makes state predictable, testable, and time-travel debuggable . Immutability (return a new object, never mutate) lets the store and OnPush components detect changes by reference, keeping change detection fast."}},{"@type":"Question","name":"What are selectors and why are they memoised?","acceptedAnswer":{"@type":"Answer","text":"Selectors are pure functions that read and derive data from the store. createSelector memoises the result — it recomputes only when its inputs change, avoiding needless recalculation and re-renders."}},{"@type":"Question","name":"What are Effects and why not call APIs in reducers?","acceptedAnswer":{"@type":"Answer","text":"Effects isolate side effects (HTTP, routing, storage) from reducers. An effect listens to an action stream, runs async work, and maps it to a new action. Reducers must stay pure, so any I/O belongs in effects."}},{"@type":"Question","name":"NgRx store vs a service with BehaviorSubject.","acceptedAnswer":{"@type":"Answer","text":"A service + BehaviorSubject is simple shared state — great for small/medium apps. NgRx adds structure: strict unidirectional flow, DevTools time-travel, effects, and clear conventions that scale to large teams — at the cost of boilerplate."}},{"@type":"Question","name":"What is @ngrx/entity?","acceptedAnswer":{"@type":"Answer","text":"A helper that stores collections in a normalised { ids: [], entities: {} } shape and provides an adapter with CRUD helpers ( addOne , updateOne , removeOne ) plus ready-made selectors — removing hand-written immutable array logic."}},{"@type":"Question","name":"What do the Redux DevTools give you with NgRx?","acceptedAnswer":{"@type":"Answer","text":"A visual log of every action, the state before/after, and time-travel debugging — you can replay actions and jump to any past state. This traceability is a core reason to adopt NgRx on large apps."}},{"@type":"Question","name":"What's a good convention for naming actions?","acceptedAnswer":{"@type":"Answer","text":"Use the pattern [Source] Event — describe what happened , not what to do. Group by feature and event (e.g. [Auth API] Login Success ). Prefer many specific, descriptive actions over a few generic setters."}},{"@type":"Question","name":"What are Actions in NgRx? How do you create them using createAction()?","acceptedAnswer":{"@type":"Answer","text":"Actions are plain objects that describe what happened in the application. They are the only way to change the store's state. Modern NgRx uses createAction() to define actions, optionally with props() to carry data."}},{"@type":"Question","name":"What is props() in NgRx?","acceptedAnswer":{"@type":"Answer","text":"props() defines the payload carried by an action. Instead of manually creating an object, it provides strongly typed data that reducers and effects can safely access."}},{"@type":"Question","name":"Why is createReducer() preferred over the old switch statement?","acceptedAnswer":{"@type":"Answer","text":"createReducer() is more readable, type-safe and easier to maintain. It avoids long switch statements and works seamlessly with on() handlers. It also provides better TypeScript support and cleaner code."}},{"@type":"Question","name":"What is the on() function inside createReducer()?","acceptedAnswer":{"@type":"Answer","text":"on() connects one or more actions to a reducer function. Whenever one of those actions is dispatched, the reducer executes and returns a new immutable state."}},{"@type":"Question","name":"When should you use switchMap(), mergeMap(), concatMap() and exhaustMap() inside NgRx Effects?","acceptedAnswer":{"@type":"Answer","text":"Each RxJS mapping operator has a different behavior: switchMap() — Cancels the previous request and keeps only the latest one. Best for Search or Auto Complete. mergeMap() — Runs all requests in parallel. Best when every request must complete independently. concatMap() — Executes requests one after another in order. Best for sequential updates. exhaustMap() — Ignores new requests while one is already running. Best for Login or Submit buttons to prevent duplicate requests."}},{"@type":"Question","name":"How do you handle API Success and Failure in NgRx?","acceptedAnswer":{"@type":"Answer","text":"Follow a three-action pattern: Load , Load Success , and Load Failure . The component dispatches the Load action, the Effect calls the API, then dispatches either Success or Failure. The Reducer updates the store accordingly."}},{"@type":"Question","name":"What is the difference between the Root Store and a Feature Store?","acceptedAnswer":{"@type":"Answer","text":"The Root Store contains global application state (authentication, user, settings). A Feature Store contains state for a specific feature or module (Products, Orders, Dashboard). Feature stores are registered independently and keep the application modular."}},{"@type":"Question","name":"How does NgRx work with Lazy Loaded Modules?","acceptedAnswer":{"@type":"Answer","text":"Each lazy-loaded module can register its own reducer and effects using StoreModule.forFeature() and EffectsModule.forFeature() . The feature state is loaded only when the module is visited, improving startup performance."}},{"@type":"Question","name":"What is createFeatureSelector() and why is it used?","acceptedAnswer":{"@type":"Answer","text":"createFeatureSelector() selects an entire feature state from the store. Other selectors are then composed from it using createSelector() . This improves code organization and reusability."}},{"@type":"Question","name":"What is the difference between createFeatureSelector() and createSelector()?","acceptedAnswer":{"@type":"Answer","text":"createFeatureSelector() selects an entire feature slice from the store. createSelector() derives or computes smaller pieces of data from one or more selectors. In practice, you usually create one feature selector first, then build multiple selectors on top of it."}},{"@type":"Question","name":"How do you reset the NgRx Store when a user logs out?","acceptedAnswer":{"@type":"Answer","text":"Dispatch a logout action and reset the state inside the root reducer (or a meta reducer) by returning the initialState . This clears all user-specific data from the store."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="NgRx interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>NgRx Interview Questions and Answers</h1>
+      <p>34 hand-picked NgRx interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Explain the NgRx flow: store, action, reducer, selector, effect.</h2>
+          <div class="seo-a"><p>A Redux pattern with <strong>one-way data flow</strong>:</p><ul><li><strong>Store</strong> — single immutable source of truth.</li><li><strong>Action</strong> — a plain event describing what happened.</li><li><strong>Reducer</strong> — pure function <code class="inline">(state, action) → new state</code>, no side effects.</li><li><strong>Selector</strong> — memoised query to read a slice of state.</li><li><strong>Effect</strong> — handles side effects (API calls); listens for an action, does async work, dispatches success/failure.</li></ul><p>Component dispatches → effect calls API → dispatches success → reducer updates store → selector pushes the new value to the component.</p></div>
+          <pre><code>// 1. Component dispatches
+this.store.dispatch(loadUsers());
+
+// 2. Effect hears it, calls the API, dispatches the result
+loadUsers$ = createEffect(() =&gt; this.actions$.pipe(
+  ofType(loadUsers),
+  switchMap(() =&gt; this.api.getUsers().pipe(
+    map(users =&gt; loadUsersSuccess({ users })),
+    catchError(error =&gt; of(loadUsersFailure({ error })))
+  ))
+));
+
+// 3. Reducer folds the success action into new state
+on(loadUsersSuccess, (state, { users }) =&gt; ({ ...state, users, loading: false }))
+
+// 4. Selector pushes it back to the component
+users$ = this.store.select(selectUsers);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>When would you NOT use NgRx?</h2>
+          <div class="seo-a"><p>NgRx adds boilerplate. Skip it for small apps or local state — a simple <strong>service with a BehaviorSubject</strong> (or Signals) is enough. Reach for NgRx when state is <strong>large, shared across many features, and needs traceability / undo / debugging</strong>.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why must reducers be pure and immutable?</h2>
+          <div class="seo-a"><p>Purity (same input → same output, no side effects) makes state <strong>predictable, testable, and time-travel debuggable</strong>. Immutability (return a new object, never mutate) lets the store and OnPush components detect changes by reference, keeping change detection fast.</p></div>
+          <pre><code>on(loadSuccess, (state, { items }) =&gt; ({ ...state, items, loading: false }))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are selectors and why are they memoised?</h2>
+          <div class="seo-a"><p>Selectors are pure functions that read and derive data from the store. <code class="inline">createSelector</code> <strong>memoises</strong> the result — it recomputes only when its inputs change, avoiding needless recalculation and re-renders.</p></div>
+          <pre><code>export const selectActiveUsers = createSelector(
+  selectUsers,
+  users =&gt; users.filter(u =&gt; u.active)
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Effects and why not call APIs in reducers?</h2>
+          <div class="seo-a"><p><strong>Effects</strong> isolate side effects (HTTP, routing, storage) from reducers. An effect listens to an action stream, runs async work, and maps it to a new action. Reducers must stay pure, so any I/O belongs in effects.</p></div>
+          <pre><code>load$ = createEffect(() =&gt; this.actions$.pipe(
+  ofType(load),
+  switchMap(() =&gt; this.api.get().pipe(
+    map(items =&gt; loadSuccess({ items })),
+    catchError(err =&gt; of(loadFailure({ err })))
+  ))
+));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>NgRx store vs a service with BehaviorSubject.</h2>
+          <div class="seo-a"><p>A <strong>service + BehaviorSubject</strong> is simple shared state — great for small/medium apps. <strong>NgRx</strong> adds structure: strict unidirectional flow, DevTools time-travel, effects, and clear conventions that scale to large teams — at the cost of boilerplate.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is @ngrx/entity?</h2>
+          <div class="seo-a"><p>A helper that stores collections in a normalised <code class="inline">{ ids: [], entities: {} }</code> shape and provides an <strong>adapter</strong> with CRUD helpers (<code class="inline">addOne</code>, <code class="inline">updateOne</code>, <code class="inline">removeOne</code>) plus ready-made selectors — removing hand-written immutable array logic.</p></div>
+          <pre><code>const adapter = createEntityAdapter&lt;User&gt;();
+const initialState = adapter.getInitialState();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do the Redux DevTools give you with NgRx?</h2>
+          <div class="seo-a"><p>A visual log of every action, the state before/after, and <strong>time-travel debugging</strong> — you can replay actions and jump to any past state. This traceability is a core reason to adopt NgRx on large apps.</p></div>
+          <pre><code>StoreDevtoolsModule.instrument({ maxAge: 25 })</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What's a good convention for naming actions?</h2>
+          <div class="seo-a"><p>Use the pattern <code class="inline">[Source] Event</code> — describe <em>what happened</em>, not what to do. Group by feature and event (e.g. <code class="inline">[Auth API] Login Success</code>). Prefer many specific, descriptive actions over a few generic setters.</p></div>
+          <pre><code>export const loginSuccess = createAction(
+  '[Auth API] Login Success',
+  props&lt;{ user: User }&gt;()
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Actions in NgRx? How do you create them using createAction()?</h2>
+          <div class="seo-a"><p><strong>Actions</strong> are plain objects that describe <strong>what happened</strong> in the application. They are the only way to change the store's state. Modern NgRx uses <code class="inline">createAction()</code> to define actions, optionally with <code class="inline">props()</code> to carry data.</p></div>
+          <pre><code>export const loadUsers = createAction('[Users Page] Load Users');
+
+export const loadUsersSuccess = createAction(
+  '[Users API] Load Success',
+  props&lt;{ users: User[] }&gt;()
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is props() in NgRx?</h2>
+          <div class="seo-a"><p><code class="inline">props()</code> defines the payload carried by an action. Instead of manually creating an object, it provides strongly typed data that reducers and effects can safely access.</p></div>
+          <pre><code>export const updateUser = createAction(
+  '[User Page] Update User',
+  props&lt;{ id: number; name: string }&gt;()
+);
+
+this.store.dispatch(updateUser({
+  id: 1,
+  name: 'John'
+}));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why is createReducer() preferred over the old switch statement?</h2>
+          <div class="seo-a"><p><code class="inline">createReducer()</code> is more readable, type-safe and easier to maintain. It avoids long switch statements and works seamlessly with <code class="inline">on()</code> handlers. It also provides better TypeScript support and cleaner code.</p></div>
+          <pre><code>export const userReducer = createReducer(
+  initialState,
+  on(loadUsersSuccess, (state, { users }) =&gt; ({
+    ...state,
+    users
+  }))
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the on() function inside createReducer()?</h2>
+          <div class="seo-a"><p><code class="inline">on()</code> connects one or more actions to a reducer function. Whenever one of those actions is dispatched, the reducer executes and returns a new immutable state.</p></div>
+          <pre><code>export const reducer = createReducer(
+  initialState,
+  on(loadUsersSuccess, (state, { users }) =&gt; ({
+    ...state,
+    users,
+    loading: false
+  }))
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>When should you use switchMap(), mergeMap(), concatMap() and exhaustMap() inside NgRx Effects?</h2>
+          <div class="seo-a"><p>Each RxJS mapping operator has a different behavior:</p><ul><li><strong>switchMap()</strong> — Cancels the previous request and keeps only the latest one. Best for Search or Auto Complete.</li><li><strong>mergeMap()</strong> — Runs all requests in parallel. Best when every request must complete independently.</li><li><strong>concatMap()</strong> — Executes requests one after another in order. Best for sequential updates.</li><li><strong>exhaustMap()</strong> — Ignores new requests while one is already running. Best for Login or Submit buttons to prevent duplicate requests.</li></ul></div>
+          <pre><code>// Search API
+switchMap(() =&gt; this.api.search())
+
+// Multiple parallel uploads
+mergeMap(() =&gt; this.api.upload())
+
+// Save records sequentially
+concatMap(() =&gt; this.api.save())
+
+// Prevent double login click
+exhaustMap(() =&gt; this.api.login())</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle API Success and Failure in NgRx?</h2>
+          <div class="seo-a"><p>Follow a three-action pattern: <strong>Load</strong>, <strong>Load Success</strong>, and <strong>Load Failure</strong>. The component dispatches the Load action, the Effect calls the API, then dispatches either Success or Failure. The Reducer updates the store accordingly.</p></div>
+          <pre><code>export const loadUsers = createAction('[Users] Load');
+
+export const loadUsersSuccess = createAction(
+  '[Users API] Load Success',
+  props&lt;{ users: User[] }&gt;()
+);
+
+export const loadUsersFailure = createAction(
+  '[Users API] Load Failure',
+  props&lt;{ error: any }&gt;()
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between the Root Store and a Feature Store?</h2>
+          <div class="seo-a"><p>The <strong>Root Store</strong> contains global application state (authentication, user, settings). A <strong>Feature Store</strong> contains state for a specific feature or module (Products, Orders, Dashboard). Feature stores are registered independently and keep the application modular.</p></div>
+          <pre><code>StoreModule.forRoot({ auth: authReducer });
+
+StoreModule.forFeature('products', productReducer);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does NgRx work with Lazy Loaded Modules?</h2>
+          <div class="seo-a"><p>Each lazy-loaded module can register its own reducer and effects using <code class="inline">StoreModule.forFeature()</code> and <code class="inline">EffectsModule.forFeature()</code>. The feature state is loaded only when the module is visited, improving startup performance.</p></div>
+          <pre><code>@NgModule({
+  imports: [
+    StoreModule.forFeature('orders', orderReducer),
+    EffectsModule.forFeature([OrderEffects])
+  ]
+})
+export class OrdersModule {}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is createFeatureSelector() and why is it used?</h2>
+          <div class="seo-a"><p><code class="inline">createFeatureSelector()</code> selects an entire feature state from the store. Other selectors are then composed from it using <code class="inline">createSelector()</code>. This improves code organization and reusability.</p></div>
+          <pre><code>export const selectUserState = createFeatureSelector&lt;UserState&gt;('users');
+
+export const selectUsers = createSelector(
+  selectUserState,
+  state =&gt; state.users
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between createFeatureSelector() and createSelector()?</h2>
+          <div class="seo-a"><p><strong>createFeatureSelector()</strong> selects an entire feature slice from the store. <strong>createSelector()</strong> derives or computes smaller pieces of data from one or more selectors. In practice, you usually create one feature selector first, then build multiple selectors on top of it.</p></div>
+          <pre><code>const selectProductState = createFeatureSelector&lt;ProductState&gt;('products');
+
+const selectProducts = createSelector(
+  selectProductState,
+  state =&gt; state.products
+);
+
+const selectProductCount = createSelector(
+  selectProducts,
+  products =&gt; products.length
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you reset the NgRx Store when a user logs out?</h2>
+          <div class="seo-a"><p>Dispatch a <code class="inline">logout</code> action and reset the state inside the root reducer (or a meta reducer) by returning the <code class="inline">initialState</code>. This clears all user-specific data from the store.</p></div>
+          <pre><code>export const logout = createAction('[Auth] Logout');
+
+export const reducer = createReducer(
+  initialState,
+  on(logout, () =&gt; initialState)
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you persist the NgRx Store after a page refresh?</h2>
+          <div class="seo-a"><p>NgRx Store lives in memory, so refreshing the page clears it. To persist state, save selected store slices to <strong>localStorage</strong> (or sessionStorage) using a <strong>Meta Reducer</strong> or libraries like <code class="inline">ngrx-store-localstorage</code>, then restore them when the application starts.</p></div>
+          <pre><code>StoreModule.forRoot(reducers, {
+  metaReducers: [localStorageSyncReducer]
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Meta Reducers in NgRx?</h2>
+          <div class="seo-a"><p>Meta Reducers are higher-order reducers that wrap normal reducers. They execute before or after every reducer call and are commonly used for logging, state persistence, resetting state, or debugging.</p></div>
+          <pre><code>export function logger(reducer: ActionReducer&lt;any&gt;): ActionReducer&lt;any&gt; {
+  return (state, action) =&gt; {
+    console.log(action.type);
+    return reducer(state, action);
+  };
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Runtime Checks in NgRx?</h2>
+          <div class="seo-a"><p>Runtime Checks help detect common mistakes such as mutating state, mutating actions, or storing non-serializable objects. They improve application reliability during development by throwing errors when NgRx best practices are violated.</p></div>
+          <pre><code>StoreModule.forRoot(reducers, {
+  runtimeChecks: {
+    strictStateImmutability: true,
+    strictActionImmutability: true,
+    strictStateSerializability: true,
+    strictActionSerializability: true
+  }
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the Facade Pattern in NgRx and why is it used?</h2>
+          <div class="seo-a"><p>A Facade is an Angular service that hides NgRx implementation details from components. Components interact only with the Facade instead of directly dispatching actions or selecting state. This reduces coupling, simplifies testing, and makes it easier to replace NgRx later if needed.</p></div>
+          <pre><code>@Injectable({ providedIn: 'root' })
+export class UserFacade {
+  users$ = this.store.select(selectUsers);
+
+  constructor(private store: Store) {}
+
+  loadUsers() {
+    this.store.dispatch(loadUsers());
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Should Angular components access the Store directly?</h2>
+          <div class="seo-a"><p>Yes, but only for simple applications. In medium or large projects, components should communicate through a <strong>Facade Service</strong> instead of directly using the Store. This reduces coupling, improves testability, and makes it easier to change the state management implementation later.</p></div>
+          <pre><code>export class UserComponent {
+  users$ = this.userFacade.users$;
+
+  constructor(private userFacade: UserFacade) {}
+
+  ngOnInit() {
+    this.userFacade.loadUsers();
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Should a component dispatch multiple NgRx actions?</h2>
+          <div class="seo-a"><p>Generally no. Components should dispatch a single business action such as <code class="inline">loadUsers()</code>. If multiple actions are needed, they should be dispatched from an Effect. This keeps components simple and business logic centralized.</p></div>
+          <pre><code>// Component
+this.store.dispatch(loadUsers());
+
+// Effect
+loadUsers$ = createEffect(() =&gt;
+  this.actions$.pipe(
+    ofType(loadUsers),
+    switchMap(() =&gt; this.api.getUsers().pipe(
+      map(users =&gt; loadUsersSuccess({ users }))
+    ))
+  )
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between Smart and Dumb Components in NgRx?</h2>
+          <div class="seo-a"><p><strong>Smart Components</strong> interact with the Store (or Facade), dispatch actions, and manage business logic. <strong>Dumb Components</strong> receive data through <code class="inline">@Input()</code> and emit events using <code class="inline">@Output()</code>. They contain little or no business logic and are highly reusable.</p></div>
+          <pre><code>// Smart Component
+&lt;app-user-list
+  [users]=&quot;users$ | async&quot;
+  (delete)=&quot;deleteUser($event)&quot;&gt;
+&lt;/app-user-list&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>When should you use NgRx Store instead of Component State?</h2>
+          <div class="seo-a"><p>Use <strong>Component State</strong> for local UI state like dialog visibility, selected tab, or input values. Use the <strong>NgRx Store</strong> for shared, long-lived application state such as logged-in user, products, orders, or shopping cart data.</p></div>
+          <pre><code>// Component State
+isDialogOpen = false;
+selectedTab = 1;
+
+// Store State
+users$ = this.store.select(selectUsers);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do multiple Reducers work in an NgRx application?</h2>
+          <div class="seo-a"><p>Each feature has its own reducer responsible for managing only its own slice of state. NgRx combines all reducers into a single Root Store. This keeps features independent, modular, and easier to maintain.</p></div>
+          <pre><code>StoreModule.forRoot({
+  auth: authReducer,
+  users: userReducer,
+  products: productReducer,
+  orders: orderReducer
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between Optimistic Updates and Pessimistic Updates in NgRx?</h2>
+          <div class="seo-a"><p><strong>Optimistic Update</strong> updates the UI immediately before the API responds, assuming success. If the API fails, the state is rolled back. <strong>Pessimistic Update</strong> waits for the API response before updating the Store, ensuring consistency but with a slower UI experience.</p></div>
+          <pre><code>// Optimistic
+this.store.dispatch(updateUser({ user }));
+
+// API call happens in Effect
+// Rollback on failure
+
+// Pessimistic
+// Wait for API success
+// Then dispatch updateSuccess()</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is @ngrx/router-store and why is it used?</h2>
+          <div class="seo-a"><p><strong>@ngrx/router-store</strong> synchronizes Angular Router state with the NgRx Store. It allows selectors, reducers, and effects to access the current route, query parameters, and navigation events without directly injecting the Router.</p></div>
+          <pre><code>StoreRouterConnectingModule.forRoot();
+
+this.store.select(selectRouteParams);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What CRUD methods does the NgRx Entity Adapter provide?</h2>
+          <div class="seo-a"><p>The Entity Adapter provides helper methods like <code class="inline">addOne()</code>, <code class="inline">addMany()</code>, <code class="inline">setAll()</code>, <code class="inline">updateOne()</code>, <code class="inline">upsertOne()</code>, <code class="inline">removeOne()</code>, and <code class="inline">removeMany()</code>. These methods perform immutable updates automatically.</p></div>
+          <pre><code>export const reducer = createReducer(
+  initialState,
+  on(loadUsersSuccess, (state, { users }) =&gt;
+    adapter.setAll(users, state)
+  ),
+  on(addUserSuccess, (state, { user }) =&gt;
+    adapter.addOne(user, state)
+  )
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between withLatestFrom() and combineLatest() inside NgRx Effects?</h2>
+          <div class="seo-a"><p><code class="inline">withLatestFrom()</code> emits only when the source Observable emits, combining it with the latest values from other Observables. <code class="inline">combineLatest()</code> emits whenever any input Observable emits after all have emitted once. In Effects, <code class="inline">withLatestFrom()</code> is usually preferred to combine an Action with Store data.</p></div>
+          <pre><code>loadUsers$ = createEffect(() =&gt;
+  this.actions$.pipe(
+    ofType(loadUsers),
+    withLatestFrom(this.store.select(selectFilters)),
+    switchMap(([action, filters]) =&gt;
+      this.api.getUsers(filters)
+    )
+  )
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is dispatch: false in NgRx Effects and when should you use it?</h2>
+          <div class="seo-a"><p>By default, every Effect dispatches a new Action. Setting <code class="inline">dispatch: false</code> tells NgRx that the Effect performs only a side effect (such as navigation, logging, or showing a toast) and should not dispatch another Action.</p></div>
+          <pre><code>navigateAfterLogin$ = createEffect(() =&gt;
+  this.actions$.pipe(
+    ofType(loginSuccess),
+    tap(() =&gt; this.router.navigate(['/dashboard']))
+  ),
+  { dispatch: false }
+);</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="ngrx";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

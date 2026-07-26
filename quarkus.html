@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Quarkus Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="22 Quarkus interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/quarkus" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Quarkus Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="22 Quarkus interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/quarkus" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Quarkus Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Quarkus and how does it differ from Spring Boot?","acceptedAnswer":{"@type":"Answer","text":"Quarkus is a Kubernetes-native Java framework optimised for GraalVM native compilation and fast startup. Key differences from Spring Boot: Build-time processing — much configuration and classpath scanning happens at build time, not runtime. Lower memory footprint — especially in native mode (tens of MB vs hundreds). Faster startup — JVM mode is fast; native mode starts in milliseconds. Reactive-first — built on Vert.x and RESTEasy Reactive; imperative style also supported. Extensions — modular add-ons (like Boot starters) for Hibernate, Kafka, Redis, etc. Both use CDI-style dependency injection; Quarkus targets cloud/serverless, Spring Boot has the larger enterprise ecosystem."}},{"@type":"Question","name":"What is Quarkus native compilation and GraalVM?","acceptedAnswer":{"@type":"Answer","text":"GraalVM Native Image compiles Java bytecode ahead-of-time (AOT) into a standalone native binary — no JVM needed at runtime. Benefits: ~10ms startup, ~20–50MB RSS, instant scale-up. Tradeoffs: longer build times, no dynamic class loading at runtime, reflection must be declared (Quarkus handles most via build-time analysis). Build with ./mvnw package -Pnative . Quarkus JVM mode is already fast — native is for extreme startup/memory requirements."}},{"@type":"Question","name":"How does dependency injection work in Quarkus?","acceptedAnswer":{"@type":"Answer","text":"Quarkus uses CDI (Contexts and Dependency Injection) — the Jakarta EE standard. Inject dependencies with @Inject on fields, constructors, or methods. Bean scopes: @ApplicationScoped (singleton), @RequestScoped , @Dependent . Define beans with @ApplicationScoped on the class — no @Component equivalent needed. Quarkus resolves the dependency graph at build time , eliminating runtime CDI container overhead."}},{"@type":"Question","name":"How do you create REST endpoints in Quarkus?","acceptedAnswer":{"@type":"Answer","text":"Use JAX-RS annotations via RESTEasy Reactive (default) or RESTEasy Classic: @Path — base URI @GET , @POST , @PUT , @DELETE @PathParam , @QueryParam , @HeaderParam @Produces / @Consumes — content types Return types can be synchronous or Uni&lt;T&gt; / Multi&lt;T&gt; for reactive endpoints."}},{"@type":"Question","name":"What are Uni and Multi in Quarkus?","acceptedAnswer":{"@type":"Answer","text":"Quarkus uses Mutiny for reactive programming: Uni&lt;T&gt; — emits 0 or 1 item (like a Promise/Single). Use for single async results. Multi&lt;T&gt; — emits 0 to N items (like a Stream). Use for event streams or paginated results. Composable with .onItem().transform() , .onFailure().recover() , .combine() . Non-blocking I/O on the Vert.x event loop."}},{"@type":"Question","name":"What is Hibernate Panache?","acceptedAnswer":{"@type":"Answer","text":"Panache is Quarkus's simplified ORM layer on top of Hibernate ORM. Two styles: Active Record — entity extends PanacheEntity ; call Person.findById(1) directly on the entity. Repository — entity is a plain JPA class; repository extends PanacheRepository&lt;Person&gt; . Provides concise query methods, pagination, and integrates with reactive PostgreSQL drivers."}},{"@type":"Question","name":"How does configuration work in Quarkus?","acceptedAnswer":{"@type":"Answer","text":"Config via application.properties or application.yaml . Inject with @ConfigProperty : Supports profiles ( %dev , %prod ), environment variables (automatic mapping), and type-safe config interfaces with @ConfigMapping . External config via env vars is the standard for containers — no config baked into the image."}},{"@type":"Question","name":"What is Quarkus dev mode?","acceptedAnswer":{"@type":"Answer","text":"Run with ./mvnw quarkus:dev for a development experience with: Live reload — code changes picked up without restart. Dev UI — browser dashboard at /q/dev for config, extensions, continuous testing. H2 dev services — auto-starts a test database if no datasource configured. Test continuous testing — tests re-run on file save."}},{"@type":"Question","name":"What are Quarkus extensions?","acceptedAnswer":{"@type":"Answer","text":"Extensions are modular add-ons that bring capabilities and auto-configuration — analogous to Spring Boot starters. Add via CLI or pom.xml: quarkus extension add hibernate-orm-panache jdbc-postgresql smallrye-openapi Each extension contributes build steps, runtime config, and dev services. Only included extensions are in the final binary — no bloat from unused features."}},{"@type":"Question","name":"Health checks and metrics in Quarkus.","acceptedAnswer":{"@type":"Answer","text":"SmallRye Health — /q/health (aggregated), /q/health/live (liveness), /q/health/ready (readiness). Implement custom checks with @Readiness / @Liveness on HealthCheck . SmallRye Metrics — MicroProfile Metrics at /q/metrics . Annotate with @Counted , @Timed . Integrates with Prometheus via Micrometer."}},{"@type":"Question","name":"How do you secure REST endpoints in Quarkus?","acceptedAnswer":{"@type":"Answer","text":"Quarkus Security with extensions: quarkus-oidc — OpenID Connect / OAuth2 integration. quarkus-smallrye-jwt — JWT bearer token validation. @RolesAllowed(\"admin\") — restrict by role. @Authenticated — require any authenticated user. Configure issuer, client, and JWKS URL in application.properties."}},{"@type":"Question","name":"How do you test Quarkus applications?","acceptedAnswer":{"@type":"Answer","text":"@QuarkusTest — boots the full application in test mode (fast thanks to build-time setup). Use @TestHTTPResource for injected test URLs. RestAssured for HTTP testing. @InjectMock to replace CDI beans with mocks. Testcontainers for real PostgreSQL/Kafka in integration tests. Dev services auto-provision databases in dev/test without manual Docker setup."}},{"@type":"Question","name":"Database migrations with Flyway in Quarkus.","acceptedAnswer":{"@type":"Answer","text":"Add quarkus-flyway extension. Place SQL scripts in src/main/resources/db/migration/ named V1__create_orders.sql , V2__add_status.sql . Flyway runs migrations on startup automatically. Configure with quarkus.flyway.migrate-at-start=true ."}},{"@type":"Question","name":"How do you schedule tasks in Quarkus?","acceptedAnswer":{"@type":"Answer","text":"Quarkus Scheduler extension — annotate methods with @Scheduled : every = \"10s\" — fixed interval cron = \"0 0 1 * * ?\" — cron expression delay = 5 — initial delay Runs on worker threads by default — safe for blocking operations."}},{"@type":"Question","name":"Caching in Quarkus.","acceptedAnswer":{"@type":"Answer","text":"Add quarkus-cache extension. Annotate methods with @CacheResult(cacheName = \"users\") to cache return values. @CacheInvalidate evicts entries. Backends: Caffeine (in-memory, default) or Redis ( quarkus-redis-cache ) for distributed caching across pods."}},{"@type":"Question","name":"How does Quarkus generate OpenAPI documentation?","acceptedAnswer":{"@type":"Answer","text":"Add quarkus-smallrye-openapi . Scans JAX-RS endpoints and generates an OpenAPI 3 spec automatically. Access at /q/openapi (JSON/YAML). Swagger UI at /q/swagger-ui . Enrich with @Operation , @APIResponse , @Schema annotations."}},{"@type":"Question","name":"Global exception handling in Quarkus.","acceptedAnswer":{"@type":"Answer","text":"Implement ExceptionMapper&lt;T extends Exception&gt; — a JAX-RS provider that converts exceptions to HTTP responses: Annotate with @Provider and implement toResponse(T exception) . Quarkus discovers it via CDI. For validation errors, quarkus-hibernate-validator returns 400 with constraint violation details automatically."}},{"@type":"Question","name":"Transaction management in Quarkus.","acceptedAnswer":{"@type":"Answer","text":"Use @Transactional on CDI bean methods (from Narayana JTA). Default propagation: REQUIRED — joins existing transaction or creates new one. Options: rollbackOn , dontRollbackOn , value = TxType.REQUIRES_NEW for independent transactions. Works with Hibernate Panache — a single @Transactional method can call multiple repository operations atomically."}},{"@type":"Question","name":"How does Quarkus integrate with Kafka?","acceptedAnswer":{"@type":"Answer","text":"Add quarkus-smallrye-reactive-messaging-kafka . Use MicroProfile Reactive Messaging channels: Incoming — @Incoming(\"orders\") on a method consuming messages. Outgoing — @Outgoing(\"orders\") on a method producing messages, or inject @Channel(\"orders\") Emitter&lt;Order&gt; . Configure broker, serializers, and consumer group in application.properties."}},{"@type":"Question","name":"Blocking vs reactive endpoints — when to use which?","acceptedAnswer":{"@type":"Answer","text":"Reactive (Uni/Multi) — non-blocking I/O on the event loop. Best for high-concurrency I/O (many simultaneous requests, reactive DB drivers). Blocking (imperative) — traditional synchronous code. Use @Blocking or run on a worker thread pool. Fine for most CRUD apps. Virtual threads (Java 21+) — @RunOnVirtualThread gives blocking-style code with reactive-scale concurrency."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Quarkus interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Quarkus Interview Questions and Answers</h1>
+      <p>22 hand-picked Quarkus interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Quarkus and how does it differ from Spring Boot?</h2>
+          <div class="seo-a"><p>Quarkus is a <strong>Kubernetes-native Java framework</strong> optimised for GraalVM native compilation and fast startup. Key differences from Spring Boot:</p><ul><li><strong>Build-time processing</strong> — much configuration and classpath scanning happens at build time, not runtime.</li><li><strong>Lower memory footprint</strong> — especially in native mode (tens of MB vs hundreds).</li><li><strong>Faster startup</strong> — JVM mode is fast; native mode starts in milliseconds.</li><li><strong>Reactive-first</strong> — built on Vert.x and RESTEasy Reactive; imperative style also supported.</li><li><strong>Extensions</strong> — modular add-ons (like Boot starters) for Hibernate, Kafka, Redis, etc.</li></ul><p>Both use CDI-style dependency injection; Quarkus targets cloud/serverless, Spring Boot has the larger enterprise ecosystem.</p></div>
+          <pre><code>@QuarkusMain
+public class App {
+  public static void main(String[] args) {
+    Quarkus.run(args);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Quarkus native compilation and GraalVM?</h2>
+          <div class="seo-a"><p><strong>GraalVM Native Image</strong> compiles Java bytecode ahead-of-time (AOT) into a standalone native binary — no JVM needed at runtime. Benefits: ~10ms startup, ~20–50MB RSS, instant scale-up.</p><p>Tradeoffs: longer build times, no dynamic class loading at runtime, reflection must be declared (Quarkus handles most via build-time analysis). Build with <code class="inline">./mvnw package -Pnative</code>.</p><p>Quarkus JVM mode is already fast — native is for extreme startup/memory requirements.</p></div>
+          <pre><code>./mvnw package -Pnative -Dquarkus.native.container-build=true</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does dependency injection work in Quarkus?</h2>
+          <div class="seo-a"><p>Quarkus uses <strong>CDI (Contexts and Dependency Injection)</strong> — the Jakarta EE standard. Inject dependencies with <code class="inline">@Inject</code> on fields, constructors, or methods.</p><p>Bean scopes: <code class="inline">@ApplicationScoped</code> (singleton), <code class="inline">@RequestScoped</code>, <code class="inline">@Dependent</code>. Define beans with <code class="inline">@ApplicationScoped</code> on the class — no <code class="inline">@Component</code> equivalent needed.</p><p>Quarkus resolves the dependency graph at <strong>build time</strong>, eliminating runtime CDI container overhead.</p></div>
+          <pre><code>@ApplicationScoped
+public class OrderService {
+  private final OrderRepository repo;
+
+  @Inject
+  public OrderService(OrderRepository repo) {
+    this.repo = repo;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you create REST endpoints in Quarkus?</h2>
+          <div class="seo-a"><p>Use <strong>JAX-RS</strong> annotations via RESTEasy Reactive (default) or RESTEasy Classic:</p><ul><li><code class="inline">@Path</code> — base URI</li><li><code class="inline">@GET</code>, <code class="inline">@POST</code>, <code class="inline">@PUT</code>, <code class="inline">@DELETE</code></li><li><code class="inline">@PathParam</code>, <code class="inline">@QueryParam</code>, <code class="inline">@HeaderParam</code></li><li><code class="inline">@Produces</code> / <code class="inline">@Consumes</code> — content types</li></ul><p>Return types can be synchronous or <code class="inline">Uni&lt;T&gt;</code> / <code class="inline">Multi&lt;T&gt;</code> for reactive endpoints.</p></div>
+          <pre><code>@Path(&quot;/orders&quot;)
+@ApplicationScoped
+public class OrderResource {
+  @GET
+  @Path(&quot;/{id}&quot;)
+  public Order get(@PathParam(&quot;id&quot;) Long id) {
+    return orderService.find(id);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Uni and Multi in Quarkus?</h2>
+          <div class="seo-a"><p>Quarkus uses <strong>Mutiny</strong> for reactive programming:</p><ul><li><code class="inline">Uni&lt;T&gt;</code> — emits 0 or 1 item (like a Promise/Single). Use for single async results.</li><li><code class="inline">Multi&lt;T&gt;</code> — emits 0 to N items (like a Stream). Use for event streams or paginated results.</li></ul><p>Composable with <code class="inline">.onItem().transform()</code>, <code class="inline">.onFailure().recover()</code>, <code class="inline">.combine()</code>. Non-blocking I/O on the Vert.x event loop.</p></div>
+          <pre><code>@GET
+public Uni&lt;Order&gt; get(@PathParam(&quot;id&quot;) Long id) {
+  return orderService.findAsync(id);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Hibernate Panache?</h2>
+          <div class="seo-a"><p>Panache is Quarkus's simplified ORM layer on top of Hibernate ORM. Two styles:</p><ul><li><strong>Active Record</strong> — entity extends <code class="inline">PanacheEntity</code>; call <code class="inline">Person.findById(1)</code> directly on the entity.</li><li><strong>Repository</strong> — entity is a plain JPA class; repository extends <code class="inline">PanacheRepository&lt;Person&gt;</code>.</li></ul><p>Provides concise query methods, pagination, and integrates with reactive PostgreSQL drivers.</p></div>
+          <pre><code>@Entity
+public class Person extends PanacheEntity {
+  public String name;
+  public static List&lt;Person&gt; findByName(String name) {
+    return find(&quot;name&quot;, name).list();
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does configuration work in Quarkus?</h2>
+          <div class="seo-a"><p>Config via <code class="inline">application.properties</code> or <code class="inline">application.yaml</code>. Inject with <code class="inline">@ConfigProperty</code>:</p><p>Supports profiles (<code class="inline">%dev</code>, <code class="inline">%prod</code>), environment variables (automatic mapping), and type-safe config interfaces with <code class="inline">@ConfigMapping</code>.</p><p>External config via env vars is the standard for containers — no config baked into the image.</p></div>
+          <pre><code>@ConfigProperty(name = &quot;greeting.message&quot;)
+String message;
+
+# application.properties
+%dev.greeting.message=Hello Dev
+%prod.greeting.message=Hello</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Quarkus dev mode?</h2>
+          <div class="seo-a"><p>Run with <code class="inline">./mvnw quarkus:dev</code> for a development experience with:</p><ul><li><strong>Live reload</strong> — code changes picked up without restart.</li><li><strong>Dev UI</strong> — browser dashboard at <code class="inline">/q/dev</code> for config, extensions, continuous testing.</li><li><strong>H2 dev services</strong> — auto-starts a test database if no datasource configured.</li><li><strong>Test continuous testing</strong> — tests re-run on file save.</li></ul></div>
+          <pre><code>./mvnw quarkus:dev</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Quarkus extensions?</h2>
+          <div class="seo-a"><p>Extensions are <strong>modular add-ons</strong> that bring capabilities and auto-configuration — analogous to Spring Boot starters. Add via CLI or pom.xml:</p><p><code class="inline">quarkus extension add hibernate-orm-panache jdbc-postgresql smallrye-openapi</code></p><p>Each extension contributes build steps, runtime config, and dev services. Only included extensions are in the final binary — no bloat from unused features.</p></div>
+          <pre><code>&lt;dependency&gt;
+  &lt;groupId&gt;io.quarkus&lt;/groupId&gt;
+  &lt;artifactId&gt;quarkus-hibernate-orm-panache&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Health checks and metrics in Quarkus.</h2>
+          <div class="seo-a"><p><strong>SmallRye Health</strong> — <code class="inline">/q/health</code> (aggregated), <code class="inline">/q/health/live</code> (liveness), <code class="inline">/q/health/ready</code> (readiness). Implement custom checks with <code class="inline">@Readiness</code> / <code class="inline">@Liveness</code> on <code class="inline">HealthCheck</code>.</p><p><strong>SmallRye Metrics</strong> — MicroProfile Metrics at <code class="inline">/q/metrics</code>. Annotate with <code class="inline">@Counted</code>, <code class="inline">@Timed</code>. Integrates with Prometheus via Micrometer.</p></div>
+          <pre><code>@Readiness
+@ApplicationScoped
+public class DatabaseCheck implements HealthCheck {
+  public HealthCheckResponse call() {
+    return isDbUp() ? up(&quot;db&quot;) : down(&quot;db&quot;);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you secure REST endpoints in Quarkus?</h2>
+          <div class="seo-a"><p><strong>Quarkus Security</strong> with extensions:</p><ul><li><code class="inline">quarkus-oidc</code> — OpenID Connect / OAuth2 integration.</li><li><code class="inline">quarkus-smallrye-jwt</code> — JWT bearer token validation.</li><li><code class="inline">@RolesAllowed("admin")</code> — restrict by role.</li><li><code class="inline">@Authenticated</code> — require any authenticated user.</li></ul><p>Configure issuer, client, and JWKS URL in application.properties.</p></div>
+          <pre><code>@GET
+@RolesAllowed(&quot;admin&quot;)
+@Path(&quot;/admin/users&quot;)
+public List&lt;User&gt; listUsers() { ... }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test Quarkus applications?</h2>
+          <div class="seo-a"><p><code class="inline">@QuarkusTest</code> — boots the full application in test mode (fast thanks to build-time setup). Use <code class="inline">@TestHTTPResource</code> for injected test URLs.</p><p><strong>RestAssured</strong> for HTTP testing. <strong>@InjectMock</strong> to replace CDI beans with mocks. <strong>Testcontainers</strong> for real PostgreSQL/Kafka in integration tests.</p><p>Dev services auto-provision databases in dev/test without manual Docker setup.</p></div>
+          <pre><code>@QuarkusTest
+class OrderResourceTest {
+  @Test
+  void testGet() {
+    given().when().get(&quot;/orders/1&quot;)
+      .then().statusCode(200);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Database migrations with Flyway in Quarkus.</h2>
+          <div class="seo-a"><p>Add <code class="inline">quarkus-flyway</code> extension. Place SQL scripts in <code class="inline">src/main/resources/db/migration/</code> named <code class="inline">V1__create_orders.sql</code>, <code class="inline">V2__add_status.sql</code>.</p><p>Flyway runs migrations on startup automatically. Configure with <code class="inline">quarkus.flyway.migrate-at-start=true</code>.</p></div>
+          <pre><code># application.properties
+quarkus.flyway.migrate-at-start=true
+quarkus.datasource.jdbc.url=jdbc:postgresql://localhost/orders</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you schedule tasks in Quarkus?</h2>
+          <div class="seo-a"><p><strong>Quarkus Scheduler</strong> extension — annotate methods with <code class="inline">@Scheduled</code>:</p><ul><li><code class="inline">every = "10s"</code> — fixed interval</li><li><code class="inline">cron = "0 0 1 * * ?"</code> — cron expression</li><li><code class="inline">delay = 5</code> — initial delay</li></ul><p>Runs on worker threads by default — safe for blocking operations.</p></div>
+          <pre><code>@Scheduled(every = &quot;1h&quot;)
+void cleanupExpiredSessions() {
+  sessionService.deleteExpired();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Caching in Quarkus.</h2>
+          <div class="seo-a"><p>Add <code class="inline">quarkus-cache</code> extension. Annotate methods with <code class="inline">@CacheResult(cacheName = "users")</code> to cache return values. <code class="inline">@CacheInvalidate</code> evicts entries.</p><p>Backends: Caffeine (in-memory, default) or Redis (<code class="inline">quarkus-redis-cache</code>) for distributed caching across pods.</p></div>
+          <pre><code>@CacheResult(cacheName = &quot;product-by-id&quot;)
+public Product findById(Long id) {
+  return productRepo.findById(id);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Quarkus generate OpenAPI documentation?</h2>
+          <div class="seo-a"><p>Add <code class="inline">quarkus-smallrye-openapi</code>. Scans JAX-RS endpoints and generates an OpenAPI 3 spec automatically.</p><p>Access at <code class="inline">/q/openapi</code> (JSON/YAML). Swagger UI at <code class="inline">/q/swagger-ui</code>. Enrich with <code class="inline">@Operation</code>, <code class="inline">@APIResponse</code>, <code class="inline">@Schema</code> annotations.</p></div>
+          <pre><code>@Operation(summary = &quot;Get order by ID&quot;)
+@APIResponse(responseCode = &quot;200&quot;, description = &quot;Order found&quot;)
+@GET @Path(&quot;/{id}&quot;)
+public Order get(@PathParam(&quot;id&quot;) Long id) { ... }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Global exception handling in Quarkus.</h2>
+          <div class="seo-a"><p>Implement <code class="inline">ExceptionMapper&lt;T extends Exception&gt;</code> — a JAX-RS provider that converts exceptions to HTTP responses:</p><p>Annotate with <code class="inline">@Provider</code> and implement <code class="inline">toResponse(T exception)</code>. Quarkus discovers it via CDI.</p><p>For validation errors, <code class="inline">quarkus-hibernate-validator</code> returns 400 with constraint violation details automatically.</p></div>
+          <pre><code>@Provider
+public class NotFoundMapper implements ExceptionMapper&lt;NotFoundException&gt; {
+  public Response toResponse(NotFoundException e) {
+    return Response.status(404).entity(Map.of(&quot;error&quot;, e.getMessage())).build();
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Transaction management in Quarkus.</h2>
+          <div class="seo-a"><p>Use <code class="inline">@Transactional</code> on CDI bean methods (from Narayana JTA). Default propagation: REQUIRED — joins existing transaction or creates new one.</p><p>Options: <code class="inline">rollbackOn</code>, <code class="inline">dontRollbackOn</code>, <code class="inline">value = TxType.REQUIRES_NEW</code> for independent transactions.</p><p>Works with Hibernate Panache — a single <code class="inline">@Transactional</code> method can call multiple repository operations atomically.</p></div>
+          <pre><code>@Transactional
+public void transfer(Long from, Long to, BigDecimal amount) {
+  accountRepo.debit(from, amount);
+  accountRepo.credit(to, amount);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Quarkus integrate with Kafka?</h2>
+          <div class="seo-a"><p>Add <code class="inline">quarkus-smallrye-reactive-messaging-kafka</code>. Use MicroProfile Reactive Messaging channels:</p><ul><li><strong>Incoming</strong> — <code class="inline">@Incoming("orders")</code> on a method consuming messages.</li><li><strong>Outgoing</strong> — <code class="inline">@Outgoing("orders")</code> on a method producing messages, or inject <code class="inline">@Channel("orders") Emitter&lt;Order&gt;</code>.</li></ul><p>Configure broker, serializers, and consumer group in application.properties.</p></div>
+          <pre><code>@Incoming(&quot;orders&quot;)
+public CompletionStage&lt;Void&gt; process(Order order) {
+  return orderService.handle(order);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Blocking vs reactive endpoints — when to use which?</h2>
+          <div class="seo-a"><p><strong>Reactive (Uni/Multi)</strong> — non-blocking I/O on the event loop. Best for high-concurrency I/O (many simultaneous requests, reactive DB drivers).</p><p><strong>Blocking (imperative)</strong> — traditional synchronous code. Use <code class="inline">@Blocking</code> or run on a worker thread pool. Fine for most CRUD apps.</p><p><strong>Virtual threads (Java 21+)</strong> — <code class="inline">@RunOnVirtualThread</code> gives blocking-style code with reactive-scale concurrency.</p></div>
+          <pre><code>@GET
+@RunOnVirtualThread  // Java 21+
+public Order get(@PathParam(&quot;id&quot;) Long id) {
+  return orderRepo.findById(id);  // blocking JPA, but cheap on virtual thread
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Quarkus profiles?</h2>
+          <div class="seo-a"><p>Profiles activate environment-specific configuration. Set via <code class="inline">quarkus.profile=dev</code> or <code class="inline">%prod</code> prefix in properties:</p><p><code class="inline">%dev.quarkus.log.level=DEBUG</code><br><code class="inline">%prod.quarkus.log.level=WARN</code></p><p>Default profiles: <code class="inline">dev</code>, <code class="inline">test</code>, <code class="inline">prod</code>. Custom profiles supported. Beans can be profile-specific with <code class="inline">@IfBuildProfile("dev")</code>.</p></div>
+          <pre><code>%dev.quarkus.datasource.jdbc.url=jdbc:h2:mem:test
+%prod.quarkus.datasource.jdbc.url=${DATABASE_URL}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Quarkus and Kubernetes — what makes it cloud-native?</h2>
+          <div class="seo-a"><p>Quarkus generates <strong>Kubernetes manifests</strong> via extensions (<code class="inline">quarkus-kubernetes</code>, <code class="inline">quarkus-openshift</code>). Auto-configures:</p><ul><li>Health probes pointing to <code class="inline">/q/health/ready</code> and <code class="inline">/q/health/live</code></li><li>Resource limits based on native vs JVM mode</li><li>Service discovery and config maps</li><li>Container image via <code class="inline">quarkus-container-image-docker</code></li></ul><p>Fast startup + low memory = higher pod density and faster autoscaling.</p></div>
+          <pre><code>./mvnw package -Dquarkus.container-image.build=true</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="quarkus";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>LLMs &amp; GenAI Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="26 LLMs &amp; GenAI interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/llm" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="LLMs &amp; GenAI Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="26 LLMs &amp; GenAI interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/llm" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="LLMs &amp; GenAI Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a Large Language Model (LLM)?","acceptedAnswer":{"@type":"Answer","text":"An LLM is a neural network trained on massive text corpora to predict the next token. By scaling model size, data, and compute, these models learn grammar, facts, reasoning patterns, and instruction-following — enabling them to generate, summarise, translate, and answer questions. Examples: GPT-4, Claude, Gemini, Llama, Mistral. They are the foundation of modern GenAI applications."}},{"@type":"Question","name":"What is the Transformer architecture and why did it matter?","acceptedAnswer":{"@type":"Answer","text":"Introduced in Attention Is All You Need (2017). Key ideas: Self-attention — each token attends to all others, capturing long-range dependencies without recurrence. Parallelisation — unlike RNNs, all positions processed simultaneously → faster training on GPUs. Encoder-decoder — original design; modern LLMs are mostly decoder-only (GPT-style) for text generation. Transformers are the architecture behind virtually all current LLMs."}},{"@type":"Question","name":"What are tokens and how does tokenization work?","acceptedAnswer":{"@type":"Answer","text":"LLMs don't read words — they process tokens , subword units from a fixed vocabulary (typically 32k–128k tokens). Tokenization splits text via algorithms like BPE (Byte Pair Encoding) or SentencePiece. Why it matters: pricing is per token, context windows are token-limited, and token count ≠ word count (\"ChatGPT\" might be 1 token; \"antidisestablishmentarianism\" might be several)."}},{"@type":"Question","name":"What is a context window?","acceptedAnswer":{"@type":"Answer","text":"The maximum number of tokens an LLM can process in a single request — includes both input (prompt + history) and output (completion). Examples: 128k (GPT-4o), 200k (Claude), 1M+ (Gemini). Exceeding it causes truncation or errors. Long contexts increase latency and cost. Techniques like RAG avoid stuffing everything into the prompt."}},{"@type":"Question","name":"Explain temperature, top-p, and top-k sampling.","acceptedAnswer":{"@type":"Answer","text":"LLMs output a probability distribution over the next token. Sampling parameters control randomness: Temperature — scales logits before softmax. Low (0–0.3) = deterministic, focused. High (0.8–1.0) = creative, varied. Top-k — sample only from the k most likely tokens. Top-p (nucleus) — sample from the smallest set of tokens whose cumulative probability ≥ p (e.g. 0.9). Use low temperature for code/facts; higher for creative writing."}},{"@type":"Question","name":"What is prompt engineering?","acceptedAnswer":{"@type":"Answer","text":"The practice of crafting inputs to get reliable, high-quality outputs from an LLM without changing model weights. Techniques include: Clear instructions and role assignment (system prompt) Few-shot examples (show input→output pairs) Chain-of-thought (\"think step by step\") Structured output formats (JSON schema, XML tags) Breaking complex tasks into steps"}},{"@type":"Question","name":"Zero-shot vs few-shot prompting.","acceptedAnswer":{"@type":"Answer","text":"Zero-shot — no examples in the prompt; the model relies entirely on pre-training and instructions. Works for common tasks the model has seen. Few-shot — include 1–5 input→output examples in the prompt to demonstrate the desired pattern. Improves accuracy on niche formats, classification, or domain-specific tasks. More examples help up to a point — then you hit context limits and diminishing returns."}},{"@type":"Question","name":"What is chain-of-thought (CoT) prompting?","acceptedAnswer":{"@type":"Answer","text":"Asking the model to reason step by step before giving the final answer. Dramatically improves performance on math, logic, and multi-step reasoning tasks. Variants: zero-shot CoT (\"Let's think step by step\"), few-shot CoT (include worked examples with reasoning), and native reasoning models (o1, DeepSeek-R1) that internalise this process."}},{"@type":"Question","name":"System, user, and assistant message roles.","acceptedAnswer":{"@type":"Answer","text":"Chat APIs structure conversations as a list of messages with roles: system — sets behaviour, persona, constraints. Usually one per conversation. user — the human's input. assistant — the model's previous responses (conversation history). tool — function call results (in tool-use flows). The model sees the full message history (within context limits) to maintain conversational coherence."}},{"@type":"Question","name":"When do you use prompting vs fine-tuning vs RAG?","acceptedAnswer":{"@type":"Answer","text":"Approach Best for Tradeoff Prompting General tasks, quick iteration, changing requirements Limited by context window; no private data unless in prompt RAG Q&A over private/docs data, reducing hallucinations Retrieval quality is the bottleneck; added latency Fine-tuning Consistent style/format, domain language, classification Needs training data, compute, retraining on model updates Often combined: RAG for knowledge + fine-tuning for behaviour + prompting for task instructions."}},{"@type":"Question","name":"What are hallucinations and how do you reduce them?","acceptedAnswer":{"@type":"Answer","text":"A hallucination is when an LLM generates confident but factually incorrect or fabricated information. Causes: training data gaps, probabilistic generation, no grounding in real data. Mitigations: RAG — ground answers in retrieved documents Citations — require the model to quote sources Lower temperature — reduce creative guessing Output validation — check against a knowledge base \"I don't know\" instructions — allow the model to refuse"}},{"@type":"Question","name":"What is fine-tuning and what is LoRA?","acceptedAnswer":{"@type":"Answer","text":"Fine-tuning — continue training a pre-trained model on domain-specific data to adapt its behaviour. Full fine-tuning updates all weights (expensive). LoRA (Low-Rank Adaptation) — a PEFT (Parameter-Efficient Fine-Tuning) method that trains small adapter matrices instead of the full model. ~1% of parameters updated → much less GPU memory and faster training. Adapters can be swapped per task."}},{"@type":"Question","name":"What are embeddings and how are they used?","acceptedAnswer":{"@type":"Answer","text":"An embedding is a dense vector (e.g. 1536 floats) representing the semantic meaning of text. Similar meanings → vectors close together in vector space (measured by cosine similarity). Uses: semantic search, RAG retrieval, clustering, recommendation, deduplication. Generated by embedding models (text-embedding-3-small, Cohere embed, open-source models like BGE)."}},{"@type":"Question","name":"What is RAG (Retrieval-Augmented Generation)?","acceptedAnswer":{"@type":"Answer","text":"RAG combines retrieval with generation : Index — chunk documents, embed chunks, store in a vector database. Retrieve — on a user query, embed the query and find the most similar chunks. Generate — pass retrieved chunks + query to the LLM as context; the model answers grounded in those documents. Reduces hallucinations and enables Q&A over private, up-to-date data without fine-tuning."}},{"@type":"Question","name":"What is function calling (tool use) in LLMs?","acceptedAnswer":{"@type":"Answer","text":"The LLM can request execution of predefined functions instead of only generating text. You describe tools (name, parameters, description) in the API call; the model returns a structured tool call; your code executes it and returns the result; the model continues with the result in context. Enables: API integration, database queries, calculations, sending emails — the model decides when and which tool to use."}},{"@type":"Question","name":"What is an AI agent?","acceptedAnswer":{"@type":"Answer","text":"An AI agent is an LLM-powered system that autonomously plans, uses tools, and iterates toward a goal — not just single prompt→response. Loop: observe → think → act (tool call) → observe result → repeat until done. Frameworks: LangChain Agents, LangGraph, AutoGPT, CrewAI, OpenAI Assistants API. Risks: runaway loops, incorrect tool calls, cost explosion. Mitigate with max iterations, human-in-the-loop, and tool sandboxing."}},{"@type":"Question","name":"How do you evaluate LLM application quality?","acceptedAnswer":{"@type":"Answer","text":"LLM outputs are non-deterministic — traditional unit tests aren't enough. Human eval — gold standard; expensive and slow. LLM-as-judge — use a strong model to score outputs against criteria. Automated metrics — BLEU/ROUGE for summarisation; exact match for structured output; retrieval recall@k for RAG. Regression sets — curated input→expected output pairs; run on every deploy. Frameworks — RAGAS (RAG eval), LangSmith, Phoenix, DeepEval."}},{"@type":"Question","name":"How do you optimize LLM API costs?","acceptedAnswer":{"@type":"Answer","text":"Model selection — use smaller/cheaper models for simple tasks (gpt-4o-mini vs gpt-4o). Prompt compression — shorter system prompts, summarise conversation history. Caching — prompt caching (Anthropic/OpenAI) for repeated prefixes; cache embeddings. Batching — batch API for non-real-time workloads (50% discount). RAG over long context — retrieve relevant chunks instead of sending full documents. Self-hosting — open-source models (Llama, Mistral) for high-volume, predictable workloads."}},{"@type":"Question","name":"How do you implement guardrails for LLM applications?","acceptedAnswer":{"@type":"Answer","text":"Layers of protection: Input filtering — moderation API, block prompt injection patterns, PII detection. System prompt constraints — define allowed scope and refusal behaviour. Output validation — schema validation (JSON), content filters, fact-checking against retrieved docs. Rate limiting — prevent abuse. Human review — for high-stakes outputs (medical, legal, financial). Frameworks: Guardrails AI, NeMo Guardrails, LlamaGuard."}},{"@type":"Question","name":"Open-source vs closed-source LLMs — tradeoffs.","acceptedAnswer":{"@type":"Answer","text":"Closed (GPT-4, Claude) Open (Llama, Mistral) Quality Generally highest Closing the gap fast Cost Per-token API pricing Self-host infra cost Privacy Data sent to provider Full data control on-prem Customization Limited fine-tuning Full fine-tuning, weights access Ops burden Low (managed API) High (GPU, scaling, updates)"}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="LLMs &amp; GenAI interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>LLMs &amp; GenAI Interview Questions and Answers</h1>
+      <p>26 hand-picked LLMs &amp; GenAI interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is a Large Language Model (LLM)?</h2>
+          <div class="seo-a"><p>An LLM is a <strong>neural network trained on massive text corpora</strong> to predict the next token. By scaling model size, data, and compute, these models learn grammar, facts, reasoning patterns, and instruction-following — enabling them to generate, summarise, translate, and answer questions.</p><p>Examples: GPT-4, Claude, Gemini, Llama, Mistral. They are the foundation of modern GenAI applications.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the Transformer architecture and why did it matter?</h2>
+          <div class="seo-a"><p>Introduced in <em>Attention Is All You Need</em> (2017). Key ideas:</p><ul><li><strong>Self-attention</strong> — each token attends to all others, capturing long-range dependencies without recurrence.</li><li><strong>Parallelisation</strong> — unlike RNNs, all positions processed simultaneously → faster training on GPUs.</li><li><strong>Encoder-decoder</strong> — original design; modern LLMs are mostly <strong>decoder-only</strong> (GPT-style) for text generation.</li></ul><p>Transformers are the architecture behind virtually all current LLMs.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are tokens and how does tokenization work?</h2>
+          <div class="seo-a"><p>LLMs don't read words — they process <strong>tokens</strong>, subword units from a fixed vocabulary (typically 32k–128k tokens). <strong>Tokenization</strong> splits text via algorithms like BPE (Byte Pair Encoding) or SentencePiece.</p><p>Why it matters: pricing is per token, context windows are token-limited, and token count ≠ word count ("ChatGPT" might be 1 token; "antidisestablishmentarianism" might be several).</p></div>
+          <pre><code>import tiktoken
+enc = tiktoken.encoding_for_model(&quot;gpt-4o&quot;)
+len(enc.encode(&quot;Hello, how are you?&quot;))  # token count</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a context window?</h2>
+          <div class="seo-a"><p>The <strong>maximum number of tokens</strong> an LLM can process in a single request — includes both input (prompt + history) and output (completion). Examples: 128k (GPT-4o), 200k (Claude), 1M+ (Gemini).</p><p>Exceeding it causes truncation or errors. Long contexts increase latency and cost. Techniques like RAG avoid stuffing everything into the prompt.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain temperature, top-p, and top-k sampling.</h2>
+          <div class="seo-a"><p>LLMs output a probability distribution over the next token. Sampling parameters control randomness:</p><ul><li><strong>Temperature</strong> — scales logits before softmax. Low (0–0.3) = deterministic, focused. High (0.8–1.0) = creative, varied.</li><li><strong>Top-k</strong> — sample only from the k most likely tokens.</li><li><strong>Top-p (nucleus)</strong> — sample from the smallest set of tokens whose cumulative probability ≥ p (e.g. 0.9).</li></ul><p>Use low temperature for code/facts; higher for creative writing.</p></div>
+          <pre><code>response = client.chat.completions.create(
+  model=&quot;gpt-4o&quot;,
+  messages=[...],
+  temperature=0.2,   # factual tasks
+  top_p=0.9
+)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is prompt engineering?</h2>
+          <div class="seo-a"><p>The practice of <strong>crafting inputs</strong> to get reliable, high-quality outputs from an LLM without changing model weights. Techniques include:</p><ul><li>Clear instructions and role assignment (system prompt)</li><li>Few-shot examples (show input→output pairs)</li><li>Chain-of-thought ("think step by step")</li><li>Structured output formats (JSON schema, XML tags)</li><li>Breaking complex tasks into steps</li></ul></div>
+          <pre><code>messages = [
+  {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;You are a SQL expert. Return only valid SQL.&quot;},
+  {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;List users who signed up last week&quot;}
+]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Zero-shot vs few-shot prompting.</h2>
+          <div class="seo-a"><p><strong>Zero-shot</strong> — no examples in the prompt; the model relies entirely on pre-training and instructions. Works for common tasks the model has seen.</p><p><strong>Few-shot</strong> — include 1–5 input→output examples in the prompt to demonstrate the desired pattern. Improves accuracy on niche formats, classification, or domain-specific tasks.</p><p>More examples help up to a point — then you hit context limits and diminishing returns.</p></div>
+          <pre><code># few-shot example
+prompt = &quot;&quot;&quot;
+Classify sentiment:
+Text: &quot;Love it!&quot; -&gt; Positive
+Text: &quot;Terrible experience&quot; -&gt; Negative
+Text: &quot;It's okay I guess&quot; -&gt; &quot;&quot;&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is chain-of-thought (CoT) prompting?</h2>
+          <div class="seo-a"><p>Asking the model to <strong>reason step by step</strong> before giving the final answer. Dramatically improves performance on math, logic, and multi-step reasoning tasks.</p><p>Variants: zero-shot CoT ("Let's think step by step"), few-shot CoT (include worked examples with reasoning), and native reasoning models (o1, DeepSeek-R1) that internalise this process.</p></div>
+          <pre><code>prompt = &quot;A store has 23 apples. They sell 17 and receive 8 more. How many now? Think step by step.&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>System, user, and assistant message roles.</h2>
+          <div class="seo-a"><p>Chat APIs structure conversations as a list of messages with roles:</p><ul><li><strong>system</strong> — sets behaviour, persona, constraints. Usually one per conversation.</li><li><strong>user</strong> — the human's input.</li><li><strong>assistant</strong> — the model's previous responses (conversation history).</li><li><strong>tool</strong> — function call results (in tool-use flows).</li></ul><p>The model sees the full message history (within context limits) to maintain conversational coherence.</p></div>
+          <pre><code>messages = [
+  {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;You are a helpful coding tutor.&quot;},
+  {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Explain recursion&quot;},
+  {&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: &quot;Recursion is when...&quot;},
+  {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;Give an example in Python&quot;}
+]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>When do you use prompting vs fine-tuning vs RAG?</h2>
+          <div class="seo-a"><table><tr><th>Approach</th><th>Best for</th><th>Tradeoff</th></tr><tr><td><strong>Prompting</strong></td><td>General tasks, quick iteration, changing requirements</td><td>Limited by context window; no private data unless in prompt</td></tr><tr><td><strong>RAG</strong></td><td>Q&A over private/docs data, reducing hallucinations</td><td>Retrieval quality is the bottleneck; added latency</td></tr><tr><td><strong>Fine-tuning</strong></td><td>Consistent style/format, domain language, classification</td><td>Needs training data, compute, retraining on model updates</td></tr></table><p>Often combined: RAG for knowledge + fine-tuning for behaviour + prompting for task instructions.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are hallucinations and how do you reduce them?</h2>
+          <div class="seo-a"><p>A <strong>hallucination</strong> is when an LLM generates confident but factually incorrect or fabricated information. Causes: training data gaps, probabilistic generation, no grounding in real data.</p><p>Mitigations:</p><ul><li><strong>RAG</strong> — ground answers in retrieved documents</li><li><strong>Citations</strong> — require the model to quote sources</li><li><strong>Lower temperature</strong> — reduce creative guessing</li><li><strong>Output validation</strong> — check against a knowledge base</li><li><strong>"I don't know"</strong> instructions — allow the model to refuse</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is fine-tuning and what is LoRA?</h2>
+          <div class="seo-a"><p><strong>Fine-tuning</strong> — continue training a pre-trained model on domain-specific data to adapt its behaviour. Full fine-tuning updates all weights (expensive).</p><p><strong>LoRA</strong> (Low-Rank Adaptation) — a <strong>PEFT</strong> (Parameter-Efficient Fine-Tuning) method that trains small adapter matrices instead of the full model. ~1% of parameters updated → much less GPU memory and faster training. Adapters can be swapped per task.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are embeddings and how are they used?</h2>
+          <div class="seo-a"><p>An <strong>embedding</strong> is a dense vector (e.g. 1536 floats) representing the semantic meaning of text. Similar meanings → vectors close together in vector space (measured by cosine similarity).</p><p>Uses: semantic search, RAG retrieval, clustering, recommendation, deduplication. Generated by embedding models (text-embedding-3-small, Cohere embed, open-source models like BGE).</p></div>
+          <pre><code>response = client.embeddings.create(
+  model=&quot;text-embedding-3-small&quot;,
+  input=&quot;How do I reset my password?&quot;
+)
+vector = response.data[0].embedding  # list of 1536 floats</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is RAG (Retrieval-Augmented Generation)?</h2>
+          <div class="seo-a"><p>RAG combines <strong>retrieval</strong> with <strong>generation</strong>:</p><ol><li><strong>Index</strong> — chunk documents, embed chunks, store in a vector database.</li><li><strong>Retrieve</strong> — on a user query, embed the query and find the most similar chunks.</li><li><strong>Generate</strong> — pass retrieved chunks + query to the LLM as context; the model answers grounded in those documents.</li></ol><p>Reduces hallucinations and enables Q&A over private, up-to-date data without fine-tuning.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is function calling (tool use) in LLMs?</h2>
+          <div class="seo-a"><p>The LLM can <strong>request execution of predefined functions</strong> instead of only generating text. You describe tools (name, parameters, description) in the API call; the model returns a structured tool call; your code executes it and returns the result; the model continues with the result in context.</p><p>Enables: API integration, database queries, calculations, sending emails — the model decides <em>when</em> and <em>which</em> tool to use.</p></div>
+          <pre><code>tools = [{
+  &quot;type&quot;: &quot;function&quot;,
+  &quot;function&quot;: {
+    &quot;name&quot;: &quot;get_weather&quot;,
+    &quot;description&quot;: &quot;Get current weather for a city&quot;,
+    &quot;parameters&quot;: {
+      &quot;type&quot;: &quot;object&quot;,
+      &quot;properties&quot;: { &quot;city&quot;: { &quot;type&quot;: &quot;string&quot; } },
+      &quot;required&quot;: [&quot;city&quot;]
+    }
+  }
+}]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is an AI agent?</h2>
+          <div class="seo-a"><p>An AI agent is an LLM-powered system that <strong>autonomously plans, uses tools, and iterates</strong> toward a goal — not just single prompt→response.</p><p>Loop: observe → think → act (tool call) → observe result → repeat until done. Frameworks: LangChain Agents, LangGraph, AutoGPT, CrewAI, OpenAI Assistants API.</p><p>Risks: runaway loops, incorrect tool calls, cost explosion. Mitigate with max iterations, human-in-the-loop, and tool sandboxing.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you evaluate LLM application quality?</h2>
+          <div class="seo-a"><p>LLM outputs are non-deterministic — traditional unit tests aren't enough.</p><ul><li><strong>Human eval</strong> — gold standard; expensive and slow.</li><li><strong>LLM-as-judge</strong> — use a strong model to score outputs against criteria.</li><li><strong>Automated metrics</strong> — BLEU/ROUGE for summarisation; exact match for structured output; retrieval recall@k for RAG.</li><li><strong>Regression sets</strong> — curated input→expected output pairs; run on every deploy.</li><li><strong>Frameworks</strong> — RAGAS (RAG eval), LangSmith, Phoenix, DeepEval.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you optimize LLM API costs?</h2>
+          <div class="seo-a"><ul><li><strong>Model selection</strong> — use smaller/cheaper models for simple tasks (gpt-4o-mini vs gpt-4o).</li><li><strong>Prompt compression</strong> — shorter system prompts, summarise conversation history.</li><li><strong>Caching</strong> — prompt caching (Anthropic/OpenAI) for repeated prefixes; cache embeddings.</li><li><strong>Batching</strong> — batch API for non-real-time workloads (50% discount).</li><li><strong>RAG over long context</strong> — retrieve relevant chunks instead of sending full documents.</li><li><strong>Self-hosting</strong> — open-source models (Llama, Mistral) for high-volume, predictable workloads.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you implement guardrails for LLM applications?</h2>
+          <div class="seo-a"><p>Layers of protection:</p><ul><li><strong>Input filtering</strong> — moderation API, block prompt injection patterns, PII detection.</li><li><strong>System prompt constraints</strong> — define allowed scope and refusal behaviour.</li><li><strong>Output validation</strong> — schema validation (JSON), content filters, fact-checking against retrieved docs.</li><li><strong>Rate limiting</strong> — prevent abuse.</li><li><strong>Human review</strong> — for high-stakes outputs (medical, legal, financial).</li></ul><p>Frameworks: Guardrails AI, NeMo Guardrails, LlamaGuard.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Open-source vs closed-source LLMs — tradeoffs.</h2>
+          <div class="seo-a"><table><tr><th></th><th>Closed (GPT-4, Claude)</th><th>Open (Llama, Mistral)</th></tr><tr><td><strong>Quality</strong></td><td>Generally highest</td><td>Closing the gap fast</td></tr><tr><td><strong>Cost</strong></td><td>Per-token API pricing</td><td>Self-host infra cost</td></tr><tr><td><strong>Privacy</strong></td><td>Data sent to provider</td><td>Full data control on-prem</td></tr><tr><td><strong>Customization</strong></td><td>Limited fine-tuning</td><td>Full fine-tuning, weights access</td></tr><tr><td><strong>Ops burden</strong></td><td>Low (managed API)</td><td>High (GPU, scaling, updates)</td></tr></table></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are multimodal LLMs?</h2>
+          <div class="seo-a"><p>Models that accept and generate <strong>multiple modalities</strong> — text, images, audio, video — in a single model. Examples: GPT-4o (text + vision + audio), Gemini (text + image + video), Claude (text + image).</p><p>Use cases: image description, document OCR, visual Q&A, chart analysis, voice assistants. Images are typically encoded into token-like representations the transformer processes alongside text.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you get structured (JSON) output from an LLM?</h2>
+          <div class="seo-a"><p>Methods:</p><ul><li><strong>Prompting</strong> — "Respond in JSON: {name, age}" — unreliable alone.</li><li><strong>JSON mode</strong> — API flag forcing valid JSON output.</li><li><strong>Structured output / response format</strong> — provide a JSON Schema; model constrained to match it (OpenAI, Anthropic).</li><li><strong>Function calling</strong> — define the schema as a tool; model returns structured args.</li><li><strong>Post-processing</strong> — parse + validate with Pydantic/Zod; retry on failure.</li></ul></div>
+          <pre><code>response = client.chat.completions.create(
+  model=&quot;gpt-4o&quot;,
+  response_format={ &quot;type&quot;: &quot;json_schema&quot;, &quot;json_schema&quot;: {...} },
+  messages=[...]
+)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Inference vs training — what's the difference?</h2>
+          <div class="seo-a"><p><strong>Training</strong> — learning model weights from data. Requires massive GPU clusters, days/weeks, millions of dollars for frontier models. Done once (or periodically) by model providers.</p><p><strong>Inference</strong> — running the trained model to generate outputs. What your application does on every API call. Optimised for latency and throughput (quantisation, batching, KV-cache).</p><p>As an application developer, you almost always work with inference — training is for ML researchers and model labs.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is prompt injection and how do you defend against it?</h2>
+          <div class="seo-a"><p><strong>Prompt injection</strong> — an attacker crafts input that overrides the system prompt or tricks the model into unintended actions. Types:</p><ul><li><strong>Direct</strong> — user says "ignore previous instructions".</li><li><strong>Indirect</strong> — malicious instructions hidden in retrieved documents, emails, or web pages the model processes.</li></ul><p>Defenses: input/output filtering, privilege separation (don't give the LLM direct tool access to sensitive systems), human approval for actions, treat all external content as untrusted.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is MCP (Model Context Protocol)?</h2>
+          <div class="seo-a"><p>An open protocol (Anthropic, 2024 — now industry-wide) standardizing how AI applications connect to external <strong>tools and data</strong>. Instead of every app hand-wiring every integration, an <strong>MCP server</strong> exposes capabilities in a uniform JSON-RPC contract, and any <strong>MCP client</strong> (Claude, IDEs, your own chat app) can use them — "USB for AI integrations".</p><p>A server exposes three primitive types:</p><ul><li><strong>Tools</strong> — model-invokable actions with JSON-schema'd inputs (query a DB, call an API);</li><li><strong>Resources</strong> — readable data/context (files, records);</li><li><strong>Prompts</strong> — reusable prompt templates.</li></ul><p>Transports: <strong>stdio</strong> for local servers, HTTP + <strong>SSE/streamable HTTP</strong> for remote — with sessions binding a client to server state across calls.</p></div>
+          <pre><code>// tool definition an MCP server advertises
+{
+  &quot;name&quot;: &quot;search_orders&quot;,
+  &quot;description&quot;: &quot;Search customer orders by status and date range&quot;,
+  &quot;inputSchema&quot;: {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+      &quot;status&quot;: { &quot;enum&quot;: [&quot;PLACED&quot;, &quot;SHIPPED&quot;, &quot;CANCELLED&quot;] },
+      &quot;from&quot;:   { &quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;date&quot; }
+    },
+    &quot;required&quot;: [&quot;status&quot;]
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you stream an LLM response into a UI (SSE parsing, incremental render)?</h2>
+          <div class="seo-a"><p>LLM APIs stream tokens as <strong>SSE</strong> — <code class="inline">data:</code> lines each carrying a JSON delta, ending with a done signal. The UI pipeline:</p><ol><li>Open the stream (EventSource for GET, or <code class="inline">fetch</code> + <code class="inline">ReadableStream</code> reader for POST bodies — the common case).</li><li><strong>Parse incrementally</strong>: decode chunks, split on the double-newline event boundary, keep the trailing partial line in a buffer (chunks don't align with events!).</li><li>Append each delta to state and render — throttle re-renders (rAF/batching) so 50 tokens/sec doesn't mean 50 renders/sec; render markdown safely as it grows.</li><li>Handle the tail: done signal, errors mid-stream (show partial + retry), and cancellation via AbortController when the user navigates away.</li></ol></div>
+          <pre><code>const res = await fetch('/api/chat', { method: 'POST', body, signal: ctrl.signal });
+const reader = res.body.getReader();
+const dec = new TextDecoder();
+let buf = '';
+for (;;) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  buf += dec.decode(value, { stream: true });
+  const events = buf.split('\n\n');
+  buf = events.pop();                    // keep the incomplete tail!
+  for (const ev of events) {
+    const data = ev.replace(/^data: /, '');
+    if (data === '[DONE]') break;
+    answer += JSON.parse(data).delta;    // incremental render
+  }
+}</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="llm";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>TypeScript Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="27 TypeScript interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/typescript" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="TypeScript Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="27 TypeScript interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/typescript" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="TypeScript Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"interface vs type — what's the difference?","acceptedAnswer":{"@type":"Answer","text":"Both describe shapes. interface can be re-opened/merged (declaration merging) and is the idiom for object/class contracts. type is more flexible — it can be a union, intersection, tuple, or alias a primitive. Rule of thumb: interface for public object shapes, type for unions and utility compositions."}},{"@type":"Question","name":"any vs unknown vs never.","acceptedAnswer":{"@type":"Answer","text":"any — turns off type checking (avoid). unknown — a safe any; you must narrow it before use. never — a value that can't exist (a function that always throws, or an exhausted union)."}},{"@type":"Question","name":"What are generics?","acceptedAnswer":{"@type":"Answer","text":"Generics allow functions, classes, interfaces, and types to work with different data types while preserving type safety. Instead of using any , a generic acts as a placeholder type that is determined when the function or class is used."}},{"@type":"Question","name":"Name some built-in utility types.","acceptedAnswer":{"@type":"Answer","text":"Partial&lt;T&gt; — all props optional (patch/update DTOs). Required&lt;T&gt; — all props required. Pick&lt;T,K&gt; / Omit&lt;T,K&gt; — select or exclude keys. Record&lt;K,V&gt; — a map/dictionary type. Readonly&lt;T&gt; — immutable props."}},{"@type":"Question","name":"What are enums, and what's a union alternative?","acceptedAnswer":{"@type":"Answer","text":"enum defines a set of named constants. Numeric enums generate reverse mappings; string enums are more readable in logs. Many teams prefer a string literal union ( type Size = 'sm' | 'md' | 'lg' ) — it's lighter and tree-shakable, with no runtime object."}},{"@type":"Question","name":"Explain public, private, protected, and readonly in TypeScript.","acceptedAnswer":{"@type":"Answer","text":"TypeScript provides access modifiers to control the visibility of class members. public members are accessible from anywhere, private members can only be accessed inside the same class, protected members are accessible inside the class and its subclasses, while readonly members can only be assigned once during declaration or inside the constructor."}},{"@type":"Question","name":"What is type narrowing / type guards?","acceptedAnswer":{"@type":"Answer","text":"Refining a broad type to a specific one within a block using checks like typeof , instanceof , in , or a custom type predicate ( x is Cat ). TypeScript then knows the precise type inside that branch."}},{"@type":"Question","name":"Union vs intersection types.","acceptedAnswer":{"@type":"Answer","text":"Union ( A | B ) — the value is one of the types. Intersection ( A &amp; B ) — the value has all properties of both."}},{"@type":"Question","name":"What does strictNullChecks do in TypeScript?","acceptedAnswer":{"@type":"Answer","text":"strictNullChecks is a TypeScript compiler option that treats null and undefined as separate types. When enabled, they cannot be assigned to other types unless explicitly included using a union type. This helps catch null-related bugs at compile time instead of runtime."}},{"@type":"Question","name":"What are mapped types?","acceptedAnswer":{"@type":"Answer","text":"Types that transform each property of another type. Utility types like Partial and Readonly are mapped types under the hood."}},{"@type":"Question","name":"What do keyof and typeof do at the type level?","acceptedAnswer":{"@type":"Answer","text":"keyof T produces a union of a type's property names. Type-level typeof value captures the type of an existing value/const so you can derive types from data."}},{"@type":"Question","name":"What are decorators (as used in Angular)?","acceptedAnswer":{"@type":"Answer","text":"Decorators are functions that add metadata/behaviour to classes, methods, properties, or parameters. Angular relies on them heavily: @Component , @Injectable , @Input , @Output ."}},{"@type":"Question","name":"What does 'as const' do?","acceptedAnswer":{"@type":"Answer","text":"A const assertion makes a value deeply readonly and narrows it to its literal types instead of the widened primitive — useful for building precise union types from arrays/objects."}},{"@type":"Question","name":"What is the non-null assertion operator (!)?","acceptedAnswer":{"@type":"Answer","text":"The postfix ! tells the compiler 'this value is definitely not null/undefined here'. It removes the check but does not add a runtime guard — use it only when you're certain."}},{"@type":"Question","name":"What is a discriminated (tagged) union?","acceptedAnswer":{"@type":"Answer","text":"A union of object types that share a common literal tag field. Switching on that tag lets TypeScript narrow to the exact member, giving type-safe, exhaustive handling — great for state machines and Redux/NgRx actions."}},{"@type":"Question","name":"What are conditional types?","acceptedAnswer":{"@type":"Answer","text":"Types that branch based on a condition: T extends U ? X : Y . They power much of the standard library (e.g. Exclude , ReturnType ) and let generic types adapt to their inputs."}},{"@type":"Question","name":"What does the infer keyword do?","acceptedAnswer":{"@type":"Answer","text":"Inside a conditional type, infer captures a type from a position so you can reuse it — e.g. extract a function's return type or an array's element type."}},{"@type":"Question","name":"What is an index signature?","acceptedAnswer":{"@type":"Answer","text":"Declares that an object can have arbitrary keys of a given type: { [key: string]: number } . Useful for dictionaries when keys aren't known ahead of time. Record&lt;K, V&gt; is the shorthand."}},{"@type":"Question","name":"What are tuple types in TypeScript?","acceptedAnswer":{"@type":"Answer","text":"A tuple is a special type of array where the number of elements and the type of each element are fixed. Unlike normal arrays, each position in a tuple has its own predefined type."}},{"@type":"Question","name":"What are function overloads in TypeScript?","acceptedAnswer":{"@type":"Answer","text":"Function overloads allow a function to have multiple call signatures while sharing a single implementation. Each overload describes a different way the function can be called, enabling TypeScript to infer the correct parameter and return types based on the arguments passed."}}]}
   </script>
 </head>
 
@@ -326,6 +330,296 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="TypeScript interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>TypeScript Interview Questions and Answers</h1>
+      <p>27 hand-picked TypeScript interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>interface vs type — what's the difference?</h2>
+          <div class="seo-a"><p>Both describe shapes. <strong>interface</strong> can be re-opened/merged (declaration merging) and is the idiom for object/class contracts. <strong>type</strong> is more flexible — it can be a union, intersection, tuple, or alias a primitive.</p><p>Rule of thumb: <code class="inline">interface</code> for public object shapes, <code class="inline">type</code> for unions and utility compositions.</p></div>
+          <pre><code>type Status = 'active' | 'inactive';
+interface User { id: number; name: string; }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>any vs unknown vs never.</h2>
+          <div class="seo-a"><ul><li><strong>any</strong> — turns off type checking (avoid).</li><li><strong>unknown</strong> — a safe any; you must narrow it before use.</li><li><strong>never</strong> — a value that can't exist (a function that always throws, or an exhausted union).</li></ul></div>
+          <pre><code>// any — checking OFF, everything allowed, crashes at runtime
+const a: any = JSON.parse(s);
+a.foo.bar.baz();          // compiles. explodes.
+
+// unknown — must narrow before use
+const u: unknown = JSON.parse(s);
+if (typeof u === 'object' &amp;&amp; u !== null &amp;&amp; 'name' in u) {
+  console.log((u as { name: string }).name);   // now safe
+}
+
+// never — no value can exist
+function fail(msg: string): never { throw new Error(msg); }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are generics?</h2>
+          <div class="seo-a"><p><strong>Generics</strong> allow functions, classes, interfaces, and types to work with different data types while preserving type safety. Instead of using <code class="inline">any</code>, a generic acts as a placeholder type that is determined when the function or class is used.</p></div>
+          <pre><code>// Generic Function
+function first&lt;T&gt;(arr: T[]): T {
+  return arr[0];
+}
+
+const name = first(['Alice', 'Bob']);
+const number = first([10, 20, 30]);
+
+console.log(name);   // Alice
+console.log(number); // 10
+
+// Generic Interface
+interface ApiResponse&lt;T&gt; {
+  data: T;
+  success: boolean;
+}
+
+const response: ApiResponse&lt;string[]&gt; = {
+  data: ['Angular', 'React'],
+  success: true
+};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Name some built-in utility types.</h2>
+          <div class="seo-a"><ul><li><code class="inline">Partial&lt;T&gt;</code> — all props optional (patch/update DTOs).</li><li><code class="inline">Required&lt;T&gt;</code> — all props required.</li><li><code class="inline">Pick&lt;T,K&gt;</code> / <code class="inline">Omit&lt;T,K&gt;</code> — select or exclude keys.</li><li><code class="inline">Record&lt;K,V&gt;</code> — a map/dictionary type.</li><li><code class="inline">Readonly&lt;T&gt;</code> — immutable props.</li></ul></div>
+          <pre><code>type UserPatch = Partial&lt;User&gt;;
+type Roles = Record&lt;string, boolean&gt;;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are enums, and what's a union alternative?</h2>
+          <div class="seo-a"><p><strong>enum</strong> defines a set of named constants. Numeric enums generate reverse mappings; string enums are more readable in logs.</p><p>Many teams prefer a <strong>string literal union</strong> (<code class="inline">type Size = 'sm' | 'md' | 'lg'</code>) — it's lighter and tree-shakable, with no runtime object.</p></div>
+          <pre><code>enum Role { Admin = 'ADMIN', User = 'USER' }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain public, private, protected, and readonly in TypeScript.</h2>
+          <div class="seo-a"><p>TypeScript provides <strong>access modifiers</strong> to control the visibility of class members. <strong>public</strong> members are accessible from anywhere, <strong>private</strong> members can only be accessed inside the same class, <strong>protected</strong> members are accessible inside the class and its subclasses, while <strong>readonly</strong> members can only be assigned once during declaration or inside the constructor.</p></div>
+          <pre><code>class Person {
+  public name = 'John';
+  private age = 25;
+  protected city = 'Bangalore';
+  readonly country = 'India';
+}
+
+const person = new Person();
+console.log(person.name); // ✅
+// console.log(person.age); // ❌
+// console.log(person.city); // ❌
+console.log(person.country); // ✅</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is type narrowing / type guards?</h2>
+          <div class="seo-a"><p>Refining a broad type to a specific one within a block using checks like <code class="inline">typeof</code>, <code class="inline">instanceof</code>, <code class="inline">in</code>, or a custom <strong>type predicate</strong> (<code class="inline">x is Cat</code>). TypeScript then knows the precise type inside that branch.</p></div>
+          <pre><code>function isCat(a: Animal): a is Cat { return 'meow' in a; }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Union vs intersection types.</h2>
+          <div class="seo-a"><p><strong>Union</strong> (<code class="inline">A | B</code>) — the value is one of the types. <strong>Intersection</strong> (<code class="inline">A &amp; B</code>) — the value has all properties of both.</p></div>
+          <pre><code>type Id = string | number;      // union
+type Employee = Person &amp; Staff;  // intersection</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does strictNullChecks do in TypeScript?</h2>
+          <div class="seo-a"><p><strong>strictNullChecks</strong> is a TypeScript compiler option that treats <code class="inline">null</code> and <code class="inline">undefined</code> as separate types. When enabled, they cannot be assigned to other types unless explicitly included using a union type. This helps catch null-related bugs at compile time instead of runtime.</p></div>
+          <pre><code>// strictNullChecks = true
+
+let username: string;
+
+// username = null;      // ❌ Error
+// username = undefined; // ❌ Error
+
+let name: string | null = null; // ✅
+let email: string | undefined;  // ✅</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are mapped types?</h2>
+          <div class="seo-a"><p>Types that transform each property of another type. Utility types like <code class="inline">Partial</code> and <code class="inline">Readonly</code> are mapped types under the hood.</p></div>
+          <pre><code>type Optional&lt;T&gt; = { [K in keyof T]?: T[K] };</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do keyof and typeof do at the type level?</h2>
+          <div class="seo-a"><p><code class="inline">keyof T</code> produces a union of a type's property names. Type-level <code class="inline">typeof value</code> captures the type of an existing value/const so you can derive types from data.</p></div>
+          <pre><code>const config = { host: '', port: 0 };
+type ConfigKey = keyof typeof config; // 'host' | 'port'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are decorators (as used in Angular)?</h2>
+          <div class="seo-a"><p>Decorators are functions that add metadata/behaviour to classes, methods, properties, or parameters. Angular relies on them heavily: <code class="inline">@Component</code>, <code class="inline">@Injectable</code>, <code class="inline">@Input</code>, <code class="inline">@Output</code>.</p></div>
+          <pre><code>@Input() label = '';
+@Output() change = new EventEmitter();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does 'as const' do?</h2>
+          <div class="seo-a"><p>A <strong>const assertion</strong> makes a value deeply readonly and narrows it to its literal types instead of the widened primitive — useful for building precise union types from arrays/objects.</p></div>
+          <pre><code>const sizes = ['sm', 'md', 'lg'] as const;
+type Size = typeof sizes[number]; // 'sm' | 'md' | 'lg'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the non-null assertion operator (!)?</h2>
+          <div class="seo-a"><p>The postfix <code class="inline">!</code> tells the compiler 'this value is definitely not null/undefined here'. It removes the check but does <em>not</em> add a runtime guard — use it only when you're certain.</p></div>
+          <pre><code>@ViewChild('el') el!: ElementRef; // asserted, assigned by Angular later</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a discriminated (tagged) union?</h2>
+          <div class="seo-a"><p>A union of object types that share a common literal <em>tag</em> field. Switching on that tag lets TypeScript narrow to the exact member, giving type-safe, exhaustive handling — great for state machines and Redux/NgRx actions.</p></div>
+          <pre><code>type Shape =
+  | { kind: 'circle'; r: number }
+  | { kind: 'square'; side: number };
+function area(s: Shape) {
+  switch (s.kind) {
+    case 'circle': return Math.PI * s.r ** 2;
+    case 'square': return s.side ** 2;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are conditional types?</h2>
+          <div class="seo-a"><p>Types that branch based on a condition: <code class="inline">T extends U ? X : Y</code>. They power much of the standard library (e.g. <code class="inline">Exclude</code>, <code class="inline">ReturnType</code>) and let generic types adapt to their inputs.</p></div>
+          <pre><code>type NonNull&lt;T&gt; = T extends null | undefined ? never : T;
+type A = NonNull&lt;string | null&gt;; // string</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does the infer keyword do?</h2>
+          <div class="seo-a"><p>Inside a conditional type, <code class="inline">infer</code> captures a type from a position so you can reuse it — e.g. extract a function's return type or an array's element type.</p></div>
+          <pre><code>type Return&lt;T&gt; = T extends (...args: any[]) =&gt; infer R ? R : never;
+type R = Return&lt;() =&gt; number&gt;; // number</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is an index signature?</h2>
+          <div class="seo-a"><p>Declares that an object can have arbitrary keys of a given type: <code class="inline">{ [key: string]: number }</code>. Useful for dictionaries when keys aren't known ahead of time. <code class="inline">Record&lt;K, V&gt;</code> is the shorthand.</p></div>
+          <pre><code>interface Scores { [player: string]: number; }
+const s: Scores = { alice: 10, bob: 7 };</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are tuple types in TypeScript?</h2>
+          <div class="seo-a"><p>A <strong>tuple</strong> is a special type of array where the <strong>number of elements</strong> and the <strong>type of each element</strong> are fixed. Unlike normal arrays, each position in a tuple has its own predefined type.</p></div>
+          <pre><code>const employee: [string, number] = ['John', 25];
+
+console.log(employee[0]); // John
+console.log(employee[1]); // 25</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are function overloads in TypeScript?</h2>
+          <div class="seo-a"><p><strong>Function overloads</strong> allow a function to have multiple call signatures while sharing a single implementation. Each overload describes a different way the function can be called, enabling TypeScript to infer the correct parameter and return types based on the arguments passed.</p></div>
+          <pre><code>interface User {
+  id: number;
+  name: string;
+}
+
+function getUser(id: number): User;
+function getUser(ids: number[]): User[];
+
+function getUser(idOrIds: number | number[]) {
+  if (Array.isArray(idOrIds)) {
+    return idOrIds.map(id =&gt; ({ id, name: `User ${id}` }));
+  }
+
+  return {
+    id: idOrIds,
+    name: `User ${idOrIds}`
+  };
+}
+
+const user = getUser(1);
+const users = getUser([1, 2, 3]);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between an Abstract Class and an Interface in TypeScript?</h2>
+          <div class="seo-a"><p>An <strong>abstract class</strong> is a base class that cannot be instantiated directly. It can contain both implemented methods and <code class="inline">abstract</code> methods that subclasses must implement. An <strong>interface</strong> defines only the structure (contract) of an object or class and does not contain implementation. Use an abstract class when you want to share common behavior, and use an interface when you only want to enforce a contract.</p></div>
+          <pre><code>abstract class Animal {
+  abstract makeSound(): void;
+
+  eat() {
+    console.log('Eating...');
+  }
+}
+
+class Dog extends Animal {
+  makeSound() {
+    console.log('Bark');
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does the satisfies operator do?</h2>
+          <div class="seo-a"><p>(TS 4.9+) <code class="inline">satisfies</code> checks that a value matches a type <strong>without widening</strong> it — you keep the precise inferred literal types while still validating the shape. Best of both worlds vs a plain annotation.</p></div>
+          <pre><code>const routes = { home: '/', about: '/about' } satisfies Record&lt;string, string&gt;;
+// routes.home is '/', not just string</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Template Literal Types in TypeScript?</h2>
+          <div class="seo-a"><p><strong>Template Literal Types</strong> allow you to create new string literal types by combining existing literal types using JavaScript template string syntax. They help generate strongly typed strings, such as event names, CSS classes, API routes, and object keys.</p></div>
+          <pre><code>type Size = 'sm' | 'md' | 'lg';
+
+type ButtonClass = `btn-${Size}`;
+
+// 'btn-sm' | 'btn-md' | 'btn-lg'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you constrain generics using extends and keyof in TypeScript?</h2>
+          <div class="seo-a"><p>Generic constraints limit the types that can be passed to a generic. The <code class="inline">extends</code> keyword ensures a type has a required shape, while <code class="inline">keyof</code> restricts a value to the valid property names of an object. Together, they enable type-safe and reusable generic functions.</p></div>
+          <pre><code>function getProp&lt;T, K extends keyof T&gt;(obj: T, key: K): T[K] {
+  return obj[key];
+}
+
+const user = {
+  id: 1,
+  name: 'John'
+};
+
+console.log(getProp(user, 'name')); // John
+// getProp(user, 'age'); // ❌ Error</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why TypeScript over JavaScript? And what does tsconfig strict mode buy you?</h2>
+          <div class="seo-a"><p>TypeScript is JavaScript + a <strong>static type system</strong> that runs at compile time and is erased at runtime. The wins:</p><ul><li><strong>Errors at compile time, not in production</strong> — typos, wrong argument shapes, null access surface in the editor.</li><li><strong>Refactoring at scale</strong> — rename a field and every stale usage lights up; the compiler is your regression net.</li><li><strong>Self-documenting APIs + tooling</strong> — autocomplete, jump-to-def, IntelliSense all flow from types.</li></ul><p><code class="inline">"strict": true</code> turns on the family that makes types honest: <code class="inline">strictNullChecks</code> (null/undefined must be handled), <code class="inline">noImplicitAny</code> (no silent any), <code class="inline">strictFunctionTypes</code>, <code class="inline">strictPropertyInitialization</code>, and more. Without strict, TypeScript is mostly decoration.</p></div>
+          <pre><code>// tsconfig.json — the non-negotiable core
+{
+  &quot;compilerOptions&quot;: {
+    &quot;strict&quot;: true,
+    &quot;noUncheckedIndexedAccess&quot;: true,   // arr[i] is T | undefined — honest!
+    &quot;noImplicitOverride&quot;: true
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Type assertion (as) vs casting — what are the risks?</h2>
+          <div class="seo-a"><p><code class="inline">value as T</code> is <strong>not a cast</strong> — nothing is converted or checked at runtime. It's you overruling the compiler: "trust me, this is a T". If you're wrong, the error surfaces later as an undefined property somewhere far from the lie.</p><p>Risks: asserting API responses (<code class="inline">res as User</code> validates nothing), and double assertion (<code class="inline">x as unknown as T</code>) which can connect <em>any</em> two types.</p><p>Prefer, in order: proper typing/generics → <strong>type guards / narrowing</strong> (runtime-checked) → <code class="inline">satisfies</code> (checks without widening) → assertion as the last resort at genuine trust boundaries (DOM lookups, JSON you control).</p></div>
+          <pre><code>// legit: you know more than the compiler
+const input = document.getElementById('email') as HTMLInputElement;
+
+// dangerous lie: no runtime check whatsoever
+const user = (await res.json()) as User;   // prefer: parse with zod
+
+// checked alternative — narrowing:
+if (isUser(data)) { data.name }            // custom guard actually verified it</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>TypeScript private vs JavaScript # private fields?</h2>
+          <div class="seo-a"><p><strong>TS <code class="inline">private</code></strong> — a compile-time promise only; erased in the emitted JS, so at runtime the field is a normal property (<code class="inline">obj['secret']</code> works, JSON.stringify includes it).</p><p><strong>JS <code class="inline">#field</code></strong> — real language-level privacy (ES2022): inaccessible outside the class at <em>runtime</em>, invisible to bracket access, Object.keys and JSON.</p><p>Other differences: <code class="inline">#</code> is "hard private" even from subclasses; TS also offers <code class="inline">protected</code> (no JS equivalent) and parameter properties (<code class="inline">constructor(private http: HttpClient)</code> — the Angular idiom).</p></div>
+          <pre><code>class A {
+  private tsSecret = 1;   // erased -&gt; reachable at runtime
+  #jsSecret = 2;          // truly private
+}
+const a = new A();
+(a as any).tsSecret;      // 1 — the 'privacy' was a type error only
+// (a as any).#jsSecret   // SyntaxError — # isn't even valid syntax outside</code></pre>
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +693,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="typescript";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

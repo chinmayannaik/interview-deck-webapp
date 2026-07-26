@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>PostgreSQL Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="30 PostgreSQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/postgresql" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="PostgreSQL Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="30 PostgreSQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/postgresql" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PostgreSQL Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is PostgreSQL and why is it popular?","acceptedAnswer":{"@type":"Answer","text":"PostgreSQL is an open-source, object-relational database known for reliability, standards compliance, and rich features. Unlike MySQL, it prioritises SQL standard adherence and extensibility. Strengths: ACID transactions, advanced indexing (GIN, GiST, BRIN), JSONB, full-text search, CTEs, window functions, extensions (PostGIS), strong concurrency via MVCC."}},{"@type":"Question","name":"How does MVCC work in PostgreSQL?","acceptedAnswer":{"@type":"Answer","text":"Multi-Version Concurrency Control — readers don't block writers and writers don't block readers. Each row has xmin (inserting transaction) and xmax (deleting/updating transaction). Updates create a new row version; old versions remain until vacuumed. This enables consistent snapshots without read locks — the foundation of PostgreSQL's concurrency model."}},{"@type":"Question","name":"PostgreSQL index types and when to use each.","acceptedAnswer":{"@type":"Answer","text":"B-tree (default) — equality and range queries on scalars. Hash — equality only; rarely needed (B-tree is fine). GIN — JSONB, arrays, full-text search (contains queries). GiST — geometric data, nearest-neighbor, full-text. BRIN — very large tables with naturally ordered data (timestamps); tiny index size. Partial index — index a subset: WHERE active = true . Composite index — column order matters for multi-column filters."}},{"@type":"Question","name":"How do you use EXPLAIN ANALYZE?","acceptedAnswer":{"@type":"Answer","text":"EXPLAIN shows the query planner's execution plan without running the query. EXPLAIN ANALYZE actually executes it and shows real timings. Look for: Seq Scan on large tables (bad — add index), Nested Loop with high row counts, high actual time , Buffers (cache hits vs disk reads)."}},{"@type":"Question","name":"JSON vs JSONB in PostgreSQL.","acceptedAnswer":{"@type":"Answer","text":"JSON — stores exact text, faster to insert, slower to query (re-parsed each time). JSONB — binary format, decomposed storage, supports indexing (GIN), slightly slower to insert but much faster to query . Use JSONB in almost all cases. Query with -> (JSON object), ->> (text), @> (contains)."}},{"@type":"Question","name":"PostgreSQL isolation levels.","acceptedAnswer":{"@type":"Answer","text":"PostgreSQL offers three practical levels (default: Read Committed ): Read Committed — each statement sees committed data as of statement start. Prevents dirty reads. Repeatable Read — snapshot at transaction start. Prevents non-repeatable reads. May get serialization failures. Serializable — strictest; prevents phantom reads via SSI (Serializable Snapshot Isolation). On conflict, Postgres raises 40001 serialization_failure — retry the transaction."}},{"@type":"Question","name":"What causes deadlocks and how does PostgreSQL handle them?","acceptedAnswer":{"@type":"Answer","text":"A deadlock occurs when two transactions wait for each other's locks in a cycle. PostgreSQL's deadlock detector identifies cycles and aborts one transaction (the victim), returning an error. Prevention: acquire locks in a consistent order, keep transactions short, use appropriate isolation levels, avoid unnecessary locking reads."}},{"@type":"Question","name":"What is VACUUM and why is it important?","acceptedAnswer":{"@type":"Answer","text":"VACUUM reclaims storage from dead row versions (from UPDATEs/DELETEs) and updates statistics for the query planner. Autovacuum runs this automatically. Without vacuum: table bloat (wasted disk), transaction ID wraparound risk (catastrophic), stale statistics (bad query plans). VACUUM FULL rewrites the entire table (locks table) — last resort for severe bloat."}},{"@type":"Question","name":"Why use connection pooling with PostgreSQL?","acceptedAnswer":{"@type":"Answer","text":"Each Postgres connection spawns a backend process (~5–10MB RAM). Thousands of app connections can exhaust memory. A pooler (PgBouncer, pgpool) maintains a small pool of real connections and multiplexes client requests. Modes: session (one server conn per client session), transaction (return conn after each transaction — most efficient), statement (most aggressive)."}},{"@type":"Question","name":"SERIAL vs IDENTITY vs sequences.","acceptedAnswer":{"@type":"Answer","text":"All generate auto-incrementing integers: SERIAL — legacy shorthand; creates a sequence + column default. GENERATED ALWAYS AS IDENTITY — SQL standard (preferred since PG 10). Sequences — standalone objects; multiple tables can share one. For distributed systems, consider UUID or Snowflake IDs instead of sequences."}},{"@type":"Question","name":"What are recursive CTEs?","acceptedAnswer":{"@type":"Answer","text":"A recursive CTE queries hierarchical data (org charts, category trees, bill of materials) using a base case + recursive step: WITH RECURSIVE tree AS (base SELECT ... UNION ALL recursive SELECT ... FROM tree JOIN ...) PostgreSQL has excellent CTE support — use them for readable complex queries."}},{"@type":"Question","name":"Full-text search in PostgreSQL.","acceptedAnswer":{"@type":"Answer","text":"Convert text to tsvector (normalized tokens) and query with tsquery . Operators: @@ (match), to_tsvector() , plainto_tsquery() . Index with GIN for fast search. Supports ranking ( ts_rank ), highlighting, and multiple languages. Good for app-level search; for heavy search workloads consider OpenSearch/Elasticsearch alongside Postgres."}},{"@type":"Question","name":"PostgreSQL replication basics.","acceptedAnswer":{"@type":"Answer","text":"Streaming replication — primary streams WAL (Write-Ahead Log) to standby replicas in real time. Standbys serve read queries (hot standby). Logical replication — replicates specific tables/changes; useful for upgrades, selective sync, and CDC. For HA: automatic failover with Patroni, repmgr, or cloud-managed RDS/Cloud SQL."}},{"@type":"Question","name":"Table partitioning in PostgreSQL.","acceptedAnswer":{"@type":"Answer","text":"Split a large table into smaller partitions by range, list, or hash. The planner prunes irrelevant partitions — queries only scan relevant chunks. Range partitioning by date is the most common (monthly order partitions). Partitions can be detached, archived, or dropped cheaply."}},{"@type":"Question","name":"PostgreSQL with Spring Data JPA — common pitfalls.","acceptedAnswer":{"@type":"Answer","text":"N+1 queries — lazy loading without @EntityGraph or JOIN FETCH causes hundreds of queries. Wrong dialect — use org.hibernate.dialect.PostgreSQLDialect . JSONB mapping — use @JdbcTypeCode(SqlTypes.JSON) (Hibernate 6). Connection pool sizing — HikariCP max pool vs Postgres max_connections. DDL auto — never use create-drop in production; use Flyway/Liquibase."}},{"@type":"Question","name":"How do you do an UPSERT in PostgreSQL?","acceptedAnswer":{"@type":"Answer","text":"INSERT ... ON CONFLICT (unique_column) DO UPDATE SET ... — insert if not exists, update if conflict on a unique constraint/index. DO NOTHING silently skips duplicates. Essential for idempotent consumers and sync operations."}},{"@type":"Question","name":"How do you diagnose locking issues?","acceptedAnswer":{"@type":"Answer","text":"Query pg_locks joined with pg_stat_activity to see who holds and waits for locks. pg_blocking_pids() (PG 14+) returns blocking process IDs. Common causes: long-running transactions holding row locks, missing indexes causing table-level locks, DDL during peak traffic."}},{"@type":"Question","name":"PostgreSQL vs MySQL — key differences.","acceptedAnswer":{"@type":"Answer","text":"PostgreSQL MySQL SQL compliance Very high Moderate JSON JSONB (indexable) JSON (less mature indexing) Concurrency MVCC (readers never block writers) InnoDB MVCC (improved but different) Extensions Rich (PostGIS, pgvector) Limited Best for Complex queries, analytics, JSON, geospatial Simple web apps, WordPress, read-heavy"}},{"@type":"Question","name":"Backup and restore strategies.","acceptedAnswer":{"@type":"Answer","text":"pg_dump — logical backup (SQL or custom format). Portable, good for small/medium DBs. pg_basebackup — physical backup of data directory. Faster for large DBs; basis for PITR. PITR — Point-in-Time Recovery using WAL archiving; restore to any moment. Managed services — automated backups on RDS, Cloud SQL, Azure."}},{"@type":"Question","name":"Native array support in PostgreSQL.","acceptedAnswer":{"@type":"Answer","text":"Postgres supports array columns: INTEGER[] , TEXT[] , etc. Query with ANY , @> (contains), unnest() . Useful for tags, multi-value attributes without a junction table. Index with GIN for containment queries."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="PostgreSQL interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>PostgreSQL Interview Questions and Answers</h1>
+      <p>30 hand-picked PostgreSQL interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is PostgreSQL and why is it popular?</h2>
+          <div class="seo-a"><p>PostgreSQL is an <strong>open-source, object-relational database</strong> known for reliability, standards compliance, and rich features. Unlike MySQL, it prioritises SQL standard adherence and extensibility.</p><p>Strengths: ACID transactions, advanced indexing (GIN, GiST, BRIN), JSONB, full-text search, CTEs, window functions, extensions (PostGIS), strong concurrency via MVCC.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does MVCC work in PostgreSQL?</h2>
+          <div class="seo-a"><p><strong>Multi-Version Concurrency Control</strong> — readers don't block writers and writers don't block readers. Each row has <code class="inline">xmin</code> (inserting transaction) and <code class="inline">xmax</code> (deleting/updating transaction). Updates create a new row version; old versions remain until vacuumed.</p><p>This enables consistent snapshots without read locks — the foundation of PostgreSQL's concurrency model.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>PostgreSQL index types and when to use each.</h2>
+          <div class="seo-a"><ul><li><strong>B-tree</strong> (default) — equality and range queries on scalars.</li><li><strong>Hash</strong> — equality only; rarely needed (B-tree is fine).</li><li><strong>GIN</strong> — JSONB, arrays, full-text search (contains queries).</li><li><strong>GiST</strong> — geometric data, nearest-neighbor, full-text.</li><li><strong>BRIN</strong> — very large tables with naturally ordered data (timestamps); tiny index size.</li><li><strong>Partial index</strong> — index a subset: <code class="inline">WHERE active = true</code>.</li><li><strong>Composite index</strong> — column order matters for multi-column filters.</li></ul></div>
+          <pre><code>CREATE INDEX idx_orders_user ON orders(user_id);
+CREATE INDEX idx_active_users ON users(email) WHERE active = true;
+CREATE INDEX idx_data_gin ON docs USING GIN(data);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you use EXPLAIN ANALYZE?</h2>
+          <div class="seo-a"><p><code class="inline">EXPLAIN</code> shows the query planner's execution plan without running the query. <code class="inline">EXPLAIN ANALYZE</code> actually executes it and shows real timings.</p><p>Look for: <strong>Seq Scan</strong> on large tables (bad — add index), <strong>Nested Loop</strong> with high row counts, high <strong>actual time</strong>, <strong>Buffers</strong> (cache hits vs disk reads).</p></div>
+          <pre><code>EXPLAIN (ANALYZE, BUFFERS, FORMAT TEXT)
+SELECT * FROM orders WHERE user_id = 42 AND status = 'open';</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>JSON vs JSONB in PostgreSQL.</h2>
+          <div class="seo-a"><p><strong>JSON</strong> — stores exact text, faster to insert, slower to query (re-parsed each time).</p><p><strong>JSONB</strong> — binary format, decomposed storage, supports indexing (GIN), slightly slower to insert but <strong>much faster to query</strong>. Use JSONB in almost all cases.</p><p>Query with <code class="inline">-></code> (JSON object), <code class="inline">->></code> (text), <code class="inline">@></code> (contains).</p></div>
+          <pre><code>SELECT data-&gt;&gt;'name' FROM profiles WHERE data @&gt; '{&quot;active&quot;: true}';
+CREATE INDEX idx_profile_data ON profiles USING GIN(data);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>PostgreSQL isolation levels.</h2>
+          <div class="seo-a"><p>PostgreSQL offers three practical levels (default: <strong>Read Committed</strong>):</p><ul><li><strong>Read Committed</strong> — each statement sees committed data as of statement start. Prevents dirty reads.</li><li><strong>Repeatable Read</strong> — snapshot at transaction start. Prevents non-repeatable reads. May get serialization failures.</li><li><strong>Serializable</strong> — strictest; prevents phantom reads via SSI (Serializable Snapshot Isolation).</li></ul><p>On conflict, Postgres raises <code class="inline">40001 serialization_failure</code> — retry the transaction.</p></div>
+          <pre><code>BEGIN ISOLATION LEVEL REPEATABLE READ;
+-- queries see consistent snapshot
+COMMIT;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What causes deadlocks and how does PostgreSQL handle them?</h2>
+          <div class="seo-a"><p>A <strong>deadlock</strong> occurs when two transactions wait for each other's locks in a cycle. PostgreSQL's deadlock detector identifies cycles and <strong>aborts one transaction</strong> (the victim), returning an error.</p><p>Prevention: acquire locks in a consistent order, keep transactions short, use appropriate isolation levels, avoid unnecessary locking reads.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is VACUUM and why is it important?</h2>
+          <div class="seo-a"><p><strong>VACUUM</strong> reclaims storage from dead row versions (from UPDATEs/DELETEs) and updates statistics for the query planner. <strong>Autovacuum</strong> runs this automatically.</p><p>Without vacuum: table bloat (wasted disk), transaction ID wraparound risk (catastrophic), stale statistics (bad query plans).</p><p><strong>VACUUM FULL</strong> rewrites the entire table (locks table) — last resort for severe bloat.</p></div>
+          <pre><code>SELECT relname, last_autovacuum, n_dead_tup
+FROM pg_stat_user_tables ORDER BY n_dead_tup DESC;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why use connection pooling with PostgreSQL?</h2>
+          <div class="seo-a"><p>Each Postgres connection spawns a backend process (~5–10MB RAM). Thousands of app connections can exhaust memory. A <strong>pooler</strong> (PgBouncer, pgpool) maintains a small pool of real connections and multiplexes client requests.</p><p>Modes: <strong>session</strong> (one server conn per client session), <strong>transaction</strong> (return conn after each transaction — most efficient), <strong>statement</strong> (most aggressive).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>SERIAL vs IDENTITY vs sequences.</h2>
+          <div class="seo-a"><p>All generate auto-incrementing integers:</p><ul><li><strong>SERIAL</strong> — legacy shorthand; creates a sequence + column default.</li><li><strong>GENERATED ALWAYS AS IDENTITY</strong> — SQL standard (preferred since PG 10).</li><li><strong>Sequences</strong> — standalone objects; multiple tables can share one.</li></ul><p>For distributed systems, consider <strong>UUID</strong> or <strong>Snowflake IDs</strong> instead of sequences.</p></div>
+          <pre><code>CREATE TABLE users (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email TEXT NOT NULL
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are recursive CTEs?</h2>
+          <div class="seo-a"><p>A <strong>recursive CTE</strong> queries hierarchical data (org charts, category trees, bill of materials) using a base case + recursive step:</p><p><code class="inline">WITH RECURSIVE tree AS (base SELECT ... UNION ALL recursive SELECT ... FROM tree JOIN ...)</code></p><p>PostgreSQL has excellent CTE support — use them for readable complex queries.</p></div>
+          <pre><code>WITH RECURSIVE subordinates AS (
+  SELECT id, name, manager_id FROM emp WHERE id = 1
+  UNION ALL
+  SELECT e.id, e.name, e.manager_id
+  FROM emp e JOIN subordinates s ON e.manager_id = s.id
+)
+SELECT * FROM subordinates;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Full-text search in PostgreSQL.</h2>
+          <div class="seo-a"><p>Convert text to <code class="inline">tsvector</code> (normalized tokens) and query with <code class="inline">tsquery</code>. Operators: <code class="inline">@@</code> (match), <code class="inline">to_tsvector()</code>, <code class="inline">plainto_tsquery()</code>.</p><p>Index with GIN for fast search. Supports ranking (<code class="inline">ts_rank</code>), highlighting, and multiple languages.</p><p>Good for app-level search; for heavy search workloads consider OpenSearch/Elasticsearch alongside Postgres.</p></div>
+          <pre><code>SELECT title, ts_rank(search_vec, query) AS rank
+FROM articles, plainto_tsquery('english', 'postgres indexing') query
+WHERE search_vec @@ query
+ORDER BY rank DESC;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>PostgreSQL replication basics.</h2>
+          <div class="seo-a"><p><strong>Streaming replication</strong> — primary streams WAL (Write-Ahead Log) to standby replicas in real time. Standbys serve read queries (hot standby).</p><p><strong>Logical replication</strong> — replicates specific tables/changes; useful for upgrades, selective sync, and CDC.</p><p>For HA: automatic failover with Patroni, repmgr, or cloud-managed RDS/Cloud SQL.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Table partitioning in PostgreSQL.</h2>
+          <div class="seo-a"><p>Split a large table into smaller <strong>partitions</strong> by range, list, or hash. The planner prunes irrelevant partitions — queries only scan relevant chunks.</p><p><strong>Range partitioning</strong> by date is the most common (monthly order partitions). Partitions can be detached, archived, or dropped cheaply.</p></div>
+          <pre><code>CREATE TABLE orders (
+  id BIGINT, created_at DATE, amount NUMERIC
+) PARTITION BY RANGE (created_at);
+
+CREATE TABLE orders_2024 PARTITION OF orders
+  FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>PostgreSQL with Spring Data JPA — common pitfalls.</h2>
+          <div class="seo-a"><ul><li><strong>N+1 queries</strong> — lazy loading without <code class="inline">@EntityGraph</code> or JOIN FETCH causes hundreds of queries.</li><li><strong>Wrong dialect</strong> — use <code class="inline">org.hibernate.dialect.PostgreSQLDialect</code>.</li><li><strong>JSONB mapping</strong> — use <code class="inline">@JdbcTypeCode(SqlTypes.JSON)</code> (Hibernate 6).</li><li><strong>Connection pool sizing</strong> — HikariCP max pool vs Postgres max_connections.</li><li><strong>DDL auto</strong> — never use <code class="inline">create-drop</code> in production; use Flyway/Liquibase.</li></ul></div>
+          <pre><code>spring.datasource.url=jdbc:postgresql://localhost:5432/mydb
+spring.jpa.properties.hibernate.jdbc.batch_size=25</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you do an UPSERT in PostgreSQL?</h2>
+          <div class="seo-a"><p><code class="inline">INSERT ... ON CONFLICT (unique_column) DO UPDATE SET ...</code> — insert if not exists, update if conflict on a unique constraint/index.</p><p><code class="inline">DO NOTHING</code> silently skips duplicates. Essential for idempotent consumers and sync operations.</p></div>
+          <pre><code>INSERT INTO inventory (product_id, qty)
+VALUES (42, 10)
+ON CONFLICT (product_id)
+DO UPDATE SET qty = inventory.qty + EXCLUDED.qty;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you diagnose locking issues?</h2>
+          <div class="seo-a"><p>Query <code class="inline">pg_locks</code> joined with <code class="inline">pg_stat_activity</code> to see who holds and waits for locks. <code class="inline">pg_blocking_pids()</code> (PG 14+) returns blocking process IDs.</p><p>Common causes: long-running transactions holding row locks, missing indexes causing table-level locks, DDL during peak traffic.</p></div>
+          <pre><code>SELECT pid, query, state, wait_event_type
+FROM pg_stat_activity
+WHERE state != 'idle'
+ORDER BY query_start;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>PostgreSQL vs MySQL — key differences.</h2>
+          <div class="seo-a"><table><tr><th></th><th>PostgreSQL</th><th>MySQL</th></tr><tr><td><strong>SQL compliance</strong></td><td>Very high</td><td>Moderate</td></tr><tr><td><strong>JSON</strong></td><td>JSONB (indexable)</td><td>JSON (less mature indexing)</td></tr><tr><td><strong>Concurrency</strong></td><td>MVCC (readers never block writers)</td><td>InnoDB MVCC (improved but different)</td></tr><tr><td><strong>Extensions</strong></td><td>Rich (PostGIS, pgvector)</td><td>Limited</td></tr><tr><td><strong>Best for</strong></td><td>Complex queries, analytics, JSON, geospatial</td><td>Simple web apps, WordPress, read-heavy</td></tr></table></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Backup and restore strategies.</h2>
+          <div class="seo-a"><ul><li><strong>pg_dump</strong> — logical backup (SQL or custom format). Portable, good for small/medium DBs.</li><li><strong>pg_basebackup</strong> — physical backup of data directory. Faster for large DBs; basis for PITR.</li><li><strong>PITR</strong> — Point-in-Time Recovery using WAL archiving; restore to any moment.</li><li><strong>Managed services</strong> — automated backups on RDS, Cloud SQL, Azure.</li></ul></div>
+          <pre><code>pg_dump -Fc mydb &gt; mydb.dump
+pg_restore -d mydb_restored mydb.dump</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Native array support in PostgreSQL.</h2>
+          <div class="seo-a"><p>Postgres supports array columns: <code class="inline">INTEGER[]</code>, <code class="inline">TEXT[]</code>, etc. Query with <code class="inline">ANY</code>, <code class="inline">@></code> (contains), <code class="inline">unnest()</code>.</p><p>Useful for tags, multi-value attributes without a junction table. Index with GIN for containment queries.</p></div>
+          <pre><code>SELECT * FROM posts WHERE 'angular' = ANY(tags);
+SELECT * FROM posts WHERE tags @&gt; ARRAY['angular', 'typescript'];</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Schemas and the search_path.</h2>
+          <div class="seo-a"><p>A <strong>schema</strong> is a namespace for tables, views, and functions inside a single database (the default is <code class="inline">public</code>). The <strong>search_path</strong> is the ordered list of schemas Postgres checks when you use an unqualified name.</p><p>Schemas are how you do multi-tenancy (one schema per tenant) or separate app modules within one database.</p></div>
+          <pre><code>CREATE SCHEMA tenant_acme;
+SET search_path TO tenant_acme, public;
+SELECT * FROM orders;   -- resolves to tenant_acme.orders</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>SERIAL vs IDENTITY vs UUID for primary keys.</h2>
+          <div class="seo-a"><ul><li><strong>SERIAL</strong> — legacy auto-increment (a sequence behind the scenes).</li><li><strong>GENERATED ALWAYS AS IDENTITY</strong> — the SQL-standard, preferred replacement: same auto-increment, cleaner ownership/permissions.</li><li><strong>UUID</strong> — globally unique, generatable on the client with no coordination, but larger (16 bytes) and, if random (v4), causes index fragmentation.</li></ul></div>
+          <pre><code>CREATE TABLE users (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  ext_id UUID DEFAULT gen_random_uuid()
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Generated (computed) columns.</h2>
+          <div class="seo-a"><p>A <code class="inline">GENERATED ALWAYS AS (expr) STORED</code> column is computed from other columns in the same row and kept in sync automatically on every write — you can't insert into it directly.</p><p>Great for derived values you want to filter, sort, or index on (e.g. a lowercased search column, a total).</p></div>
+          <pre><code>CREATE TABLE items (
+  price NUMERIC, qty INT,
+  total NUMERIC GENERATED ALWAYS AS (price * qty) STORED
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Materialized views in PostgreSQL.</h2>
+          <div class="seo-a"><p>Unlike a regular view (recomputed on every query), a <strong>materialized view</strong> stores the result <em>physically</em> — expensive aggregations read instantly. The price is staleness: the data is a snapshot until you <code class="inline">REFRESH</code> it.</p><p><code class="inline">REFRESH ... CONCURRENTLY</code> avoids locking out readers during the rebuild, but requires a unique index on the view.</p></div>
+          <pre><code>CREATE MATERIALIZED VIEW daily_sales AS
+SELECT date_trunc('day', created_at) d, sum(total) rev
+FROM orders GROUP BY 1;
+REFRESH MATERIALIZED VIEW CONCURRENTLY daily_sales;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Useful PostgreSQL extensions.</h2>
+          <div class="seo-a"><p><code class="inline">CREATE EXTENSION</code> bolts on powerful features:</p><ul><li><strong>pg_stat_statements</strong> — aggregated query performance stats (find slow queries).</li><li><strong>pgcrypto</strong> — hashing/encryption; <strong>uuid-ossp</strong> / built-in <code class="inline">gen_random_uuid()</code> for UUIDs.</li><li><strong>pg_trgm</strong> — trigram fuzzy/similarity search (great with GIN).</li><li><strong>PostGIS</strong> — full geospatial types and queries.</li></ul></div>
+          <pre><code>CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+SELECT query, calls, mean_exec_time
+FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 5;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Triggers and PL/pgSQL.</h2>
+          <div class="seo-a"><p><strong>PL/pgSQL</strong> is Postgres's procedural language for functions and triggers. A <strong>trigger</strong> binds a trigger function to fire <code class="inline">BEFORE</code>/<code class="inline">AFTER</code> an INSERT/UPDATE/DELETE; the special records <code class="inline">NEW</code> and <code class="inline">OLD</code> hold the row values.</p><p>Common uses: audit logging, maintaining <code class="inline">updated_at</code>, and enforcing rules a CHECK can't express.</p></div>
+          <pre><code>CREATE FUNCTION touch() RETURNS trigger AS $
+BEGIN NEW.updated_at = now(); RETURN NEW; END;
+$ LANGUAGE plpgsql;
+CREATE TRIGGER t BEFORE UPDATE ON orders
+FOR EACH ROW EXECUTE FUNCTION touch();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Bulk loading data with COPY.</h2>
+          <div class="seo-a"><p><code class="inline">COPY</code> streams whole files of rows in or out far faster than row-by-row <code class="inline">INSERT</code> — one command, minimal parsing and per-statement overhead. <code class="inline">\copy</code> is the psql client-side variant that reads a local file.</p><p>For very large loads, drop/disable indexes and triggers first, load, then rebuild — maintaining indexes per row is the bottleneck.</p></div>
+          <pre><code>COPY orders (id, total) FROM '/data/orders.csv' WITH (FORMAT csv, HEADER);
+-- client side:
+\copy orders FROM 'orders.csv' CSV HEADER</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Index types: B-tree, GIN, GiST, BRIN, Hash.</h2>
+          <div class="seo-a"><ul><li><strong>B-tree</strong> — default; equality, ranges, sorting.</li><li><strong>GIN</strong> — multi-valued data: <code class="inline">jsonb</code>, arrays, full-text search.</li><li><strong>GiST</strong> — geometric/spatial, ranges, nearest-neighbor.</li><li><strong>BRIN</strong> — tiny index for huge, naturally-ordered tables (e.g. append-only by time).</li><li><strong>Hash</strong> — equality only; rarely worth it over B-tree.</li></ul></div>
+          <pre><code>CREATE INDEX idx_doc ON docs USING GIN (data jsonb_path_ops);
+CREATE INDEX idx_ts ON events USING BRIN (created_at);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a LATERAL join?</h2>
+          <div class="seo-a"><p><code class="inline">LATERAL</code> lets a subquery (or set-returning function) in the <code class="inline">FROM</code> clause <strong>reference columns from the preceding FROM items</strong> — it's evaluated once per outer row, like a correlated subquery you can join to.</p><p>The classic use is <strong>top-N per group</strong>: for each parent, run a small ordered/limited query.</p></div>
+          <pre><code>SELECT c.name, o.*
+FROM customers c
+CROSS JOIN LATERAL (
+  SELECT * FROM orders o
+  WHERE o.customer_id = c.id
+  ORDER BY o.created_at DESC LIMIT 3
+) o;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>LISTEN / NOTIFY — what and when?</h2>
+          <div class="seo-a"><p>Postgres's built-in lightweight <strong>pub/sub</strong>: <code class="inline">NOTIFY channel, 'payload'</code> broadcasts a message (often from a trigger); connected clients that ran <code class="inline">LISTEN channel</code> receive it in near real time.</p><p>Great for cache invalidation or nudging workers. But it's <em>not a durable queue</em> — a client that's disconnected misses the message.</p></div>
+          <pre><code>-- worker:
+LISTEN order_created;
+-- producer (or trigger):
+NOTIFY order_created, '{&quot;id&quot;: 42}';</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="postgresql";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

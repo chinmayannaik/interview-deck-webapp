@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>Git Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="28 Git interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/git" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="Git Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="28 Git interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/git" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="Git Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Merge vs rebase.","acceptedAnswer":{"@type":"Answer","text":"Merge combines branches with a merge commit — preserves the true history, non-destructive. Rebase replays your commits on top of another branch — a linear, clean history, but rewrites commits. Never rebase branches others have pulled."}},{"@type":"Question","name":"git fetch vs git pull.","acceptedAnswer":{"@type":"Answer","text":"fetch downloads remote changes but doesn't touch your working branch — you can inspect first. pull = fetch + merge (or rebase) into your current branch in one step."}},{"@type":"Question","name":"reset vs revert vs checkout.","acceptedAnswer":{"@type":"Answer","text":"revert — creates a new commit that undoes a previous one; safe on shared branches. reset — moves the branch pointer (soft/mixed/hard); rewrites history, use locally. checkout / switch / restore — move between branches or restore files."}},{"@type":"Question","name":"What does git stash do?","acceptedAnswer":{"@type":"Answer","text":"Temporarily shelves uncommitted changes so you can switch context (e.g. fix an urgent bug on another branch), then reapply them with git stash pop ."}},{"@type":"Question","name":"What is git cherry-pick?","acceptedAnswer":{"@type":"Answer","text":"Applies a single specific commit from one branch onto another — useful for hotfixes you need on multiple branches without merging everything."}},{"@type":"Question","name":"Describe a common branching strategy.","acceptedAnswer":{"@type":"Answer","text":"GitFlow — long-lived main and develop , plus feature/* , release/* , and hotfix/* branches. Simpler alternative: trunk-based / GitHub Flow — short-lived feature branches merged to main via pull requests."}},{"@type":"Question","name":"How do you resolve a merge conflict?","acceptedAnswer":{"@type":"Answer","text":"Git marks conflicting regions with &lt;&lt;&lt;&lt;&lt;&lt;&lt; / ======= / &gt;&gt;&gt;&gt;&gt;&gt;&gt; . Edit to the desired result, remove the markers, git add the files, then commit (or git rebase --continue )."}},{"@type":"Question","name":"How do you recover a 'lost' commit?","acceptedAnswer":{"@type":"Answer","text":"git reflog logs where HEAD has been, including commits orphaned by a reset/rebase. Find the hash and git checkout or git reset back to it."}},{"@type":"Question","name":"What is squashing and why do it?","acceptedAnswer":{"@type":"Answer","text":"Combining several commits into one (via interactive rebase or a squash-merge) to keep the main branch history clean — one logical change = one commit."}},{"@type":"Question","name":"What is HEAD and a detached HEAD?","acceptedAnswer":{"@type":"Answer","text":"HEAD points to your current commit/branch. A detached HEAD means you've checked out a specific commit rather than a branch — new commits there aren't on any branch and can be lost unless you create one."}},{"@type":"Question","name":"What do you look for in a code review? Describe your PR process.","acceptedAnswer":{"@type":"Answer","text":"A layered checklist, most important first: Correctness — does it do what the ticket says; edge cases (null/empty/concurrent); error handling. Design — right layer for the logic, no duplication of existing utilities, sane API shapes, backward compatibility. Safety — SQL injection/XSS, secrets in code, N+1 queries, missing indexes on new queries, transaction boundaries. Tests — meaningful cases (not just coverage), failure paths tested. Readability last — naming, dead code; style nits belong to the linter, not humans. Process: small PRs (&lt; ~400 lines review well), a description that says why , CI green before human eyes, comments phrased as questions, and approval means I'd maintain this ."}},{"@type":"Question","name":"Working directory, staging area, and repository.","acceptedAnswer":{"@type":"Answer","text":"Git has three 'trees': Working directory — the actual files you edit. Staging area (index) — a snapshot you're preparing; git add moves changes here. Repository — committed history; git commit records the staged snapshot permanently. The staging area is what lets you commit only some of your changes."}},{"@type":"Question","name":"clone vs fork.","acceptedAnswer":{"@type":"Answer","text":"clone — a Git operation that makes a local copy of a repository (with full history) that you can pull from and, with access, push to. fork — a hosting-platform (GitHub/GitLab) concept: a server-side copy of a repo under your account. You fork a project you can't push to, clone your fork, then open a pull request back to the original."}},{"@type":"Question","name":".gitignore — how it works and the common mistakes.","acceptedAnswer":{"@type":"Answer","text":".gitignore lists path patterns Git should not track (build output, node_modules , secrets). It only affects untracked files. Gotcha: a file already tracked keeps being tracked even after you add it to .gitignore — you must untrack it explicitly."}},{"@type":"Question","name":"Inspecting history: log, diff, and show.","acceptedAnswer":{"@type":"Answer","text":"git log — commit history; --oneline --graph for a compact branch view. git diff — unstaged changes; --staged for what's about to commit; A..B to compare commits/branches. git show &lt;commit&gt; — the full patch and metadata of one commit."}},{"@type":"Question","name":"Git tags — lightweight vs annotated.","acceptedAnswer":{"@type":"Answer","text":"A tag is a named pointer to a specific commit, typically marking a release. Lightweight — just a name → commit pointer. Annotated ( -a ) — a full object storing tagger, date, message, and can be signed. Recommended for releases. Tags aren't pushed by default — you must push them explicitly."}},{"@type":"Question","name":"What does git commit --amend do?","acceptedAnswer":{"@type":"Answer","text":"It replaces the most recent commit with a new one — letting you fix the commit message or fold in additional staged changes you forgot. Technically it creates a brand-new commit (new hash) and moves the branch to it."}},{"@type":"Question","name":"Interactive rebase — what can it do?","acceptedAnswer":{"@type":"Answer","text":"git rebase -i opens an editable list of commits so you can rewrite a series before merging: reword — change a message squash / fixup — combine commits (fixup discards the message) edit — stop to amend a specific commit reorder / drop — rearrange or delete commits"}},{"@type":"Question","name":"Fast-forward vs no-ff merge.","acceptedAnswer":{"@type":"Answer","text":"A fast-forward merge happens when the target branch hasn't diverged — Git just moves the branch pointer forward, no merge commit, a perfectly linear history. --no-ff forces a merge commit even when a fast-forward is possible, preserving the fact that a feature branch existed as a distinct group of commits."}},{"@type":"Question","name":"git pull --rebase vs a plain pull.","acceptedAnswer":{"@type":"Answer","text":"A default git pull does fetch + merge , which can litter history with 'Merge branch main' commits when you and the remote both moved. git pull --rebase instead replays your local commits on top of the fetched remote — a clean, linear history with no extra merge commits."}}]}
   </script>
 </head>
 
@@ -326,6 +330,186 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="Git interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Git Interview Questions and Answers</h1>
+      <p>28 hand-picked Git interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Merge vs rebase.</h2>
+          <div class="seo-a"><p><strong>Merge</strong> combines branches with a merge commit — preserves the true history, non-destructive.</p><p><strong>Rebase</strong> replays your commits on top of another branch — a linear, clean history, but rewrites commits. Never rebase branches others have pulled.</p></div>
+          <pre><code>git rebase main   # replay feature commits onto main</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>git fetch vs git pull.</h2>
+          <div class="seo-a"><p><strong>fetch</strong> downloads remote changes but doesn't touch your working branch — you can inspect first. <strong>pull</strong> = fetch + merge (or rebase) into your current branch in one step.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>reset vs revert vs checkout.</h2>
+          <div class="seo-a"><ul><li><strong>revert</strong> — creates a new commit that undoes a previous one; safe on shared branches.</li><li><strong>reset</strong> — moves the branch pointer (soft/mixed/hard); rewrites history, use locally.</li><li><strong>checkout / switch / restore</strong> — move between branches or restore files.</li></ul></div>
+          <pre><code>git revert &lt;hash&gt;   # safe undo
+git reset --hard HEAD~1  # local-only</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does git stash do?</h2>
+          <div class="seo-a"><p>Temporarily shelves uncommitted changes so you can switch context (e.g. fix an urgent bug on another branch), then reapply them with <code class="inline">git stash pop</code>.</p></div>
+          <pre><code>git stash
+git switch main
+# ... later ...
+git switch feature &amp;&amp; git stash pop</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is git cherry-pick?</h2>
+          <div class="seo-a"><p>Applies a single specific commit from one branch onto another — useful for hotfixes you need on multiple branches without merging everything.</p></div>
+          <pre><code>git cherry-pick &lt;hash&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Describe a common branching strategy.</h2>
+          <div class="seo-a"><p><strong>GitFlow</strong> — long-lived <code class="inline">main</code> and <code class="inline">develop</code>, plus <code class="inline">feature/*</code>, <code class="inline">release/*</code>, and <code class="inline">hotfix/*</code> branches. Simpler alternative: <strong>trunk-based</strong> / <strong>GitHub Flow</strong> — short-lived feature branches merged to main via pull requests.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you resolve a merge conflict?</h2>
+          <div class="seo-a"><p>Git marks conflicting regions with <code class="inline">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> / <code class="inline">=======</code> / <code class="inline">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>. Edit to the desired result, remove the markers, <code class="inline">git add</code> the files, then commit (or <code class="inline">git rebase --continue</code>).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you recover a 'lost' commit?</h2>
+          <div class="seo-a"><p><code class="inline">git reflog</code> logs where HEAD has been, including commits orphaned by a reset/rebase. Find the hash and <code class="inline">git checkout</code> or <code class="inline">git reset</code> back to it.</p></div>
+          <pre><code>git reflog
+git reset --hard &lt;hash&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is squashing and why do it?</h2>
+          <div class="seo-a"><p>Combining several commits into one (via interactive rebase or a squash-merge) to keep the main branch history clean — one logical change = one commit.</p></div>
+          <pre><code>git rebase -i HEAD~3   # mark commits as 'squash'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is HEAD and a detached HEAD?</h2>
+          <div class="seo-a"><p><strong>HEAD</strong> points to your current commit/branch. A <strong>detached HEAD</strong> means you've checked out a specific commit rather than a branch — new commits there aren't on any branch and can be lost unless you create one.</p></div>
+          <pre><code>git switch -c new-branch  # save detached-HEAD work</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do you look for in a code review? Describe your PR process.</h2>
+          <div class="seo-a"><p>A layered checklist, most important first:</p><ul><li><strong>Correctness</strong> — does it do what the ticket says; edge cases (null/empty/concurrent); error handling.</li><li><strong>Design</strong> — right layer for the logic, no duplication of existing utilities, sane API shapes, backward compatibility.</li><li><strong>Safety</strong> — SQL injection/XSS, secrets in code, N+1 queries, missing indexes on new queries, transaction boundaries.</li><li><strong>Tests</strong> — meaningful cases (not just coverage), failure paths tested.</li><li><strong>Readability last</strong> — naming, dead code; style nits belong to the linter, not humans.</li></ul><p>Process: small PRs (&lt; ~400 lines review well), a description that says <em>why</em>, CI green before human eyes, comments phrased as questions, and approval means <em>I'd maintain this</em>.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Working directory, staging area, and repository.</h2>
+          <div class="seo-a"><p>Git has three 'trees':</p><ul><li><strong>Working directory</strong> — the actual files you edit.</li><li><strong>Staging area (index)</strong> — a snapshot you're preparing; <code class="inline">git add</code> moves changes here.</li><li><strong>Repository</strong> — committed history; <code class="inline">git commit</code> records the staged snapshot permanently.</li></ul><p>The staging area is what lets you commit only <em>some</em> of your changes.</p></div>
+          <pre><code>git add file.js      # working dir -&gt; staging
+git commit -m &quot;msg&quot;  # staging -&gt; repository</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>clone vs fork.</h2>
+          <div class="seo-a"><p><strong>clone</strong> — a Git operation that makes a local copy of a repository (with full history) that you can pull from and, with access, push to.</p><p><strong>fork</strong> — a hosting-platform (GitHub/GitLab) concept: a server-side copy of a repo under <em>your</em> account. You fork a project you can't push to, clone your fork, then open a pull request back to the original.</p></div>
+          <pre><code>git clone https://github.com/user/repo.git</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>.gitignore — how it works and the common mistakes.</h2>
+          <div class="seo-a"><p><code class="inline">.gitignore</code> lists path patterns Git should not track (build output, <code class="inline">node_modules</code>, secrets). It only affects <strong>untracked</strong> files.</p><p>Gotcha: a file <em>already tracked</em> keeps being tracked even after you add it to .gitignore — you must untrack it explicitly.</p></div>
+          <pre><code>git rm --cached .env      # stop tracking, keep the file
+echo &quot;.env&quot; &gt;&gt; .gitignore</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Inspecting history: log, diff, and show.</h2>
+          <div class="seo-a"><ul><li><strong>git log</strong> — commit history; <code class="inline">--oneline --graph</code> for a compact branch view.</li><li><strong>git diff</strong> — unstaged changes; <code class="inline">--staged</code> for what's about to commit; <code class="inline">A..B</code> to compare commits/branches.</li><li><strong>git show &lt;commit&gt;</strong> — the full patch and metadata of one commit.</li></ul></div>
+          <pre><code>git log --oneline --graph --all
+git diff --staged
+git show HEAD~2</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Git tags — lightweight vs annotated.</h2>
+          <div class="seo-a"><p>A <strong>tag</strong> is a named pointer to a specific commit, typically marking a release.</p><ul><li><strong>Lightweight</strong> — just a name → commit pointer.</li><li><strong>Annotated</strong> (<code class="inline">-a</code>) — a full object storing tagger, date, message, and can be signed. Recommended for releases.</li></ul><p>Tags aren't pushed by default — you must push them explicitly.</p></div>
+          <pre><code>git tag -a v1.2.0 -m &quot;Release 1.2.0&quot;
+git push origin v1.2.0</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does git commit --amend do?</h2>
+          <div class="seo-a"><p>It <strong>replaces</strong> the most recent commit with a new one — letting you fix the commit message or fold in additional staged changes you forgot. Technically it creates a brand-new commit (new hash) and moves the branch to it.</p></div>
+          <pre><code>git add forgotten.js
+git commit --amend --no-edit   # fold in, keep message</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Interactive rebase — what can it do?</h2>
+          <div class="seo-a"><p><code class="inline">git rebase -i</code> opens an editable list of commits so you can rewrite a series before merging:</p><ul><li><strong>reword</strong> — change a message</li><li><strong>squash / fixup</strong> — combine commits (fixup discards the message)</li><li><strong>edit</strong> — stop to amend a specific commit</li><li><strong>reorder / drop</strong> — rearrange or delete commits</li></ul></div>
+          <pre><code>git rebase -i HEAD~4   # curate the last 4 commits</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Fast-forward vs no-ff merge.</h2>
+          <div class="seo-a"><p>A <strong>fast-forward</strong> merge happens when the target branch hasn't diverged — Git just moves the branch pointer forward, no merge commit, a perfectly linear history.</p><p><code class="inline">--no-ff</code> forces a merge commit even when a fast-forward is possible, preserving the fact that a feature branch existed as a distinct group of commits.</p></div>
+          <pre><code>git merge --no-ff feature   # always create a merge commit</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>git pull --rebase vs a plain pull.</h2>
+          <div class="seo-a"><p>A default <code class="inline">git pull</code> does fetch + <strong>merge</strong>, which can litter history with 'Merge branch main' commits when you and the remote both moved.</p><p><code class="inline">git pull --rebase</code> instead <strong>replays your local commits on top</strong> of the fetched remote — a clean, linear history with no extra merge commits.</p></div>
+          <pre><code>git pull --rebase origin main</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does git bisect find a bug?</h2>
+          <div class="seo-a"><p>A <strong>binary search</strong> through history for the commit that introduced a bug. You mark a known-<code class="inline">bad</code> commit and a known-<code class="inline">good</code> one; Git checks out the midpoint, you test and mark it good/bad, and it halves the range each step until it pinpoints the culprit.</p></div>
+          <pre><code>git bisect start
+git bisect bad            # current is broken
+git bisect good v1.0     # this tag worked
+# test each checkout, then:  git bisect good|bad
+git bisect reset</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is git blame for?</h2>
+          <div class="seo-a"><p><code class="inline">git blame</code> annotates each line of a file with the commit, author, and date that <strong>last changed it</strong> — the way to find <em>when</em> and <em>why</em> a specific line came to be, then read that commit's message/PR for context.</p></div>
+          <pre><code>git blame -L 40,60 src/app.js   # who touched lines 40-60</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Git hooks?</h2>
+          <div class="seo-a"><p>Scripts Git runs automatically on events: <strong>pre-commit</strong> (lint/format), <strong>commit-msg</strong> (enforce message format), <strong>pre-push</strong> (run tests), <strong>post-merge</strong>, etc.</p><p>They live in <code class="inline">.git/hooks</code> and are <em>not</em> committed — so teams use tools like <strong>Husky</strong> or <strong>pre-commit</strong> to share and version them.</p></div>
+          <pre><code># .husky/pre-commit
+npm run lint &amp;&amp; npm test</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>reset --soft vs --mixed vs --hard.</h2>
+          <div class="seo-a"><p>All three move <code class="inline">HEAD</code> to a target commit; they differ in what else they touch:</p><ul><li><strong>--soft</strong> — moves HEAD only; changes stay <em>staged</em>.</li><li><strong>--mixed</strong> (default) — moves HEAD and unstages; changes remain in the working directory.</li><li><strong>--hard</strong> — moves HEAD and <em>discards</em> both staged and working changes.</li></ul></div>
+          <pre><code>git reset --soft HEAD~1   # undo last commit, keep changes staged
+git reset --hard HEAD~1   # undo last commit, throw changes away</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Git submodules?</h2>
+          <div class="seo-a"><p>A submodule embeds one repository inside another, pinned to a <strong>specific commit</strong> of the child. The parent tracks only that pointer, not the child's files.</p><p>Pros: share a library across projects with exact version control. Cons: extra ceremony — clones need <code class="inline">--recurse-submodules</code>, and it's easy to forget to commit an updated pointer.</p></div>
+          <pre><code>git clone --recurse-submodules &lt;url&gt;
+git submodule update --init --recursive</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you remove a secret or large file from all of history?</h2>
+          <div class="seo-a"><p>Deleting it in a new commit isn't enough — it's still in every prior commit. Use <strong>git filter-repo</strong> (the modern replacement for <code class="inline">filter-branch</code>, or the <strong>BFG</strong> tool) to rewrite <em>every</em> commit and purge the file/string.</p><p>This changes all commit hashes, so you must force-push and everyone must re-clone — and you should <strong>rotate the leaked secret regardless</strong>, since it may already be cloned.</p></div>
+          <pre><code>git filter-repo --path secrets.env --invert-paths
+git push --force --all</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is git worktree?</h2>
+          <div class="seo-a"><p><code class="inline">git worktree</code> checks out multiple branches into <strong>separate directories</strong> backed by a single repository (shared <code class="inline">.git</code>). You can work on an urgent hotfix in one folder without stashing or disturbing your half-done feature in another.</p></div>
+          <pre><code>git worktree add ../hotfix main
+# fix, commit, then:
+git worktree remove ../hotfix</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain Git's object model.</h2>
+          <div class="seo-a"><p>Git is a content-addressable store of four object types, each keyed by a hash of its content:</p><ul><li><strong>blob</strong> — file contents.</li><li><strong>tree</strong> — a directory listing (names → blobs/trees).</li><li><strong>commit</strong> — a snapshot: root tree + parent commit(s) + author/message.</li><li><strong>tag</strong> — an annotated pointer to a commit.</li></ul><p><strong>Refs</strong> (branches) are just movable pointers to commit hashes.</p></div>
+          <pre><code>git cat-file -t HEAD    # commit
+git cat-file -p HEAD    # inspect the object graph</code></pre>
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +583,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="git";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

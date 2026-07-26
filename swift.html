@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>Swift Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="25 Swift interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/swift" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="Swift Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="25 Swift interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/swift" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="Swift Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Swift, and why is it used for iOS development?","acceptedAnswer":{"@type":"Answer","text":"Swift is Apple's modern, open-source programming language used to develop applications for iOS, macOS, watchOS, and tvOS. It is designed to be fast, safe, and expressive, offering features like type inference, optionals, automatic memory management (ARC), and strong compile-time safety."}},{"@type":"Question","name":"What is the difference between var and let in Swift?","acceptedAnswer":{"@type":"Answer","text":"var declares a mutable variable whose value can change after initialization. let declares an immutable constant whose value cannot be changed once assigned."}},{"@type":"Question","name":"What are Optionals in Swift?","acceptedAnswer":{"@type":"Answer","text":"An Optional represents a value that may either contain a value or be nil . Swift uses optionals to prevent null pointer exceptions by forcing developers to safely unwrap values before using them. Common unwrapping techniques include optional binding ( if let , guard let ) and the nil-coalescing operator ( ?? )."}},{"@type":"Question","name":"What is ARC (Automatic Reference Counting) in Swift?","acceptedAnswer":{"@type":"Answer","text":"ARC (Automatic Reference Counting) automatically manages memory by keeping track of object references. When an object's reference count becomes zero, Swift automatically deallocates it. To avoid retain cycles, Swift provides weak and unowned references."}},{"@type":"Question","name":"What is the difference between a Struct and a Class in Swift?","acceptedAnswer":{"@type":"Answer","text":"Structs are value types. They are copied when assigned or passed to functions. Classes are reference types. Multiple variables can reference the same object instance. Classes support inheritance, deinitializers, and reference counting, while structs do not."}},{"@type":"Question","name":"guard let vs if let for unwrapping optionals?","acceptedAnswer":{"@type":"Answer","text":"if let binds the unwrapped value only inside the if block. guard let binds it for the rest of the enclosing scope and requires an else that exits (return/break/throw). guard enables an early-exit style that avoids the nested 'pyramid of doom' and keeps the happy path un-indented."}},{"@type":"Question","name":"What are closures in Swift?","acceptedAnswer":{"@type":"Answer","text":"Self-contained blocks of code that can be passed around and capture references to variables from their surrounding context. They power callbacks, completion handlers, and higher-order functions. Swift adds sugar: shorthand argument names ( $0 ), implicit return, and trailing closure syntax."}},{"@type":"Question","name":"Enums and associated values.","acceptedAnswer":{"@type":"Answer","text":"An enum models a type with a fixed set of cases. Swift enums are powerful: each case can carry associated values , can have raw values , and the enum can define computed properties and methods. Ideal for representing state and outcomes exhaustively — the compiler forces you to handle every case in a switch."}},{"@type":"Question","name":"What is a protocol in Swift?","acceptedAnswer":{"@type":"Answer","text":"A protocol is a blueprint of methods and properties a conforming type must provide — Swift's version of an interface. Structs, classes, and enums can all conform, enabling polymorphism without class inheritance. Protocol extensions can supply default implementations, so conformers get behavior for free."}},{"@type":"Question","name":"Array vs Set vs Dictionary.","acceptedAnswer":{"@type":"Answer","text":"Array — ordered, index-accessed, allows duplicates. Set — unordered, unique elements, O(1) membership tests and set algebra (union/intersection). Dictionary — unordered key → value pairs, O(1) lookup by key. All three are value types (copy semantics) with copy-on-write storage."}},{"@type":"Question","name":"map, filter, reduce, and compactMap.","acceptedAnswer":{"@type":"Answer","text":"map — transforms every element. filter — keeps elements matching a condition. reduce — combines all elements into a single value. compactMap — maps, then drops the nil results (unwrapping optionals). flatMap — maps and flattens nested sequences."}},{"@type":"Question","name":"Error handling with do / try / catch.","acceptedAnswer":{"@type":"Answer","text":"A function that can fail is marked throws ; callers use try inside a do/catch . Variants: try? converts the throw to an optional (nil on error), try! force-unwraps and crashes on error. Errors are just values conforming to the Error protocol — typically enums."}},{"@type":"Question","name":"weak vs unowned references.","acceptedAnswer":{"@type":"Answer","text":"Both break retain cycles by not incrementing the reference count. weak — always optional, automatically becomes nil when the referent is deallocated. Use when the reference can outlive the object (e.g. a delegate). unowned — non-optional, assumes the referent always outlives it; accessing it after deallocation crashes . Use only when the lifetimes are guaranteed."}},{"@type":"Question","name":"Generics in Swift.","acceptedAnswer":{"@type":"Answer","text":"Generics let you write reusable, type-safe code parameterized over types ( &lt;T&gt; ) instead of duplicating logic or falling back to Any . Type constraints ( T: Comparable ) restrict what the type must support. The standard library is built on them — Array&lt;Element&gt; , Optional&lt;Wrapped&gt; , Dictionary&lt;Key, Value&gt; ."}},{"@type":"Question","name":"What are extensions?","acceptedAnswer":{"@type":"Answer","text":"Extensions add functionality — methods, computed properties, initializers, nested types, and protocol conformances — to an existing type without subclassing , even to types you don't own (like String or Int ). Limitation: they cannot add stored properties (no new storage), only computed ones."}},{"@type":"Question","name":"What is protocol-oriented programming (POP)?","acceptedAnswer":{"@type":"Answer","text":"Apple's recommended paradigm: prefer protocols + protocol extensions over class inheritance. Define behavior in protocols, provide defaults in extensions, and let value types (structs) conform. It favors composition over inheritance , works with value semantics, and sidesteps the fragile-base-class and single-inheritance limits of OOP."}},{"@type":"Question","name":"What is copy-on-write (COW)?","acceptedAnswer":{"@type":"Answer","text":"Swift's standard collections ( Array , Dictionary , Set , String ) share underlying storage when copied and only make a real copy the moment one copy is mutated . So passing arrays around is cheap — you pay for the copy only on write."}},{"@type":"Question","name":"Codable — JSON encoding and decoding.","acceptedAnswer":{"@type":"Answer","text":"Codable = Encodable & Decodable . Conform a type and Swift synthesizes the (de)serialization; JSONEncoder / JSONDecoder do the work. Use a CodingKeys enum to map JSON field names to Swift property names."}},{"@type":"Question","name":"What does defer do?","acceptedAnswer":{"@type":"Answer","text":"A defer block schedules code to run when the current scope exits — however it exits (normal fall-through, return , or a thrown error). Perfect for guaranteed cleanup: closing files, releasing locks, ending a context. Multiple defers execute in reverse (LIFO) order."}},{"@type":"Question","name":"Stored vs computed properties, lazy, and observers.","acceptedAnswer":{"@type":"Answer","text":"Stored — holds a value in memory. Computed — no storage; a get (and optional set ) calculates on each access. lazy — a stored property initialized only on first access (defer expensive setup). Observers — willSet / didSet run around a stored property's changes."}}]}
   </script>
 </head>
 
@@ -326,6 +330,242 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="Swift interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Swift Interview Questions and Answers</h1>
+      <p>25 hand-picked Swift interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Swift, and why is it used for iOS development?</h2>
+          <div class="seo-a"><p><strong>Swift</strong> is Apple's modern, open-source programming language used to develop applications for iOS, macOS, watchOS, and tvOS. It is designed to be fast, safe, and expressive, offering features like type inference, optionals, automatic memory management (ARC), and strong compile-time safety.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between var and let in Swift?</h2>
+          <div class="seo-a"><p><strong>var</strong> declares a mutable variable whose value can change after initialization.</p><p><strong>let</strong> declares an immutable constant whose value cannot be changed once assigned.</p></div>
+          <pre><code>var age = 25
+age = 26
+
+let name = &quot;John&quot;
+// name = &quot;Mike&quot; // Error</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Optionals in Swift?</h2>
+          <div class="seo-a"><p>An <strong>Optional</strong> represents a value that may either contain a value or be <code class="inline">nil</code>. Swift uses optionals to prevent null pointer exceptions by forcing developers to safely unwrap values before using them.</p><p>Common unwrapping techniques include optional binding (<code class="inline">if let</code>, <code class="inline">guard let</code>) and the nil-coalescing operator (<code class="inline">??</code>).</p></div>
+          <pre><code>var username: String?
+if let name = username {
+    print(name)
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is ARC (Automatic Reference Counting) in Swift?</h2>
+          <div class="seo-a"><p><strong>ARC (Automatic Reference Counting)</strong> automatically manages memory by keeping track of object references. When an object's reference count becomes zero, Swift automatically deallocates it.</p><p>To avoid retain cycles, Swift provides <code class="inline">weak</code> and <code class="inline">unowned</code> references.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between a Struct and a Class in Swift?</h2>
+          <div class="seo-a"><p><strong>Structs</strong> are value types. They are copied when assigned or passed to functions.</p><p><strong>Classes</strong> are reference types. Multiple variables can reference the same object instance.</p><p>Classes support inheritance, deinitializers, and reference counting, while structs do not.</p></div>
+          <pre><code>struct User {
+    var name: String
+}
+
+class Person {
+    var name = &quot;John&quot;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>guard let vs if let for unwrapping optionals?</h2>
+          <div class="seo-a"><p><strong>if let</strong> binds the unwrapped value only <em>inside</em> the if block. <strong>guard let</strong> binds it for the <em>rest of the enclosing scope</em> and requires an <code class="inline">else</code> that exits (return/break/throw).</p><p>guard enables an early-exit style that avoids the nested 'pyramid of doom' and keeps the happy path un-indented.</p></div>
+          <pre><code>func greet(_ name: String?) {
+    guard let name = name else { return }
+    print(&quot;Hello, \(name)&quot;)  // name is non-optional here
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are closures in Swift?</h2>
+          <div class="seo-a"><p>Self-contained blocks of code that can be passed around and <strong>capture</strong> references to variables from their surrounding context. They power callbacks, completion handlers, and higher-order functions.</p><p>Swift adds sugar: shorthand argument names (<code class="inline">$0</code>), implicit return, and <em>trailing closure</em> syntax.</p></div>
+          <pre><code>let add = { (a: Int, b: Int) in a + b }
+let sorted = [3, 1, 2].sorted { $0 &lt; $1 }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Enums and associated values.</h2>
+          <div class="seo-a"><p>An <strong>enum</strong> models a type with a fixed set of cases. Swift enums are powerful: each case can carry <strong>associated values</strong>, can have <strong>raw values</strong>, and the enum can define computed properties and methods.</p><p>Ideal for representing state and outcomes exhaustively — the compiler forces you to handle every case in a switch.</p></div>
+          <pre><code>enum Loadable {
+    case idle
+    case loading
+    case success(String)
+    case failure(Error)
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a protocol in Swift?</h2>
+          <div class="seo-a"><p>A <strong>protocol</strong> is a blueprint of methods and properties a conforming type must provide — Swift's version of an interface. Structs, classes, and enums can all conform, enabling polymorphism without class inheritance.</p><p><strong>Protocol extensions</strong> can supply default implementations, so conformers get behavior for free.</p></div>
+          <pre><code>protocol Drivable {
+    func drive()
+}
+extension Drivable {
+    func drive() { print(&quot;Vroom&quot;) }  // default
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Array vs Set vs Dictionary.</h2>
+          <div class="seo-a"><ul><li><strong>Array</strong> — ordered, index-accessed, allows duplicates.</li><li><strong>Set</strong> — unordered, unique elements, O(1) membership tests and set algebra (union/intersection).</li><li><strong>Dictionary</strong> — unordered key → value pairs, O(1) lookup by key.</li></ul><p>All three are <strong>value types</strong> (copy semantics) with copy-on-write storage.</p></div>
+          <pre><code>var nums = [1, 2, 2, 3]
+let unique = Set(nums)          // {1, 2, 3}
+var ages = [&quot;Ann&quot;: 30, &quot;Bo&quot;: 25]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>map, filter, reduce, and compactMap.</h2>
+          <div class="seo-a"><ul><li><strong>map</strong> — transforms every element.</li><li><strong>filter</strong> — keeps elements matching a condition.</li><li><strong>reduce</strong> — combines all elements into a single value.</li><li><strong>compactMap</strong> — maps, then drops the <code class="inline">nil</code> results (unwrapping optionals).</li><li><strong>flatMap</strong> — maps and flattens nested sequences.</li></ul></div>
+          <pre><code>let nums = [1, 2, 3, 4]
+let doubled = nums.map { $0 * 2 }         // [2,4,6,8]
+let evens = nums.filter { $0 % 2 == 0 }   // [2,4]
+let sum = nums.reduce(0, +)               // 10</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Error handling with do / try / catch.</h2>
+          <div class="seo-a"><p>A function that can fail is marked <code class="inline">throws</code>; callers use <code class="inline">try</code> inside a <code class="inline">do/catch</code>. Variants: <code class="inline">try?</code> converts the throw to an optional (nil on error), <code class="inline">try!</code> force-unwraps and crashes on error.</p><p>Errors are just values conforming to the <code class="inline">Error</code> protocol — typically enums.</p></div>
+          <pre><code>enum NetError: Error { case offline }
+func load() throws -&gt; Data { throw NetError.offline }
+
+do {
+    let data = try load()
+} catch NetError.offline {
+    print(&quot;No connection&quot;)
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>weak vs unowned references.</h2>
+          <div class="seo-a"><p>Both break <strong>retain cycles</strong> by not incrementing the reference count.</p><ul><li><strong>weak</strong> — always optional, automatically becomes <code class="inline">nil</code> when the referent is deallocated. Use when the reference <em>can</em> outlive the object (e.g. a delegate).</li><li><strong>unowned</strong> — non-optional, assumes the referent always outlives it; accessing it after deallocation <strong>crashes</strong>. Use only when the lifetimes are guaranteed.</li></ul></div>
+          <pre><code>class ViewModel {
+    var onDone: (() -&gt; Void)?
+    func setup() {
+        onDone = { [weak self] in self?.finish() }
+    }
+    func finish() {}
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Generics in Swift.</h2>
+          <div class="seo-a"><p>Generics let you write reusable, type-safe code parameterized over types (<code class="inline">&lt;T&gt;</code>) instead of duplicating logic or falling back to <code class="inline">Any</code>. <strong>Type constraints</strong> (<code class="inline">T: Comparable</code>) restrict what the type must support.</p><p>The standard library is built on them — <code class="inline">Array&lt;Element&gt;</code>, <code class="inline">Optional&lt;Wrapped&gt;</code>, <code class="inline">Dictionary&lt;Key, Value&gt;</code>.</p></div>
+          <pre><code>func maxOf&lt;T: Comparable&gt;(_ a: T, _ b: T) -&gt; T {
+    a &gt; b ? a : b
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are extensions?</h2>
+          <div class="seo-a"><p>Extensions add functionality — methods, computed properties, initializers, nested types, and protocol conformances — to an <strong>existing type without subclassing</strong>, even to types you don't own (like <code class="inline">String</code> or <code class="inline">Int</code>).</p><p>Limitation: they <em>cannot</em> add stored properties (no new storage), only computed ones.</p></div>
+          <pre><code>extension String {
+    var isBlank: Bool {
+        trimmingCharacters(in: .whitespaces).isEmpty
+    }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is protocol-oriented programming (POP)?</h2>
+          <div class="seo-a"><p>Apple's recommended paradigm: prefer <strong>protocols + protocol extensions</strong> over class inheritance. Define behavior in protocols, provide defaults in extensions, and let value types (structs) conform.</p><p>It favors <em>composition over inheritance</em>, works with value semantics, and sidesteps the fragile-base-class and single-inheritance limits of OOP.</p></div>
+          <pre><code>protocol Identifiable { var id: String { get } }
+protocol Timestamped { var created: Date { get } }
+struct Post: Identifiable, Timestamped {
+    let id: String
+    let created: Date
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is copy-on-write (COW)?</h2>
+          <div class="seo-a"><p>Swift's standard collections (<code class="inline">Array</code>, <code class="inline">Dictionary</code>, <code class="inline">Set</code>, <code class="inline">String</code>) <strong>share underlying storage</strong> when copied and only make a real copy the moment one copy is <em>mutated</em>. So passing arrays around is cheap — you pay for the copy only on write.</p></div>
+          <pre><code>var a = [1, 2, 3]
+var b = a        // no copy yet — shared buffer
+b.append(4)      // NOW b copies; a stays [1,2,3]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Codable — JSON encoding and decoding.</h2>
+          <div class="seo-a"><p><code class="inline">Codable</code> = <code class="inline">Encodable & Decodable</code>. Conform a type and Swift <strong>synthesizes</strong> the (de)serialization; <code class="inline">JSONEncoder</code>/<code class="inline">JSONDecoder</code> do the work. Use a <code class="inline">CodingKeys</code> enum to map JSON field names to Swift property names.</p></div>
+          <pre><code>struct User: Codable {
+    let id: Int
+    let fullName: String
+    enum CodingKeys: String, CodingKey {
+        case id, fullName = &quot;full_name&quot;
+    }
+}
+let u = try JSONDecoder().decode(User.self, from: data)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does defer do?</h2>
+          <div class="seo-a"><p>A <code class="inline">defer</code> block schedules code to run when the current scope exits — <em>however</em> it exits (normal fall-through, <code class="inline">return</code>, or a thrown error). Perfect for guaranteed cleanup: closing files, releasing locks, ending a context.</p><p>Multiple defers execute in <strong>reverse (LIFO)</strong> order.</p></div>
+          <pre><code>func process(_ file: File) throws {
+    file.open()
+    defer { file.close() }   // runs on every exit path
+    try file.read()
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Stored vs computed properties, lazy, and observers.</h2>
+          <div class="seo-a"><ul><li><strong>Stored</strong> — holds a value in memory.</li><li><strong>Computed</strong> — no storage; a <code class="inline">get</code> (and optional <code class="inline">set</code>) calculates on each access.</li><li><strong>lazy</strong> — a stored property initialized only on first access (defer expensive setup).</li><li><strong>Observers</strong> — <code class="inline">willSet</code>/<code class="inline">didSet</code> run around a stored property's changes.</li></ul></div>
+          <pre><code>class Report {
+    lazy var data = expensiveLoad()   // runs once, on demand
+    var title = &quot;&quot; { didSet { print(&quot;changed&quot;) } }
+    var isEmpty: Bool { title.isEmpty } // computed
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Access control levels in Swift.</h2>
+          <div class="seo-a"><p>From most to least open:</p><ul><li><strong>open</strong> — usable <em>and subclassable/overridable</em> across modules.</li><li><strong>public</strong> — usable across modules, but not subclassable outside.</li><li><strong>internal</strong> — default; visible within the same module.</li><li><strong>fileprivate</strong> — within the same file.</li><li><strong>private</strong> — within the enclosing declaration (and its extensions in the same file).</li></ul></div>
+          <pre><code>public struct API {
+    private var token: String
+    public init(token: String) { self.token = token }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does async/await work in Swift?</h2>
+          <div class="seo-a"><p>Swift's <strong>structured concurrency</strong>: mark a function <code class="inline">async</code>, call it with <code class="inline">await</code> at a <em>suspension point</em>. A <code class="inline">Task</code> starts async work from a sync context, and <code class="inline">async let</code> runs children in parallel.</p><p>It replaces nested completion handlers with linear, readable code — and the compiler enforces safety around it.</p></div>
+          <pre><code>func loadProfile() async throws -&gt; Profile {
+    async let user = fetchUser()      // parallel
+    async let posts = fetchPosts()
+    return Profile(user: try await user, posts: try await posts)
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are actors in Swift?</h2>
+          <div class="seo-a"><p><strong>Actors</strong> are reference types that protect their mutable state from <em>data races</em> by <strong>serializing</strong> access — only one task touches an actor's state at a time. Reaching in from outside requires <code class="inline">await</code> (an actor 'hop').</p><p><code class="inline">@MainActor</code> is a special actor pinning work to the main thread — essential for UI updates.</p></div>
+          <pre><code>actor Counter {
+    private var value = 0
+    func increment() { value += 1 }
+    func current() -&gt; Int { value }
+}
+let c = Counter()
+await c.increment()</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>The Result type — what and when?</h2>
+          <div class="seo-a"><p><code class="inline">Result&lt;Success, Failure: Error&gt;</code> is an enum with <code class="inline">.success(value)</code> and <code class="inline">.failure(error)</code> — it models an outcome as a <em>value</em> you can store and pass around. Common in completion-handler APIs (pre-async), and for capturing an error to handle later.</p><p><code class="inline">.get()</code> throws, and <code class="inline">map</code>/<code class="inline">flatMap</code> transform the success case.</p></div>
+          <pre><code>func fetch(completion: (Result&lt;Data, Error&gt;) -&gt; Void) { }
+fetch { result in
+    switch result {
+    case .success(let data): print(data)
+    case .failure(let err): print(err)
+    }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>some vs any (opaque vs existential types).</h2>
+          <div class="seo-a"><p><strong><code class="inline">some P</code></strong> — an <em>opaque</em> type: the compiler knows the single concrete type, it's just hidden from the caller. No runtime boxing, better performance (SwiftUI's <code class="inline">some View</code>).</p><p><strong><code class="inline">any P</code></strong> — an <em>existential</em>: holds any conforming type, boxed at runtime. More flexible (heterogeneous values) but with indirection/overhead.</p></div>
+          <pre><code>func makeShape() -&gt; some Shape { Circle() }   // opaque, one type
+let shapes: [any Shape] = [Circle(), Square()] // existential, mixed</code></pre>
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +639,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="swift";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

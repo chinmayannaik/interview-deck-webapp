@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>General Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="18 General interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/general" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="General Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="18 General interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/general" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="General Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"REST basics — methods, status codes, idempotency.","acceptedAnswer":{"@type":"Answer","text":"GET read, POST create, PUT replace, PATCH partial update, DELETE remove. GET/PUT/DELETE are idempotent; POST is not. Status codes: 200 OK, 201 Created, 204 No Content, 400 bad request, 401 unauthenticated, 403 forbidden, 404 not found, 500 server error."}},{"@type":"Question","name":"Explain the JWT authentication flow.","acceptedAnswer":{"@type":"Answer","text":"User logs in → server returns a signed JWT (header.payload.signature). The client stores it and sends it as Authorization: Bearer &lt;token&gt; . The server verifies the signature and expiry on each request — no server-side session needed (stateless)."}},{"@type":"Question","name":"What is CORS and how do you fix it?","acceptedAnswer":{"@type":"Answer","text":"CORS (Cross-Origin Resource Sharing) is a browser rule that blocks requests to a different origin unless the server opts in with Access-Control-Allow-Origin headers. Fix it on the server ; in dev you can use a proxy."}},{"@type":"Question","name":"HTTP vs HTTPS, and what is TLS?","acceptedAnswer":{"@type":"Answer","text":"HTTPS is HTTP over TLS , which encrypts traffic, verifies the server's identity via certificates, and prevents tampering. It's required for PWAs, service workers, and modern browser features."}},{"@type":"Question","name":"GET vs POST — key differences.","acceptedAnswer":{"@type":"Answer","text":"GET — params in the URL, cacheable, idempotent, no body; for reads. POST — data in the body, not cached, not idempotent; for creating/side-effecting operations. Never send sensitive data in a GET query string."}},{"@type":"Question","name":"Authentication vs authorization.","acceptedAnswer":{"@type":"Answer","text":"Authentication — proving who you are (login). Authorization — what you're allowed to do (roles/permissions). AuthN comes first, then AuthZ."}},{"@type":"Question","name":"How does browser/HTTP caching work?","acceptedAnswer":{"@type":"Answer","text":"Servers send caching headers: Cache-Control (max-age, no-cache), ETag / Last-Modified for revalidation. The browser reuses cached responses until they expire, then revalidates. CDNs cache at the edge for speed."}},{"@type":"Question","name":"SPA vs SSR vs SSG.","acceptedAnswer":{"@type":"Answer","text":"SPA — renders in the browser; fast navigation, weaker initial SEO/first paint. SSR — server renders HTML per request; better SEO and first paint (Angular Universal). SSG — pre-render at build time; fastest, best for static content."}},{"@type":"Question","name":"What is Big-O and name common complexities.","acceptedAnswer":{"@type":"Answer","text":"Big-O describes how runtime/space grows with input size (worst case). Common: O(1) constant, O(log n) binary search, O(n) linear scan, O(n log n) good sorts, O(n²) nested loops."}},{"@type":"Question","name":"Array vs Linked List vs Hash Table — tradeoffs.","acceptedAnswer":{"@type":"Answer","text":"Array — O(1) index access, O(n) insert/delete in the middle. Linked list — O(1) insert/delete at a known node, O(n) access. Hash table — O(1) average lookup/insert, unordered."}},{"@type":"Question","name":"What are the SOLID principles?","acceptedAnswer":{"@type":"Answer","text":"S — Single Responsibility (one reason to change). O — Open/Closed (open to extension, closed to modification). L — Liskov Substitution (subtypes replace base types safely). I — Interface Segregation (small, focused interfaces). D — Dependency Inversion (depend on abstractions)."}},{"@type":"Question","name":"Explain Agile / Scrum basics.","acceptedAnswer":{"@type":"Answer","text":"Scrum works in fixed sprints (1–4 weeks). Ceremonies: sprint planning, daily stand-up, review (demo), and retrospective. Roles: Product Owner (backlog), Scrum Master (process), and the development team."}},{"@type":"Question","name":"What is a reverse proxy / load balancer? Nginx basics.","acceptedAnswer":{"@type":"Answer","text":"A reverse proxy sits in front of your servers, accepting client traffic and forwarding it inward (clients never see the backends). It centralizes: TLS termination , compression, caching, rate limiting, path routing ( /api → backend, / → static Angular files). A load balancer is a reverse proxy distributing across multiple instances — round robin, least-connections, IP-hash — with health checks ejecting dead backends. (Forward proxy = the mirror image: sits in front of clients .)"}},{"@type":"Question","name":"What is a user story? INVEST criteria and acceptance criteria?","acceptedAnswer":{"@type":"Answer","text":"A user story is a small requirement from the user's viewpoint: As a &lt;role&gt; I want &lt;capability&gt; so that &lt;benefit&gt; — a placeholder for a conversation, not a spec. INVEST : I ndependent (schedulable alone), N egotiable, V aluable (user-visible benefit), E stimable, S mall (fits a sprint), T estable. Acceptance criteria — the concrete conditions that make it done, often Given/When/Then; they become the test cases and kill \"that's not what I meant\" at demo time."}},{"@type":"Question","name":"Story points and estimation — planning poker, velocity, burndown?","acceptedAnswer":{"@type":"Answer","text":"Story points measure relative effort+complexity+uncertainty (Fibonacci 1,2,3,5,8...), not hours — a 5 is 'about like that other 5', which dodges human badness at absolute estimates. Planning poker : everyone reveals an estimate simultaneously (no anchoring); big splits trigger discussion — the outliers usually know something. T-shirt sizing (S/M/L) for coarse roadmap-level sizing. Velocity — points completed per sprint, averaged; it's the team's empirical capacity for forecasting, never a performance KPI. Burndown — remaining work vs time in the sprint; a flat line mid-sprint = blocked or bad breakdown."}},{"@type":"Question","name":"Definition of Ready vs Definition of Done? How do you handle mid-sprint scope changes?","acceptedAnswer":{"@type":"Answer","text":"DoR — a story may enter a sprint only when: clear acceptance criteria, dependencies identified, estimated, testable. Protects the sprint from half-baked work. DoD — 'done' means: code + review + tests passing, acceptance criteria met, merged, deployed to the agreed environment, docs updated. One shared definition kills \"done but not done-done\". Mid-sprint changes : the sprint goal is protected — genuine urgencies (prod incident) swap something out of equal size rather than piling on; everything else goes to the backlog for next planning. Constant mid-sprint churn is a signal to shorten sprints or move to Kanban."}},{"@type":"Question","name":"Kanban vs Scrum?","acceptedAnswer":{"@type":"Answer","text":"Scrum — fixed-length sprints with commitment, defined roles (PO/SM), ceremonies (planning, standup, review, retro), velocity per sprint. Fits feature work that batches well. Kanban — continuous flow, no sprints: a board with WIP limits per column; pull the next item when capacity frees; measure cycle time and throughput. Fits support/ops and interrupt-heavy streams. Many teams run Scrumban — sprint cadence for planning/retros, WIP limits and pull for daily flow."}},{"@type":"Question","name":"How do you translate functional requirements into technical/system requirements? What is performance engineering?","acceptedAnswer":{"@type":"Answer","text":"A repeatable pipeline: Clarify the functional requirement with concrete scenarios and acceptance criteria (what exactly must happen, for whom, how often). Derive system requirements — data model changes, API contracts (endpoints, payloads, status codes), integration points, authorization rules. Extract the non-functionals hidden inside — expected volumes, latency targets, concurrency, auditability, retention. \"Show order history\" secretly contains pagination, an index, and an SLA. Design + spike unknowns, then split into estimable stories with traceability back to the source requirement. Performance engineering — treating performance as a requirement through the lifecycle, not a post-hoc fix: set numeric targets (p95 latency, throughput), test against them (JMeter/Gatling, Lighthouse for frontend), profile bottlenecks (APM, EXPLAIN plans, bundle analysis), fix, and guard in CI (perf budgets) so regressions fail the build."}}]}
   </script>
 </head>
 
@@ -326,6 +330,124 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="General interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>General Interview Questions and Answers</h1>
+      <p>18 hand-picked General interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>REST basics — methods, status codes, idempotency.</h2>
+          <div class="seo-a"><p><strong>GET</strong> read, <strong>POST</strong> create, <strong>PUT</strong> replace, <strong>PATCH</strong> partial update, <strong>DELETE</strong> remove. GET/PUT/DELETE are idempotent; POST is not.</p><p>Status codes: <strong>200</strong> OK, <strong>201</strong> Created, <strong>204</strong> No Content, <strong>400</strong> bad request, <strong>401</strong> unauthenticated, <strong>403</strong> forbidden, <strong>404</strong> not found, <strong>500</strong> server error.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain the JWT authentication flow.</h2>
+          <div class="seo-a"><p>User logs in → server returns a signed <strong>JWT</strong> (header.payload.signature). The client stores it and sends it as <code class="inline">Authorization: Bearer &lt;token&gt;</code>. The server verifies the signature and expiry on each request — no server-side session needed (stateless).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is CORS and how do you fix it?</h2>
+          <div class="seo-a"><p><strong>CORS</strong> (Cross-Origin Resource Sharing) is a browser rule that blocks requests to a different origin unless the server opts in with <code class="inline">Access-Control-Allow-Origin</code> headers. Fix it on the <strong>server</strong>; in dev you can use a proxy.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>HTTP vs HTTPS, and what is TLS?</h2>
+          <div class="seo-a"><p><strong>HTTPS</strong> is HTTP over <strong>TLS</strong>, which encrypts traffic, verifies the server's identity via certificates, and prevents tampering. It's required for PWAs, service workers, and modern browser features.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>GET vs POST — key differences.</h2>
+          <div class="seo-a"><p><strong>GET</strong> — params in the URL, cacheable, idempotent, no body; for reads. <strong>POST</strong> — data in the body, not cached, not idempotent; for creating/side-effecting operations. Never send sensitive data in a GET query string.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Authentication vs authorization.</h2>
+          <div class="seo-a"><p><strong>Authentication</strong> — proving who you are (login). <strong>Authorization</strong> — what you're allowed to do (roles/permissions). AuthN comes first, then AuthZ.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does browser/HTTP caching work?</h2>
+          <div class="seo-a"><p>Servers send caching headers: <code class="inline">Cache-Control</code> (max-age, no-cache), <code class="inline">ETag</code>/<code class="inline">Last-Modified</code> for revalidation. The browser reuses cached responses until they expire, then revalidates. CDNs cache at the edge for speed.</p></div>
+          <pre><code>Cache-Control: max-age=31536000, immutable</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>SPA vs SSR vs SSG.</h2>
+          <div class="seo-a"><ul><li><strong>SPA</strong> — renders in the browser; fast navigation, weaker initial SEO/first paint.</li><li><strong>SSR</strong> — server renders HTML per request; better SEO and first paint (Angular Universal).</li><li><strong>SSG</strong> — pre-render at build time; fastest, best for static content.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is Big-O and name common complexities.</h2>
+          <div class="seo-a"><p>Big-O describes how runtime/space grows with input size (worst case). Common: <code class="inline">O(1)</code> constant, <code class="inline">O(log n)</code> binary search, <code class="inline">O(n)</code> linear scan, <code class="inline">O(n log n)</code> good sorts, <code class="inline">O(n²)</code> nested loops.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Array vs Linked List vs Hash Table — tradeoffs.</h2>
+          <div class="seo-a"><ul><li><strong>Array</strong> — O(1) index access, O(n) insert/delete in the middle.</li><li><strong>Linked list</strong> — O(1) insert/delete at a known node, O(n) access.</li><li><strong>Hash table</strong> — O(1) average lookup/insert, unordered.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the SOLID principles?</h2>
+          <div class="seo-a"><ul><li><strong>S</strong> — Single Responsibility (one reason to change).</li><li><strong>O</strong> — Open/Closed (open to extension, closed to modification).</li><li><strong>L</strong> — Liskov Substitution (subtypes replace base types safely).</li><li><strong>I</strong> — Interface Segregation (small, focused interfaces).</li><li><strong>D</strong> — Dependency Inversion (depend on abstractions).</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain Agile / Scrum basics.</h2>
+          <div class="seo-a"><p><strong>Scrum</strong> works in fixed <strong>sprints</strong> (1–4 weeks). Ceremonies: sprint planning, daily stand-up, review (demo), and retrospective. Roles: Product Owner (backlog), Scrum Master (process), and the development team.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is a reverse proxy / load balancer? Nginx basics.</h2>
+          <div class="seo-a"><p>A <strong>reverse proxy</strong> sits in front of your servers, accepting client traffic and forwarding it inward (clients never see the backends). It centralizes: <strong>TLS termination</strong>, compression, caching, rate limiting, path routing (<code class="inline">/api</code> → backend, <code class="inline">/</code> → static Angular files).</p><p>A <strong>load balancer</strong> is a reverse proxy distributing across multiple instances — round robin, least-connections, IP-hash — with health checks ejecting dead backends. (Forward proxy = the mirror image: sits in front of <em>clients</em>.)</p></div>
+          <pre><code>server {
+  listen 443 ssl;
+  location /api/ { proxy_pass http://backend:8080/; }
+  location /     { root /usr/share/nginx/html; try_files $uri /index.html; }
+}
+upstream backend { server app1:8080; server app2:8080; }  # least_conn; health checks</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a user story? INVEST criteria and acceptance criteria?</h2>
+          <div class="seo-a"><p>A user story is a small requirement from the user's viewpoint: <em>As a &lt;role&gt; I want &lt;capability&gt; so that &lt;benefit&gt;</em> — a placeholder for a conversation, not a spec.</p><p><strong>INVEST</strong>: <strong>I</strong>ndependent (schedulable alone), <strong>N</strong>egotiable, <strong>V</strong>aluable (user-visible benefit), <strong>E</strong>stimable, <strong>S</strong>mall (fits a sprint), <strong>T</strong>estable.</p><p><strong>Acceptance criteria</strong> — the concrete conditions that make it done, often Given/When/Then; they become the test cases and kill "that's not what I meant" at demo time.</p></div>
+          <pre><code>Story: As a customer I want to filter orders by date so I can find a past order.
+
+Acceptance criteria:
+  Given orders exist, When I pick a date range, Then only orders in it show
+  Given no orders match, Then an empty state with a clear-filters action shows
+  Date range max 1 year; invalid range shows inline validation</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Story points and estimation — planning poker, velocity, burndown?</h2>
+          <div class="seo-a"><p><strong>Story points</strong> measure relative effort+complexity+uncertainty (Fibonacci 1,2,3,5,8...), not hours — a 5 is 'about like that other 5', which dodges human badness at absolute estimates.</p><p><strong>Planning poker</strong>: everyone reveals an estimate simultaneously (no anchoring); big splits trigger discussion — the outliers usually know something. <strong>T-shirt sizing</strong> (S/M/L) for coarse roadmap-level sizing.</p><p><strong>Velocity</strong> — points completed per sprint, averaged; it's the team's <em>empirical</em> capacity for forecasting, never a performance KPI. <strong>Burndown</strong> — remaining work vs time in the sprint; a flat line mid-sprint = blocked or bad breakdown.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Definition of Ready vs Definition of Done? How do you handle mid-sprint scope changes?</h2>
+          <div class="seo-a"><p><strong>DoR</strong> — a story may enter a sprint only when: clear acceptance criteria, dependencies identified, estimated, testable. Protects the sprint from half-baked work.</p><p><strong>DoD</strong> — 'done' means: code + review + tests passing, acceptance criteria met, merged, deployed to the agreed environment, docs updated. One shared definition kills "done but not done-done".</p><p><strong>Mid-sprint changes</strong>: the sprint goal is protected — genuine urgencies (prod incident) swap something <em>out</em> of equal size rather than piling on; everything else goes to the backlog for next planning. Constant mid-sprint churn is a signal to shorten sprints or move to Kanban.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Kanban vs Scrum?</h2>
+          <div class="seo-a"><ul><li><strong>Scrum</strong> — fixed-length sprints with commitment, defined roles (PO/SM), ceremonies (planning, standup, review, retro), velocity per sprint. Fits feature work that batches well.</li><li><strong>Kanban</strong> — continuous flow, no sprints: a board with <strong>WIP limits</strong> per column; pull the next item when capacity frees; measure <strong>cycle time</strong> and throughput. Fits support/ops and interrupt-heavy streams.</li></ul><p>Many teams run <strong>Scrumban</strong> — sprint cadence for planning/retros, WIP limits and pull for daily flow.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you translate functional requirements into technical/system requirements? What is performance engineering?</h2>
+          <div class="seo-a"><p>A repeatable pipeline:</p><ol><li><strong>Clarify</strong> the functional requirement with concrete scenarios and acceptance criteria (what exactly must happen, for whom, how often).</li><li><strong>Derive system requirements</strong> — data model changes, API contracts (endpoints, payloads, status codes), integration points, authorization rules.</li><li><strong>Extract the non-functionals hidden inside</strong> — expected volumes, latency targets, concurrency, auditability, retention. "Show order history" secretly contains pagination, an index, and an SLA.</li><li><strong>Design + spike</strong> unknowns, then split into estimable stories with traceability back to the source requirement.</li></ol><p><strong>Performance engineering</strong> — treating performance as a requirement through the lifecycle, not a post-hoc fix: set numeric targets (p95 latency, throughput), test against them (JMeter/Gatling, Lighthouse for frontend), profile bottlenecks (APM, EXPLAIN plans, bundle analysis), fix, and <strong>guard in CI</strong> (perf budgets) so regressions fail the build.</p></div>
+          
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +521,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="general";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

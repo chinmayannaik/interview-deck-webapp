@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>Manual QA Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 Manual QA interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/manual-qa" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="Manual QA Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 Manual QA interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/manual-qa" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="Manual QA Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a test case? What makes a good one?","acceptedAnswer":{"@type":"Answer","text":"A test case is a documented set of steps, data, and expected results used to verify a specific behaviour. A good test case is clear, reusable, and independent. It usually includes: ID, title, preconditions, steps, test data, expected result, and sometimes priority/severity."}},{"@type":"Question","name":"Explain the defect / bug life cycle.","acceptedAnswer":{"@type":"Answer","text":"Typical flow: New → Assigned → Open/In Progress → Fixed → Retest → Verified/Closed . Branches: Rejected (not a bug), Deferred (fix later), Reopened (fix failed), Duplicate . Tools like Jira track status, owner, and history so triage stays organised."}},{"@type":"Question","name":"Severity vs Priority — what’s the difference?","acceptedAnswer":{"@type":"Answer","text":"Severity = how badly the defect impacts the system (technical impact). Priority = how soon it should be fixed (business urgency). Example: a typo on the homepage can be low severity but high priority before a marketing launch. A crash in a rarely used admin screen can be high severity but low priority ."}},{"@type":"Question","name":"Smoke vs Sanity vs Regression testing?","acceptedAnswer":{"@type":"Answer","text":"Smoke — shallow, wide check that the build is testable (app launches, main pages open). Fail smoke → reject build. Sanity — narrow, deeper check of a specific fix/area after a small change. Regression — broader suite to ensure old features still work after changes."}},{"@type":"Question","name":"What is UAT (User Acceptance Testing)? How is it different from system testing?","acceptedAnswer":{"@type":"Answer","text":"UAT is acceptance testing by business users/clients to confirm the system meets real-world needs and is ready for production. System testing is usually done by QA against requirements in a test environment. UAT focuses on business workflows, real data scenarios, and sign-off — not every low-level validation."}},{"@type":"Question","name":"What are Equivalence Partitioning and Boundary Value Analysis?","acceptedAnswer":{"@type":"Answer","text":"Equivalence Partitioning (EP) groups inputs that should behave the same, then tests one value from each group (valid/invalid partitions). Boundary Value Analysis (BVA) tests the edges of those groups — bugs often live at min/max limits (e.g. 0, 1, 100, 101 for a 1–100 range)."}},{"@type":"Question","name":"What should a good bug report contain?","acceptedAnswer":{"@type":"Answer","text":"A good bug report lets someone reproduce and fix without guessing: clear title, environment/build, preconditions, steps, test data, actual vs expected result, severity/priority, evidence (screenshots/logs/API response), and optionally related story/module."}},{"@type":"Question","name":"Test scenario vs test case?","acceptedAnswer":{"@type":"Answer","text":"A test scenario is a high-level what-to-test statement (\"Verify user can reset password\"). A test case is the detailed how — steps, data, expected results for that scenario."}},{"@type":"Question","name":"What is decision table testing? Give an example.","acceptedAnswer":{"@type":"Answer","text":"Decision tables map combinations of conditions to actions/outcomes. Useful when business rules have multiple inputs (role + order status + payment state → allowed actions)."}},{"@type":"Question","name":"What is state transition testing?","acceptedAnswer":{"@type":"Answer","text":"State transition testing validates that an entity moves between allowed states with valid events, and rejects invalid transitions. Example order states: CREATED → PAID → SHIPPED → DELIVERED; cannot jump CREATED → DELIVERED."}},{"@type":"Question","name":"How do you derive tests from a use case / user story?","acceptedAnswer":{"@type":"Answer","text":"From the main success path, alternate paths, and exceptions. Convert acceptance criteria into scenarios, then into cases with data. Include negative and boundary conditions the story implies."}},{"@type":"Question","name":"How do you design and manage test data?","acceptedAnswer":{"@type":"Answer","text":"Identify data needed per scenario (users, orders, products), keep it reusable and unique where collisions matter, document setup/cleanup, and avoid depending on fragile production-like leftovers. Prefer dedicated QA accounts and factories/scripts for repeatable data."}},{"@type":"Question","name":"What is a blocker defect? How do you handle it in a release?","acceptedAnswer":{"@type":"Answer","text":"A blocker prevents major testing or a critical user journey (can’t login, can’t place order). You escalate immediately, pause dependent testing if needed, and treat it as release-stopping unless a formal waiver exists."}},{"@type":"Question","name":"What is ad-hoc testing? How is it different from exploratory testing?","acceptedAnswer":{"@type":"Answer","text":"Ad-hoc is informal, unstructured testing without documented design. Exploratory is also unscripted but more disciplined — time-boxed charters, notes, and follow-up cases. Exploratory is preferred professionally."}},{"@type":"Question","name":"Alpha testing vs Beta testing?","acceptedAnswer":{"@type":"Answer","text":"Alpha is performed in-house (internal users/QA) before external release. Beta is performed by limited external real users in a production-like setting to gather feedback before full launch."}},{"@type":"Question","name":"How do you track test execution status?","acceptedAnswer":{"@type":"Answer","text":"Track each case as Pass/Fail/Blocked/Not Run (and sometimes Skipped). Summarise by module/priority, link failures to defects, and report progress against exit criteria daily during release testing."}},{"@type":"Question","name":"What happens in a defect triage meeting?","acceptedAnswer":{"@type":"Answer","text":"Triage reviews new/open defects with QA, dev, and often product: confirm validity, set/adjust severity & priority, assign owners, target fix version, and decide defer/reject/duplicate. Goal is a clear, prioritised backlog."}},{"@type":"Question","name":"What is error guessing?","acceptedAnswer":{"@type":"Answer","text":"Error guessing uses experience to invent likely failure cases that formal techniques may miss — double-submit, empty optional-but-used fields, copy-paste whitespace, timezone boundaries, concurrent edits."}},{"@type":"Question","name":"What is build acceptance / BVT testing?","acceptedAnswer":{"@type":"Answer","text":"Build Verification Testing (BVT) / build acceptance is a short smoke pack that decides if a new build is stable enough for deeper testing. If BVT fails, the build is rejected."}},{"@type":"Question","name":"What is included in a test closure / summary report?","acceptedAnswer":{"@type":"Answer","text":"A closure report summarises scope tested, execution results, open defects (by severity), risks/waivers, environment/build, and recommendation (go/no-go). It is the evidence behind sign-off."}}]}
   </script>
 </head>
 
@@ -326,6 +330,137 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="Manual QA interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Manual QA Interview Questions and Answers</h1>
+      <p>20 hand-picked Manual QA interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is a test case? What makes a good one?</h2>
+          <div class="seo-a"><p>A <strong>test case</strong> is a documented set of steps, data, and expected results used to verify a specific behaviour.</p><p>A good test case is clear, reusable, and independent. It usually includes: ID, title, preconditions, steps, test data, expected result, and sometimes priority/severity.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain the defect / bug life cycle.</h2>
+          <div class="seo-a"><p>Typical flow: <strong>New → Assigned → Open/In Progress → Fixed → Retest → Verified/Closed</strong>. Branches: <strong>Rejected</strong> (not a bug), <strong>Deferred</strong> (fix later), <strong>Reopened</strong> (fix failed), <strong>Duplicate</strong>.</p><p>Tools like Jira track status, owner, and history so triage stays organised.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Severity vs Priority — what’s the difference?</h2>
+          <div class="seo-a"><p><strong>Severity</strong> = how badly the defect impacts the system (technical impact). <strong>Priority</strong> = how soon it should be fixed (business urgency).</p><p>Example: a typo on the homepage can be <em>low severity</em> but <em>high priority</em> before a marketing launch. A crash in a rarely used admin screen can be <em>high severity</em> but <em>low priority</em>.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Smoke vs Sanity vs Regression testing?</h2>
+          <div class="seo-a"><ul><li><strong>Smoke</strong> — shallow, wide check that the build is testable (app launches, main pages open). Fail smoke → reject build.</li><li><strong>Sanity</strong> — narrow, deeper check of a specific fix/area after a small change.</li><li><strong>Regression</strong> — broader suite to ensure old features still work after changes.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is UAT (User Acceptance Testing)? How is it different from system testing?</h2>
+          <div class="seo-a"><p><strong>UAT</strong> is acceptance testing by business users/clients to confirm the system meets real-world needs and is ready for production.</p><p><strong>System testing</strong> is usually done by QA against requirements in a test environment. <strong>UAT</strong> focuses on business workflows, real data scenarios, and sign-off — not every low-level validation.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are Equivalence Partitioning and Boundary Value Analysis?</h2>
+          <div class="seo-a"><p><strong>Equivalence Partitioning (EP)</strong> groups inputs that should behave the same, then tests one value from each group (valid/invalid partitions).</p><p><strong>Boundary Value Analysis (BVA)</strong> tests the edges of those groups — bugs often live at min/max limits (e.g. 0, 1, 100, 101 for a 1–100 range).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What should a good bug report contain?</h2>
+          <div class="seo-a"><p>A good bug report lets someone reproduce and fix without guessing: clear title, environment/build, preconditions, steps, test data, actual vs expected result, severity/priority, evidence (screenshots/logs/API response), and optionally related story/module.</p></div>
+          <pre><code>Title: Checkout total ignores 10% coupon CODE10 on QA
+Env: QA v24.6.1, Chrome 126
+Steps: ...
+Actual: Total remains 100
+Expected: Total becomes 90
+Evidence: screenshot + network response</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Test scenario vs test case?</h2>
+          <div class="seo-a"><p>A <strong>test scenario</strong> is a high-level what-to-test statement ("Verify user can reset password"). A <strong>test case</strong> is the detailed how — steps, data, expected results for that scenario.</p></div>
+          <pre><code>Scenario: User resets password
+Cases: valid reset, expired link, mismatched confirm password</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is decision table testing? Give an example.</h2>
+          <div class="seo-a"><p>Decision tables map combinations of conditions to actions/outcomes. Useful when business rules have multiple inputs (role + order status + payment state → allowed actions).</p></div>
+          <pre><code>VIP=Y, Order=OPEN, Paid=Y → Allow cancel with refund
+VIP=N, Order=SHIPPED, Paid=Y → Cancel blocked</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is state transition testing?</h2>
+          <div class="seo-a"><p>State transition testing validates that an entity moves between allowed states with valid events, and rejects invalid transitions. Example order states: CREATED → PAID → SHIPPED → DELIVERED; cannot jump CREATED → DELIVERED.</p></div>
+          <pre><code>CREATED --pay--&gt; PAID --ship--&gt; SHIPPED
+CREATED --ship--&gt; ✘ rejected</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you derive tests from a use case / user story?</h2>
+          <div class="seo-a"><p>From the main success path, alternate paths, and exceptions. Convert acceptance criteria into scenarios, then into cases with data. Include negative and boundary conditions the story implies.</p></div>
+          <pre><code>Story: Cancel order within 1 hour
+- Success within 60 min
+- Reject after 61 min
+- Unauthorized user cannot cancel</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you design and manage test data?</h2>
+          <div class="seo-a"><p>Identify data needed per scenario (users, orders, products), keep it reusable and unique where collisions matter, document setup/cleanup, and avoid depending on fragile production-like leftovers. Prefer dedicated QA accounts and factories/scripts for repeatable data.</p></div>
+          <pre><code>qa.order.user+&lt;timestamp&gt;@test.com
+seed order in CREATED status for cancel tests</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a blocker defect? How do you handle it in a release?</h2>
+          <div class="seo-a"><p>A <strong>blocker</strong> prevents major testing or a critical user journey (can’t login, can’t place order). You escalate immediately, pause dependent testing if needed, and treat it as release-stopping unless a formal waiver exists.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is ad-hoc testing? How is it different from exploratory testing?</h2>
+          <div class="seo-a"><p><strong>Ad-hoc</strong> is informal, unstructured testing without documented design. <strong>Exploratory</strong> is also unscripted but more disciplined — time-boxed charters, notes, and follow-up cases. Exploratory is preferred professionally.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Alpha testing vs Beta testing?</h2>
+          <div class="seo-a"><p><strong>Alpha</strong> is performed in-house (internal users/QA) before external release. <strong>Beta</strong> is performed by limited external real users in a production-like setting to gather feedback before full launch.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you track test execution status?</h2>
+          <div class="seo-a"><p>Track each case as Pass/Fail/Blocked/Not Run (and sometimes Skipped). Summarise by module/priority, link failures to defects, and report progress against exit criteria daily during release testing.</p></div>
+          <pre><code>High priority: 40 Pass / 2 Fail / 1 Blocked / 7 Not Run</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What happens in a defect triage meeting?</h2>
+          <div class="seo-a"><p>Triage reviews new/open defects with QA, dev, and often product: confirm validity, set/adjust severity & priority, assign owners, target fix version, and decide defer/reject/duplicate. Goal is a clear, prioritised backlog.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is error guessing?</h2>
+          <div class="seo-a"><p>Error guessing uses experience to invent likely failure cases that formal techniques may miss — double-submit, empty optional-but-used fields, copy-paste whitespace, timezone boundaries, concurrent edits.</p></div>
+          <pre><code>Double-click Place Order → two orders?
+Paste email with trailing space → login fails?</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is build acceptance / BVT testing?</h2>
+          <div class="seo-a"><p><strong>Build Verification Testing (BVT)</strong> / build acceptance is a short smoke pack that decides if a new build is stable enough for deeper testing. If BVT fails, the build is rejected.</p></div>
+          <pre><code>BVT: login, open dashboard, create order draft, logout</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is included in a test closure / summary report?</h2>
+          <div class="seo-a"><p>A closure report summarises scope tested, execution results, open defects (by severity), risks/waivers, environment/build, and recommendation (go/no-go). It is the evidence behind sign-off.</p></div>
+          
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +534,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="manual-qa";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

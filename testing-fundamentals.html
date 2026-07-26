@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>Fundamentals Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="24 Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/testing-fundamentals" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="Fundamentals Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="24 Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/testing-fundamentals" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="Fundamentals Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why do we test software? What is the goal of testing?","acceptedAnswer":{"@type":"Answer","text":"Testing finds defects before users do , reduces risk, and builds confidence that the product meets requirements. The goal is not to prove the software is perfect — it is to provide information about quality so the team can decide whether to ship. Catch bugs early (cheaper to fix). Verify behaviour against requirements. Prevent regressions when code changes. Improve trust for release decisions."}},{"@type":"Question","name":"Verification vs Validation?","acceptedAnswer":{"@type":"Answer","text":"Verification asks: Are we building the product right? — checks against specs/design (reviews, static analysis, unit tests against requirements). Validation asks: Are we building the right product? — checks whether it satisfies the real user need (UAT, usability, acceptance testing)."}},{"@type":"Question","name":"Functional vs non-functional testing?","acceptedAnswer":{"@type":"Answer","text":"Functional checks what the system does — features, business rules, inputs/outputs (login works, order is created, invoice total is correct). Non-functional checks how the system behaves — performance, security, usability, reliability, compatibility."}},{"@type":"Question","name":"Explain the main test levels: unit, integration, system, acceptance.","acceptedAnswer":{"@type":"Answer","text":"Unit — smallest piece of code (method/class) in isolation; fast; usually by developers. Integration — modules/services working together (API + DB, service A calling service B). System — the full application as a whole against requirements. Acceptance (UAT) — business/users confirm it is ready for real use. You need all levels; relying only on UI/system tests is slow and brittle."}},{"@type":"Question","name":"What is shift-left testing?","acceptedAnswer":{"@type":"Answer","text":"Shift-left means starting quality activities earlier in the lifecycle — during requirements, design, and development — instead of only testing at the end. Examples: review requirements for testability, write acceptance criteria with the story, automate unit/API tests in the PR pipeline, pair with developers on edge cases."}},{"@type":"Question","name":"Positive testing vs negative testing?","acceptedAnswer":{"@type":"Answer","text":"Positive testing uses valid inputs and happy-path flows to confirm the system works as expected (correct login, successful order). Negative testing uses invalid/unexpected inputs to confirm the system handles failure safely (wrong password, missing required field, SQL injection attempt)."}},{"@type":"Question","name":"What is STLC (Software Testing Life Cycle)?","acceptedAnswer":{"@type":"Answer","text":"STLC is the structured process QA follows from planning to closure. Common phases: Requirement Analysis → Test Planning → Test Case Design → Environment Setup → Test Execution → Defect Reporting/Retest → Test Closure."}},{"@type":"Question","name":"How does testing differ in Waterfall vs Agile?","acceptedAnswer":{"@type":"Answer","text":"In Waterfall , testing is mostly a late phase after development is \"done\". In Agile , testing happens continuously every sprint — stories are tested as they are built, with automation and frequent regression."}},{"@type":"Question","name":"Retesting vs Regression testing?","acceptedAnswer":{"@type":"Answer","text":"Retesting checks whether a specific defect fix works (run the failed case again). Regression checks that the fix (or any change) did not break existing features."}},{"@type":"Question","name":"Static testing vs Dynamic testing?","acceptedAnswer":{"@type":"Answer","text":"Static testing finds issues without executing code — reviews of requirements, design, test cases, code walkthroughs. Dynamic testing executes the software — manual/automated functional tests, API calls, UI flows."}},{"@type":"Question","name":"Black-box vs White-box vs Grey-box testing?","acceptedAnswer":{"@type":"Answer","text":"Black-box — test using requirements/UI/API behaviour only; no code knowledge. White-box — test with code knowledge (branches, paths, unit tests). Grey-box — mix: know architecture/DB/API contracts while testing like a user (common for SDETs)."}},{"@type":"Question","name":"What are entry and exit criteria in testing?","acceptedAnswer":{"@type":"Answer","text":"Entry criteria = conditions before testing starts (build deployed, smoke passed, test data ready). Exit criteria = conditions to stop/finish (planned cases executed, critical bugs closed, coverage/risk accepted)."}},{"@type":"Question","name":"Test Plan vs Test Strategy?","acceptedAnswer":{"@type":"Answer","text":"Test Strategy is the high-level approach (what types of testing, tools, environments, risk focus) — often organisation/project wide. Test Plan is a concrete document for a release/sprint: scope, schedule, resources, deliverables, entry/exit criteria."}},{"@type":"Question","name":"What is risk-based testing?","acceptedAnswer":{"@type":"Answer","text":"Risk-based testing prioritises test effort where failure would hurt most — high business impact × high likelihood. You test payment/order paths deeper than a rarely used settings tooltip."}},{"@type":"Question","name":"What is compatibility testing?","acceptedAnswer":{"@type":"Answer","text":"Compatibility testing checks the product works across supported combinations — browsers, OS versions, devices, or dependent systems (browser × OS, mobile screen sizes, integrations)."}},{"@type":"Question","name":"What is exploratory testing? When do you use it?","acceptedAnswer":{"@type":"Answer","text":"Exploratory testing is simultaneous learning, test design, and execution — you investigate the product with a charter instead of only following scripted cases. Use it for new features, weak requirements, or after major UI changes to find unexpected bugs."}},{"@type":"Question","name":"Which quality/testing metrics are useful? Which are misleading?","acceptedAnswer":{"@type":"Answer","text":"Useful: escaped defects, defect leakage by severity, automation pass rate trends, requirement coverage of critical paths, mean time to detect/fix. Misleading as sole goals: raw case count executed, vanity 100% coverage, \"number of bugs found\" without context."}},{"@type":"Question","name":"What makes a good test environment?","acceptedAnswer":{"@type":"Answer","text":"A good test environment is stable, versioned, and close enough to production for the risks you care about: correct configs, integrated dependencies (or reliable mocks), known test data, and access to logs/DB for debugging."}},{"@type":"Question","name":"What is a Requirements Traceability Matrix (RTM)?","acceptedAnswer":{"@type":"Answer","text":"An RTM maps requirements/user stories to test cases (and sometimes defects). It shows coverage gaps — every critical requirement should have at least one test, and every test should trace to a need."}},{"@type":"Question","name":"Quality Assurance (QA) vs Quality Control (QC)?","acceptedAnswer":{"@type":"Answer","text":"QA is process-oriented — preventing defects (standards, reviews, shift-left, good Definition of Done). QC is product-oriented — detecting defects in the build (test execution, inspections of outputs)."}}]}
   </script>
 </head>
 
@@ -326,6 +330,149 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="Fundamentals interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Fundamentals Interview Questions and Answers</h1>
+      <p>24 hand-picked Fundamentals interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Why do we test software? What is the goal of testing?</h2>
+          <div class="seo-a"><p>Testing finds defects <strong>before users do</strong>, reduces risk, and builds confidence that the product meets requirements. The goal is not to prove the software is perfect — it is to provide information about quality so the team can decide whether to ship.</p><ul><li>Catch bugs early (cheaper to fix).</li><li>Verify behaviour against requirements.</li><li>Prevent regressions when code changes.</li><li>Improve trust for release decisions.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Verification vs Validation?</h2>
+          <div class="seo-a"><p><strong>Verification</strong> asks: <em>Are we building the product right?</em> — checks against specs/design (reviews, static analysis, unit tests against requirements).</p><p><strong>Validation</strong> asks: <em>Are we building the right product?</em> — checks whether it satisfies the real user need (UAT, usability, acceptance testing).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Functional vs non-functional testing?</h2>
+          <div class="seo-a"><p><strong>Functional</strong> checks <em>what</em> the system does — features, business rules, inputs/outputs (login works, order is created, invoice total is correct).</p><p><strong>Non-functional</strong> checks <em>how</em> the system behaves — performance, security, usability, reliability, compatibility.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain the main test levels: unit, integration, system, acceptance.</h2>
+          <div class="seo-a"><ul><li><strong>Unit</strong> — smallest piece of code (method/class) in isolation; fast; usually by developers.</li><li><strong>Integration</strong> — modules/services working together (API + DB, service A calling service B).</li><li><strong>System</strong> — the full application as a whole against requirements.</li><li><strong>Acceptance (UAT)</strong> — business/users confirm it is ready for real use.</li></ul><p>You need all levels; relying only on UI/system tests is slow and brittle.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is shift-left testing?</h2>
+          <div class="seo-a"><p><strong>Shift-left</strong> means starting quality activities earlier in the lifecycle — during requirements, design, and development — instead of only testing at the end.</p><p>Examples: review requirements for testability, write acceptance criteria with the story, automate unit/API tests in the PR pipeline, pair with developers on edge cases.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Positive testing vs negative testing?</h2>
+          <div class="seo-a"><p><strong>Positive testing</strong> uses valid inputs and happy-path flows to confirm the system works as expected (correct login, successful order).</p><p><strong>Negative testing</strong> uses invalid/unexpected inputs to confirm the system handles failure safely (wrong password, missing required field, SQL injection attempt).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is STLC (Software Testing Life Cycle)?</h2>
+          <div class="seo-a"><p><strong>STLC</strong> is the structured process QA follows from planning to closure. Common phases: Requirement Analysis → Test Planning → Test Case Design → Environment Setup → Test Execution → Defect Reporting/Retest → Test Closure.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does testing differ in Waterfall vs Agile?</h2>
+          <div class="seo-a"><p>In <strong>Waterfall</strong>, testing is mostly a late phase after development is "done". In <strong>Agile</strong>, testing happens continuously every sprint — stories are tested as they are built, with automation and frequent regression.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Retesting vs Regression testing?</h2>
+          <div class="seo-a"><p><strong>Retesting</strong> checks whether a specific defect fix works (run the failed case again). <strong>Regression</strong> checks that the fix (or any change) did not break existing features.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Static testing vs Dynamic testing?</h2>
+          <div class="seo-a"><p><strong>Static testing</strong> finds issues without executing code — reviews of requirements, design, test cases, code walkthroughs. <strong>Dynamic testing</strong> executes the software — manual/automated functional tests, API calls, UI flows.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Black-box vs White-box vs Grey-box testing?</h2>
+          <div class="seo-a"><ul><li><strong>Black-box</strong> — test using requirements/UI/API behaviour only; no code knowledge.</li><li><strong>White-box</strong> — test with code knowledge (branches, paths, unit tests).</li><li><strong>Grey-box</strong> — mix: know architecture/DB/API contracts while testing like a user (common for SDETs).</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are entry and exit criteria in testing?</h2>
+          <div class="seo-a"><p><strong>Entry criteria</strong> = conditions before testing starts (build deployed, smoke passed, test data ready). <strong>Exit criteria</strong> = conditions to stop/finish (planned cases executed, critical bugs closed, coverage/risk accepted).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Test Plan vs Test Strategy?</h2>
+          <div class="seo-a"><p><strong>Test Strategy</strong> is the high-level approach (what types of testing, tools, environments, risk focus) — often organisation/project wide. <strong>Test Plan</strong> is a concrete document for a release/sprint: scope, schedule, resources, deliverables, entry/exit criteria.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is risk-based testing?</h2>
+          <div class="seo-a"><p><strong>Risk-based testing</strong> prioritises test effort where failure would hurt most — high business impact × high likelihood. You test payment/order paths deeper than a rarely used settings tooltip.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is compatibility testing?</h2>
+          <div class="seo-a"><p>Compatibility testing checks the product works across supported combinations — browsers, OS versions, devices, or dependent systems (browser × OS, mobile screen sizes, integrations).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is exploratory testing? When do you use it?</h2>
+          <div class="seo-a"><p><strong>Exploratory testing</strong> is simultaneous learning, test design, and execution — you investigate the product with a charter instead of only following scripted cases. Use it for new features, weak requirements, or after major UI changes to find unexpected bugs.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Which quality/testing metrics are useful? Which are misleading?</h2>
+          <div class="seo-a"><p>Useful: escaped defects, defect leakage by severity, automation pass rate trends, requirement coverage of critical paths, mean time to detect/fix. Misleading as sole goals: raw case count executed, vanity 100% coverage, "number of bugs found" without context.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What makes a good test environment?</h2>
+          <div class="seo-a"><p>A good test environment is stable, versioned, and close enough to production for the risks you care about: correct configs, integrated dependencies (or reliable mocks), known test data, and access to logs/DB for debugging.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is a Requirements Traceability Matrix (RTM)?</h2>
+          <div class="seo-a"><p>An <strong>RTM</strong> maps requirements/user stories to test cases (and sometimes defects). It shows coverage gaps — every critical requirement should have at least one test, and every test should trace to a need.</p></div>
+          <pre><code>Req-Login-01 → TC-01, TC-02, TC-03
+Req-Order-05 → TC-40, API-12 (missing UI e2e? → gap)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Quality Assurance (QA) vs Quality Control (QC)?</h2>
+          <div class="seo-a"><p><strong>QA</strong> is process-oriented — preventing defects (standards, reviews, shift-left, good Definition of Done). <strong>QC</strong> is product-oriented — detecting defects in the build (test execution, inspections of outputs).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is TDD? Explain red-green-refactor.</h2>
+          <div class="seo-a"><p>Test-Driven Development: write the test <strong>before</strong> the code, in a tight loop:</p><ol><li><strong>Red</strong> — write a small failing test for the next behavior (failing proves the test can fail).</li><li><strong>Green</strong> — write the <em>minimum</em> code to pass.</li><li><strong>Refactor</strong> — clean up with the tests as a safety net; repeat.</li></ol><p>Real benefits: design pressure (hard-to-test code reveals coupling early), executable specs, fearless refactoring, and by construction everything is covered. Costs: slower start, and tests welded to implementation details make refactoring <em>harder</em> — test behavior, not internals.</p></div>
+          <pre><code>// 1 RED
+@Test void emptyCartTotalsZero() { assertEquals(0, new Cart().total()); }
+// 2 GREEN: int total() { return 0; }
+// 3 next RED forces real logic:
+@Test void totalSumsLinePrices() { cart.add(item(100), item(50)); assertEquals(150, cart.total()); }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What makes a good unit test? (FIRST principles)</h2>
+          <div class="seo-a"><p><strong>FIRST</strong>:</p><ul><li><strong>F</strong>ast — milliseconds; slow suites stop being run.</li><li><strong>I</strong>ndependent — any order, no shared mutable state between tests.</li><li><strong>R</strong>epeatable — same result everywhere: no real clock, network, or randomness (inject them).</li><li><strong>S</strong>elf-validating — asserts pass/fail by itself; no reading logs.</li><li><strong>T</strong>imely — written with (or before) the code.</li></ul><p>Plus the structural habits: one behavior per test, Arrange-Act-Assert shape, names that state the scenario (<code class="inline">withdraw_insufficientBalance_throws</code>), and asserting <strong>behavior</strong> not implementation (over-mocked tests that break on every refactor are the classic smell).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is code coverage? Is 100% coverage a good goal?</h2>
+          <div class="seo-a"><p>The percentage of code executed by tests — line, branch (each if-outcome), and condition coverage; measured by JaCoCo (Java) or Istanbul (JS), usually gated in CI (e.g. 80% on changed code).</p><p><strong>100% is not a good goal</strong>: coverage proves code <em>ran</em>, not that anything was <em>asserted</em> — a suite with zero assertions can hit 100%. Chasing the last percent produces brittle tests of getters and framework glue, while a covered-but-wrong edge case still ships broken.</p><p>Healthy use: coverage as a <strong>detector of untested areas</strong> (a critical service at 30% is a real signal), branch coverage over line coverage, and mutation testing (PIT) if you want to measure test <em>quality</em>.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What do SonarQube and ESLint give you? How do quality gates work?</h2>
+          <div class="seo-a"><p><strong>Static analysis</strong> inspects code without running it:</p><ul><li><strong>ESLint</strong> (JS/TS, + Angular rules) — bugs and style at lint speed: unused vars, unsafe any, missing lifecycle interfaces; auto-fixable, runs in the editor and CI.</li><li><strong>SonarQube</strong> — deeper multi-language analysis: bug patterns (possible NPEs, resource leaks), <strong>security hotspots</strong> (injection, weak crypto), code smells, duplication, complexity — tracked over time per branch/PR.</li></ul><p>A <strong>quality gate</strong> fails the pipeline on thresholds — the sane pattern is gating on <strong>new code only</strong> ("clean as you code"): no new critical issues, coverage on changed lines ≥ X% — so legacy debt doesn't block today's PR but nothing new rots.</p></div>
+          
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +546,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="testing-fundamentals";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

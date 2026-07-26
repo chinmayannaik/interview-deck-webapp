@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Redis Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="23 Redis interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/redis" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Redis Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="23 Redis interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/redis" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Redis Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Redis and what is it used for?","acceptedAnswer":{"@type":"Answer","text":"Redis is an in-memory data store that can optionally persist to disk. Extremely fast (sub-millisecond latency) because data lives in RAM. Supports rich data structures beyond simple key-value. Common use cases: Caching — reduce database load. Session storage — shared sessions across app instances. Rate limiting — token bucket / sliding window counters. Pub/Sub — real-time messaging between services. Leaderboards — sorted sets for rankings. Distributed locks — coordinate across services. Job queues — simple task queues with lists."}},{"@type":"Question","name":"Redis data structures and their use cases.","acceptedAnswer":{"@type":"Answer","text":"Type Commands Use case String SET, GET, INCR Cache, counters, simple KV Hash HSET, HGET, HGETALL Objects (user profile fields) List LPUSH, RPOP, LRANGE Queues, recent items feed Set SADD, SMEMBERS, SINTER Unique items, tags, followers Sorted Set ZADD, ZRANGE, ZRANK Leaderboards, priority queues Stream XADD, XREAD, XGROUP Event logs, message queues"}},{"@type":"Question","name":"How does TTL and key expiration work?","acceptedAnswer":{"@type":"Answer","text":"Set expiration with EXPIRE key seconds or SET key value EX 300 (5 minutes). Redis uses two strategies: Passive — key is deleted when accessed after expiry. Active — background task randomly samples keys and deletes expired ones. TTL key returns remaining seconds. PERSIST key removes expiration."}},{"@type":"Question","name":"Cache-aside, read-through, and write-through patterns.","acceptedAnswer":{"@type":"Answer","text":"Cache-aside (lazy loading) — app checks cache first; on miss, reads DB, writes to cache. Most common. Risk: stale data if DB updated without cache invalidation. Read-through — cache layer loads from DB on miss (app only talks to cache). Write-through — write to cache and DB synchronously. Always consistent but slower writes. Write-behind — write to cache immediately, async flush to DB. Fast but risk of data loss."}},{"@type":"Question","name":"How does Redis Pub/Sub work?","acceptedAnswer":{"@type":"Answer","text":"Publishers send messages to a channel . Subscribers listen on channels and receive messages in real time. Fire-and-forget — if no subscriber is listening, the message is lost. Pattern subscriptions: PSUBSCRIBE order.* matches order.created , order.shipped . Limitations: no persistence, no acknowledgment, no consumer groups. For durable messaging, use Redis Streams or Kafka/RabbitMQ."}},{"@type":"Question","name":"What are Redis Streams?","acceptedAnswer":{"@type":"Answer","text":"An append-only log data structure (like a lightweight Kafka topic). Supports: Consumer groups — multiple consumers share work, track progress. Acknowledgments — XACK confirms processing. Persistence — messages survive restarts (unlike Pub/Sub). Range queries — read from any point by ID. Use for: simple event processing, activity feeds, reliable lightweight queues."}},{"@type":"Question","name":"RDB vs AOF persistence.","acceptedAnswer":{"@type":"Answer","text":"RDB (snapshots) — periodic point-in-time snapshots of the dataset to disk. Fast recovery, compact files. Risk: lose data since last snapshot (minutes of writes). AOF (Append Only File) — logs every write command. More durable (configurable fsync: every second or every write). Larger files, slower recovery. Auto-rewrites to compact. Both — recommended for production. RDB for fast restarts, AOF for durability."}},{"@type":"Question","name":"Eviction policies when Redis runs out of memory.","acceptedAnswer":{"@type":"Answer","text":"When maxmemory is reached, Redis evicts keys based on maxmemory-policy : allkeys-lru — evict least recently used keys (any key). Good default for caching. volatile-lru — evict LRU among keys with TTL set. allkeys-lfu — evict least frequently used (Redis 4.0+). noeviction — return errors on writes. Use when data must not be lost."}},{"@type":"Question","name":"What is pipelining in Redis?","acceptedAnswer":{"@type":"Answer","text":"Send multiple commands without waiting for each response — batch them in one round trip. Dramatically reduces latency for bulk operations (10–100x faster than individual commands). Not the same as transactions — pipelining doesn't guarantee atomicity. Just reduces network overhead."}},{"@type":"Question","name":"Redis transactions (MULTI/EXEC).","acceptedAnswer":{"@type":"Answer","text":"MULTI starts a transaction; commands are queued. EXEC runs all queued commands atomically. DISCARD aborts. Important: no rollback — if a command fails during EXEC, others still execute. No isolation from other clients between MULTI and EXEC (use WATCH for optimistic locking). WATCH key — if key changes before EXEC, transaction is aborted (optimistic concurrency control)."}},{"@type":"Question","name":"Why use Lua scripts in Redis?","acceptedAnswer":{"@type":"Answer","text":"Lua scripts execute atomically on the server — no other command runs during execution. Use for: Complex read-modify-write without race conditions. Rate limiting (INCR + EXPIRE in one atomic script). Conditional updates (update only if current value matches). Scripts are cached by SHA — send with EVALSHA after first EVAL ."}},{"@type":"Question","name":"How do you implement distributed locks with Redis?","acceptedAnswer":{"@type":"Answer","text":"Basic pattern: SET lock:resource unique_id NX EX 30 — set only if not exists, with expiry. Release with a Lua script that deletes only if the value matches (prevents deleting another client's lock). Redlock (Salvatore Sanfilippo) — acquire lock on N independent Redis instances for higher safety. Controversial but widely used via libraries (Redisson, Redlock-py). Always set TTL — locks must auto-expire if the holder crashes."}},{"@type":"Question","name":"Implementing rate limiting with Redis.","acceptedAnswer":{"@type":"Answer","text":"Common approaches: Fixed window — INCR key:{minute} with TTL. Simple but allows 2× burst at window boundaries. Sliding window — sorted set with timestamps; remove old entries, count remaining. Accurate but more memory. Token bucket — Lua script tracks tokens and last refill time. Smooth rate limiting. Return 429 when limit exceeded. Libraries: rate-limiter-flexible (Node), Bucket4j (Java)."}},{"@type":"Question","name":"How does Redis Cluster work?","acceptedAnswer":{"@type":"Answer","text":"Horizontal sharding across multiple nodes. Key space divided into 16,384 hash slots . Each node manages a subset of slots. CRC16(key) mod 16384 determines the slot. Clients route directly to the correct node. If a key's slot isn't on the connected node, Redis returns a MOVED redirect. Supports automatic failover — replicas promote to master on failure. Limitation: multi-key operations only work if all keys hash to the same slot (use hash tags: {user}:profile and {user}:orders )."}},{"@type":"Question","name":"What is Redis Sentinel?","acceptedAnswer":{"@type":"Answer","text":"Sentinel provides high availability for Redis without full clustering. It monitors master and replicas, performs automatic failover if the master is down, and notifies clients of the new master address. Deploy at least 3 Sentinel instances for quorum. Clients connect via Sentinel to discover the current master. Use Sentinel for HA with a single master; use Cluster for horizontal scaling."}},{"@type":"Question","name":"Using Redis for session storage.","acceptedAnswer":{"@type":"Answer","text":"Store session data as a hash or JSON string with a TTL matching session timeout. All app instances read/write the same Redis — enabling stateless horizontal scaling without sticky sessions. Spring Session, express-session (with connect-redis), and Django-redis provide drop-in integration."}},{"@type":"Question","name":"Redis vs Memcached.","acceptedAnswer":{"@type":"Answer","text":"Redis Memcached Data types Strings, hashes, lists, sets, sorted sets, streams Strings only Persistence RDB + AOF None (pure cache) Replication Master-replica, Sentinel, Cluster None built-in Threading Single-threaded Multi-threaded Best for Cache + data structure server + messaging Simple, high-throughput caching"}},{"@type":"Question","name":"Using Redis with Spring Boot.","acceptedAnswer":{"@type":"Answer","text":"spring-boot-starter-data-redis provides: RedisTemplate&lt;K,V&gt; — generic Redis operations. StringRedisTemplate — string-focused operations. @Cacheable / @CacheEvict — annotation-based caching with Redis backend. @EnableRedisRepositories — Spring Data Redis repositories. Configure via spring.data.redis.host , port , password ."}},{"@type":"Question","name":"What is HyperLogLog in Redis?","acceptedAnswer":{"@type":"Answer","text":"A probabilistic data structure for counting unique items (cardinality) with fixed ~12KB memory regardless of set size. ~0.81% standard error. Commands: PFADD visitors user123 , PFCOUNT visitors . Merge with PFMERGE . Use for: unique visitor counts, unique search queries, deduplication at scale where exact count isn't needed."}},{"@type":"Question","name":"Bloom filters in Redis (RedisBloom module).","acceptedAnswer":{"@type":"Answer","text":"A probabilistic structure that answers \"is this item possibly in the set?\" with no false negatives but possible false positives. Fixed memory footprint. Use cases: check if a username exists before hitting DB, spam URL filtering, cache penetration prevention (don't query DB for keys that definitely don't exist). Available via RedisBloom module (Redis Stack) or implement with Bitmaps."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Redis interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Redis Interview Questions and Answers</h1>
+      <p>23 hand-picked Redis interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Redis and what is it used for?</h2>
+          <div class="seo-a"><p>Redis is an <strong>in-memory data store</strong> that can optionally persist to disk. Extremely fast (sub-millisecond latency) because data lives in RAM. Supports rich data structures beyond simple key-value.</p><p>Common use cases:</p><ul><li><strong>Caching</strong> — reduce database load.</li><li><strong>Session storage</strong> — shared sessions across app instances.</li><li><strong>Rate limiting</strong> — token bucket / sliding window counters.</li><li><strong>Pub/Sub</strong> — real-time messaging between services.</li><li><strong>Leaderboards</strong> — sorted sets for rankings.</li><li><strong>Distributed locks</strong> — coordinate across services.</li><li><strong>Job queues</strong> — simple task queues with lists.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Redis data structures and their use cases.</h2>
+          <div class="seo-a"><table><tr><th>Type</th><th>Commands</th><th>Use case</th></tr><tr><td><strong>String</strong></td><td>SET, GET, INCR</td><td>Cache, counters, simple KV</td></tr><tr><td><strong>Hash</strong></td><td>HSET, HGET, HGETALL</td><td>Objects (user profile fields)</td></tr><tr><td><strong>List</strong></td><td>LPUSH, RPOP, LRANGE</td><td>Queues, recent items feed</td></tr><tr><td><strong>Set</strong></td><td>SADD, SMEMBERS, SINTER</td><td>Unique items, tags, followers</td></tr><tr><td><strong>Sorted Set</strong></td><td>ZADD, ZRANGE, ZRANK</td><td>Leaderboards, priority queues</td></tr><tr><td><strong>Stream</strong></td><td>XADD, XREAD, XGROUP</td><td>Event logs, message queues</td></tr></table></div>
+          <pre><code>SET user:42:name &quot;Alice&quot;
+HSET user:42 email &quot;a@b.com&quot; age 30
+ZADD leaderboard 9500 &quot;player1&quot; 8700 &quot;player2&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does TTL and key expiration work?</h2>
+          <div class="seo-a"><p>Set expiration with <code class="inline">EXPIRE key seconds</code> or <code class="inline">SET key value EX 300</code> (5 minutes). Redis uses two strategies:</p><ul><li><strong>Passive</strong> — key is deleted when accessed after expiry.</li><li><strong>Active</strong> — background task randomly samples keys and deletes expired ones.</li></ul><p><code class="inline">TTL key</code> returns remaining seconds. <code class="inline">PERSIST key</code> removes expiration.</p></div>
+          <pre><code>SET session:abc123 &quot;{userId:42}&quot; EX 3600
+TTL session:abc123  # returns seconds remaining</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Cache-aside, read-through, and write-through patterns.</h2>
+          <div class="seo-a"><p><strong>Cache-aside (lazy loading)</strong> — app checks cache first; on miss, reads DB, writes to cache. Most common. Risk: stale data if DB updated without cache invalidation.</p><p><strong>Read-through</strong> — cache layer loads from DB on miss (app only talks to cache).</p><p><strong>Write-through</strong> — write to cache and DB synchronously. Always consistent but slower writes.</p><p><strong>Write-behind</strong> — write to cache immediately, async flush to DB. Fast but risk of data loss.</p></div>
+          <pre><code>val = redis.get(key)
+if val is None:
+    val = db.query(key)
+    redis.setex(key, 300, val)
+return val</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Redis Pub/Sub work?</h2>
+          <div class="seo-a"><p><strong>Publishers</strong> send messages to a <strong>channel</strong>. <strong>Subscribers</strong> listen on channels and receive messages in real time. Fire-and-forget — if no subscriber is listening, the message is lost.</p><p>Pattern subscriptions: <code class="inline">PSUBSCRIBE order.*</code> matches <code class="inline">order.created</code>, <code class="inline">order.shipped</code>.</p><p>Limitations: no persistence, no acknowledgment, no consumer groups. For durable messaging, use <strong>Redis Streams</strong> or Kafka/RabbitMQ.</p></div>
+          <pre><code># subscriber
+SUBSCRIBE notifications
+# publisher
+PUBLISH notifications &quot;New order #123&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Redis Streams?</h2>
+          <div class="seo-a"><p>An append-only log data structure (like a lightweight Kafka topic). Supports:</p><ul><li><strong>Consumer groups</strong> — multiple consumers share work, track progress.</li><li><strong>Acknowledgments</strong> — <code class="inline">XACK</code> confirms processing.</li><li><strong>Persistence</strong> — messages survive restarts (unlike Pub/Sub).</li><li><strong>Range queries</strong> — read from any point by ID.</li></ul><p>Use for: simple event processing, activity feeds, reliable lightweight queues.</p></div>
+          <pre><code>XADD orders * product_id 42 qty 3
+XREADGROUP GROUP processors consumer1 COUNT 10 STREAMS orders &gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>RDB vs AOF persistence.</h2>
+          <div class="seo-a"><p><strong>RDB (snapshots)</strong> — periodic point-in-time snapshots of the dataset to disk. Fast recovery, compact files. Risk: lose data since last snapshot (minutes of writes).</p><p><strong>AOF (Append Only File)</strong> — logs every write command. More durable (configurable fsync: every second or every write). Larger files, slower recovery. Auto-rewrites to compact.</p><p><strong>Both</strong> — recommended for production. RDB for fast restarts, AOF for durability.</p></div>
+          <pre><code># redis.conf
+save 900 1        # RDB: snapshot if 1 key changed in 900s
+appendonly yes      # AOF enabled
+appendfsync everysec</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Eviction policies when Redis runs out of memory.</h2>
+          <div class="seo-a"><p>When <code class="inline">maxmemory</code> is reached, Redis evicts keys based on <code class="inline">maxmemory-policy</code>:</p><ul><li><strong>allkeys-lru</strong> — evict least recently used keys (any key). Good default for caching.</li><li><strong>volatile-lru</strong> — evict LRU among keys with TTL set.</li><li><strong>allkeys-lfu</strong> — evict least frequently used (Redis 4.0+).</li><li><strong>noeviction</strong> — return errors on writes. Use when data must not be lost.</li></ul></div>
+          <pre><code>maxmemory 2gb
+maxmemory-policy allkeys-lru</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is pipelining in Redis?</h2>
+          <div class="seo-a"><p>Send multiple commands without waiting for each response — batch them in one round trip. Dramatically reduces latency for bulk operations (10–100x faster than individual commands).</p><p>Not the same as transactions — pipelining doesn't guarantee atomicity. Just reduces network overhead.</p></div>
+          <pre><code>pipe = redis.pipeline()
+for key, val in data.items():
+    pipe.set(key, val)
+pipe.execute()  # single round trip</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Redis transactions (MULTI/EXEC).</h2>
+          <div class="seo-a"><p><code class="inline">MULTI</code> starts a transaction; commands are queued. <code class="inline">EXEC</code> runs all queued commands atomically. <code class="inline">DISCARD</code> aborts.</p><p>Important: no rollback — if a command fails during EXEC, others still execute. No isolation from other clients between MULTI and EXEC (use WATCH for optimistic locking).</p><p><code class="inline">WATCH key</code> — if key changes before EXEC, transaction is aborted (optimistic concurrency control).</p></div>
+          <pre><code>WATCH balance:42
+val = GET balance:42
+MULTI
+DECRBY balance:42 100
+INCRBY balance:99 100
+EXEC  # fails if balance:42 changed since WATCH</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why use Lua scripts in Redis?</h2>
+          <div class="seo-a"><p>Lua scripts execute <strong>atomically</strong> on the server — no other command runs during execution. Use for:</p><ul><li>Complex read-modify-write without race conditions.</li><li>Rate limiting (INCR + EXPIRE in one atomic script).</li><li>Conditional updates (update only if current value matches).</li></ul><p>Scripts are cached by SHA — send with <code class="inline">EVALSHA</code> after first <code class="inline">EVAL</code>.</p></div>
+          <pre><code>EVAL &quot;local c = redis.call('INCR', KEYS[1]) if c == 1 then redis.call('EXPIRE', KEYS[1], ARGV[1]) end return c&quot; 1 rate:user:42 60</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you implement distributed locks with Redis?</h2>
+          <div class="seo-a"><p>Basic pattern: <code class="inline">SET lock:resource unique_id NX EX 30</code> — set only if not exists, with expiry. Release with a Lua script that deletes only if the value matches (prevents deleting another client's lock).</p><p><strong>Redlock</strong> (Salvatore Sanfilippo) — acquire lock on N independent Redis instances for higher safety. Controversial but widely used via libraries (Redisson, Redlock-py).</p><p>Always set TTL — locks must auto-expire if the holder crashes.</p></div>
+          <pre><code>SET lock:order:123 uuid-abc NX EX 30
+# release (Lua)
+if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) end</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implementing rate limiting with Redis.</h2>
+          <div class="seo-a"><p>Common approaches:</p><ul><li><strong>Fixed window</strong> — <code class="inline">INCR key:{minute}</code> with TTL. Simple but allows 2× burst at window boundaries.</li><li><strong>Sliding window</strong> — sorted set with timestamps; remove old entries, count remaining. Accurate but more memory.</li><li><strong>Token bucket</strong> — Lua script tracks tokens and last refill time. Smooth rate limiting.</li></ul><p>Return 429 when limit exceeded. Libraries: rate-limiter-flexible (Node), Bucket4j (Java).</p></div>
+          <pre><code>ZADD rate:user:42 {now_ms} {now_ms}
+ZREMRANGEBYSCORE rate:user:42 0 {now_ms - 60000}
+ZCARD rate:user:42  # count in last 60s</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Redis Cluster work?</h2>
+          <div class="seo-a"><p><strong>Horizontal sharding</strong> across multiple nodes. Key space divided into 16,384 <strong>hash slots</strong>. Each node manages a subset of slots. <code class="inline">CRC16(key) mod 16384</code> determines the slot.</p><p>Clients route directly to the correct node. If a key's slot isn't on the connected node, Redis returns a <strong>MOVED</strong> redirect. Supports automatic failover — replicas promote to master on failure.</p><p>Limitation: multi-key operations only work if all keys hash to the same slot (use hash tags: <code class="inline">{user}:profile</code> and <code class="inline">{user}:orders</code>).</p></div>
+          <pre><code>SET {user:42}:profile &quot;...&quot;
+SET {user:42}:orders &quot;...&quot;  # same slot due to {user:42}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Redis Sentinel?</h2>
+          <div class="seo-a"><p>Sentinel provides <strong>high availability</strong> for Redis without full clustering. It monitors master and replicas, performs <strong>automatic failover</strong> if the master is down, and notifies clients of the new master address.</p><p>Deploy at least 3 Sentinel instances for quorum. Clients connect via Sentinel to discover the current master.</p><p>Use Sentinel for HA with a single master; use Cluster for horizontal scaling.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Using Redis for session storage.</h2>
+          <div class="seo-a"><p>Store session data as a hash or JSON string with a TTL matching session timeout. All app instances read/write the same Redis — enabling <strong>stateless horizontal scaling</strong> without sticky sessions.</p><p>Spring Session, express-session (with connect-redis), and Django-redis provide drop-in integration.</p></div>
+          <pre><code>SET session:sess_abc &quot;{userId:42, role:'admin'}&quot; EX 1800
+EXPIRE session:sess_abc 1800  # refresh on each request</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Redis vs Memcached.</h2>
+          <div class="seo-a"><table><tr><th></th><th>Redis</th><th>Memcached</th></tr><tr><td><strong>Data types</strong></td><td>Strings, hashes, lists, sets, sorted sets, streams</td><td>Strings only</td></tr><tr><td><strong>Persistence</strong></td><td>RDB + AOF</td><td>None (pure cache)</td></tr><tr><td><strong>Replication</strong></td><td>Master-replica, Sentinel, Cluster</td><td>None built-in</td></tr><tr><td><strong>Threading</strong></td><td>Single-threaded</td><td>Multi-threaded</td></tr><tr><td><strong>Best for</strong></td><td>Cache + data structure server + messaging</td><td>Simple, high-throughput caching</td></tr></table></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Using Redis with Spring Boot.</h2>
+          <div class="seo-a"><p><code class="inline">spring-boot-starter-data-redis</code> provides:</p><ul><li><code class="inline">RedisTemplate&lt;K,V&gt;</code> — generic Redis operations.</li><li><code class="inline">StringRedisTemplate</code> — string-focused operations.</li><li><code class="inline">@Cacheable</code> / <code class="inline">@CacheEvict</code> — annotation-based caching with Redis backend.</li><li><code class="inline">@EnableRedisRepositories</code> — Spring Data Redis repositories.</li></ul><p>Configure via <code class="inline">spring.data.redis.host</code>, <code class="inline">port</code>, <code class="inline">password</code>.</p></div>
+          <pre><code>@Cacheable(value = &quot;users&quot;, key = &quot;#id&quot;)
+public User findById(Long id) {
+  return userRepo.findById(id);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is HyperLogLog in Redis?</h2>
+          <div class="seo-a"><p>A probabilistic data structure for <strong>counting unique items</strong> (cardinality) with fixed ~12KB memory regardless of set size. ~0.81% standard error.</p><p>Commands: <code class="inline">PFADD visitors user123</code>, <code class="inline">PFCOUNT visitors</code>. Merge with <code class="inline">PFMERGE</code>.</p><p>Use for: unique visitor counts, unique search queries, deduplication at scale where exact count isn't needed.</p></div>
+          <pre><code>PFADD page:views:2024-01-15 user_42 user_99 user_42
+PFCOUNT page:views:2024-01-15  # returns ~2 (unique)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Bloom filters in Redis (RedisBloom module).</h2>
+          <div class="seo-a"><p>A probabilistic structure that answers "is this item possibly in the set?" with <strong>no false negatives</strong> but possible false positives. Fixed memory footprint.</p><p>Use cases: check if a username exists before hitting DB, spam URL filtering, cache penetration prevention (don't query DB for keys that definitely don't exist).</p><p>Available via RedisBloom module (Redis Stack) or implement with Bitmaps.</p></div>
+          <pre><code>BF.ADD usernames &quot;alice&quot;
+BF.EXISTS usernames &quot;alice&quot;   # 1 (probably yes)
+BF.EXISTS usernames &quot;nobody&quot;  # 0 (definitely no)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Cache invalidation strategies.</h2>
+          <div class="seo-a"><p>The hardest problem in computer science. Strategies:</p><ul><li><strong>TTL-based</strong> — let entries expire naturally. Simple but stale data window.</li><li><strong>Write-invalidate</strong> — delete cache key on DB write. Next read repopulates.</li><li><strong>Write-update</strong> — update cache on DB write. Risk of race conditions.</li><li><strong>Event-driven</strong> — DB change events (CDC, triggers) invalidate related cache keys.</li></ul><p>For related keys, use cache tagging or versioned keys (<code class="inline">user:42:v3</code>).</p></div>
+          <pre><code>def update_user(id, data):
+    db.update(id, data)
+    redis.delete(f&quot;user:{id}&quot;)  # invalidate</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Redis security best practices.</h2>
+          <div class="seo-a"><ul><li><strong>Authentication</strong> — set <code class="inline">requirepass</code> or use ACLs (Redis 6+).</li><li><strong>Network</strong> — bind to private IP; never expose port 6379 to the internet.</li><li><strong>Disable dangerous commands</strong> — rename or disable FLUSHALL, CONFIG, DEBUG.</li><li><strong>TLS</strong> — encrypt data in transit for compliance.</li><li><strong>Principle of least privilege</strong> — ACL users with only needed commands.</li></ul></div>
+          <pre><code>ACL SETUSER appuser on &gt;password ~cached:* +get +set +del -flushall</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Key Redis metrics to monitor.</h2>
+          <div class="seo-a"><ul><li><strong>Memory usage</strong> — used_memory vs maxmemory. Alert before eviction kicks in.</li><li><strong>Hit rate</strong> — keyspace_hits / (hits + misses). Below 80% = cache not effective.</li><li><strong>Connected clients</strong> — sudden spikes may indicate connection leaks.</li><li><strong>Ops/sec</strong> — commands processed per second.</li><li><strong>Blocked clients</strong> — clients waiting on BLPOP or slow scripts.</li><li><strong>Replication lag</strong> — replica offset behind master.</li></ul><p>Tools: Redis INFO command, RedisInsight, Prometheus redis_exporter + Grafana.</p></div>
+          <pre><code>INFO memory
+INFO stats  # keyspace_hits, keyspace_misses</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="redis";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>API Testing Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 API Testing interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/api-testing" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="API Testing Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 API Testing interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/api-testing" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="API Testing Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is API testing? Why is it important for SDETs?","acceptedAnswer":{"@type":"Answer","text":"API testing validates application programming interfaces — usually REST/HTTP services — by sending requests and checking responses without (or before) using the UI. It is important because APIs are the backbone of modern apps: faster than UI tests, more stable, and they catch business-logic and contract bugs early."}},{"@type":"Question","name":"Explain common HTTP methods and status codes used in API testing.","acceptedAnswer":{"@type":"Answer","text":"Methods : GET (read), POST (create), PUT / PATCH (update), DELETE (remove). Status codes : 2xx success ( 200 / 201 ), 4xx client error ( 400 bad request, 401 unauthorized, 403 forbidden, 404 not found), 5xx server error ( 500 )."}},{"@type":"Question","name":"How do you use Postman for API testing?","acceptedAnswer":{"@type":"Answer","text":"In Postman you create requests (method, URL, headers, body), organise them into Collections , and use Environments for variables like base URL and tokens. You can add Tests (JavaScript assertions) on status/body, chain requests with variables, and run collections via Collection Runner or Newman in CI."}},{"@type":"Question","name":"How do you test API authentication and authorization?","acceptedAnswer":{"@type":"Answer","text":"Authentication = who you are (login/token). Authorization = what you are allowed to do (roles/permissions). Test with valid token, missing token, expired/invalid token, and a valid user calling a forbidden resource (e.g. normal user hitting admin API)."}},{"@type":"Question","name":"What do you validate in an API response?","acceptedAnswer":{"@type":"Answer","text":"Status code matches the scenario. Response time is within an agreed limit (basic performance signal). Headers like Content-Type . Body : required fields present, correct types/values, error structure on failures. Contract : no unexpected breaking field changes when relevant. Side effects : DB/UI state updated if the API creates/updates data."}},{"@type":"Question","name":"How do you design an end-to-end API test flow (example: ecommerce order)?","acceptedAnswer":{"@type":"Answer","text":"Chain APIs in business order and pass data between calls: authenticate → create customer/cart → place order → fetch order → (optional) cancel/update → assert final state. Store dynamic IDs/tokens from each response and reuse them. Clean up test data when possible so runs stay independent."}},{"@type":"Question","name":"REST vs SOAP — what should a tester know?","acceptedAnswer":{"@type":"Answer","text":"REST APIs usually use HTTP + JSON, are resource-based, and are most common today. SOAP uses XML envelopes and strict WSDL contracts — still seen in enterprise/telecom integrations. Testing REST focuses on HTTP semantics; SOAP focuses on operations and XML schemas."}},{"@type":"Question","name":"What is idempotency in APIs? Why test it?","acceptedAnswer":{"@type":"Answer","text":"An idempotent operation can be repeated with the same result — e.g. GET , PUT , DELETE ideally. POST create is often not idempotent (two calls → two orders) unless the API uses an idempotency key."}},{"@type":"Question","name":"Which HTTP headers matter most in API testing?","acceptedAnswer":{"@type":"Answer","text":"Common critical headers: Authorization , Content-Type , Accept , correlation/request IDs, and sometimes If-Match /idempotency keys. Wrong Content-Type often yields 415; missing auth yields 401."}},{"@type":"Question","name":"Path parameters vs query parameters — how do you test them?","acceptedAnswer":{"@type":"Answer","text":"Path params identify a resource ( /orders/{orderId} ). Query params filter/sort/page ( /orders?status=OPEN&amp;page=2 ). Test valid values, missing required params, invalid types, and empty/unknown filters."}},{"@type":"Question","name":"How do you test request body / schema validation?","acceptedAnswer":{"@type":"Answer","text":"Send valid payloads and systematic invalid ones: missing required fields, wrong types, empty strings, oversized values, extra unexpected fields (depending on API strictness). Expect 400 with clear validation errors — not 500."}},{"@type":"Question","name":"Why is asserting only HTTP status code not enough?","acceptedAnswer":{"@type":"Answer","text":"Status can be 200 while body is wrong (incorrect total, missing fields, wrong status enum). Always assert business-critical fields and types. Conversely, body may look fine while status is wrong for the contract."}},{"@type":"Question","name":"How do you run Postman collections in CI (Newman)?","acceptedAnswer":{"@type":"Answer","text":"Newman is the CLI runner for Postman collections. In CI you export collection + environment, run Newman in the pipeline, fail the build on test failures, and publish the HTML/CLI report."}},{"@type":"Question","name":"When should you mock dependencies in API testing?","acceptedAnswer":{"@type":"Answer","text":"Mock when a dependency is unstable, costly, or outside your control (payment gateway, SMS, third-party KYC). Don’t mock the system under test itself. Use real integrated envs for contract confidence on critical paths when possible."}},{"@type":"Question","name":"How do you test pagination, sorting, and filtering?","acceptedAnswer":{"@type":"Answer","text":"Verify page size boundaries, page numbers, empty pages, total counts, stable sort order, and filter combinations. Check that no duplicates appear across pages and that invalid page params return 400."}},{"@type":"Question","name":"What should you validate in API error responses?","acceptedAnswer":{"@type":"Answer","text":"Validate status code, stable error code/message structure, field-level validation details when relevant, and that no sensitive internals leak (stack traces, SQL, secrets). Errors should be consistent across endpoints."}},{"@type":"Question","name":"How do you test API rate limiting / throttling?","acceptedAnswer":{"@type":"Answer","text":"Send requests beyond the documented limit and expect throttling responses (often 429) with retry guidance when provided. Confirm legitimate traffic still works below the threshold and that limits apply per user/IP/key as designed."}},{"@type":"Question","name":"How do you approach API versioning in testing?","acceptedAnswer":{"@type":"Answer","text":"Know how versions are exposed (URL /v1 , header, or media type). Test that older supported versions still behave for consumers, and that breaking changes don’t silently land on an existing version. Regression should include critical contracts per supported version."}},{"@type":"Question","name":"How do you test file upload APIs?","acceptedAnswer":{"@type":"Answer","text":"Test valid file types/sizes, invalid type, oversize file, empty file, missing multipart field, and auth on upload endpoints. Verify response metadata and that the file is stored/linked correctly (or rejected cleanly)."}},{"@type":"Question","name":"What is API contract testing?","acceptedAnswer":{"@type":"Answer","text":"Contract testing verifies that a provider’s API still meets the expectations a consumer relies on (fields, types, status behaviours). It catches breaking changes earlier than full UI e2e, often via schema checks or consumer-driven contract tools."}}]}
   </script>
 </head>
 
@@ -326,6 +330,153 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="API Testing interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>API Testing Interview Questions and Answers</h1>
+      <p>20 hand-picked API Testing interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is API testing? Why is it important for SDETs?</h2>
+          <div class="seo-a"><p><strong>API testing</strong> validates application programming interfaces — usually REST/HTTP services — by sending requests and checking responses without (or before) using the UI.</p><p>It is important because APIs are the backbone of modern apps: faster than UI tests, more stable, and they catch business-logic and contract bugs early.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain common HTTP methods and status codes used in API testing.</h2>
+          <div class="seo-a"><p><strong>Methods</strong>: <code class="inline">GET</code> (read), <code class="inline">POST</code> (create), <code class="inline">PUT</code>/<code class="inline">PATCH</code> (update), <code class="inline">DELETE</code> (remove).</p><p><strong>Status codes</strong>: <code class="inline">2xx</code> success (<code class="inline">200</code>/<code class="inline">201</code>), <code class="inline">4xx</code> client error (<code class="inline">400</code> bad request, <code class="inline">401</code> unauthorized, <code class="inline">403</code> forbidden, <code class="inline">404</code> not found), <code class="inline">5xx</code> server error (<code class="inline">500</code>).</p></div>
+          <pre><code>GET    /api/orders/123     → 200 + order JSON
+POST   /api/orders         → 201 + created id
+DELETE /api/orders/123     → 204 or 200</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you use Postman for API testing?</h2>
+          <div class="seo-a"><p>In Postman you create <strong>requests</strong> (method, URL, headers, body), organise them into <strong>Collections</strong>, and use <strong>Environments</strong> for variables like base URL and tokens.</p><p>You can add <strong>Tests</strong> (JavaScript assertions) on status/body, chain requests with variables, and run collections via Collection Runner or Newman in CI.</p></div>
+          <pre><code>pm.test('status is 200', () =&gt; {
+  pm.response.to.have.status(200);
+});
+pm.test('has orderId', () =&gt; {
+  const json = pm.response.json();
+  pm.expect(json.orderId).to.be.a('string');
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test API authentication and authorization?</h2>
+          <div class="seo-a"><p><strong>Authentication</strong> = who you are (login/token). <strong>Authorization</strong> = what you are allowed to do (roles/permissions).</p><p>Test with valid token, missing token, expired/invalid token, and a valid user calling a forbidden resource (e.g. normal user hitting admin API).</p></div>
+          <pre><code>Authorization: Bearer &lt;access_token&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do you validate in an API response?</h2>
+          <div class="seo-a"><ul><li><strong>Status code</strong> matches the scenario.</li><li><strong>Response time</strong> is within an agreed limit (basic performance signal).</li><li><strong>Headers</strong> like <code class="inline">Content-Type</code>.</li><li><strong>Body</strong>: required fields present, correct types/values, error structure on failures.</li><li><strong>Contract</strong>: no unexpected breaking field changes when relevant.</li><li><strong>Side effects</strong>: DB/UI state updated if the API creates/updates data.</li></ul></div>
+          <pre><code>pm.test('order status is CREATED', () =&gt; {
+  pm.expect(pm.response.json().status).to.eql('CREATED');
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you design an end-to-end API test flow (example: ecommerce order)?</h2>
+          <div class="seo-a"><p>Chain APIs in business order and pass data between calls: authenticate → create customer/cart → place order → fetch order → (optional) cancel/update → assert final state.</p><p>Store dynamic IDs/tokens from each response and reuse them. Clean up test data when possible so runs stay independent.</p></div>
+          <pre><code>1) POST /auth/login          → token
+2) POST /cart/items          → cartId
+3) POST /orders              → orderId
+4) GET  /orders/{{orderId}}  → status=CREATED</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>REST vs SOAP — what should a tester know?</h2>
+          <div class="seo-a"><p><strong>REST</strong> APIs usually use HTTP + JSON, are resource-based, and are most common today. <strong>SOAP</strong> uses XML envelopes and strict WSDL contracts — still seen in enterprise/telecom integrations. Testing REST focuses on HTTP semantics; SOAP focuses on operations and XML schemas.</p></div>
+          <pre><code>REST: GET /orders/1  → JSON
+SOAP: XML &lt;GetOrder&gt; request/response</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is idempotency in APIs? Why test it?</h2>
+          <div class="seo-a"><p>An idempotent operation can be repeated with the same result — e.g. <code class="inline">GET</code>, <code class="inline">PUT</code>, <code class="inline">DELETE</code> ideally. <code class="inline">POST</code> create is often not idempotent (two calls → two orders) unless the API uses an idempotency key.</p></div>
+          <pre><code>POST /orders twice without key → 2 orders (bug risk)
+POST /orders with Idempotency-Key → same order returned</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Which HTTP headers matter most in API testing?</h2>
+          <div class="seo-a"><p>Common critical headers: <code class="inline">Authorization</code>, <code class="inline">Content-Type</code>, <code class="inline">Accept</code>, correlation/request IDs, and sometimes <code class="inline">If-Match</code>/idempotency keys. Wrong Content-Type often yields 415; missing auth yields 401.</p></div>
+          <pre><code>Content-Type: application/json
+Authorization: Bearer &lt;token&gt;
+Accept: application/json</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Path parameters vs query parameters — how do you test them?</h2>
+          <div class="seo-a"><p><strong>Path params</strong> identify a resource (<code class="inline">/orders/{orderId}</code>). <strong>Query params</strong> filter/sort/page (<code class="inline">/orders?status=OPEN&amp;page=2</code>). Test valid values, missing required params, invalid types, and empty/unknown filters.</p></div>
+          <pre><code>GET /orders/ORD-1
+GET /orders?status=CANCELLED&amp;page=1&amp;size=20</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test request body / schema validation?</h2>
+          <div class="seo-a"><p>Send valid payloads and systematic invalid ones: missing required fields, wrong types, empty strings, oversized values, extra unexpected fields (depending on API strictness). Expect 400 with clear validation errors — not 500.</p></div>
+          <pre><code>POST /orders {&quot;items&quot;:[]}           → 400
+POST /orders {&quot;items&quot;:[{&quot;qty&quot;:&quot;x&quot;}]} → 400
+POST /orders valid body              → 201</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why is asserting only HTTP status code not enough?</h2>
+          <div class="seo-a"><p>Status can be 200 while body is wrong (incorrect total, missing fields, wrong status enum). Always assert business-critical fields and types. Conversely, body may look fine while status is wrong for the contract.</p></div>
+          <pre><code>expect(status).toBe(201)
+expect(body.orderId).toBeTruthy()
+expect(body.status).toBe('CREATED')</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you run Postman collections in CI (Newman)?</h2>
+          <div class="seo-a"><p><strong>Newman</strong> is the CLI runner for Postman collections. In CI you export collection + environment, run Newman in the pipeline, fail the build on test failures, and publish the HTML/CLI report.</p></div>
+          <pre><code>newman run order-api.postman_collection.json \
+  -e qa.postman_environment.json \
+  --reporters cli,htmlextra</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>When should you mock dependencies in API testing?</h2>
+          <div class="seo-a"><p>Mock when a dependency is unstable, costly, or outside your control (payment gateway, SMS, third-party KYC). Don’t mock the system under test itself. Use real integrated envs for contract confidence on critical paths when possible.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you test pagination, sorting, and filtering?</h2>
+          <div class="seo-a"><p>Verify page size boundaries, page numbers, empty pages, total counts, stable sort order, and filter combinations. Check that no duplicates appear across pages and that invalid page params return 400.</p></div>
+          <pre><code>GET /orders?page=1&amp;size=10&amp;sort=createdAt,desc&amp;status=OPEN</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What should you validate in API error responses?</h2>
+          <div class="seo-a"><p>Validate status code, stable error code/message structure, field-level validation details when relevant, and that no sensitive internals leak (stack traces, SQL, secrets). Errors should be consistent across endpoints.</p></div>
+          <pre><code>{
+  &quot;code&quot;: &quot;VALIDATION_ERROR&quot;,
+  &quot;message&quot;: &quot;Invalid request&quot;,
+  &quot;fields&quot;: [{&quot;name&quot;: &quot;qty&quot;, &quot;error&quot;: &quot;must be &gt;= 1&quot;}]
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test API rate limiting / throttling?</h2>
+          <div class="seo-a"><p>Send requests beyond the documented limit and expect throttling responses (often 429) with retry guidance when provided. Confirm legitimate traffic still works below the threshold and that limits apply per user/IP/key as designed.</p></div>
+          <pre><code>Burst 100 req/sec → expect 429 after threshold</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you approach API versioning in testing?</h2>
+          <div class="seo-a"><p>Know how versions are exposed (URL <code class="inline">/v1</code>, header, or media type). Test that older supported versions still behave for consumers, and that breaking changes don’t silently land on an existing version. Regression should include critical contracts per supported version.</p></div>
+          <pre><code>GET /v1/orders/1
+GET /v2/orders/1</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test file upload APIs?</h2>
+          <div class="seo-a"><p>Test valid file types/sizes, invalid type, oversize file, empty file, missing multipart field, and auth on upload endpoints. Verify response metadata and that the file is stored/linked correctly (or rejected cleanly).</p></div>
+          <pre><code>POST /documents multipart/form-data file=@invoice.pdf</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is API contract testing?</h2>
+          <div class="seo-a"><p>Contract testing verifies that a provider’s API still meets the expectations a consumer relies on (fields, types, status behaviours). It catches breaking changes earlier than full UI e2e, often via schema checks or consumer-driven contract tools.</p></div>
+          
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +550,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="api-testing";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

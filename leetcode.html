@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>LeetCode Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="13 LeetCode interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/leetcode" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="LeetCode Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="13 LeetCode interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/leetcode" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="LeetCode Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Two Sum","acceptedAnswer":{"@type":"Answer","text":"Optimal approach: use a hash map to store each number and its index while iterating. For each element, check whether target - nums[i] has already been seen — if it has, you have the pair. Time Complexity: O(n) Space Complexity: O(n)"}},{"@type":"Question","name":"Valid Parentheses","acceptedAnswer":{"@type":"Answer","text":"Given a string containing only () , [] , and {} , determine if the input string is valid. Optimal Approach: Use a Stack . Push opening brackets onto the stack. Whenever a closing bracket appears, check if it matches the top of the stack. Time Complexity: O(n) Space Complexity: O(n)"}},{"@type":"Question","name":"Best Time to Buy and Sell Stock","acceptedAnswer":{"@type":"Answer","text":"Given an array prices where prices[i] is the stock price on day i , find the maximum profit by choosing one day to buy and one later day to sell. Optimal Approach: Traverse the array once while maintaining the minimum price seen so far. At each step, calculate the profit if you sold today and update the maximum profit. Time Complexity: O(n) Space Complexity: O(1)"}},{"@type":"Question","name":"Longest Substring Without Repeating Characters","acceptedAnswer":{"@type":"Answer","text":"Given a string s , find the length of the longest substring without repeating characters. Optimal Approach: Use the Sliding Window technique along with a HashMap to store the last index of every character. Whenever a duplicate character is found inside the current window, move the left pointer just after its previous occurrence. Time Complexity: O(n) Space Complexity: O(min(n, charset))"}},{"@type":"Question","name":"Contains Duplicate","acceptedAnswer":{"@type":"Answer","text":"Given an integer array nums , return true if any value appears at least twice in the array, and return false if every element is distinct. Optimal Approach: Use a HashSet . As you iterate through the array, check if the current element already exists in the set. If it does, a duplicate has been found. Time Complexity: O(n) Space Complexity: O(n)"}},{"@type":"Question","name":"Valid Anagram","acceptedAnswer":{"@type":"Answer","text":"Given two strings s and t , return true if t is an anagram of s , otherwise return false . Optimal Approach: Since the strings contain only lowercase English letters, use an integer frequency array of size 26 . Increment the count for each character in s and decrement for each character in t . If all counts become zero, the strings are anagrams. Time Complexity: O(n) Space Complexity: O(1)"}},{"@type":"Question","name":"Merge Sorted Array","acceptedAnswer":{"@type":"Answer","text":"You are given two sorted integer arrays nums1 and nums2 . Merge nums2 into nums1 as one sorted array. Optimal Approach: Use three pointers starting from the end of both arrays. Compare the largest remaining elements and place the larger one at the end of nums1 . Time Complexity: O(m+n) Space Complexity: O(1)"}},{"@type":"Question","name":"Squares of a Sorted Array","acceptedAnswer":{"@type":"Answer","text":"Given a sorted integer array nums , return an array of the squares of each number sorted in non-decreasing order. Optimal Approach: Use two pointers at the beginning and end of the array. Compare the absolute values and place the larger square at the end of the result array. Time Complexity: O(n) Space Complexity: O(n)"}},{"@type":"Question","name":"Longest Repeating Character Replacement","acceptedAnswer":{"@type":"Answer","text":"Given a string s and an integer k , you can replace at most k characters. Return the length of the longest substring containing the same letter after performing at most k replacements. Optimal Approach: Use a Sliding Window . Maintain the frequency of characters inside the window and keep track of the highest frequency character. If the number of characters that need replacement exceeds k , shrink the window from the left. Time Complexity: O(n) Space Complexity: O(1) (26 uppercase letters)"}},{"@type":"Question","name":"Maximum Average Subarray I","acceptedAnswer":{"@type":"Answer","text":"Given an integer array nums consisting of n elements and an integer k , find the contiguous subarray of length k that has the maximum average value and return that value. Optimal Approach: Compute the sum of the first window of size k . Then slide the window by removing the leftmost element and adding the next element. Track the maximum window sum. Time Complexity: O(n) Space Complexity: O(1)"}},{"@type":"Question","name":"Next Greater Element I","acceptedAnswer":{"@type":"Answer","text":"You are given two arrays nums1 and nums2 , where nums1 is a subset of nums2 . For each element in nums1 , find the first greater element to its right in nums2 . If none exists, return -1 . Optimal Approach: Traverse nums2 using a Monotonic Decreasing Stack . Whenever the current number is greater than the stack's top, it becomes the next greater element for all smaller numbers popped from the stack. Store these mappings in a HashMap . Time Complexity: O(n + m) Space Complexity: O(n)"}},{"@type":"Question","name":"Next Greater Element II","acceptedAnswer":{"@type":"Answer","text":"Given a circular integer array nums , return the next greater number for every element. If no greater element exists, return -1 . Optimal Approach: Since the array is circular, iterate through it twice using modulo ( i % n ). Maintain a Monotonic Decreasing Stack of indices. Whenever a greater value is found, update the answer for indices popped from the stack. Time Complexity: O(n) Space Complexity: O(n)"}},{"@type":"Question","name":"Daily Temperatures","acceptedAnswer":{"@type":"Answer","text":"Given an array temperatures , return an array where each element represents the number of days you have to wait until a warmer temperature. If there is no future warmer day, return 0 . Optimal Approach: Use a Monotonic Decreasing Stack that stores indices. Whenever a warmer temperature is found, pop indices from the stack and calculate the distance between the current day and the popped day. Time Complexity: O(n) Space Complexity: O(n)"}}]}
   </script>
 </head>
 
@@ -326,6 +330,292 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="LeetCode interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>LeetCode Interview Questions and Answers</h1>
+      <p>13 hand-picked LeetCode interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Two Sum</h2>
+          <div class="seo-a"><p><strong>Optimal approach:</strong> use a hash map to store each number and its index while iterating. For each element, check whether <code class="inline">target - nums[i]</code> has already been seen — if it has, you have the pair.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(n)</strong></li></ul></div>
+          <pre><code>public int[] twoSum(int[] nums, int target) {
+    Map&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;();
+    for (int i = 0; i &lt; nums.length; i++) {
+        int complement = target - nums[i];
+        if (map.containsKey(complement)) {
+            return new int[]{map.get(complement), i};
+        }
+        map.put(nums[i], i);
+    }
+    return new int[]{};
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Valid Parentheses</h2>
+          <div class="seo-a"><p>Given a string containing only <code class="inline">()</code>, <code class="inline">[]</code>, and <code class="inline">{}</code>, determine if the input string is valid.</p><p><strong>Optimal Approach:</strong> Use a <code class="inline">Stack</code>. Push opening brackets onto the stack. Whenever a closing bracket appears, check if it matches the top of the stack.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(n)</strong></li></ul></div>
+          <pre><code>public boolean isValid(String s) {
+    Stack&lt;Character&gt; stack = new Stack&lt;&gt;();
+    for (char c : s.toCharArray()) {
+        if (c == '(' || c == '{' || c == '[') {
+            stack.push(c);
+        } else {
+            if (stack.isEmpty()) return false;
+            char top = stack.pop();
+            if ((c == ')' &amp;&amp; top != '(') ||
+                (c == '}' &amp;&amp; top != '{') ||
+                (c == ']' &amp;&amp; top != '[')) {
+                return false;
+            }
+        }
+    }
+    return stack.isEmpty();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Best Time to Buy and Sell Stock</h2>
+          <div class="seo-a"><p>Given an array <code class="inline">prices</code> where <code class="inline">prices[i]</code> is the stock price on day <code class="inline">i</code>, find the maximum profit by choosing one day to buy and one later day to sell.</p><p><strong>Optimal Approach:</strong> Traverse the array once while maintaining the minimum price seen so far. At each step, calculate the profit if you sold today and update the maximum profit.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(1)</strong></li></ul></div>
+          <pre><code>public int maxProfit(int[] prices) {
+    int minPrice = Integer.MAX_VALUE;
+    int maxProfit = 0;
+
+    for (int price : prices) {
+        if (price &lt; minPrice) {
+            minPrice = price;
+        } else {
+            maxProfit = Math.max(maxProfit, price - minPrice);
+        }
+    }
+
+    return maxProfit;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Longest Substring Without Repeating Characters</h2>
+          <div class="seo-a"><p>Given a string <code class="inline">s</code>, find the length of the longest substring without repeating characters.</p><p><strong>Optimal Approach:</strong> Use the <code class="inline">Sliding Window</code> technique along with a <code class="inline">HashMap</code> to store the last index of every character. Whenever a duplicate character is found inside the current window, move the left pointer just after its previous occurrence.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(min(n, charset))</strong></li></ul></div>
+          <pre><code>public int lengthOfLongestSubstring(String s) {
+    Map&lt;Character, Integer&gt; map = new HashMap&lt;&gt;();
+    int left = 0;
+    int maxLength = 0;
+
+    for (int right = 0; right &lt; s.length(); right++) {
+        char ch = s.charAt(right);
+
+        if (map.containsKey(ch)) {
+            left = Math.max(left, map.get(ch) + 1);
+        }
+
+        map.put(ch, right);
+        maxLength = Math.max(maxLength, right - left + 1);
+    }
+
+    return maxLength;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Contains Duplicate</h2>
+          <div class="seo-a"><p>Given an integer array <code class="inline">nums</code>, return <code class="inline">true</code> if any value appears at least twice in the array, and return <code class="inline">false</code> if every element is distinct.</p><p><strong>Optimal Approach:</strong> Use a <code class="inline">HashSet</code>. As you iterate through the array, check if the current element already exists in the set. If it does, a duplicate has been found.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(n)</strong></li></ul></div>
+          <pre><code>public boolean containsDuplicate(int[] nums) {
+    Set&lt;Integer&gt; set = new HashSet&lt;&gt;();
+
+    for (int num : nums) {
+        if (!set.add(num)) {
+            return true;
+        }
+    }
+
+    return false;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Valid Anagram</h2>
+          <div class="seo-a"><p>Given two strings <code class="inline">s</code> and <code class="inline">t</code>, return <code class="inline">true</code> if <code class="inline">t</code> is an anagram of <code class="inline">s</code>, otherwise return <code class="inline">false</code>.</p><p><strong>Optimal Approach:</strong> Since the strings contain only lowercase English letters, use an integer frequency array of size <code class="inline">26</code>. Increment the count for each character in <code class="inline">s</code> and decrement for each character in <code class="inline">t</code>. If all counts become zero, the strings are anagrams.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(1)</strong></li></ul></div>
+          <pre><code>public boolean isAnagram(String s, String t) {
+    if (s.length() != t.length()) {
+        return false;
+    }
+
+    int[] count = new int[26];
+
+    for (int i = 0; i &lt; s.length(); i++) {
+        count[s.charAt(i) - 'a']++;
+        count[t.charAt(i) - 'a']--;
+    }
+
+    for (int c : count) {
+        if (c != 0) {
+            return false;
+        }
+    }
+
+    return true;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Merge Sorted Array</h2>
+          <div class="seo-a"><p>You are given two sorted integer arrays <code class="inline">nums1</code> and <code class="inline">nums2</code>. Merge <code class="inline">nums2</code> into <code class="inline">nums1</code> as one sorted array.</p><p><strong>Optimal Approach:</strong> Use three pointers starting from the end of both arrays. Compare the largest remaining elements and place the larger one at the end of <code class="inline">nums1</code>.</p><ul><li>Time Complexity: <strong>O(m+n)</strong></li><li>Space Complexity: <strong>O(1)</strong></li></ul></div>
+          <pre><code>public void merge(int[] nums1, int m, int[] nums2, int n) {
+    int i = m - 1;
+    int j = n - 1;
+    int k = m + n - 1;
+
+    while (j &gt;= 0) {
+        if (i &gt;= 0 &amp;&amp; nums1[i] &gt; nums2[j]) {
+            nums1[k--] = nums1[i--];
+        } else {
+            nums1[k--] = nums2[j--];
+        }
+    }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Squares of a Sorted Array</h2>
+          <div class="seo-a"><p>Given a sorted integer array <code class="inline">nums</code>, return an array of the squares of each number sorted in non-decreasing order.</p><p><strong>Optimal Approach:</strong> Use two pointers at the beginning and end of the array. Compare the absolute values and place the larger square at the end of the result array.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(n)</strong></li></ul></div>
+          <pre><code>public int[] sortedSquares(int[] nums) {
+    int n = nums.length;
+    int[] result = new int[n];
+
+    int left = 0;
+    int right = n - 1;
+
+    for (int i = n - 1; i &gt;= 0; i--) {
+        if (Math.abs(nums[left]) &gt; Math.abs(nums[right])) {
+            result[i] = nums[left] * nums[left];
+            left++;
+        } else {
+            result[i] = nums[right] * nums[right];
+            right--;
+        }
+    }
+
+    return result;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Longest Repeating Character Replacement</h2>
+          <div class="seo-a"><p>Given a string <code class="inline">s</code> and an integer <code class="inline">k</code>, you can replace at most <code class="inline">k</code> characters. Return the length of the longest substring containing the same letter after performing at most <code class="inline">k</code> replacements.</p><p><strong>Optimal Approach:</strong> Use a <code class="inline">Sliding Window</code>. Maintain the frequency of characters inside the window and keep track of the highest frequency character. If the number of characters that need replacement exceeds <code class="inline">k</code>, shrink the window from the left.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(1)</strong> (26 uppercase letters)</li></ul></div>
+          <pre><code>public int characterReplacement(String s, int k) {
+    int[] freq = new int[26];
+    int left = 0;
+    int maxFreq = 0;
+    int maxLength = 0;
+
+    for (int right = 0; right &lt; s.length(); right++) {
+        maxFreq = Math.max(maxFreq, ++freq[s.charAt(right) - 'A']);
+
+        while ((right - left + 1) - maxFreq &gt; k) {
+            freq[s.charAt(left) - 'A']--;
+            left++;
+        }
+
+        maxLength = Math.max(maxLength, right - left + 1);
+    }
+
+    return maxLength;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Maximum Average Subarray I</h2>
+          <div class="seo-a"><p>Given an integer array <code class="inline">nums</code> consisting of <code class="inline">n</code> elements and an integer <code class="inline">k</code>, find the contiguous subarray of length <code class="inline">k</code> that has the maximum average value and return that value.</p><p><strong>Optimal Approach:</strong> Compute the sum of the first window of size <code class="inline">k</code>. Then slide the window by removing the leftmost element and adding the next element. Track the maximum window sum.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(1)</strong></li></ul></div>
+          <pre><code>public double findMaxAverage(int[] nums, int k) {
+    int sum = 0;
+
+    for (int i = 0; i &lt; k; i++) {
+        sum += nums[i];
+    }
+
+    int maxSum = sum;
+
+    for (int i = k; i &lt; nums.length; i++) {
+        sum = sum - nums[i - k] + nums[i];
+        maxSum = Math.max(maxSum, sum);
+    }
+
+    return (double) maxSum / k;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Next Greater Element I</h2>
+          <div class="seo-a"><p>You are given two arrays <code class="inline">nums1</code> and <code class="inline">nums2</code>, where <code class="inline">nums1</code> is a subset of <code class="inline">nums2</code>. For each element in <code class="inline">nums1</code>, find the first greater element to its right in <code class="inline">nums2</code>. If none exists, return <code class="inline">-1</code>.</p><p><strong>Optimal Approach:</strong> Traverse <code class="inline">nums2</code> using a <code class="inline">Monotonic Decreasing Stack</code>. Whenever the current number is greater than the stack's top, it becomes the next greater element for all smaller numbers popped from the stack. Store these mappings in a <code class="inline">HashMap</code>.</p><ul><li>Time Complexity: <strong>O(n + m)</strong></li><li>Space Complexity: <strong>O(n)</strong></li></ul></div>
+          <pre><code>public int[] nextGreaterElement(int[] nums1, int[] nums2) {
+    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+    Map&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;();
+
+    for (int num : nums2) {
+        while (!stack.isEmpty() &amp;&amp; num &gt; stack.peek()) {
+            map.put(stack.pop(), num);
+        }
+        stack.push(num);
+    }
+
+    while (!stack.isEmpty()) {
+        map.put(stack.pop(), -1);
+    }
+
+    int[] result = new int[nums1.length];
+    for (int i = 0; i &lt; nums1.length; i++) {
+        result[i] = map.get(nums1[i]);
+    }
+
+    return result;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Next Greater Element II</h2>
+          <div class="seo-a"><p>Given a circular integer array <code class="inline">nums</code>, return the next greater number for every element. If no greater element exists, return <code class="inline">-1</code>.</p><p><strong>Optimal Approach:</strong> Since the array is circular, iterate through it twice using modulo (<code class="inline">i % n</code>). Maintain a <code class="inline">Monotonic Decreasing Stack</code> of indices. Whenever a greater value is found, update the answer for indices popped from the stack.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(n)</strong></li></ul></div>
+          <pre><code>public int[] nextGreaterElements(int[] nums) {
+    int n = nums.length;
+    int[] result = new int[n];
+    Arrays.fill(result, -1);
+
+    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+
+    for (int i = 0; i &lt; 2 * n; i++) {
+        int index = i % n;
+
+        while (!stack.isEmpty() &amp;&amp; nums[index] &gt; nums[stack.peek()]) {
+            result[stack.pop()] = nums[index];
+        }
+
+        if (i &lt; n) {
+            stack.push(index);
+        }
+    }
+
+    return result;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Daily Temperatures</h2>
+          <div class="seo-a"><p>Given an array <code class="inline">temperatures</code>, return an array where each element represents the number of days you have to wait until a warmer temperature. If there is no future warmer day, return <code class="inline">0</code>.</p><p><strong>Optimal Approach:</strong> Use a <code class="inline">Monotonic Decreasing Stack</code> that stores indices. Whenever a warmer temperature is found, pop indices from the stack and calculate the distance between the current day and the popped day.</p><ul><li>Time Complexity: <strong>O(n)</strong></li><li>Space Complexity: <strong>O(n)</strong></li></ul></div>
+          <pre><code>public int[] dailyTemperatures(int[] temperatures) {
+    int n = temperatures.length;
+    int[] answer = new int[n];
+    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+
+    for (int i = 0; i &lt; n; i++) {
+        while (!stack.isEmpty() &amp;&amp; temperatures[i] &gt; temperatures[stack.peek()]) {
+            int index = stack.pop();
+            answer[index] = i - index;
+        }
+        stack.push(i);
+    }
+
+    return answer;
+}</code></pre>
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +689,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="leetcode";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

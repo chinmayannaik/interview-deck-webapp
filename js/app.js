@@ -1858,6 +1858,20 @@
     updatePackChip();
     parseHash();
 
+    /* SEO entry pages (/angular, /java, …) are static HTML that inject
+       window.__ENTRY_CAT so the live app opens that category on load. A #hash
+       is a more explicit intent and is already handled by parseHash above, so
+       it wins; we only honour the entry category when there is no hash. */
+    if (window.__ENTRY_CAT && !location.hash) {
+      const ec = window.__ENTRY_CAT;
+      if (isGroup(ec) || CATEGORIES.some((c) => c.key === ec)) setCategory(ec, false);
+    }
+    /* the pre-rendered block existed for crawlers and the no-JS first paint;
+       the interactive app has now rendered the real list, so drop the static
+       duplicate. Harmless (no-op) on pages that were never pre-rendered. */
+    const seoBlock = document.getElementById("seo-prerender");
+    if (seoBlock) seoBlock.remove();
+
     // register service worker (PWA) — only over http(s)
     if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
       window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));

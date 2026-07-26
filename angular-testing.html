@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>Angular Testing Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 Angular Testing interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/angular-testing" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="Angular Testing Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 Angular Testing interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/angular-testing" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="Angular Testing Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Unit vs integration vs e2e tests (the testing pyramid).","acceptedAnswer":{"@type":"Answer","text":"Unit — one class/function in isolation, dependencies mocked. Fast, many. Integration — several units together (a component + its template + a real child). E2E — the whole app in a browser, simulating a real user. Slow, few. The pyramid: lots of unit tests, fewer integration, fewest e2e."}},{"@type":"Question","name":"What are Jasmine and Karma in Angular?","acceptedAnswer":{"@type":"Answer","text":"Jasmine is the testing framework — describe / it / expect with matchers and spies. Karma is the test runner that launches real browsers and reports results. (Newer Angular is moving to Jest / Vitest + web-test-runner.)"}},{"@type":"Question","name":"What is TestBed and configureTestingModule?","acceptedAnswer":{"@type":"Answer","text":"TestBed creates an Angular testing module — a mini environment where you declare/import the component under test and provide (usually mocked) dependencies. TestBed.createComponent() then gives you a ComponentFixture ."}},{"@type":"Question","name":"ComponentFixture — detectChanges, nativeElement, debugElement?","acceptedAnswer":{"@type":"Answer","text":"The fixture wraps the component + its DOM. detectChanges() runs change detection (nothing renders until you call it). nativeElement is the raw DOM; debugElement is Angular's wrapper with query(By.css()) for finding elements."}},{"@type":"Question","name":"How do spies work (spyOn, createSpy, returnValue)?","acceptedAnswer":{"@type":"Answer","text":"A spy records calls and can fake return values. spyOn(obj, 'method') replaces a real method; jasmine.createSpyObj builds a whole mock. Assert with toHaveBeenCalledWith ."}},{"@type":"Question","name":"How do you test HttpClient calls?","acceptedAnswer":{"@type":"Answer","text":"Import HttpClientTestingModule and inject HttpTestingController . It intercepts requests so no real network happens: expectOne(url) asserts the request, flush(data) returns a fake response, and verify() ensures nothing is outstanding."}},{"@type":"Question","name":"fakeAsync + tick vs async + whenStable.","acceptedAnswer":{"@type":"Answer","text":"fakeAsync runs a test in a virtual time zone; tick(ms) advances timers synchronously and flush() drains all pending ones — ideal for setTimeout /debounce. async/whenStable waits for real async tasks (promises) to settle."}},{"@type":"Question","name":"How do you test an observable?","acceptedAnswer":{"@type":"Answer","text":"Subscribe and assert inside the callback. For synchronous streams ( of ) assertions run immediately; for async use fakeAsync / done . Verify emitted values and completion."}},{"@type":"Question","name":"What is marble testing?","acceptedAnswer":{"@type":"Answer","text":"A way to test RxJS timing using ASCII 'marble diagrams' with the TestScheduler . Characters represent virtual time: - a frame, letters emissions, | complete, # error. Great for operators like debounceTime and switchMap ."}},{"@type":"Question","name":"How do you unit-test a service?","acceptedAnswer":{"@type":"Answer","text":"Services are plain classes — instantiate directly or via TestBed.inject() , mock their dependencies, call methods, and assert results/side effects. No fixture/DOM needed unless the service touches HTTP."}},{"@type":"Question","name":"How do you test a pipe?","acceptedAnswer":{"@type":"Answer","text":"Pipes are pure functions — instantiate the class and assert transform() output for various inputs. No TestBed required."}},{"@type":"Question","name":"How do you test a directive?","acceptedAnswer":{"@type":"Answer","text":"Create a tiny host component whose template uses the directive, render it via TestBed, then assert the directive's effect on the host element (classes, styles, events)."}},{"@type":"Question","name":"How do you test @Input and @Output?","acceptedAnswer":{"@type":"Answer","text":"Input : set the property on component , call detectChanges() , assert the rendered result. Output : subscribe to the EventEmitter (or spy on it), trigger the action, and assert it emitted the expected payload."}},{"@type":"Question","name":"What are CDK Component Harnesses?","acceptedAnswer":{"@type":"Answer","text":"From @angular/cdk/testing : a harness is a reusable API for interacting with a component in tests without depending on its DOM structure — so tests don't break when internal markup changes. Angular Material ships harnesses for its components."}},{"@type":"Question","name":"How do you test routing/navigation?","acceptedAnswer":{"@type":"Answer","text":"Provide the router in test mode ( RouterTestingModule or provideRouter([]) ), spy on Router.navigate , or use a RouterTestingHarness to drive real navigation and assert the activated component."}},{"@type":"Question","name":"What is code coverage and is 100% the goal?","acceptedAnswer":{"@type":"Answer","text":"Coverage measures which lines/branches your tests execute ( ng test --code-coverage ). It shows untested code but not test quality — 100% coverage of trivial getters proves little. Aim for meaningful coverage of logic and edge cases, not a vanity number."}},{"@type":"Question","name":"E2E options: Cypress / Playwright vs Protractor.","acceptedAnswer":{"@type":"Answer","text":"Protractor was Angular's original e2e tool — now deprecated . Modern choices are Cypress (great DX, time-travel debugging) and Playwright (multi-browser, fast, auto-wait). They drive the real app and assert user-visible behaviour."}},{"@type":"Question","name":"What makes a good unit test?","acceptedAnswer":{"@type":"Answer","text":"Tests behaviour , not implementation details. Fast, isolated, and deterministic (no real network/time). One logical assertion/concept per test; descriptive names. Arrange-Act-Assert structure; mock external dependencies."}},{"@type":"Question","name":"How do you mock dependencies in Angular tests?","acceptedAnswer":{"@type":"Answer","text":"Provide fakes in TestBed via providers: [{ provide: RealService, useValue: mock }] or useClass / useFactory . Build mocks with jasmine.createSpyObj (or Jest fns) and return Observables with of(...) / throwError(...) to match real APIs."}},{"@type":"Question","name":"How do you test OnPush components correctly?","acceptedAnswer":{"@type":"Answer","text":"OnPush components re-render on input reference changes, events, or explicit mark-for-check — not on random field mutations. In tests, set inputs with fixture.componentRef.setInput() (or new input object references), trigger events, then detectChanges() . Mutating an input object in place often won’t update the view."}}]}
   </script>
 </head>
 
@@ -326,6 +330,173 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="Angular Testing interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Angular Testing Interview Questions and Answers</h1>
+      <p>20 hand-picked Angular Testing interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Unit vs integration vs e2e tests (the testing pyramid).</h2>
+          <div class="seo-a"><ul><li><strong>Unit</strong> — one class/function in isolation, dependencies mocked. Fast, many.</li><li><strong>Integration</strong> — several units together (a component + its template + a real child).</li><li><strong>E2E</strong> — the whole app in a browser, simulating a real user. Slow, few.</li></ul><p>The pyramid: lots of unit tests, fewer integration, fewest e2e.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are Jasmine and Karma in Angular?</h2>
+          <div class="seo-a"><p><strong>Jasmine</strong> is the testing framework — <code class="inline">describe</code>/<code class="inline">it</code>/<code class="inline">expect</code> with matchers and spies. <strong>Karma</strong> is the test runner that launches real browsers and reports results. (Newer Angular is moving to <strong>Jest</strong>/<strong>Vitest</strong> + web-test-runner.)</p></div>
+          <pre><code>describe('MathUtil', () =&gt; {
+  it('adds', () =&gt; { expect(add(2, 3)).toBe(5); });
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is TestBed and configureTestingModule?</h2>
+          <div class="seo-a"><p><code class="inline">TestBed</code> creates an Angular testing module — a mini environment where you declare/import the component under test and provide (usually mocked) dependencies. <code class="inline">TestBed.createComponent()</code> then gives you a <code class="inline">ComponentFixture</code>.</p></div>
+          <pre><code>await TestBed.configureTestingModule({
+  imports: [MyComponent],
+  providers: [{ provide: DataService, useValue: mockData }]
+}).compileComponents();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>ComponentFixture — detectChanges, nativeElement, debugElement?</h2>
+          <div class="seo-a"><p>The fixture wraps the component + its DOM. <code class="inline">detectChanges()</code> runs change detection (nothing renders until you call it). <code class="inline">nativeElement</code> is the raw DOM; <code class="inline">debugElement</code> is Angular's wrapper with <code class="inline">query(By.css())</code> for finding elements.</p></div>
+          <pre><code>const fixture = TestBed.createComponent(MyComponent);
+fixture.detectChanges();
+const h1 = fixture.debugElement.query(By.css('h1')).nativeElement;
+expect(h1.textContent).toContain('Hello');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do spies work (spyOn, createSpy, returnValue)?</h2>
+          <div class="seo-a"><p>A <strong>spy</strong> records calls and can fake return values. <code class="inline">spyOn(obj, 'method')</code> replaces a real method; <code class="inline">jasmine.createSpyObj</code> builds a whole mock. Assert with <code class="inline">toHaveBeenCalledWith</code>.</p></div>
+          <pre><code>const svc = jasmine.createSpyObj('DataService', ['load']);
+svc.load.and.returnValue(of([1, 2]));
+expect(svc.load).toHaveBeenCalledWith(42);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test HttpClient calls?</h2>
+          <div class="seo-a"><p>Import <code class="inline">HttpClientTestingModule</code> and inject <code class="inline">HttpTestingController</code>. It intercepts requests so no real network happens: <code class="inline">expectOne(url)</code> asserts the request, <code class="inline">flush(data)</code> returns a fake response, and <code class="inline">verify()</code> ensures nothing is outstanding.</p></div>
+          <pre><code>service.getUsers().subscribe(u =&gt; expect(u.length).toBe(2));
+const req = httpMock.expectOne('/api/users');
+expect(req.request.method).toBe('GET');
+req.flush([{ id: 1 }, { id: 2 }]);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>fakeAsync + tick vs async + whenStable.</h2>
+          <div class="seo-a"><p><strong>fakeAsync</strong> runs a test in a virtual time zone; <code class="inline">tick(ms)</code> advances timers synchronously and <code class="inline">flush()</code> drains all pending ones — ideal for <code class="inline">setTimeout</code>/debounce. <strong>async/whenStable</strong> waits for real async tasks (promises) to settle.</p></div>
+          <pre><code>it('debounces', fakeAsync(() =&gt; {
+  component.onType('a');
+  tick(300);
+  expect(component.results.length).toBe(1);
+}));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test an observable?</h2>
+          <div class="seo-a"><p>Subscribe and assert inside the callback. For synchronous streams (<code class="inline">of</code>) assertions run immediately; for async use <code class="inline">fakeAsync</code>/<code class="inline">done</code>. Verify emitted values and completion.</p></div>
+          <pre><code>service.data$.subscribe(v =&gt; {
+  expect(v).toEqual([1, 2, 3]);
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is marble testing?</h2>
+          <div class="seo-a"><p>A way to test RxJS timing using ASCII 'marble diagrams' with the <code class="inline">TestScheduler</code>. Characters represent virtual time: <code class="inline">-</code> a frame, letters emissions, <code class="inline">|</code> complete, <code class="inline">#</code> error. Great for operators like <code class="inline">debounceTime</code> and <code class="inline">switchMap</code>.</p></div>
+          <pre><code>testScheduler.run(({ cold, expectObservable }) =&gt; {
+  const source$ = cold('-a-b-c|');
+  expectObservable(source$.pipe(map(x =&gt; x.toUpperCase())))
+    .toBe('-A-B-C|');
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you unit-test a service?</h2>
+          <div class="seo-a"><p>Services are plain classes — instantiate directly or via <code class="inline">TestBed.inject()</code>, mock their dependencies, call methods, and assert results/side effects. No fixture/DOM needed unless the service touches HTTP.</p></div>
+          <pre><code>const service = TestBed.inject(CalcService);
+expect(service.total([1, 2, 3])).toBe(6);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test a pipe?</h2>
+          <div class="seo-a"><p>Pipes are pure functions — instantiate the class and assert <code class="inline">transform()</code> output for various inputs. No TestBed required.</p></div>
+          <pre><code>const pipe = new TruncatePipe();
+expect(pipe.transform('hello world', 5)).toBe('hello…');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test a directive?</h2>
+          <div class="seo-a"><p>Create a tiny <strong>host component</strong> whose template uses the directive, render it via TestBed, then assert the directive's effect on the host element (classes, styles, events).</p></div>
+          <pre><code>@Component({ template: `&lt;div appHighlight&gt;&lt;/div&gt;` })
+class HostComponent {}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test @Input and @Output?</h2>
+          <div class="seo-a"><p><strong>Input</strong>: set the property on <code class="inline">component</code>, call <code class="inline">detectChanges()</code>, assert the rendered result. <strong>Output</strong>: subscribe to the EventEmitter (or spy on it), trigger the action, and assert it emitted the expected payload.</p></div>
+          <pre><code>let emitted;
+component.saved.subscribe(v =&gt; (emitted = v));
+component.onSave();
+expect(emitted).toEqual(expectedItem);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are CDK Component Harnesses?</h2>
+          <div class="seo-a"><p>From <code class="inline">@angular/cdk/testing</code>: a harness is a reusable API for interacting with a component in tests without depending on its DOM structure — so tests don't break when internal markup changes. Angular Material ships harnesses for its components.</p></div>
+          <pre><code>const loader = TestbedHarnessEnvironment.loader(fixture);
+const button = await loader.getHarness(MatButtonHarness);
+await button.click();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test routing/navigation?</h2>
+          <div class="seo-a"><p>Provide the router in test mode (<code class="inline">RouterTestingModule</code> or <code class="inline">provideRouter([])</code>), spy on <code class="inline">Router.navigate</code>, or use a <code class="inline">RouterTestingHarness</code> to drive real navigation and assert the activated component.</p></div>
+          <pre><code>const router = TestBed.inject(Router);
+const spy = spyOn(router, 'navigate');
+component.logout();
+expect(spy).toHaveBeenCalledWith(['/login']);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is code coverage and is 100% the goal?</h2>
+          <div class="seo-a"><p>Coverage measures which lines/branches your tests execute (<code class="inline">ng test --code-coverage</code>). It shows <em>untested</em> code but not test <em>quality</em> — 100% coverage of trivial getters proves little. Aim for meaningful coverage of logic and edge cases, not a vanity number.</p></div>
+          <pre><code>ng test --code-coverage</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>E2E options: Cypress / Playwright vs Protractor.</h2>
+          <div class="seo-a"><p><strong>Protractor</strong> was Angular's original e2e tool — now <strong>deprecated</strong>. Modern choices are <strong>Cypress</strong> (great DX, time-travel debugging) and <strong>Playwright</strong> (multi-browser, fast, auto-wait). They drive the real app and assert user-visible behaviour.</p></div>
+          <pre><code>// Cypress
+cy.visit('/login');
+cy.get('[data-cy=email]').type('a@b.com');
+cy.contains('Sign in').click();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What makes a good unit test?</h2>
+          <div class="seo-a"><ul><li>Tests <strong>behaviour</strong>, not implementation details.</li><li>Fast, isolated, and deterministic (no real network/time).</li><li>One logical assertion/concept per test; descriptive names.</li><li>Arrange-Act-Assert structure; mock external dependencies.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you mock dependencies in Angular tests?</h2>
+          <div class="seo-a"><p>Provide fakes in <code class="inline">TestBed</code> via <code class="inline">providers: [{ provide: RealService, useValue: mock }]</code> or <code class="inline">useClass</code>/<code class="inline">useFactory</code>. Build mocks with <code class="inline">jasmine.createSpyObj</code> (or Jest fns) and return Observables with <code class="inline">of(...)</code>/<code class="inline">throwError(...)</code> to match real APIs.</p></div>
+          <pre><code>const userService = jasmine.createSpyObj&lt;UserService&gt;('UserService', ['getUser']);
+userService.getUser.and.returnValue(of({ id: '1', name: 'Ann' }));
+
+await TestBed.configureTestingModule({
+  imports: [UserComponent],
+  providers: [{ provide: UserService, useValue: userService }]
+}).compileComponents();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you test OnPush components correctly?</h2>
+          <div class="seo-a"><p>OnPush components re-render on input reference changes, events, or explicit mark-for-check — not on random field mutations. In tests, set inputs with <code class="inline">fixture.componentRef.setInput()</code> (or new input object references), trigger events, then <code class="inline">detectChanges()</code>. Mutating an input object in place often won’t update the view.</p></div>
+          <pre><code>fixture.componentRef.setInput('user', { id: '1', name: 'Ann' });
+fixture.detectChanges();
+expect(fixture.nativeElement.textContent).toContain('Ann');
+
+// new reference required for another update
+fixture.componentRef.setInput('user', { id: '1', name: 'Bob' });
+fixture.detectChanges();</code></pre>
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +570,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="angular-testing";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

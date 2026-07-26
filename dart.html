@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Dart Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="100 Dart interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/dart" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Dart Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="100 Dart interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/dart" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Dart Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Dart, and why is it used for Flutter development?","acceptedAnswer":{"@type":"Answer","text":"Dart is an object-oriented, client-optimized programming language developed by Google. It is the primary language for Flutter because it supports AOT (Ahead-of-Time) compilation for fast production performance and JIT (Just-in-Time) compilation for Hot Reload during development."}},{"@type":"Question","name":"What is the difference between var, final, and const in Dart?","acceptedAnswer":{"@type":"Answer","text":"var declares a variable whose type is inferred and whose value can change. final can only be assigned once at runtime. const represents a compile-time constant and must be initialized with a constant value."}},{"@type":"Question","name":"What is Null Safety in Dart?","acceptedAnswer":{"@type":"Answer","text":"Null Safety helps prevent null reference errors by distinguishing between nullable and non-nullable types. A variable declared as String cannot hold null , while String? can. Dart also provides operators like ? , ! , and ?? to safely work with nullable values."}},{"@type":"Question","name":"Explain async, await, and Future in Dart.","acceptedAnswer":{"@type":"Answer","text":"Future represents a value that will be available later. Functions marked with async return a Future, and the await keyword pauses execution until the Future completes without blocking the main thread."}},{"@type":"Question","name":"Which Object-Oriented Programming (OOP) concepts does Dart support?","acceptedAnswer":{"@type":"Answer","text":"Dart fully supports the four main OOP principles: Encapsulation – Bundle data and methods inside classes. Inheritance – Extend existing classes using extends . Polymorphism – Override methods in subclasses. Abstraction – Use abstract classes and interfaces to hide implementation details. Dart also supports mixins, extensions, and interfaces for code reuse."}},{"@type":"Question","name":"What are the differences between List, Set, and Map in Dart?","acceptedAnswer":{"@type":"Answer","text":"List is an ordered, index-accessible collection that allows duplicates. Set is an unordered collection of unique elements—duplicates are automatically discarded. Map stores key-value pairs with unique keys, allowing average O(1) lookup by key."}},{"@type":"Question","name":"What are Generics in Dart, and why are they useful?","acceptedAnswer":{"@type":"Answer","text":"Generics let classes and functions operate on a type specified at the call site rather than hardcoding a type, giving compile-time type safety while allowing reusable code. Dart's core collections ( List&lt;T&gt; , Map&lt;K, V&gt; ) are all generic."}},{"@type":"Question","name":"What are Extension Methods in Dart?","acceptedAnswer":{"@type":"Answer","text":"Extension methods let you add new functionality to an existing type (even ones you don't own, like String or int ) without modifying its source or subclassing it. They are resolved statically at compile time."}},{"@type":"Question","name":"What are Mixins in Dart, and how do they differ from inheritance?","acceptedAnswer":{"@type":"Answer","text":"A mixin lets a class reuse a set of methods/fields from multiple sources without traditional single inheritance, using the with keyword. Unlike inheritance (an 'is-a' relationship with one superclass), mixins model 'can-do' capabilities and can be composed from multiple mixins at once."}},{"@type":"Question","name":"How does Dart's event loop work, and what's the difference between the microtask queue and the event queue?","acceptedAnswer":{"@type":"Answer","text":"Dart runs single-threaded within an isolate using an event loop . The microtask queue (used internally for resolving Futures) is always fully drained before the event loop processes the next item in the event queue (I/O callbacks, timers, user input). This means scheduleMicrotask callbacks always run before a pending Timer , even a zero-duration one."}},{"@type":"Question","name":"What is a Stream in Dart, and what's the difference between single-subscription and broadcast streams?","acceptedAnswer":{"@type":"Answer","text":"A Stream is a sequence of asynchronous events. A single-subscription stream allows only one listener and buffers events until listened to (used for things like file reads). A broadcast stream allows multiple listeners simultaneously but doesn't buffer—listeners only get events emitted after they subscribe."}},{"@type":"Question","name":"How do you run multiple Futures concurrently in Dart?","acceptedAnswer":{"@type":"Answer","text":"Future.wait([...]) runs a list of Futures concurrently and completes when all of them finish (or fails fast if one throws, unless eagerError: false ). This is much faster than awaiting each Future sequentially when the operations are independent."}},{"@type":"Question","name":"What are Enhanced Enums in Dart?","acceptedAnswer":{"@type":"Answer","text":"Since Dart 2.17, enums can have fields, constructors, methods, and implement interfaces , not just be a list of named values. This lets you attach data/behavior directly to each enum constant instead of using a separate switch statement."}},{"@type":"Question","name":"What are Records and Pattern Matching in Dart 3?","acceptedAnswer":{"@type":"Answer","text":"Records let you return multiple values from a function without defining a class, e.g. (int, String) . Pattern matching (via switch expressions, destructuring, and if-case ) lets you deconstruct records, lists, maps, and objects concisely and exhaustively."}},{"@type":"Question","name":"What are sealed classes in Dart, and how do they enable exhaustive switches?","acceptedAnswer":{"@type":"Answer","text":"A sealed class restricts all direct subtypes to the same library, letting the compiler know every possible subtype. This allows switch statements/expressions over the sealed type to be checked for exhaustiveness at compile time—if you add a new subtype and forget a case, Dart flags it as an error, not a runtime bug."}},{"@type":"Question","name":"What is a factory constructor in Dart, and when would you use one?","acceptedAnswer":{"@type":"Answer","text":"A factory constructor doesn't always create a new instance—it can return a cached instance, an instance of a subclass, or run logic before construction (like validating/parsing JSON). This differs from a normal constructor, which always creates a new instance of exactly that class."}},{"@type":"Question","name":"What are named constructors and initializer lists in Dart?","acceptedAnswer":{"@type":"Answer","text":"Named constructors let a class have multiple constructors for different creation scenarios (e.g. Point.origin() ). An initializer list (after the colon, before the body) runs before the constructor body and is used to initialize final fields or call super / assert before the object exists."}},{"@type":"Question","name":"What is the difference between static and instance members in Dart?","acceptedAnswer":{"@type":"Answer","text":"Instance members (fields/methods) belong to a specific object and can access this . Static members belong to the class itself, are shared across all instances, and are accessed via the class name—useful for constants, factory helpers, or utility functions that don't need instance state."}},{"@type":"Question","name":"How does operator overloading work in Dart?","acceptedAnswer":{"@type":"Answer","text":"Dart lets classes override operators like + , == , and [] by defining an operator method, enabling natural syntax for custom types like vectors or money values."}},{"@type":"Question","name":"How does exception handling work in Dart?","acceptedAnswer":{"@type":"Answer","text":"Dart uses try / catch / on / finally . on SomeType catch (e) catches a specific exception type, plain catch (e, stackTrace) catches anything, and finally always runs (cleanup). Custom exceptions are made by implementing Exception or extending Error ."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Dart interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Dart Interview Questions and Answers</h1>
+      <p>100 hand-picked Dart interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Dart, and why is it used for Flutter development?</h2>
+          <div class="seo-a"><p><strong>Dart</strong> is an object-oriented, client-optimized programming language developed by Google. It is the primary language for Flutter because it supports <strong>AOT (Ahead-of-Time)</strong> compilation for fast production performance and <strong>JIT (Just-in-Time)</strong> compilation for Hot Reload during development.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between var, final, and const in Dart?</h2>
+          <div class="seo-a"><p><strong>var</strong> declares a variable whose type is inferred and whose value can change.</p><p><strong>final</strong> can only be assigned once at runtime.</p><p><strong>const</strong> represents a compile-time constant and must be initialized with a constant value.</p></div>
+          <pre><code>var name = 'John';
+final date = DateTime.now();
+const pi = 3.14159;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Null Safety in Dart?</h2>
+          <div class="seo-a"><p>Null Safety helps prevent null reference errors by distinguishing between nullable and non-nullable types. A variable declared as <code class="inline">String</code> cannot hold <code class="inline">null</code>, while <code class="inline">String?</code> can.</p><p>Dart also provides operators like <code class="inline">?</code>, <code class="inline">!</code>, and <code class="inline">??</code> to safely work with nullable values.</p></div>
+          <pre><code>String name = 'John';
+String? middleName;
+print(middleName ?? 'Not Available');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain async, await, and Future in Dart.</h2>
+          <div class="seo-a"><p><strong>Future</strong> represents a value that will be available later. Functions marked with <code class="inline">async</code> return a Future, and the <code class="inline">await</code> keyword pauses execution until the Future completes without blocking the main thread.</p></div>
+          <pre><code>Future&lt;String&gt; fetchUser() async {
+  await Future.delayed(Duration(seconds: 2));
+  return 'John';
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Which Object-Oriented Programming (OOP) concepts does Dart support?</h2>
+          <div class="seo-a"><p>Dart fully supports the four main OOP principles:</p><ul><li><strong>Encapsulation</strong> – Bundle data and methods inside classes.</li><li><strong>Inheritance</strong> – Extend existing classes using <code class="inline">extends</code>.</li><li><strong>Polymorphism</strong> – Override methods in subclasses.</li><li><strong>Abstraction</strong> – Use abstract classes and interfaces to hide implementation details.</li></ul><p>Dart also supports mixins, extensions, and interfaces for code reuse.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the differences between List, Set, and Map in Dart?</h2>
+          <div class="seo-a"><p><strong>List</strong> is an ordered, index-accessible collection that allows duplicates. <strong>Set</strong> is an unordered collection of unique elements—duplicates are automatically discarded. <strong>Map</strong> stores key-value pairs with unique keys, allowing average O(1) lookup by key.</p></div>
+          <pre><code>var list = [1, 2, 2, 3];
+var set = {1, 2, 2, 3}; // {1, 2, 3}
+var map = {'a': 1, 'b': 2};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Generics in Dart, and why are they useful?</h2>
+          <div class="seo-a"><p><strong>Generics</strong> let classes and functions operate on a type specified at the call site rather than hardcoding a type, giving compile-time type safety while allowing reusable code. Dart's core collections (<code class="inline">List&lt;T&gt;</code>, <code class="inline">Map&lt;K, V&gt;</code>) are all generic.</p></div>
+          <pre><code>class Box&lt;T&gt; {
+  final T value;
+  Box(this.value);
+}
+final intBox = Box&lt;int&gt;(5);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Extension Methods in Dart?</h2>
+          <div class="seo-a"><p><strong>Extension methods</strong> let you add new functionality to an existing type (even ones you don't own, like <code class="inline">String</code> or <code class="inline">int</code>) without modifying its source or subclassing it. They are resolved statically at compile time.</p></div>
+          <pre><code>extension StringExtension on String {
+  bool get isValidEmail =&gt; contains('@');
+}
+
+print('a@b.com'.isValidEmail); // true</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Mixins in Dart, and how do they differ from inheritance?</h2>
+          <div class="seo-a"><p>A <strong>mixin</strong> lets a class reuse a set of methods/fields from multiple sources without traditional single inheritance, using the <code class="inline">with</code> keyword. Unlike inheritance (an 'is-a' relationship with one superclass), mixins model 'can-do' capabilities and can be composed from multiple mixins at once.</p></div>
+          <pre><code>mixin Flyer {
+  void fly() =&gt; print('Flying');
+}
+class Bird extends Animal with Flyer {}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Dart's event loop work, and what's the difference between the microtask queue and the event queue?</h2>
+          <div class="seo-a"><p>Dart runs single-threaded within an isolate using an <strong>event loop</strong>. The <strong>microtask queue</strong> (used internally for resolving Futures) is always fully drained before the event loop processes the next item in the <strong>event queue</strong> (I/O callbacks, timers, user input). This means <code class="inline">scheduleMicrotask</code> callbacks always run before a pending <code class="inline">Timer</code>, even a zero-duration one.</p></div>
+          <pre><code>Future(() =&gt; print('event queue'));
+scheduleMicrotask(() =&gt; print('microtask'));
+// Output: microtask, then event queue</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a Stream in Dart, and what's the difference between single-subscription and broadcast streams?</h2>
+          <div class="seo-a"><p>A <strong>Stream</strong> is a sequence of asynchronous events. A <strong>single-subscription stream</strong> allows only one listener and buffers events until listened to (used for things like file reads). A <strong>broadcast stream</strong> allows multiple listeners simultaneously but doesn't buffer—listeners only get events emitted after they subscribe.</p></div>
+          <pre><code>final controller = StreamController&lt;int&gt;.broadcast();
+controller.stream.listen((v) =&gt; print('A: $v'));
+controller.stream.listen((v) =&gt; print('B: $v'));
+controller.add(1);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you run multiple Futures concurrently in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">Future.wait([...])</code> runs a list of Futures concurrently and completes when all of them finish (or fails fast if one throws, unless <code class="inline">eagerError: false</code>). This is much faster than awaiting each Future sequentially when the operations are independent.</p></div>
+          <pre><code>final results = await Future.wait([
+  fetchUser(),
+  fetchPosts(),
+]);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Enhanced Enums in Dart?</h2>
+          <div class="seo-a"><p>Since Dart 2.17, enums can have <strong>fields, constructors, methods, and implement interfaces</strong>, not just be a list of named values. This lets you attach data/behavior directly to each enum constant instead of using a separate switch statement.</p></div>
+          <pre><code>enum Status {
+  active(label: 'Active', color: Colors.green),
+  inactive(label: 'Inactive', color: Colors.grey);
+
+  final String label;
+  final Color color;
+  const Status({required this.label, required this.color});
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Records and Pattern Matching in Dart 3?</h2>
+          <div class="seo-a"><p><strong>Records</strong> let you return multiple values from a function without defining a class, e.g. <code class="inline">(int, String)</code>. <strong>Pattern matching</strong> (via <code class="inline">switch</code> expressions, destructuring, and <code class="inline">if-case</code>) lets you deconstruct records, lists, maps, and objects concisely and exhaustively.</p></div>
+          <pre><code>(int, String) getUser() =&gt; (1, 'John');
+
+final (id, name) = getUser();
+print('$id $name');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are sealed classes in Dart, and how do they enable exhaustive switches?</h2>
+          <div class="seo-a"><p>A <strong>sealed class</strong> restricts all direct subtypes to the same library, letting the compiler know every possible subtype. This allows <code class="inline">switch</code> statements/expressions over the sealed type to be checked for <strong>exhaustiveness</strong> at compile time—if you add a new subtype and forget a case, Dart flags it as an error, not a runtime bug.</p></div>
+          <pre><code>sealed class Result&lt;T&gt; {}
+class Success&lt;T&gt; extends Result&lt;T&gt; { final T data; Success(this.data); }
+class Failure&lt;T&gt; extends Result&lt;T&gt; { final String error; Failure(this.error); }
+
+String show(Result r) =&gt; switch (r) {
+  Success(:final data) =&gt; 'Data: $data',
+  Failure(:final error) =&gt; 'Error: $error',
+};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a factory constructor in Dart, and when would you use one?</h2>
+          <div class="seo-a"><p>A <strong>factory constructor</strong> doesn't always create a new instance—it can return a cached instance, an instance of a subclass, or run logic before construction (like validating/parsing JSON). This differs from a normal constructor, which always creates a new instance of exactly that class.</p></div>
+          <pre><code>class User {
+  final String name;
+  User._(this.name);
+
+  factory User.fromJson(Map&lt;String, dynamic&gt; json) {
+    return User._(json['name'] as String);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are named constructors and initializer lists in Dart?</h2>
+          <div class="seo-a"><p><strong>Named constructors</strong> let a class have multiple constructors for different creation scenarios (e.g. <code class="inline">Point.origin()</code>). An <strong>initializer list</strong> (after the colon, before the body) runs before the constructor body and is used to initialize final fields or call <code class="inline">super</code>/<code class="inline">assert</code> before the object exists.</p></div>
+          <pre><code>class Point {
+  final double x, y;
+  Point(this.x, this.y);
+  Point.origin() : x = 0, y = 0;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between static and instance members in Dart?</h2>
+          <div class="seo-a"><p><strong>Instance members</strong> (fields/methods) belong to a specific object and can access <code class="inline">this</code>. <strong>Static members</strong> belong to the class itself, are shared across all instances, and are accessed via the class name—useful for constants, factory helpers, or utility functions that don't need instance state.</p></div>
+          <pre><code>class MathUtils {
+  static const double pi = 3.14159;
+  static double square(double x) =&gt; x * x;
+}
+print(MathUtils.square(4));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does operator overloading work in Dart?</h2>
+          <div class="seo-a"><p>Dart lets classes override operators like <code class="inline">+</code>, <code class="inline">==</code>, and <code class="inline">[]</code> by defining an <code class="inline">operator</code> method, enabling natural syntax for custom types like vectors or money values.</p></div>
+          <pre><code>class Vector {
+  final double x, y;
+  Vector(this.x, this.y);
+  Vector operator +(Vector o) =&gt; Vector(x + o.x, y + o.y);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does exception handling work in Dart?</h2>
+          <div class="seo-a"><p>Dart uses <code class="inline">try</code>/<code class="inline">catch</code>/<code class="inline">on</code>/<code class="inline">finally</code>. <code class="inline">on SomeType catch (e)</code> catches a specific exception type, plain <code class="inline">catch (e, stackTrace)</code> catches anything, and <code class="inline">finally</code> always runs (cleanup). Custom exceptions are made by implementing <code class="inline">Exception</code> or extending <code class="inline">Error</code>.</p></div>
+          <pre><code>try {
+  riskyCall();
+} on FormatException catch (e) {
+  print('Bad format: $e');
+} catch (e, st) {
+  print('Unknown error: $e');
+} finally {
+  cleanup();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do the spread operator and collection if/for do in Dart?</h2>
+          <div class="seo-a"><p>The <strong>spread operator</strong> (<code class="inline">...</code>) inlines the elements of one collection into another literal; <code class="inline">...?</code> spreads a nullable collection safely. <strong>Collection if/for</strong> let you conditionally include elements or generate them with a loop directly inside a list/set/map literal, avoiding manual list-building boilerplate.</p></div>
+          <pre><code>final base = [1, 2, 3];
+final combined = [0, ...base, if (base.isNotEmpty) 4, for (var i in base) i * 2];</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is cascade notation (..) in Dart?</h2>
+          <div class="seo-a"><p>The <strong>cascade operator</strong> (<code class="inline">..</code>) lets you perform a sequence of operations on the same object without repeating its name, and returns the original object rather than the result of the last call.</p></div>
+          <pre><code>var sb = StringBuffer()
+  ..write('Hello')
+  ..write(' ')
+  ..write('World');
+print(sb.toString());</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a typedef in Dart, and when would you use one?</h2>
+          <div class="seo-a"><p>A <strong>typedef</strong> creates an alias for a type, most commonly a function signature, making code more readable and giving a named, reusable type for callbacks (e.g. a validator function passed around your app).</p></div>
+          <pre><code>typedef Validator = String? Function(String? value);
+
+void setValidator(Validator v) { /* ... */ }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does the late keyword do in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">late</code> marks a non-nullable variable that will be initialized after its declaration but before first use—useful for fields initialized in <code class="inline">initState()</code>, or for lazy, expensive computations that should only run when first accessed. Accessing a late variable before it's initialized throws a <code class="inline">LateInitializationError</code>.</p></div>
+          <pre><code>late String name; // initialized later
+
+void setup() {
+  name = 'John';
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the copyWith pattern in Dart, and why is it used?</h2>
+          <div class="seo-a"><p><code class="inline">copyWith</code> creates a new instance of an immutable class with some fields replaced, keeping the rest unchanged. Since fields are typically <code class="inline">final</code>, this is the standard way to 'update' immutable state objects—common in state management (BLoC/Riverpod state classes).</p></div>
+          <pre><code>class UserState {
+  final String name;
+  final int age;
+  const UserState({required this.name, required this.age});
+
+  UserState copyWith({String? name, int? age}) =&gt;
+      UserState(name: name ?? this.name, age: age ?? this.age);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between var, dynamic, and Object in Dart?</h2>
+          <div class="seo-a"><p><strong>var</strong> infers a static type at compile time from the assigned value, and that type is then fixed. <strong>dynamic</strong> disables static type checking entirely—you can reassign any type and call any method without a compile error (errors surface at runtime instead). <strong>Object</strong> is the root of Dart's type hierarchy—every value is an Object, but you must cast before calling type-specific members.</p></div>
+          <pre><code>var a = 5;      // inferred as int, fixed
+dynamic b = 5;  // can become anything
+b = 'hello';    // OK
+Object c = 5;   // must cast to use int-specific methods</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are some commonly used String methods in Dart?</h2>
+          <div class="seo-a"><p>Common methods: <code class="inline">substring()</code>, <code class="inline">split()</code>, <code class="inline">trim()</code>, <code class="inline">toUpperCase()</code>/<code class="inline">toLowerCase()</code>, <code class="inline">replaceAll()</code>, <code class="inline">contains()</code>, <code class="inline">startsWith()</code>/<code class="inline">endsWith()</code>, <code class="inline">padLeft()</code>/<code class="inline">padRight()</code>, and <code class="inline">indexOf()</code>. Strings in Dart are immutable—every method returns a new String rather than mutating in place.</p></div>
+          <pre><code>'  Hello '.trim().toUpperCase(); // 'HELLO'
+'5'.padLeft(3, '0'); // '005'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does string interpolation work in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">$variable</code> embeds a variable's value directly inside a string, and <code class="inline">${expression}</code> embeds the result of any expression. This is generally preferred over manual string concatenation with <code class="inline">+</code> for readability and (for multiple concatenations) performance.</p></div>
+          <pre><code>var name = 'John';
+print('Hello, $name! Length: ${name.length}');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the relationship between num, int, and double in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">num</code> is the abstract superclass of both <code class="inline">int</code> (whole numbers) and <code class="inline">double</code> (64-bit floating point). Declaring a variable as <code class="inline">num</code> lets it hold either an int or a double, useful for generic arithmetic code that shouldn't care which one it gets.</p></div>
+          <pre><code>num value = 5;
+value = 5.5; // also valid, still num
+print(5 ~/ 2); // 2 (integer division)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain map(), where(), reduce(), and fold() on a Dart List.</h2>
+          <div class="seo-a"><p><code class="inline">map()</code> transforms each element into a new value (lazy—returns an Iterable). <code class="inline">where()</code> filters elements matching a predicate. <code class="inline">reduce()</code> combines all elements into one using an accumulator function, but throws on an empty list. <code class="inline">fold()</code> is like reduce but takes an explicit initial value, so it works safely on empty lists too.</p></div>
+          <pre><code>final nums = [1, 2, 3, 4];
+final doubled = nums.map((n) =&gt; n * 2).toList();
+final evens = nums.where((n) =&gt; n.isEven).toList();
+final sum = nums.fold(0, (acc, n) =&gt; acc + n);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between Iterable and List in Dart?</h2>
+          <div class="seo-a"><p><strong>Iterable</strong> is a lazy, one-directional sequence—operations like <code class="inline">map</code>/<code class="inline">where</code> aren't computed until you iterate (e.g. via <code class="inline">toList()</code> or a for-loop). <strong>List</strong> is a concrete, indexable, eagerly-evaluated collection stored in memory, supporting <code class="inline">[]</code> index access and <code class="inline">length</code> in O(1).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you sort a List with a custom comparator in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">list.sort((a, b) => ...)</code> sorts in place using a comparator that returns negative/zero/positive, similar to Java/JS. For sorting by a derived key, combine with <code class="inline">compareTo</code> on that key, or use a named comparator function for readability.</p></div>
+          <pre><code>final people = [Person('Bob', 30), Person('Ann', 25)];
+people.sort((a, b) =&gt; a.age.compareTo(b.age));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are some useful Map methods in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">map.entries</code> exposes key-value pairs for iteration. <code class="inline">putIfAbsent(key, () => value)</code> inserts only if the key is missing. <code class="inline">update(key, (v) => ..., ifAbsent: () => ...)</code> updates an existing value or inserts a default. <code class="inline">map.map((k, v) => ...)</code> transforms a Map into a new Map.</p></div>
+          <pre><code>final counts = &lt;String, int&gt;{};
+for (final word in words) {
+  counts.update(word, (v) =&gt; v + 1, ifAbsent: () =&gt; 1);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What set operations does Dart's Set support?</h2>
+          <div class="seo-a"><p><code class="inline">union()</code> combines two sets. <code class="inline">intersection()</code> returns elements present in both. <code class="inline">difference()</code> returns elements in the first set but not the second. These are useful for tasks like finding common tags or de-duplicating combined lists efficiently.</p></div>
+          <pre><code>final a = {1, 2, 3};
+final b = {2, 3, 4};
+print(a.intersection(b)); // {2, 3}
+print(a.difference(b));   // {1}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between named and positional parameters in Dart?</h2>
+          <div class="seo-a"><p><strong>Positional parameters</strong> are passed in order and are required by default unless wrapped in <code class="inline">[]</code> (optional positional). <strong>Named parameters</strong> (wrapped in <code class="inline">{}</code>) are passed by name at the call site, improving readability, and are optional by default unless marked <code class="inline">required</code>.</p></div>
+          <pre><code>void greet(String name, {String greeting = 'Hello'}) {
+  print('$greeting, $name');
+}
+greet('John', greeting: 'Hi');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does the required keyword do in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">required</code> marks a named parameter as mandatory—callers must supply it, and the compiler enforces this at the call site, even though named parameters are otherwise optional by default. It's commonly combined with non-nullable types on constructors.</p></div>
+          <pre><code>class User {
+  final String name;
+  User({required this.name});
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a closure in Dart, and how does it capture variables?</h2>
+          <div class="seo-a"><p>A <strong>closure</strong> is a function that captures variables from its surrounding lexical scope, keeping a reference to them (not a copy) even after the outer function has returned. This is why a counter closure keeps incrementing the same captured variable across calls.</p></div>
+          <pre><code>Function makeCounter() {
+  int count = 0;
+  return () =&gt; ++count;
+}
+
+final counter = makeCounter();
+print(counter()); // 1
+print(counter()); // 2</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is arrow function syntax in Dart, and when can you use it?</h2>
+          <div class="seo-a"><p>The <code class="inline">=&gt;</code> (fat arrow) syntax is shorthand for a function body that's a single expression, implicitly returning that expression's value—equivalent to a <code class="inline">{ return expr; }</code> block but more concise. It cannot be used for bodies needing multiple statements.</p></div>
+          <pre><code>int square(int x) =&gt; x * x;
+// equivalent to:
+int square2(int x) { return x * x; }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a higher-order function in Dart?</h2>
+          <div class="seo-a"><p>A <strong>higher-order function</strong> either accepts a function as an argument or returns a function as its result. Since functions are first-class values in Dart, this enables patterns like passing callbacks (<code class="inline">onPressed</code>), or building function factories (like a debounce or memoize wrapper).</p></div>
+          <pre><code>void Function() withLogging(void Function() action) {
+  return () {
+    print('Before');
+    action();
+    print('After');
+  };
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What should you consider when writing recursive functions in Dart?</h2>
+          <div class="seo-a"><p>Every recursive function needs a clear <strong>base case</strong> to terminate, and each recursive call should progress toward it. Dart does not guarantee tail-call optimization, so very deep recursion (tens of thousands of levels) can throw a stack overflow—an iterative approach or trampolining is safer for unbounded depth.</p></div>
+          <pre><code>int factorial(int n) =&gt; n &lt;= 1 ? 1 : n * factorial(n - 1);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Dart handle interfaces, given it doesn't have an explicit 'interface' keyword?</h2>
+          <div class="seo-a"><p>Every Dart class implicitly defines an interface. Any class can act as an interface by having another class <code class="inline">implements</code> it, forcing that class to provide its own implementation of all members (no inherited behavior). An <strong>abstract class</strong> (marked <code class="inline">abstract</code>, can have unimplemented methods) is used when you want to share some default implementation via <code class="inline">extends</code>, while still requiring subclasses to implement specific methods.</p></div>
+          <pre><code>abstract class Shape {
+  double area();
+}
+class Circle implements Shape {
+  final double radius;
+  Circle(this.radius);
+  @override
+  double area() =&gt; 3.14159 * radius * radius;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between extends, implements, and with in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">extends</code> inherits from one superclass, gaining its implementation and being able to override it. <code class="inline">implements</code> adopts a class's interface (its member signatures) without any inherited implementation—you must implement everything yourself. <code class="inline">with</code> applies one or more mixins, adding their implementation to the class without traditional single inheritance.</p></div>
+          <pre><code>class Bird extends Animal with Flyer, Swimmer implements Pet {}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you create a private constructor in Dart, and why would you?</h2>
+          <div class="seo-a"><p>Prefixing a constructor name with an underscore (e.g. <code class="inline">User._()</code>) makes it private to the library, preventing external code from calling it directly. This is commonly used to force object creation through a controlled factory constructor, or to implement the Singleton pattern.</p></div>
+          <pre><code>class Singleton {
+  Singleton._internal();
+  static final Singleton instance = Singleton._internal();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do getters and setters work in Dart?</h2>
+          <div class="seo-a"><p>A <code class="inline">get</code> defines a computed property accessed like a field (no parentheses), and a <code class="inline">set</code> defines custom logic that runs when a property is assigned. Together they let you expose a field-like API while adding validation or derived computation behind the scenes.</p></div>
+          <pre><code>class Circle {
+  double radius;
+  Circle(this.radius);
+  double get area =&gt; 3.14159 * radius * radius;
+  set diameter(double d) =&gt; radius = d / 2;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between a switch statement and a switch expression in Dart 3?</h2>
+          <div class="seo-a"><p>A <strong>switch statement</strong> executes code per matching case using <code class="inline">case</code>/<code class="inline">break</code>. A <strong>switch expression</strong> (Dart 3) directly evaluates to a value using <code class="inline">=&gt;</code> per case, is more concise, supports pattern matching, and the compiler enforces exhaustiveness for enums and sealed types.</p></div>
+          <pre><code>String describe(int n) =&gt; switch (n) {
+  0 =&gt; 'zero',
+  int() when n &lt; 0 =&gt; 'negative',
+  _ =&gt; 'positive',
+};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do the null-aware operators ?., ??, and ??= do in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">?.</code> calls a method/accesses a property only if the receiver isn't null, otherwise evaluates to null. <code class="inline">??</code> returns the left value if it's non-null, otherwise the right (fallback) value. <code class="inline">??=</code> assigns the right value only if the variable is currently null.</p></div>
+          <pre><code>String? name;
+print(name?.length);      // null, no exception
+print(name ?? 'Unknown'); // 'Unknown'
+name ??= 'Default';       // assigns only if null</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does the assert statement do in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">assert(condition, message)</code> throws an <code class="inline">AssertionError</code> if the condition is false, but <strong>only in debug builds</strong>—asserts are stripped entirely in release/profile mode, so they're safe for cheap sanity checks without impacting production performance.</p></div>
+          <pre><code>void setAge(int age) {
+  assert(age &gt;= 0, 'Age cannot be negative');
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between throw and rethrow in a catch block?</h2>
+          <div class="seo-a"><p><code class="inline">throw e</code> inside a catch block throws the exception again but resets the stack trace to the current point, losing the original error location. <code class="inline">rethrow</code> re-throws the caught exception while preserving its original stack trace, which is important for debugging and logging.</p></div>
+          <pre><code>try {
+  riskyCall();
+} catch (e) {
+  logger.log(e);
+  rethrow;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are sync* and async* generator functions in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">sync*</code> functions return an <code class="inline">Iterable</code> and use <code class="inline">yield</code> to lazily produce values one at a time as the caller iterates. <code class="inline">async*</code> functions return a <code class="inline">Stream</code> and use <code class="inline">yield</code> to asynchronously emit values over time. Both can use <code class="inline">yield*</code> to delegate to another iterable/stream.</p></div>
+          <pre><code>Stream&lt;int&gt; countStream(int max) async* {
+  for (var i = 1; i &lt;= max; i++) {
+    await Future.delayed(const Duration(seconds: 1));
+    yield i;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a Completer in Dart, and when would you use one?</h2>
+          <div class="seo-a"><p><code class="inline">Completer&lt;T&gt;</code> lets you manually create and control a <code class="inline">Future</code>, calling <code class="inline">complete(value)</code> or <code class="inline">completeError(error)</code> whenever the async operation actually finishes—useful when wrapping callback-based APIs (that don't natively return a Future) into a Future-based API.</p></div>
+          <pre><code>Future&lt;String&gt; waitForCallback() {
+  final completer = Completer&lt;String&gt;();
+  legacyApi.onDone((result) =&gt; completer.complete(result));
+  return completer.future;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a Zone in Dart?</h2>
+          <div class="seo-a"><p>A <strong>Zone</strong> is an execution context that can intercept and modify behavior for code running within it—such as capturing all uncaught async errors (<code class="inline">runZonedGuarded</code>), overriding <code class="inline">print</code>, or tracking timers. It's the mechanism Flutter apps use to globally catch errors thrown inside async callbacks that would otherwise crash silently.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you manually spawn an Isolate in Dart, and how do isolates communicate?</h2>
+          <div class="seo-a"><p><code class="inline">Isolate.spawn(entryPoint, message)</code> starts a new isolate running a top-level/static function. Since isolates share no memory, they communicate exclusively via message passing using <code class="inline">SendPort</code>/<code class="inline">ReceivePort</code>—messages are copied between isolates, not shared by reference.</p></div>
+          <pre><code>final receivePort = ReceivePort();
+await Isolate.spawn(_worker, receivePort.sendPort);
+final result = await receivePort.first;
+
+void _worker(SendPort sendPort) {
+  sendPort.send('done');
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you encode and decode JSON in Dart using dart:convert?</h2>
+          <div class="seo-a"><p><code class="inline">jsonDecode(str)</code> parses a JSON string into Dart objects (Map/List/primitives). <code class="inline">jsonEncode(obj)</code> serializes a Dart object back into a JSON string. Custom classes need their own <code class="inline">toJson()</code>/<code class="inline">fromJson()</code> since jsonEncode only knows how to handle built-in types by default.</p></div>
+          <pre><code>import 'dart:convert';
+
+final map = jsonDecode('{&quot;name&quot;:&quot;John&quot;}');
+final json = jsonEncode({'name': 'John'});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why can't you use dart:io in a Flutter Web app?</h2>
+          <div class="seo-a"><p><code class="inline">dart:io</code> provides file system, socket, and process APIs that assume a native OS environment—none of which exist in a browser sandbox, so the library isn't available when compiling to JavaScript/WASM for web. Cross-platform code should conditionally import platform-specific implementations, or use packages (like <code class="inline">http</code>) that abstract over the difference.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does the environment/sdk constraint in pubspec.yaml control?</h2>
+          <div class="seo-a"><p>The <code class="inline">environment: sdk:</code> field specifies which Dart SDK versions the package/app is compatible with, using semantic version ranges. Pub uses it to ensure your dependencies (and your own code, if you use newer language features like Dart 3 records) only run on a compatible SDK.</p></div>
+          <pre><code>environment:
+  sdk: '&gt;=3.0.0 &lt;4.0.0'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What should you evaluate before adding a third-party package from pub.dev?</h2>
+          <div class="seo-a"><p>Check the package's <strong>pub points/popularity/likes score</strong>, how recently it was updated, whether it has null safety support, open issue/PR activity (is it maintained?), and whether it has a compatible license. Also check if it's a thin wrapper you could implement yourself to avoid an unnecessary dependency.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is 'Effective Dart', and why does it matter?</h2>
+          <div class="seo-a"><p><strong>Effective Dart</strong> is Google's official style and usage guide covering naming conventions (UpperCamelCase for types, lowerCamelCase for members), documentation practices, and usage recommendations (e.g. prefer final over var when possible). Following it keeps code consistent across teams and is what the default <code class="inline">lints</code> package enforces.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why prefer immutable data structures in Dart, especially in Flutter apps?</h2>
+          <div class="seo-a"><p>Immutable objects can't be changed after creation, which eliminates a whole class of bugs from shared references being mutated unexpectedly from another part of the app, makes equality checks meaningful (two immutable objects with the same data are truly equal), and works well with widget rebuild optimizations that rely on comparing old vs new state.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between const and final when applied to an object instance (not just a primitive)?</h2>
+          <div class="seo-a"><p><code class="inline">final</code> means the variable's reference can't be reassigned, but the object it points to could still be internally mutable (if its fields aren't all final). <code class="inline">const</code> creates a fully compile-time-constant, deeply immutable object—all its fields must also be const, and identical const expressions are automatically canonicalized to the same instance in memory.</p></div>
+          <pre><code>final list = [1, 2, 3];
+list.add(4); // OK, list itself is mutable
+
+const list2 = [1, 2, 3];
+// list2.add(4); // Error: unmodifiable</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you deep copy a nested object/list/map in Dart?</h2>
+          <div class="seo-a"><p>Dart has no built-in deep-copy. A shallow copy (<code class="inline">List.from(list)</code> or the spread operator) only copies the top-level references—nested lists/maps/objects are still shared. A true deep copy requires manually recursively cloning nested structures, or serializing to JSON and back for simple data-only structures.</p></div>
+          <pre><code>final shallow = [...original]; // nested objects still shared
+final deep = jsonDecode(jsonEncode(original)); // works only for JSON-safe data</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the Comparable interface used for in Dart?</h2>
+          <div class="seo-a"><p>Implementing <code class="inline">Comparable&lt;T&gt;</code> and its <code class="inline">compareTo()</code> method lets your custom class define a natural sort order, so it works automatically with <code class="inline">List.sort()</code> (with no comparator needed) and sorted collections like <code class="inline">SplayTreeSet</code>.</p></div>
+          <pre><code>class Person implements Comparable&lt;Person&gt; {
+  final int age;
+  Person(this.age);
+  @override
+  int compareTo(Person other) =&gt; age.compareTo(other.age);
+}
+
+people.sort(); // uses compareTo automatically</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does Iterable.generate() do, and when is it useful?</h2>
+          <div class="seo-a"><p><code class="inline">Iterable.generate(count, generator)</code> lazily produces a sequence of a given length by calling a generator function with each index, avoiding manually building a list with a loop—handy for building a range of computed values (like a list of days, or a 2D grid coordinate list).</p></div>
+          <pre><code>final squares = List.generate(5, (i) =&gt; i * i); // [0, 1, 4, 9, 16]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is List.unmodifiable, and why use it?</h2>
+          <div class="seo-a"><p><code class="inline">List.unmodifiable(source)</code> creates a fixed-length, read-only view over the given elements—attempting <code class="inline">add</code>/<code class="inline">remove</code>/index-assignment throws an <code class="inline">UnsupportedError</code>. It's useful for exposing a collection field publicly without letting external code mutate your internal state.</p></div>
+          <pre><code>class Cart {
+  final List&lt;Item&gt; _items = [];
+  List&lt;Item&gt; get items =&gt; List.unmodifiable(_items);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is type promotion in Dart?</h2>
+          <div class="seo-a"><p>After an <code class="inline">is</code> type check (or a null check like <code class="inline">if (x != null)</code>), Dart's compiler 'promotes' the variable to the narrower type within that scope, so you can call type-specific members without an explicit cast. Promotion only works on local variables and final fields the compiler can prove aren't reassigned in between.</p></div>
+          <pre><code>void printLength(Object value) {
+  if (value is String) {
+    print(value.length); // promoted to String here, no cast needed
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does the covariant keyword do in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">covariant</code> lets a subclass override a method parameter with a more specific (narrower) type than the superclass declares, moving what would otherwise be a compile-time type error into a runtime check instead—used when you're confident the narrower type is always what's actually passed in practice.</p></div>
+          <pre><code>class Animal {
+  void chase(Animal other) {}
+}
+class Cat extends Animal {
+  @override
+  void chase(covariant Cat other) {} // narrows Animal -&gt; Cat
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you implement the Singleton pattern in Dart?</h2>
+          <div class="seo-a"><p>Use a private constructor plus a static final instance, or a factory constructor that always returns the same cached instance. Dart guarantees the static field is initialized lazily and only once, making this thread-safe without extra locking (isolates don't share memory, so there's no cross-isolate race either).</p></div>
+          <pre><code>class ApiClient {
+  ApiClient._internal();
+  static final ApiClient _instance = ApiClient._internal();
+  factory ApiClient() =&gt; _instance;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Extension Types in Dart 3?</h2>
+          <div class="seo-a"><p><strong>Extension types</strong> wrap an existing type with a new static-only interface—unlike a regular class wrapper, there's no runtime object/allocation overhead; the compiler enforces the new type's API at compile time while the underlying representation type is used at runtime. Useful for adding type safety (e.g. distinguishing a raw <code class="inline">int</code> UserId from a ProductId) with zero cost.</p></div>
+          <pre><code>extension type UserId(int value) {}
+
+void greet(UserId id) =&gt; print('User #${id.value}');
+greet(UserId(42));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do the base, interface, final, and sealed class modifiers control in Dart 3?</h2>
+          <div class="seo-a"><p>These modifiers restrict how a class can be used outside its own library: <code class="inline">base</code> forces subclasses to extend (not implement) it, preserving guaranteed behavior. <code class="inline">interface</code> allows implementing but not extending outside the library. <code class="inline">final</code> prevents any subclassing outside the library entirely. <code class="inline">sealed</code> restricts all direct subtypes to the same library, enabling exhaustive switches.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does equality work for Records in Dart?</h2>
+          <div class="seo-a"><p>Records have structural equality built in automatically—two records are <code class="inline">==</code> if they have the same shape (same fields/names) and each corresponding field is equal, with no need to override <code class="inline">==</code>/<code class="inline">hashCode</code> manually like you would for a regular class.</p></div>
+          <pre><code>print((1, 'a') == (1, 'a')); // true
+print((x: 1, y: 2) == (x: 1, y: 2)); // true</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you destructure a List or Map using pattern matching in Dart 3?</h2>
+          <div class="seo-a"><p>Dart 3 pattern matching lets you destructure lists (<code class="inline">final [a, b, ...rest] = list;</code>) and maps (<code class="inline">final {'name': name} = map;</code>) directly into variables in one step, including nested destructuring, instead of manually indexing/accessing keys.</p></div>
+          <pre><code>final [first, second] = [10, 20];
+final {'name': name, 'age': age} = {'name': 'John', 'age': 30};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are pattern guards (the 'when' clause) in a Dart switch?</h2>
+          <div class="seo-a"><p>A <code class="inline">when</code> clause adds an extra boolean condition to a switch case, so the case only matches if both the pattern matches AND the guard evaluates to true—letting you express conditional logic within pattern matching without nesting an if inside every case body.</p></div>
+          <pre><code>String classify(int n) =&gt; switch (n) {
+  int() when n &lt; 0 =&gt; 'negative',
+  int() when n == 0 =&gt; 'zero',
+  _ =&gt; 'positive',
+};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between == and identical() in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">==</code> is value equality and can be overridden by a class to compare fields. <code class="inline">identical(a, b)</code> checks true reference/object identity—whether both variables point to the exact same object in memory—and cannot be overridden.</p></div>
+          <pre><code>final a = Point(1, 2);
+final b = Point(1, 2);
+print(a == b);         // true if Point overrides ==
+print(identical(a, b)); // false, different instances</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why should you override toString() on custom classes?</h2>
+          <div class="seo-a"><p>By default, <code class="inline">toString()</code> returns something unhelpful like <code class="inline">Instance of 'User'</code>. Overriding it to return meaningful field values makes debugging (print statements, debugger output, test failure messages) far more useful.</p></div>
+          <pre><code>class User {
+  final String name;
+  User(this.name);
+  @override
+  String toString() =&gt; 'User(name: $name)';
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between HashMap, LinkedHashMap, and SplayTreeMap in dart:collection?</h2>
+          <div class="seo-a"><p><strong>HashMap</strong> offers no guaranteed iteration order but the fastest average operations. <strong>LinkedHashMap</strong> (what Dart's default <code class="inline">{}</code> map literal actually uses) preserves insertion order while iterating. <strong>SplayTreeMap</strong> keeps keys sorted according to a comparator, at the cost of O(log n) operations instead of average O(1).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is Queue in dart:collection, and why use it instead of List?</h2>
+          <div class="seo-a"><p><code class="inline">Queue&lt;T&gt;</code> (backed by a doubly-linked list, via <code class="inline">ListQueue</code>) supports efficient O(1) insertion/removal at both ends (<code class="inline">addFirst</code>/<code class="inline">removeFirst</code>/<code class="inline">addLast</code>/<code class="inline">removeLast</code>), unlike a plain List where removing from the front is O(n) because remaining elements must shift.</p></div>
+          <pre><code>import 'dart:collection';
+final queue = Queue&lt;int&gt;();
+queue.addLast(1);
+queue.addFirst(0);
+print(queue.removeFirst()); // 0</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does garbage collection work in Dart, at a high level?</h2>
+          <div class="seo-a"><p>Dart uses a <strong>generational garbage collector</strong>: short-lived objects (most allocations, like temporary widget instances) are collected quickly in a fast 'young generation' scavenger, while long-lived objects that survive multiple collections are promoted to an 'old generation' collected less frequently with a more thorough mark-and-sweep/compact pass.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is tree shaking in Dart's AOT compilation?</h2>
+          <div class="seo-a"><p><strong>Tree shaking</strong> analyzes which code is actually reachable from the app's entry point and strips out unused classes, functions, and even unused icon glyphs from a font, reducing final binary size. This is only fully effective in AOT release builds—debug/JIT builds keep everything for fast iterative recompilation.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are Future.value and Future.error used for?</h2>
+          <div class="seo-a"><p><code class="inline">Future.value(x)</code> creates an already-completed Future wrapping a value—useful for satisfying a Future-returning interface with a synchronously-known result. <code class="inline">Future.error(e)</code> creates an already-failed Future—useful for returning a consistent error type from a function that must always return a Future, even in an early-exit error path.</p></div>
+          <pre><code>Future&lt;int&gt; getCached(int? cached) {
+  if (cached != null) return Future.value(cached);
+  return fetchFromNetwork();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you transform a Stream's data using map/where/transform?</h2>
+          <div class="seo-a"><p>Like Iterables, <code class="inline">stream.map()</code> and <code class="inline">stream.where()</code> return a new Stream that lazily applies the transformation/filter as events flow through, without needing to buffer or wait for the source stream to finish. <code class="inline">transform()</code> applies a custom <code class="inline">StreamTransformer</code> for more complex reusable pipeline logic.</p></div>
+          <pre><code>final evens = numberStream.where((n) =&gt; n.isEven).map((n) =&gt; n * 2);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What can you do with a StreamSubscription after calling stream.listen()?</h2>
+          <div class="seo-a"><p>The returned <code class="inline">StreamSubscription</code> lets you <code class="inline">pause()</code> (buffer events without processing), <code class="inline">resume()</code>, and <code class="inline">cancel()</code> (stop listening entirely and release resources)—essential for cleaning up subscriptions in a widget's <code class="inline">dispose()</code> to avoid calling setState on an unmounted widget.</p></div>
+          <pre><code>late StreamSubscription sub;
+
+@override
+void initState() {
+  super.initState();
+  sub = stream.listen((data) =&gt; setState(() {}));
+}
+
+@override
+void dispose() {
+  sub.cancel();
+  super.dispose();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is FutureOr&lt;T&gt;, and when is it used?</h2>
+          <div class="seo-a"><p><code class="inline">FutureOr&lt;T&gt;</code> declares that a value can be either a plain <code class="inline">T</code> or a <code class="inline">Future&lt;T&gt;</code>—used in APIs (like <code class="inline">Future.then</code>'s callback) that need to accept either a synchronous or asynchronous result without forcing the caller to always wrap synchronous values in <code class="inline">Future.value()</code>.</p></div>
+          <pre><code>FutureOr&lt;int&gt; maybeAsync(bool useAsync) {
+  return useAsync ? Future.value(1) : 1;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do part and part of do in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">part 'file.dart';</code> and <code class="inline">part of 'library.dart';</code> split a single logical library across multiple files while sharing the same top-level scope (including private members)—commonly used by code generators (e.g. Freezed, json_serializable) to keep generated code in a sibling <code class="inline">.g.dart</code> file that can still access the original file's private members.</p></div>
+          <pre><code>// user.dart
+part 'user.g.dart';
+
+// user.g.dart
+part of 'user.dart';</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do the show, hide, and as keywords do when importing a library in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">show</code> imports only the listed names from a library. <code class="inline">hide</code> imports everything except the listed names. <code class="inline">as prefix</code> imports the library under a namespace prefix, useful for resolving naming conflicts between two libraries that export the same identifier.</p></div>
+          <pre><code>import 'package:collection/collection.dart' show ListEquality;
+import 'package:http/http.dart' as http;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the role of the main() function in a Dart program?</h2>
+          <div class="seo-a"><p><code class="inline">main()</code> is the required entry point of every Dart program/app. It can optionally accept <code class="inline">List&lt;String&gt; args</code> for command-line arguments (in server/CLI Dart), and can be declared <code class="inline">async</code> when startup requires awaiting async initialization (like <code class="inline">Firebase.initializeApp()</code>) before calling <code class="inline">runApp()</code>.</p></div>
+          <pre><code>void main(List&lt;String&gt; args) {
+  print('Hello, ${args.isNotEmpty ? args[0] : 'World'}');
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does privacy/encapsulation work in Dart, given there's no 'private' keyword?</h2>
+          <div class="seo-a"><p>Dart enforces privacy at the <strong>library (file)</strong> level, not the class level: any identifier prefixed with an underscore (<code class="inline">_name</code>) is only visible within the same library. There's no true class-level 'private' like in Java—two classes in the same file can access each other's underscore-prefixed members.</p></div>
+          <pre><code>class _InternalHelper {
+  int _secret = 42;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why is StringBuffer preferred over repeated string concatenation in a loop?</h2>
+          <div class="seo-a"><p>Since Dart strings are immutable, each <code class="inline">+</code> concatenation in a loop allocates a brand-new string, making repeated concatenation O(n²) overall. <code class="inline">StringBuffer</code> accumulates pieces internally and builds the final string once with <code class="inline">toString()</code>, making it O(n).</p></div>
+          <pre><code>final sb = StringBuffer();
+for (final word in words) {
+  sb.write(word);
+  sb.write(' ');
+}
+final result = sb.toString();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do runtimeType and noSuchMethod provide on Dart's Object class?</h2>
+          <div class="seo-a"><p><code class="inline">runtimeType</code> returns the actual runtime <code class="inline">Type</code> of an object (useful for debugging/logging, though comparing types with <code class="inline">is</code> is usually preferred for logic). <code class="inline">noSuchMethod</code> can be overridden to intercept calls to undefined methods/properties—used by some mocking frameworks and dynamic proxy-style APIs.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What do Enum.values and enum.index provide in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">MyEnum.values</code> returns a <code class="inline">List</code> of all declared enum constants in declaration order—handy for building a dropdown of all options. <code class="inline">instance.index</code> returns that constant's zero-based position in the declaration order, useful for serialization to a compact integer form (though this breaks if you reorder the enum later).</p></div>
+          <pre><code>enum Status { active, inactive }
+print(Status.values); // [Status.active, Status.inactive]
+print(Status.active.index); // 0</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a redirecting constructor in Dart?</h2>
+          <div class="seo-a"><p>A <strong>redirecting constructor</strong> forwards to another constructor of the same class instead of having its own body, avoiding duplicated initialization logic between multiple named constructors.</p></div>
+          <pre><code>class Point {
+  final double x, y;
+  Point(this.x, this.y);
+  Point.origin() : this(0, 0); // redirects to the main constructor
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do conditional imports work in Dart, and why are they used?</h2>
+          <div class="seo-a"><p>Conditional imports pick a different implementation file at compile time based on which platform library is available (e.g. <code class="inline">dart.library.io</code> vs <code class="inline">dart.library.html</code>), letting the same public API compile correctly for both native and web targets even though their underlying implementations differ completely.</p></div>
+          <pre><code>import 'storage_stub.dart'
+  if (dart.library.io) 'storage_io.dart'
+  if (dart.library.html) 'storage_web.dart';</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>When should you use a top-level function versus a static method in Dart?</h2>
+          <div class="seo-a"><p>A <strong>top-level function</strong> (declared outside any class) is best for standalone utility logic unrelated to a specific type. A <strong>static method</strong> is better when the logic is conceptually tied to a class (e.g. a factory-like helper or a named constant computation), improving discoverability via the class namespace and avoiding polluting the global namespace.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the time complexity of List.removeAt(0) versus List.removeLast() in Dart?</h2>
+          <div class="seo-a"><p><code class="inline">removeLast()</code> is O(1) since it only touches the end. <code class="inline">removeAt(0)</code> (or any removal from the front/middle) is O(n) because every subsequent element must shift left by one to fill the gap. If you frequently remove from the front, a <code class="inline">Queue</code> (doubly-linked list) is the better data structure.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between using .then()/.catchError() and async/await for handling a Future?</h2>
+          <div class="seo-a"><p><code class="inline">.then()</code>/<code class="inline">.catchError()</code> is the callback-chaining style—functionally equivalent to async/await but can become harder to read once chained several levels deep. <code class="inline">async</code>/<code class="inline">await</code> with try/catch reads like synchronous code and is generally preferred for readability, though both compile to the same underlying Future machinery.</p></div>
+          <pre><code>// callback style
+fetchUser().then((user) =&gt; print(user)).catchError((e) =&gt; print(e));
+
+// async/await style
+try {
+  final user = await fetchUser();
+  print(user);
+} catch (e) {
+  print(e);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What happens if a Future's error is never caught?</h2>
+          <div class="seo-a"><p>An uncaught error on a Future is reported to the current <strong>Zone</strong>'s uncaught error handler—in a Flutter app without a custom zone/handler, this typically crashes the app or prints an 'Unhandled exception' to the console. This is exactly why production apps wrap <code class="inline">runApp()</code> in <code class="inline">runZonedGuarded</code> to catch these globally.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between cascade notation (..) and regular method chaining (.)?</h2>
+          <div class="seo-a"><p>Regular chaining (<code class="inline">.</code>) calls a method on the <strong>result</strong> of the previous call, so the receiver changes at each step. Cascade notation (<code class="inline">..</code>) calls each method on the <strong>same original object</strong>, ignoring each call's return value, and the whole cascade expression evaluates to that original object.</p></div>
+          <pre><code>final list = &lt;int&gt;[]..add(1)..add(2); // cascade: works even though add() returns void</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between a static factory method and a factory constructor in Dart?</h2>
+          <div class="seo-a"><p>A <strong>static method</strong> that returns an instance is just a regular function attached to the class namespace—callers must know it's not a 'real' constructor. A <strong>factory constructor</strong> is called with <code class="inline">ClassName(...)</code> syntax like a normal constructor, but internally can return a cached/subtype instance—preserving normal constructor call syntax while still allowing that flexibility.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does the null-aware spread operator (...?) do?</h2>
+          <div class="seo-a"><p><code class="inline">...?</code> spreads a collection into a literal only if it's non-null, safely skipping it (rather than throwing) if the source collection is null—avoiding a manual null check before spreading.</p></div>
+          <pre><code>List&lt;int&gt;? maybeNulls;
+final combined = [1, 2, ...?maybeNulls]; // [1, 2] if maybeNulls is null</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>When a class applies multiple mixins, what determines which implementation wins if they define the same method?</h2>
+          <div class="seo-a"><p>Mixins are applied left-to-right, and each one 'layers' on top of the previous, similar to a linear inheritance chain. The <strong>rightmost</strong> mixin in the <code class="inline">with</code> clause takes precedence for any conflicting method, since it's applied last and is closest to the concrete class in the resulting chain.</p></div>
+          <pre><code>class C extends A with MixinX, MixinY {} // MixinY's methods win over MixinX's on conflict</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What requirements must a class satisfy to have a const constructor?</h2>
+          <div class="seo-a"><p>All of the class's fields must be <code class="inline">final</code>, and the constructor itself must be marked <code class="inline">const</code>. Any field values passed in when creating a const instance must themselves be compile-time constants. This guarantees the resulting object is fully immutable and safe to canonicalize/reuse.</p></div>
+          <pre><code>class Point {
+  final double x, y;
+  const Point(this.x, this.y);
+}
+const p = Point(1, 2);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a 'mixin class' in Dart 3, and how does it differ from a plain mixin?</h2>
+          <div class="seo-a"><p>A <code class="inline">mixin class</code> can be used both as a regular class (extended, instantiated) <strong>and</strong> as a mixin (applied with <code class="inline">with</code>)—unifying what previously required declaring separate <code class="inline">class</code> and <code class="inline">mixin</code> definitions if you wanted both capabilities for the same behavior.</p></div>
+          <pre><code>mixin class Loggable {
+  void log(String msg) =&gt; print('[LOG] $msg');
+}
+// usable as: class Service extends Loggable {}
+// or as:     class Service2 with Loggable {}</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="dart";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>JS Coding Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="83 JS Coding interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/coding" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="JS Coding Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="83 JS Coding interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/coding" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="JS Coding Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Reverse a string without using .reverse().","acceptedAnswer":{"@type":"Answer","text":"Walk the string from the end to the start and build a new one, or convert to an array and back. Time O(n), space O(n)."}},{"@type":"Question","name":"Check whether a string is a palindrome.","acceptedAnswer":{"@type":"Answer","text":"A palindrome reads the same forward and backward (e.g. madam , racecar ). The optimal solution uses the Two Pointer approach. Keep one pointer at the beginning and another at the end. Compare both characters. If they match, move both pointers toward the center. If any pair doesn't match, return false ."}},{"@type":"Question","name":"Implement FizzBuzz for numbers from 1 to n.","acceptedAnswer":{"@type":"Answer","text":"Loop from 1 to n . For each number: If divisible by both 3 and 5 , print FizzBuzz . Else if divisible by 3 , print Fizz . Else if divisible by 5 , print Buzz . Otherwise, print the number itself."}},{"@type":"Question","name":"Two Sum - Given an array of integers and a target, return the indices of the two numbers whose sum equals the target.","acceptedAnswer":{"@type":"Answer","text":"The brute-force solution uses two nested loops and checks every pair, resulting in O(n²) time complexity. A better approach is to use a HashMap (Map) . As we iterate through the array, we calculate the number we need ( target - currentNumber ). If that number already exists in the Map, we've found the answer. Otherwise, store the current number and its index in the Map."}},{"@type":"Question","name":"Group Anagrams — group strings that are anagrams together.","acceptedAnswer":{"@type":"Answer","text":"Sort each word alphabetically and use the sorted string as the key inside a Map . Words with the same sorted characters belong to the same group."}},{"@type":"Question","name":"Top K Frequent Elements — return the K most frequent elements.","acceptedAnswer":{"@type":"Answer","text":"Count the frequency of every number using a Map , sort by frequency in descending order, then return the first K elements."}},{"@type":"Question","name":"Product of Array Except Self — return the product of all elements except itself.","acceptedAnswer":{"@type":"Answer","text":"Build prefix products from the left and suffix products from the right. Multiply both values to get the answer for each index without using division."}},{"@type":"Question","name":"Longest Consecutive Sequence — find the length of the longest consecutive sequence.","acceptedAnswer":{"@type":"Answer","text":"Store all numbers inside a Set . Only start counting when the current number is the beginning of a sequence (its previous number doesn't exist). This guarantees O(n) time."}},{"@type":"Question","name":"3Sum — find all unique triplets whose sum is zero.","acceptedAnswer":{"@type":"Answer","text":"Sort the array first. Fix one number and use two pointers ( left and right ) to find the remaining two numbers. Skip duplicate values to avoid duplicate triplets."}},{"@type":"Question","name":"Container With Most Water — find the maximum amount of water a container can store.","acceptedAnswer":{"@type":"Answer","text":"Use two pointers at both ends of the array. Calculate the area and move the pointer with the smaller height inward because moving the taller one cannot increase the area."}},{"@type":"Question","name":"Longest Substring Without Repeating Characters.","acceptedAnswer":{"@type":"Answer","text":"Maintain a sliding window using two pointers. Store the latest index of every character inside a Map. Whenever a duplicate appears, move the left pointer accordingly."}},{"@type":"Question","name":"Longest Palindromic Substring.","acceptedAnswer":{"@type":"Answer","text":"Expand around every character (and every gap between characters) as the center of a palindrome. Keep track of the longest palindrome found."}},{"@type":"Question","name":"Valid Parentheses — determine whether the parentheses are valid.","acceptedAnswer":{"@type":"Answer","text":"Use a Stack. Push every opening bracket. Whenever a closing bracket appears, verify it matches the top of the stack. At the end, the stack must be empty."}},{"@type":"Question","name":"Generate Parentheses — generate all combinations of well-formed parentheses.","acceptedAnswer":{"@type":"Answer","text":"Use backtracking. Keep adding '(' until the limit is reached, then add ')' only when it won't make the string invalid. Backtrack after each recursive call."}},{"@type":"Question","name":"Daily Temperatures — return how many days until a warmer temperature.","acceptedAnswer":{"@type":"Answer","text":"Maintain a monotonic decreasing stack of indices. Whenever the current temperature is higher than the top of the stack, calculate the waiting days and pop it."}},{"@type":"Question","name":"Min Stack — design a stack that supports retrieving the minimum element in O(1).","acceptedAnswer":{"@type":"Answer","text":"Maintain two stacks. One stores all values, while the other stores the current minimum after each push. The minimum is always at the top of the second stack."}},{"@type":"Question","name":"Evaluate Reverse Polish Notation.","acceptedAnswer":{"@type":"Answer","text":"Traverse the tokens. Push numbers onto the stack. When an operator is found, pop the last two numbers, evaluate them, and push the result back."}},{"@type":"Question","name":"Search in Rotated Sorted Array.","acceptedAnswer":{"@type":"Answer","text":"Apply Binary Search while determining which half of the array is sorted. Decide whether the target lies in the sorted half, then continue searching only that half."}},{"@type":"Question","name":"Find First and Last Position of Element in Sorted Array.","acceptedAnswer":{"@type":"Answer","text":"Use Binary Search twice—once to find the leftmost occurrence and once to find the rightmost occurrence. This gives O(log n) time complexity."}},{"@type":"Question","name":"Merge Intervals — merge all overlapping intervals.","acceptedAnswer":{"@type":"Answer","text":"Sort intervals by start time. Compare each interval with the previous one. If they overlap, merge them; otherwise, add a new interval."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="JS Coding interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>JS Coding Interview Questions and Answers</h1>
+      <p>83 hand-picked JS Coding interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Reverse a string without using .reverse().</h2>
+          <div class="seo-a"><p>Walk the string from the end to the start and build a new one, or convert to an array and back. Time O(n), space O(n).</p></div>
+          <pre><code>function reverse(str) {
+  let out = '';
+  for (let i = str.length - 1; i &gt;= 0; i--) out += str[i];
+  return out;
+}
+reverse('hello'); // 'olleh'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Check whether a string is a palindrome.</h2>
+          <div class="seo-a"><p>A palindrome reads the same forward and backward (e.g. <strong>madam</strong>, <strong>racecar</strong>). The optimal solution uses the <strong>Two Pointer</strong> approach. Keep one pointer at the beginning and another at the end. Compare both characters. If they match, move both pointers toward the center. If any pair doesn't match, return <code class="inline">false</code>.</p></div>
+          <pre><code>function isPalindrome(str) {
+  let left = 0;
+  let right = str.length - 1;
+
+  while (left &lt; right) {
+    if (str[left] ! == str[right]) {
+      return false;
+    }
+
+    left++;
+    right--;
+  }
+
+  return true;
+}
+
+console.log(isPalindrome('madam'));    // true
+console.log(isPalindrome('racecar'));  // true
+console.log(isPalindrome('hello'));    // false</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement FizzBuzz for numbers from 1 to n.</h2>
+          <div class="seo-a"><p>Loop from <code class="inline">1</code> to <code class="inline">n</code>. For each number:</p><ul><li>If divisible by both <strong>3</strong> and <strong>5</strong>, print <strong>FizzBuzz</strong>.</li><li>Else if divisible by <strong>3</strong>, print <strong>Fizz</strong>.</li><li>Else if divisible by <strong>5</strong>, print <strong>Buzz</strong>.</li><li>Otherwise, print the number itself.</li></ul></div>
+          <pre><code>function fizzBuzz(n) {
+  for (let i = 1; i &lt;= n; i++) {
+    if (i % 3 === 0 &amp;&amp; i % 5 === 0) {
+      console.log('FizzBuzz');
+    } else if (i % 3 === 0) {
+      console.log('Fizz');
+    } else if (i % 5 === 0) {
+      console.log('Buzz');
+    } else {
+      console.log(i);
+    }
+  }
+}
+
+fizzBuzz(15);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Two Sum - Given an array of integers and a target, return the indices of the two numbers whose sum equals the target.</h2>
+          <div class="seo-a"><p>The brute-force solution uses two nested loops and checks every pair, resulting in <strong>O(n²)</strong> time complexity.</p><p>A better approach is to use a <strong>HashMap (Map)</strong>. As we iterate through the array, we calculate the number we need (<code class="inline">target - currentNumber</code>). If that number already exists in the Map, we've found the answer. Otherwise, store the current number and its index in the Map.</p></div>
+          <pre><code>function twoSum(nums, target) {
+  const seen = new Map();
+
+  for (let i = 0; i &lt; nums.length; i++) {
+    const current = nums[i];
+    const need = target - current;
+
+    // Have we already seen the required number?
+    if (seen.has(need)) {
+      return [seen.get(need), i];
+    }
+
+    // Store current number and its index
+    seen.set(current, i);
+  }
+}
+
+console.log(twoSum([2, 7, 11, 15], 9)); // [0, 1]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Group Anagrams — group strings that are anagrams together.</h2>
+          <div class="seo-a"><p>Sort each word alphabetically and use the sorted string as the key inside a <code class="inline">Map</code>. Words with the same sorted characters belong to the same group.</p></div>
+          <pre><code>function groupAnagrams(strs) {
+  const map = new Map();
+
+  for (const word of strs) {
+    const key = word.split('').sort().join('');
+
+    if (!map.has(key)) {
+      map.set(key, []);
+    }
+
+    map.get(key).push(word);
+  }
+
+  return [...map.values()];
+}
+
+console.log(groupAnagrams(['eat','tea','tan','ate','nat','bat']));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Top K Frequent Elements — return the K most frequent elements.</h2>
+          <div class="seo-a"><p>Count the frequency of every number using a <code class="inline">Map</code>, sort by frequency in descending order, then return the first K elements.</p></div>
+          <pre><code>function topKFrequent(nums, k) {
+  const freq = new Map();
+
+  for (const num of nums) {
+    freq.set(num, (freq.get(num) || 0) + 1);
+  }
+
+  return [...freq.entries()]
+    .sort((a, b) =&gt; b[1] - a[1])
+    .slice(0, k)
+    .map(item =&gt; item[0]);
+}
+
+console.log(topKFrequent([1,1,1,2,2,3],2));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Product of Array Except Self — return the product of all elements except itself.</h2>
+          <div class="seo-a"><p>Build prefix products from the left and suffix products from the right. Multiply both values to get the answer for each index without using division.</p></div>
+          <pre><code>function productExceptSelf(nums) {
+  const result = Array(nums.length).fill(1);
+
+  let prefix = 1;
+  for (let i = 0; i &lt; nums.length; i++) {
+    result[i] = prefix;
+    prefix *= nums[i];
+  }
+
+  let suffix = 1;
+  for (let i = nums.length - 1; i &gt;= 0; i--) {
+    result[i] *= suffix;
+    suffix *= nums[i];
+  }
+
+  return result;
+}
+
+console.log(productExceptSelf([1,2,3,4]));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Longest Consecutive Sequence — find the length of the longest consecutive sequence.</h2>
+          <div class="seo-a"><p>Store all numbers inside a <code class="inline">Set</code>. Only start counting when the current number is the beginning of a sequence (its previous number doesn't exist). This guarantees O(n) time.</p></div>
+          <pre><code>function longestConsecutive(nums) {
+  const set = new Set(nums);
+  let longest = 0;
+
+  for (const num of set) {
+    if (!set.has(num - 1)) {
+      let current = num;
+      let length = 1;
+
+      while (set.has(current + 1)) {
+        current++;
+        length++;
+      }
+
+      longest = Math.max(longest, length);
+    }
+  }
+
+  return longest;
+}
+
+console.log(longestConsecutive([100,4,200,1,3,2])); // 4</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>3Sum — find all unique triplets whose sum is zero.</h2>
+          <div class="seo-a"><p>Sort the array first. Fix one number and use two pointers (<code class="inline">left</code> and <code class="inline">right</code>) to find the remaining two numbers. Skip duplicate values to avoid duplicate triplets.</p></div>
+          <pre><code>function threeSum(nums) {
+  nums.sort((a,b)=&gt;a-b);
+  const result = [];
+
+  for(let i=0;i&lt;nums.length-2;i++){
+    if(i&gt;0 &amp;&amp; nums[i]===nums[i-1]) continue;
+
+    let left=i+1;
+    let right=nums.length-1;
+
+    while(left&lt;right){
+      const sum=nums[i]+nums[left]+nums[right];
+
+      if(sum===0){
+        result.push([nums[i],nums[left],nums[right]]);
+        while(left&lt;right &amp;&amp; nums[left]===nums[left+1]) left++;
+        while(left&lt;right &amp;&amp; nums[right]===nums[right-1]) right--;
+        left++;
+        right--;
+      }else if(sum&lt;0){
+        left++;
+      }else{
+        right--;
+      }
+    }
+  }
+
+  return result;
+}
+
+console.log(threeSum([-1,0,1,2,-1,-4]));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Container With Most Water — find the maximum amount of water a container can store.</h2>
+          <div class="seo-a"><p>Use two pointers at both ends of the array. Calculate the area and move the pointer with the smaller height inward because moving the taller one cannot increase the area.</p></div>
+          <pre><code>function maxArea(height) {
+  let left=0;
+  let right=height.length-1;
+  let max=0;
+
+  while(left&lt;right){
+    const area=Math.min(height[left],height[right])*(right-left);
+    max=Math.max(max,area);
+
+    if(height[left]&lt;height[right]) left++;
+    else right--;
+  }
+
+  return max;
+}
+
+console.log(maxArea([1,8,6,2,5,4,8,3,7]));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Longest Substring Without Repeating Characters.</h2>
+          <div class="seo-a"><p>Maintain a sliding window using two pointers. Store the latest index of every character inside a Map. Whenever a duplicate appears, move the left pointer accordingly.</p></div>
+          <pre><code>function lengthOfLongestSubstring(s){
+  const map=new Map();
+  let left=0;
+  let max=0;
+
+  for(let right=0;right&lt;s.length;right++){
+    if(map.has(s[right])){
+      left=Math.max(left,map.get(s[right])+1);
+    }
+
+    map.set(s[right],right);
+    max=Math.max(max,right-left+1);
+  }
+
+  return max;
+}
+
+console.log(lengthOfLongestSubstring('abcabcbb'));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Longest Palindromic Substring.</h2>
+          <div class="seo-a"><p>Expand around every character (and every gap between characters) as the center of a palindrome. Keep track of the longest palindrome found.</p></div>
+          <pre><code>function longestPalindrome(s){
+  let start=0,end=0;
+
+  function expand(left,right){
+    while(left&gt;=0 &amp;&amp; right&lt;s.length &amp;&amp; s[left]===s[right]){
+      left--;
+      right++;
+    }
+    return [left+1,right-1];
+  }
+
+  for(let i=0;i&lt;s.length;i++){
+    const odd=expand(i,i);
+    const even=expand(i,i+1);
+
+    const longer=(odd[1]-odd[0])&gt;(even[1]-even[0])?odd:even;
+
+    if(longer[1]-longer[0]&gt;end-start){
+      start=longer[0];
+      end=longer[1];
+    }
+  }
+
+  return s.substring(start,end+1);
+}
+
+console.log(longestPalindrome('babad'));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Valid Parentheses — determine whether the parentheses are valid.</h2>
+          <div class="seo-a"><p>Use a Stack. Push every opening bracket. Whenever a closing bracket appears, verify it matches the top of the stack. At the end, the stack must be empty.</p></div>
+          <pre><code>function isValid(s){
+  const stack=[];
+  const map={')':'(',']':'[','}':'{'};
+
+  for(const ch of s){
+    if(ch==='('||ch==='['||ch==='{'){
+      stack.push(ch);
+    }else{
+      if(stack.pop()!==map[ch]){
+        return false;
+      }
+    }
+  }
+
+  return stack.length===0;
+}
+
+console.log(isValid('()[]{}'));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Generate Parentheses — generate all combinations of well-formed parentheses.</h2>
+          <div class="seo-a"><p>Use backtracking. Keep adding '(' until the limit is reached, then add ')' only when it won't make the string invalid. Backtrack after each recursive call.</p></div>
+          <pre><code>function generateParenthesis(n) {
+  const result = [];
+
+  function backtrack(str, open, close) {
+    if (str.length === n * 2) {
+      result.push(str);
+      return;
+    }
+
+    if (open &lt; n) {
+      backtrack(str + '(', open + 1, close);
+    }
+
+    if (close &lt; open) {
+      backtrack(str + ')', open, close + 1);
+    }
+  }
+
+  backtrack('', 0, 0);
+  return result;
+}
+
+console.log(generateParenthesis(3));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Daily Temperatures — return how many days until a warmer temperature.</h2>
+          <div class="seo-a"><p>Maintain a monotonic decreasing stack of indices. Whenever the current temperature is higher than the top of the stack, calculate the waiting days and pop it.</p></div>
+          <pre><code>function dailyTemperatures(temperatures) {
+  const result = Array(temperatures.length).fill(0);
+  const stack = [];
+
+  for (let i = 0; i &lt; temperatures.length; i++) {
+    while (stack.length &amp;&amp; temperatures[i] &gt; temperatures[stack[stack.length - 1]]) {
+      const index = stack.pop();
+      result[index] = i - index;
+    }
+    stack.push(i);
+  }
+
+  return result;
+}
+
+console.log(dailyTemperatures([73,74,75,71,69,72,76,73]));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Min Stack — design a stack that supports retrieving the minimum element in O(1).</h2>
+          <div class="seo-a"><p>Maintain two stacks. One stores all values, while the other stores the current minimum after each push. The minimum is always at the top of the second stack.</p></div>
+          <pre><code>class MinStack {
+  constructor() {
+    this.stack = [];
+    this.minStack = [];
+  }
+
+  push(val) {
+    this.stack.push(val);
+
+    if (!this.minStack.length || val &lt;= this.getMin()) {
+      this.minStack.push(val);
+    }
+  }
+
+  pop() {
+    if (this.stack.pop() === this.getMin()) {
+      this.minStack.pop();
+    }
+  }
+
+  top() {
+    return this.stack[this.stack.length - 1];
+  }
+
+  getMin() {
+    return this.minStack[this.minStack.length - 1];
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Evaluate Reverse Polish Notation.</h2>
+          <div class="seo-a"><p>Traverse the tokens. Push numbers onto the stack. When an operator is found, pop the last two numbers, evaluate them, and push the result back.</p></div>
+          <pre><code>function evalRPN(tokens) {
+  const stack = [];
+
+  for (const token of tokens) {
+    if (!'+-*/'.includes(token)) {
+      stack.push(Number(token));
+    } else {
+      const b = stack.pop();
+      const a = stack.pop();
+
+      switch (token) {
+        case '+': stack.push(a + b); break;
+        case '-': stack.push(a - b); break;
+        case '*': stack.push(a * b); break;
+        case '/': stack.push(Math.trunc(a / b)); break;
+      }
+    }
+  }
+
+  return stack.pop();
+}
+
+console.log(evalRPN(['2','1','+','3','*']));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Search in Rotated Sorted Array.</h2>
+          <div class="seo-a"><p>Apply Binary Search while determining which half of the array is sorted. Decide whether the target lies in the sorted half, then continue searching only that half.</p></div>
+          <pre><code>function search(nums, target) {
+  let left = 0;
+  let right = nums.length - 1;
+
+  while (left &lt;= right) {
+    const mid = Math.floor((left + right) / 2);
+
+    if (nums[mid] === target) return mid;
+
+    if (nums[left] &lt;= nums[mid]) {
+      if (target &gt;= nums[left] &amp;&amp; target &lt; nums[mid]) {
+        right = mid - 1;
+      } else {
+        left = mid + 1;
+      }
+    } else {
+      if (target &gt; nums[mid] &amp;&amp; target &lt;= nums[right]) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+  }
+
+  return -1;
+}
+
+console.log(search([4,5,6,7,0,1,2],0));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find First and Last Position of Element in Sorted Array.</h2>
+          <div class="seo-a"><p>Use Binary Search twice—once to find the leftmost occurrence and once to find the rightmost occurrence. This gives O(log n) time complexity.</p></div>
+          <pre><code>function searchRange(nums, target) {
+  function find(first) {
+    let left = 0, right = nums.length - 1;
+    let ans = -1;
+
+    while (left &lt;= right) {
+      const mid = Math.floor((left + right) / 2);
+
+      if (nums[mid] === target) {
+        ans = mid;
+        if (first) right = mid - 1;
+        else left = mid + 1;
+      } else if (nums[mid] &lt; target) {
+        left = mid + 1;
+      } else {
+        right = mid - 1;
+      }
+    }
+
+    return ans;
+  }
+
+  return [find(true), find(false)];
+}
+
+console.log(searchRange([5,7,7,8,8,10],8));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Merge Intervals — merge all overlapping intervals.</h2>
+          <div class="seo-a"><p>Sort intervals by start time. Compare each interval with the previous one. If they overlap, merge them; otherwise, add a new interval.</p></div>
+          <pre><code>function merge(intervals) {
+  intervals.sort((a,b)=&gt;a[0]-b[0]);
+
+  const result=[];
+
+  for(const interval of intervals){
+    if(!result.length || result[result.length-1][1] &lt; interval[0]){
+      result.push(interval);
+    }else{
+      result[result.length-1][1]=Math.max(result[result.length-1][1],interval[1]);
+    }
+  }
+
+  return result;
+}
+
+console.log(merge([[1,3],[2,6],[8,10],[15,18]]));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Insert Interval — insert a new interval into sorted intervals.</h2>
+          <div class="seo-a"><p>Add all intervals before the new interval, merge overlapping intervals, then append the remaining intervals.</p></div>
+          <pre><code>function insert(intervals,newInterval){
+  const result=[];
+  let i=0;
+
+  while(i&lt;intervals.length &amp;&amp; intervals[i][1]&lt;newInterval[0]){
+    result.push(intervals[i++]);
+  }
+
+  while(i&lt;intervals.length &amp;&amp; intervals[i][0]&lt;=newInterval[1]){
+    newInterval=[
+      Math.min(newInterval[0],intervals[i][0]),
+      Math.max(newInterval[1],intervals[i][1])
+    ];
+    i++;
+  }
+
+  result.push(newInterval);
+
+  while(i&lt;intervals.length){
+    result.push(intervals[i++]);
+  }
+
+  return result;
+}
+
+console.log(insert([[1,3],[6,9]],[2,5]));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Spiral Matrix — return all elements in spiral order.</h2>
+          <div class="seo-a"><p>Maintain four boundaries (top, bottom, left, right). Traverse each boundary and shrink it until every element is visited.</p></div>
+          <pre><code>function spiralOrder(matrix){
+  const result=[];
+
+  let top=0;
+  let bottom=matrix.length-1;
+  let left=0;
+  let right=matrix[0].length-1;
+
+  while(top&lt;=bottom &amp;&amp; left&lt;=right){
+    for(let i=left;i&lt;=right;i++) result.push(matrix[top][i]);
+    top++;
+
+    for(let i=top;i&lt;=bottom;i++) result.push(matrix[i][right]);
+    right--;
+
+    if(top&lt;=bottom){
+      for(let i=right;i&gt;=left;i--) result.push(matrix[bottom][i]);
+      bottom--;
+    }
+
+    if(left&lt;=right){
+      for(let i=bottom;i&gt;=top;i--) result.push(matrix[i][left]);
+      left++;
+    }
+  }
+
+  return result;
+}
+
+console.log(spiralOrder([[1,2,3],[4,5,6],[7,8,9]]));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Number of Islands — count the number of islands in a grid.</h2>
+          <div class="seo-a"><p>Traverse every cell. Whenever you find land ('1'), increment the count and perform DFS/BFS to mark the entire island as visited.</p></div>
+          <pre><code>function numIslands(grid){
+  let count=0;
+
+  function dfs(r,c){
+    if(r&lt;0||c&lt;0||r&gt;=grid.length||c&gt;=grid[0].length||grid[r][c]==='0') return;
+
+    grid[r][c]='0';
+
+    dfs(r+1,c);
+    dfs(r-1,c);
+    dfs(r,c+1);
+    dfs(r,c-1);
+  }
+
+  for(let r=0;r&lt;grid.length;r++){
+    for(let c=0;c&lt;grid[0].length;c++){
+      if(grid[r][c]==='1'){
+        count++;
+        dfs(r,c);
+      }
+    }
+  }
+
+  return count;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Clone Graph — create a deep copy of an undirected graph.</h2>
+          <div class="seo-a"><p>Use DFS (or BFS) with a <code class="inline">Map</code> to store already cloned nodes. If a node is visited again, return its clone instead of creating a new one.</p></div>
+          <pre><code>function cloneGraph(node) {
+  if (!node) return null;
+
+  const map = new Map();
+
+  function dfs(node) {
+    if (map.has(node)) return map.get(node);
+
+    const clone = { val: node.val, neighbors: [] };
+    map.set(node, clone);
+
+    for (const nei of node.neighbors) {
+      clone.neighbors.push(dfs(nei));
+    }
+
+    return clone;
+  }
+
+  return dfs(node);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Course Schedule — determine whether all courses can be completed.</h2>
+          <div class="seo-a"><p>Represent courses as a graph and detect cycles using DFS. If a cycle exists, all courses cannot be completed. Otherwise, return true.</p></div>
+          <pre><code>function canFinish(numCourses, prerequisites) {
+  const graph = Array.from({ length: numCourses }, () =&gt; []);
+
+  for (const [a, b] of prerequisites) {
+    graph[a].push(b);
+  }
+
+  const visiting = new Set();
+  const visited = new Set();
+
+  function dfs(course) {
+    if (visiting.has(course)) return false;
+    if (visited.has(course)) return true;
+
+    visiting.add(course);
+
+    for (const next of graph[course]) {
+      if (!dfs(next)) return false;
+    }
+
+    visiting.delete(course);
+    visited.add(course);
+
+    return true;
+  }
+
+  for (let i = 0; i &lt; numCourses; i++) {
+    if (!dfs(i)) return false;
+  }
+
+  return true;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Lowest Common Ancestor of a Binary Tree.</h2>
+          <div class="seo-a"><p>Traverse recursively. If either node is found, return it. If both left and right recursive calls return non-null values, the current node is the Lowest Common Ancestor.</p></div>
+          <pre><code>function lowestCommonAncestor(root, p, q) {
+  if (!root || root === p || root === q) return root;
+
+  const left = lowestCommonAncestor(root.left, p, q);
+  const right = lowestCommonAncestor(root.right, p, q);
+
+  if (left &amp;&amp; right) return root;
+
+  return left || right;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Kth Largest Element in an Array.</h2>
+          <div class="seo-a"><p>Sort the array in descending order and return the Kth element. Interviewers may later ask for an O(n log k) Heap solution or O(n) Quick Select solution.</p></div>
+          <pre><code>function findKthLargest(nums, k) {
+  nums.sort((a, b) =&gt; b - a);
+  return nums[k - 1];
+}
+
+console.log(findKthLargest([3,2,1,5,6,4],2));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Letter Combinations of a Phone Number.</h2>
+          <div class="seo-a"><p>Use Backtracking to generate all possible combinations. For every digit, iterate through its mapped letters and recursively build the current string.</p></div>
+          <pre><code>function letterCombinations(digits) {
+  if (!digits.length) return [];
+
+  const map = {
+    '2':'abc','3':'def','4':'ghi','5':'jkl',
+    '6':'mno','7':'pqrs','8':'tuv','9':'wxyz'
+  };
+
+  const result = [];
+
+  function backtrack(index, current) {
+    if (index === digits.length) {
+      result.push(current);
+      return;
+    }
+
+    for (const ch of map[digits[index]]) {
+      backtrack(index + 1, current + ch);
+    }
+  }
+
+  backtrack(0, '');
+  return result;
+}
+
+console.log(letterCombinations('23'));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Remove duplicates from an array.</h2>
+          <div class="seo-a"><p>Wrap it in a <code class="inline">Set</code> (which keeps unique values) and spread back to an array. For objects by a key, use a Map keyed on that field.</p></div>
+          <pre><code>const unique = arr =&gt; [...new Set(arr)];
+unique([1, 1, 2, 3, 3]); // [1, 2, 3]
+
+// by key:
+const byId = arr =&gt; [...new Map(arr.map(o =&gt; [o.id, o])).values()];</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Flatten a deeply nested array (without .flat(Infinity)).</h2>
+          <div class="seo-a"><p>Reduce over the array; if an element is itself an array, recurse and concat the result, otherwise include it. Or use an explicit stack to avoid recursion.</p></div>
+          <pre><code>function flatten(arr) {
+  return arr.reduce((acc, v) =&gt;
+    acc.concat(Array.isArray(v) ? flatten(v) : v), []);
+}
+flatten([1, [2, [3, [4]]]]); // [1, 2, 3, 4]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a debounce function.</h2>
+          <div class="seo-a"><p>Return a function that clears a pending timer and sets a new one on each call, so the wrapped function only runs after calls stop for <code class="inline">ms</code>. The timer id lives in a closure.</p></div>
+          <pre><code>function debounce(fn, ms) {
+  let t;
+  return function (...args) {
+    clearTimeout(t);
+    t = setTimeout(() =&gt; fn.apply(this, args), ms);
+  };
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a throttle function.</h2>
+          <div class="seo-a"><p>Track the last run time; only invoke the wrapped function if at least <code class="inline">ms</code> has elapsed since the previous call. Guarantees a maximum call rate.</p></div>
+          <pre><code>function throttle(fn, ms) {
+  let last = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - last &gt;= ms) { last = now; fn.apply(this, args); }
+  };
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Deep clone an object (without structuredClone).</h2>
+          <div class="seo-a"><p>Recurse: return primitives as-is, map arrays, and rebuild objects key by key cloning each value. Handle <code class="inline">Date</code>/arrays explicitly. (In real code prefer <code class="inline">structuredClone</code>.)</p></div>
+          <pre><code>function deepClone(v) {
+  if (v === null || typeof v !== 'object') return v;
+  if (v instanceof Date) return new Date(v);
+  if (Array.isArray(v)) return v.map(deepClone);
+  return Object.fromEntries(
+    Object.entries(v).map(([k, val]) =&gt; [k, deepClone(val)])
+  );
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a generic memoize higher-order function.</h2>
+          <div class="seo-a"><p>Cache results in a Map keyed by the serialized arguments; return the cached value on repeat calls. Great for expensive pure functions.</p></div>
+          <pre><code>function memoize(fn) {
+  const cache = new Map();
+  return function (...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement curry — curry(fn)(a)(b)(c) === fn(a,b,c).</h2>
+          <div class="seo-a"><p>Collect arguments across calls; once you have at least <code class="inline">fn.length</code> of them, invoke. Otherwise return a function that keeps gathering. Uses closures + recursion.</p></div>
+          <pre><code>function curry(fn) {
+  return function curried(...args) {
+    return args.length &gt;= fn.length
+      ? fn.apply(this, args)
+      : (...next) =&gt; curried.apply(this, args.concat(next));
+  };
+}
+const add = (a, b, c) =&gt; a + b + c;
+curry(add)(1)(2)(3); // 6</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement Promise.all.</h2>
+          <div class="seo-a"><p>Return a new Promise. Track a results array and a completion counter; resolve when every input settles, preserving order by index; reject on the first failure.</p></div>
+          <pre><code>function promiseAll(promises) {
+  return new Promise((resolve, reject) =&gt; {
+    const results = []; let done = 0;
+    if (!promises.length) return resolve(results);
+    promises.forEach((p, i) =&gt; {
+      Promise.resolve(p).then(v =&gt; {
+        results[i] = v;
+        if (++done === promises.length) resolve(results);
+      }, reject);
+    });
+  });
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a simple EventEmitter (on / off / emit).</h2>
+          <div class="seo-a"><p>Keep a map of event name → array of listeners. <code class="inline">on</code> pushes, <code class="inline">off</code> filters out, <code class="inline">emit</code> calls each listener with the payload. This is the pub/sub pattern behind RxJS Subjects and Node's EventEmitter.</p></div>
+          <pre><code>class EventEmitter {
+  constructor() { this.map = {}; }
+  on(e, fn) { (this.map[e] ||= []).push(fn); return () =&gt; this.off(e, fn); }
+  off(e, fn) { this.map[e] = (this.map[e] || []).filter(f =&gt; f !== fn); }
+  emit(e, ...args) { (this.map[e] || []).forEach(fn =&gt; fn(...args)); }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Group an array of objects by a property.</h2>
+          <div class="seo-a"><p>Reduce into an object whose keys are the group values and whose values are arrays. Modern JS also has <code class="inline">Object.groupBy</code>.</p></div>
+          <pre><code>const groupBy = (arr, key) =&gt;
+  arr.reduce((acc, item) =&gt; {
+    (acc[item[key]] ||= []).push(item);
+    return acc;
+  }, {});
+groupBy([{ t: 'a', v: 1 }, { t: 'b', v: 2 }, { t: 'a', v: 3 }], 't');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Flatten a nested object to dot-notation keys.</h2>
+          <div class="seo-a"><p>Recurse over entries; for nested objects, prefix the parent key with a dot and keep descending; for leaves, assign the flattened key.</p></div>
+          <pre><code>function flatten(obj, prefix = '', out = {}) {
+  for (const [k, v] of Object.entries(obj)) {
+    const key = prefix ? `${prefix}.${k}` : k;
+    if (v &amp;&amp; typeof v === 'object' &amp;&amp; !Array.isArray(v)) flatten(v, key, out);
+    else out[key] = v;
+  }
+  return out;
+}
+flatten({ a: { b: { c: 1 } } }); // { 'a.b.c': 1 }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Count word frequency in a sentence.</h2>
+          <div class="seo-a"><p>Lowercase, split into words, and tally each in a Map/object. Sort by count if you need the most frequent.</p></div>
+          <pre><code>function wordFreq(str) {
+  const map = {};
+  for (const w of str.toLowerCase().match(/\w+/g) || [])
+    map[w] = (map[w] || 0) + 1;
+  return map;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write an async sleep(ms) helper.</h2>
+          <div class="seo-a"><p>Return a Promise that resolves via <code class="inline">setTimeout</code>. You can then <code class="inline">await sleep(1000)</code> to pause inside an async function.</p></div>
+          <pre><code>const sleep = ms =&gt; new Promise(res =&gt; setTimeout(res, ms));
+
+async function run() {
+  console.log('start');
+  await sleep(1000);
+  console.log('1s later');
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Polyfill Array.prototype.map.</h2>
+          <div class="seo-a"><p>Add a method to the prototype that loops the array, calls the callback with <code class="inline">(value, index, array)</code>, and pushes each result into a new array — never mutating the original.</p></div>
+          <pre><code>Array.prototype.myMap = function (cb) {
+  const out = [];
+  for (let i = 0; i &lt; this.length; i++) out.push(cb(this[i], i, this));
+  return out;
+};
+[1, 2, 3].myMap(x =&gt; x * 2); // [2, 4, 6]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Check whether two strings are anagrams.</h2>
+          <div class="seo-a"><p>Normalise (lowercase, strip non-word chars), then compare sorted characters — or compare character-frequency maps for O(n) instead of O(n log n).</p></div>
+          <pre><code>const norm = s =&gt; s.toLowerCase().replace(/\W/g, '').split('').sort().join('');
+const isAnagram = (a, b) =&gt; norm(a) === norm(b);
+isAnagram('listen', 'silent'); // true</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find the maximum sum of a contiguous subarray (Kadane's).</h2>
+          <div class="seo-a"><p>Track the best sum ending at the current index (<code class="inline">cur</code>) and the global best. Extend or restart at each element. O(n) time, O(1) space.</p></div>
+          <pre><code>function maxSubArray(nums) {
+  let cur = nums[0], best = nums[0];
+  for (let i = 1; i &lt; nums.length; i++) {
+    cur = Math.max(nums[i], cur + nums[i]);
+    best = Math.max(best, cur);
+  }
+  return best;
+}
+maxSubArray([-2, 1, -3, 4, -1, 2, 1, -5, 4]); // 6</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Predict the output: sync vs setTimeout vs Promise.</h2>
+          <div class="seo-a"><p><strong>Output: 1, 4, 3, 2.</strong></p><p>Synchronous code runs first (<code class="inline">1</code>, then <code class="inline">4</code>). When the stack is empty, the engine drains the <strong>microtask</strong> queue (the Promise <code class="inline">.then</code> → <code class="inline">3</code>) before any <strong>macrotask</strong>. The <code class="inline">setTimeout</code> callback is a macrotask, so <code class="inline">2</code> runs last — even with a <code class="inline">0ms</code> delay.</p></div>
+          <pre><code>console.log(1);
+setTimeout(() =&gt; console.log(2), 0);
+Promise.resolve().then(() =&gt; console.log(3));
+console.log(4);
+
+// Output:
+// 1
+// 4
+// 3
+// 2</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Predict the output: async/await ordering.</h2>
+          <div class="seo-a"><p><strong>Output: start, async1 start, async2, end, async1 end, promise, timeout.</strong></p><p>Everything up to the first <code class="inline">await</code> runs synchronously. <code class="inline">await async2()</code> runs <code class="inline">async2</code>'s body now, then schedules the <em>rest</em> of <code class="inline">async1</code> as a microtask. The synchronous script finishes (<code class="inline">end</code>) before any microtask. Microtasks (the <code class="inline">await</code> continuation and the <code class="inline">.then</code>) drain before the <code class="inline">setTimeout</code> macrotask.</p></div>
+          <pre><code>async function async1() {
+  console.log('async1 start');
+  await async2();
+  console.log('async1 end');
+}
+async function async2() {
+  console.log('async2');
+}
+
+console.log('start');
+setTimeout(() =&gt; console.log('timeout'), 0);
+async1();
+Promise.resolve().then(() =&gt; console.log('promise'));
+console.log('end');
+
+// Output:
+// start
+// async1 start
+// async2
+// end
+// async1 end
+// promise
+// timeout</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Predict the output: setTimeout inside a for-loop (var vs let).</h2>
+          <div class="seo-a"><p>With <code class="inline">var</code> → <strong>3, 3, 3</strong>. With <code class="inline">let</code> → <strong>0, 1, 2</strong>.</p><p><code class="inline">var</code> is function-scoped, so all three callbacks close over the <em>same</em> <code class="inline">i</code>. The loop finishes (i = 3) before any timeout fires, so all log 3. <code class="inline">let</code> is block-scoped and creates a <em>fresh binding each iteration</em>, so each callback captures its own value.</p></div>
+          <pre><code>for (var i = 0; i &lt; 3; i++) {
+  setTimeout(() =&gt; console.log(i), 0);
+}
+// 3, 3, 3
+
+for (let j = 0; j &lt; 3; j++) {
+  setTimeout(() =&gt; console.log(j), 0);
+}
+// 0, 1, 2</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Predict the output: interleaved Promise chain and setTimeout.</h2>
+          <div class="seo-a"><p><strong>Output: script start, script end, promise1, promise2, setTimeout.</strong></p><p>Both <code class="inline">console.log</code>s in the main body are synchronous. The Promise chain runs as microtasks (<code class="inline">promise1</code> then <code class="inline">promise2</code>), and the whole microtask queue drains before the single <code class="inline">setTimeout</code> macrotask.</p></div>
+          <pre><code>console.log('script start');
+
+setTimeout(() =&gt; console.log('setTimeout'), 0);
+
+Promise.resolve()
+  .then(() =&gt; console.log('promise1'))
+  .then(() =&gt; console.log('promise2'));
+
+console.log('script end');
+
+// Output:
+// script start
+// script end
+// promise1
+// promise2
+// setTimeout</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Design an LRU Cache supporting get() and put() in O(1).</h2>
+          <div class="seo-a"><p>The optimal solution combines a <code class="inline">HashMap</code> with a doubly linked list. The HashMap provides O(1) lookup, while the linked list maintains usage order. Recently used items move to the front, and the least recently used item is removed from the tail.</p></div>
+          <pre><code>class LRUCache {
+  constructor(capacity) {
+    this.capacity = capacity;
+    this.map = new Map();
+  }
+
+  get(key) {
+    if (!this.map.has(key)) return -1;
+
+    const value = this.map.get(key);
+    this.map.delete(key);
+    this.map.set(key, value);
+
+    return value;
+  }
+
+  put(key, value) {
+    if (this.map.has(key)) {
+      this.map.delete(key);
+    }
+
+    this.map.set(key, value);
+
+    if (this.map.size &gt; this.capacity) {
+      const oldest = this.map.keys().next().value;
+      this.map.delete(oldest);
+    }
+  }
+}
+
+const cache = new LRUCache(2);
+cache.put(1,1);
+cache.put(2,2);
+console.log(cache.get(1)); // 1</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Next Greater Element — find the next greater element for each number.</h2>
+          <div class="seo-a"><p>Use a monotonic decreasing stack. While the current element is greater than the stack top, pop it and map its next greater element. Remaining elements have no greater value and map to -1.</p></div>
+          <pre><code>function nextGreaterElement(nums1, nums2) {
+  const stack = [];
+  const map = new Map();
+
+  for (const num of nums2) {
+    while (stack.length &amp;&amp; num &gt; stack[stack.length - 1]) {
+      map.set(stack.pop(), num);
+    }
+    stack.push(num);
+  }
+
+  while (stack.length) {
+    map.set(stack.pop(), -1);
+  }
+
+  return nums1.map(n =&gt; map.get(n));
+}
+
+console.log(nextGreaterElement([4,1,2],[1,3,4,2]));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Permutations — generate all possible permutations of an array.</h2>
+          <div class="seo-a"><p>Use Backtracking. Choose one unused element at each recursive step, mark it as visited, recurse, then backtrack by removing it and marking it unused again.</p></div>
+          <pre><code>function permute(nums) {
+  const result = [];
+  const used = Array(nums.length).fill(false);
+
+  function backtrack(path) {
+    if (path.length === nums.length) {
+      result.push([...path]);
+      return;
+    }
+
+    for (let i = 0; i &lt; nums.length; i++) {
+      if (used[i]) continue;
+
+      used[i] = true;
+      path.push(nums[i]);
+
+      backtrack(path);
+
+      path.pop();
+      used[i] = false;
+    }
+  }
+
+  backtrack([]);
+  return result;
+}
+
+console.log(permute([1,2,3]));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Predict the output: microtask queued inside a macrotask.</h2>
+          <div class="seo-a"><p><strong>Output: 1, 5, 3, 2, 4.</strong></p><p>Sync first: <code class="inline">1</code>, <code class="inline">5</code>. The stack empties, so the microtask <code class="inline">3</code> runs. Then the timeout macrotask runs <code class="inline">2</code> and, inside it, queues a new microtask. Because the microtask queue is drained again <em>right after</em> that macrotask finishes, <code class="inline">4</code> runs next — before any further macrotask.</p></div>
+          <pre><code>console.log(1);
+
+setTimeout(() =&gt; {
+  console.log(2);
+  Promise.resolve().then(() =&gt; console.log(4));
+}, 0);
+
+Promise.resolve().then(() =&gt; console.log(3));
+
+console.log(5);
+
+// Output:
+// 1
+// 5
+// 3
+// 2
+// 4</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Predict the output: what does an async function return, and when?</h2>
+          <div class="seo-a"><p><strong>Output: A, C, B.</strong></p><p>An <code class="inline">async</code> function returns a Promise immediately. Calling <code class="inline">f()</code> runs its body synchronously up to the return (<code class="inline">A</code>), but the <code class="inline">.then</code> attached to the returned Promise (<code class="inline">B</code>) is a microtask. So the synchronous <code class="inline">C</code> after the call runs before <code class="inline">B</code>.</p></div>
+          <pre><code>async function f() {
+  console.log('A');
+  return 'done';
+}
+
+f().then((v) =&gt; console.log('B', v));
+console.log('C');
+
+// Output:
+// A
+// C
+// B done</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find the first non-repeating character in a string.</h2>
+          <div class="seo-a"><p>Count frequencies in one pass (LinkedHashMap keeps encounter order), then return the first key with count 1. O(n) time, O(1) space (bounded alphabet).</p><p>Very often asked as a <strong>Java 8 streams</strong> one-liner — practice both forms.</p></div>
+          <pre><code>// classic
+char firstUnique(String s) {
+  Map&lt;Character, Integer&gt; freq = new LinkedHashMap&lt;&gt;();
+  for (char c : s.toCharArray()) freq.merge(c, 1, Integer::sum);
+  for (var e : freq.entrySet()) if (e.getValue() == 1) return e.getKey();
+  return 0;
+}
+
+// streams
+Character first = s.chars().mapToObj(c -&gt; (char) c)
+  .collect(Collectors.groupingBy(c -&gt; c, LinkedHashMap::new, Collectors.counting()))
+  .entrySet().stream()
+  .filter(e -&gt; e.getValue() == 1)
+  .map(Map.Entry::getKey)
+  .findFirst().orElse(null);   // &quot;swiss&quot; -&gt; 'w'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>String compression: aabbbc → a2b3c1.</h2>
+          <div class="seo-a"><p>Walk the string counting runs of the same character; append <code class="inline">char + count</code> when the run breaks. Use StringBuilder — string concatenation in a loop is O(n²). O(n) time.</p></div>
+          <pre><code>String compress(String s) {
+  StringBuilder sb = new StringBuilder();
+  int count = 1;
+  for (int i = 1; i &lt;= s.length(); i++) {
+    if (i &lt; s.length() &amp;&amp; s.charAt(i) == s.charAt(i - 1)) count++;
+    else { sb.append(s.charAt(i - 1)).append(count); count = 1; }
+  }
+  return sb.toString();
+}
+compress(&quot;aabbbc&quot;); // &quot;a2b3c1&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Longest common prefix of an array of strings.</h2>
+          <div class="seo-a"><p>Take the first string as candidate; for each other string, shrink the candidate from the end while it isn't a prefix. O(S) where S = total characters.</p><p>Alternative: sort and compare only first vs last string — they're the most different.</p></div>
+          <pre><code>String longestCommonPrefix(String[] strs) {
+  String prefix = strs[0];
+  for (int i = 1; i &lt; strs.length; i++) {
+    while (!strs[i].startsWith(prefix))
+      prefix = prefix.substring(0, prefix.length() - 1);
+    if (prefix.isEmpty()) return &quot;&quot;;
+  }
+  return prefix;
+}
+// [&quot;flower&quot;,&quot;flow&quot;,&quot;flight&quot;] -&gt; &quot;fl&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Check if one string is a rotation of another (and rotate a string by k).</h2>
+          <div class="seo-a"><p>The elegant trick: <code class="inline">b</code> is a rotation of <code class="inline">a</code> iff they're the same length and <strong>b is a substring of a + a</strong>. One line after the length check.</p><p>Rotating by k: <code class="inline">s.substring(k) + s.substring(0, k)</code> (normalize k with modulo first).</p></div>
+          <pre><code>boolean isRotation(String a, String b) {
+  return a.length() == b.length() &amp;&amp; (a + a).contains(b);
+}
+
+String rotateLeft(String s, int k) {
+  k %= s.length();
+  return s.substring(k) + s.substring(0, k);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Count vowels and consonants in a string (loop and streams).</h2>
+          <div class="seo-a"><p>Normalize to lowercase, check membership in the vowel set, count letters only. Trivial logic — what's evaluated is clean code and the streams variant.</p></div>
+          <pre><code>int[] countVowelsConsonants(String s) {
+  int v = 0, c = 0;
+  for (char ch : s.toLowerCase().toCharArray()) {
+    if (ch &lt; 'a' || ch &gt; 'z') continue;
+    if (&quot;aeiou&quot;.indexOf(ch) &gt;= 0) v++; else c++;
+  }
+  return new int[]{v, c};
+}
+
+// streams
+long vowels = s.toLowerCase().chars()
+    .filter(ch -&gt; &quot;aeiou&quot;.indexOf(ch) &gt;= 0).count();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find max, min, and the second largest in an array — without sorting.</h2>
+          <div class="seo-a"><p>Single pass with two trackers: when a new max appears, the old max becomes second; else update second when the value fits between. O(n) time, O(1) space — sorting (O(n log n)) is the answer they don't want.</p></div>
+          <pre><code>int secondLargest(int[] a) {
+  int max = Integer.MIN_VALUE, second = Integer.MIN_VALUE;
+  for (int x : a) {
+    if (x &gt; max) { second = max; max = x; }
+    else if (x &gt; second &amp;&amp; x &lt; max) second = x;
+  }
+  return second; // MIN_VALUE =&gt; not found
+}
+// [12, 35, 1, 10, 34, 1] -&gt; 34</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Move all zeros to the end, keeping the order of non-zeros (in place).</h2>
+          <div class="seo-a"><p>Two pointers: <code class="inline">insertPos</code> tracks where the next non-zero goes; sweep once copying non-zeros forward, then fill the tail with zeros. O(n) time, O(1) space, stable.</p></div>
+          <pre><code>void moveZeroes(int[] nums) {
+  int insertPos = 0;
+  for (int x : nums) if (x != 0) nums[insertPos++] = x;
+  while (insertPos &lt; nums.length) nums[insertPos++] = 0;
+}
+// [0,1,0,3,12] -&gt; [1,3,12,0,0]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Remove duplicates from a sorted array in place; return the new length.</h2>
+          <div class="seo-a"><p>Because it's sorted, duplicates are adjacent. Slow pointer marks the end of the unique prefix; fast pointer scans — copy forward only when the value differs from the last kept one. O(n) time, O(1) space.</p></div>
+          <pre><code>int removeDuplicates(int[] nums) {
+  if (nums.length == 0) return 0;
+  int k = 1;                       // nums[0..k-1] = unique prefix
+  for (int i = 1; i &lt; nums.length; i++)
+    if (nums[i] != nums[k - 1]) nums[k++] = nums[i];
+  return k;
+}
+// [1,1,2,2,3] -&gt; 3, array starts [1,2,3,...]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find the missing number in 1..n — and the duplicate number in an array.</h2>
+          <div class="seo-a"><p><strong>Missing</strong>: expected sum <code class="inline">n(n+1)/2</code> minus actual sum; or XOR all indices and values (overflow-proof). O(n)/O(1).</p><p><strong>Duplicate</strong>: HashSet catches the first repeat in O(n)/O(n); the O(1)-space follow-up is Floyd's cycle detection treating values as pointers.</p></div>
+          <pre><code>int missing(int[] a, int n) {          // values 1..n, one absent
+  long sum = (long) n * (n + 1) / 2;
+  for (int x : a) sum -= x;
+  return (int) sum;
+}
+
+int firstDuplicate(int[] a) {
+  Set&lt;Integer&gt; seen = new HashSet&lt;&gt;();
+  for (int x : a) if (!seen.add(x)) return x;
+  return -1;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Reverse an array in place, and rotate an array by k (reversal algorithm).</h2>
+          <div class="seo-a"><p><strong>Reverse</strong>: two pointers swapping inward. <strong>Rotate right by k</strong> without extra space — the reversal trick: reverse the whole array, then reverse the first k, then the rest. O(n) time, O(1) space.</p></div>
+          <pre><code>void rotate(int[] a, int k) {
+  k %= a.length;
+  reverse(a, 0, a.length - 1);   // [1,2,3,4,5,6,7] k=3
+  reverse(a, 0, k - 1);          // -&gt; [5,6,7,1,2,3,4]
+  reverse(a, k, a.length - 1);
+}
+void reverse(int[] a, int i, int j) {
+  while (i &lt; j) { int t = a[i]; a[i++] = a[j]; a[j--] = t; }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Sort an array of 0s, 1s and 2s in one pass (Dutch National Flag).</h2>
+          <div class="seo-a"><p>Three pointers: <code class="inline">low</code> (next slot for 0), <code class="inline">mid</code> (scanner), <code class="inline">high</code> (next slot for 2). Swap 0s down, 2s up, walk past 1s. One pass, O(n) time, O(1) space — no counting, no sorting.</p></div>
+          <pre><code>void sortColors(int[] a) {
+  int low = 0, mid = 0, high = a.length - 1;
+  while (mid &lt;= high) {
+    switch (a[mid]) {
+      case 0 -&gt; { swap(a, low++, mid++); }
+      case 1 -&gt; mid++;
+      case 2 -&gt; { swap(a, mid, high--); }  // mid stays!
+    }
+  }
+}
+// [2,0,2,1,1,0] -&gt; [0,0,1,1,2,2]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Intersection and union of two arrays in O(n).</h2>
+          <div class="seo-a"><p>Sets do the work: union = add everything to one set; intersection = build a set from the first array, keep elements of the second found in it (<code class="inline">retainAll</code> or a manual contains loop). O(n + m) time — the point is avoiding the O(n·m) nested loop.</p></div>
+          <pre><code>Set&lt;Integer&gt; intersection(int[] a, int[] b) {
+  Set&lt;Integer&gt; setA = new HashSet&lt;&gt;();
+  for (int x : a) setA.add(x);
+  Set&lt;Integer&gt; result = new HashSet&lt;&gt;();
+  for (int x : b) if (setA.contains(x)) result.add(x);
+  return result;
+}
+
+// streams union
+int[] union = IntStream.concat(Arrays.stream(a), Arrays.stream(b))
+    .distinct().toArray();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find the majority element (appears more than n/2 times).</h2>
+          <div class="seo-a"><p><strong>Boyer-Moore voting</strong>: keep a candidate and a counter — same element increments, different decrements, zero picks a new candidate. Majority survives all cancellations. O(n) time, O(1) space.</p><p>The HashMap-count version is the obvious O(n)/O(n) warm-up; Boyer-Moore is the answer that impresses.</p></div>
+          <pre><code>int majorityElement(int[] nums) {
+  int count = 0, candidate = 0;
+  for (int x : nums) {
+    if (count == 0) candidate = x;
+    count += (x == candidate) ? 1 : -1;
+  }
+  return candidate;
+}
+// [2,2,1,1,1,2,2] -&gt; 2</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find all leaders in an array (elements greater than everything to their right).</h2>
+          <div class="seo-a"><p>Scan <strong>right to left</strong> tracking the running max: an element ≥ max-so-far is a leader. O(n) time, one pass — versus the naive O(n²) 'for each element scan its right side'.</p></div>
+          <pre><code>List&lt;Integer&gt; leaders(int[] a) {
+  List&lt;Integer&gt; res = new ArrayList&lt;&gt;();
+  int maxRight = Integer.MIN_VALUE;
+  for (int i = a.length - 1; i &gt;= 0; i--) {
+    if (a[i] &gt;= maxRight) { res.add(a[i]); maxRight = a[i]; }
+  }
+  Collections.reverse(res);
+  return res;
+}
+// [16,17,4,3,5,2] -&gt; [17,5,2]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find a contiguous subarray with a given sum.</h2>
+          <div class="seo-a"><p><strong>Positive numbers</strong>: sliding window — grow the right edge, shrink from the left while the sum exceeds the target. O(n).</p><p><strong>With negatives</strong> (window breaks): prefix sums + HashMap — at each index look up <code class="inline">prefix − target</code>; if seen before, the slice between is the answer. O(n)/O(n).</p></div>
+          <pre><code>// positives: sliding window
+int[] subarraySum(int[] a, int target) {
+  int left = 0, sum = 0;
+  for (int right = 0; right &lt; a.length; right++) {
+    sum += a[right];
+    while (sum &gt; target &amp;&amp; left &lt;= right) sum -= a[left++];
+    if (sum == target) return new int[]{left, right};
+  }
+  return new int[]{-1, -1};
+}
+// negatives allowed: prefix + HashMap&lt;prefixSum, index&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Transpose a matrix, and rotate it 90° clockwise in place.</h2>
+          <div class="seo-a"><p><strong>Transpose</strong>: swap <code class="inline">a[i][j]</code> with <code class="inline">a[j][i]</code> across the diagonal (j starts at i+1 to avoid double-swapping).</p><p><strong>Rotate 90° clockwise</strong> = transpose, then reverse each row. Two clean passes, O(n²) time, O(1) extra space. (Counter-clockwise = transpose + reverse columns.)</p></div>
+          <pre><code>void rotate90(int[][] m) {
+  int n = m.length;
+  for (int i = 0; i &lt; n; i++)                 // transpose
+    for (int j = i + 1; j &lt; n; j++) {
+      int t = m[i][j]; m[i][j] = m[j][i]; m[j][i] = t;
+    }
+  for (int[] row : m) {                        // reverse each row
+    for (int i = 0, j = n - 1; i &lt; j; i++, j--) {
+      int t = row[i]; row[i] = row[j]; row[j] = t;
+    }
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Fibonacci — iterative, recursive, and memoized.</h2>
+          <div class="seo-a"><p>Three versions, three lessons: naive recursion is O(2ⁿ) (recomputes everything), memoization makes it O(n) by caching, iteration is O(n) time O(1) space and usually the best answer.</p></div>
+          <pre><code>// iterative — O(n)/O(1), the answer to give
+long fib(int n) {
+  long a = 0, b = 1;
+  for (int i = 0; i &lt; n; i++) { long t = a + b; a = b; b = t; }
+  return a;
+}
+
+// memoized — O(n)/O(n)
+Map&lt;Integer, Long&gt; memo = new HashMap&lt;&gt;();
+long fibMemo(int n) {
+  if (n &lt; 2) return n;
+  return memo.computeIfAbsent(n, k -&gt; fibMemo(k - 1) + fibMemo(k - 2));
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Factorial — and count the trailing zeros of n! without computing it.</h2>
+          <div class="seo-a"><p>Factorial itself: iterative loop (use <code class="inline">long</code>/BigInteger — int overflows at 13!).</p><p><strong>Trailing zeros</strong>: each zero comes from a factor 10 = 2×5, and 5s are rarer than 2s — so count factors of 5: <code class="inline">n/5 + n/25 + n/125 + ...</code>. O(log n), no factorial computed.</p></div>
+          <pre><code>long factorial(int n) {
+  long f = 1;
+  for (int i = 2; i &lt;= n; i++) f *= i;
+  return f;                       // 20! is the long limit
+}
+
+int trailingZeros(int n) {
+  int count = 0;
+  for (int p = 5; p &lt;= n; p *= 5) count += n / p;
+  return count;
+}
+trailingZeros(100); // 24</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Check if a number is prime, and list primes up to N (Sieve of Eratosthenes).</h2>
+          <div class="seo-a"><p><strong>Single check</strong>: trial division up to √n — a factor above √n implies one below it. O(√n).</p><p><strong>All primes ≤ N</strong>: the sieve — mark multiples of each prime as composite, starting from p². O(N log log N), the expected answer for 'primes up to N'.</p></div>
+          <pre><code>boolean isPrime(int n) {
+  if (n &lt; 2) return false;
+  for (int i = 2; (long) i * i &lt;= n; i++)
+    if (n % i == 0) return false;
+  return true;
+}
+
+boolean[] sieve(int n) {
+  boolean[] composite = new boolean[n + 1];
+  for (int p = 2; (long) p * p &lt;= n; p++)
+    if (!composite[p])
+      for (int m = p * p; m &lt;= n; m += p) composite[m] = true;
+  return composite;   // !composite[i] &amp;&amp; i &gt;= 2 =&gt; prime
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Armstrong number and perfect number checks.</h2>
+          <div class="seo-a"><p><strong>Armstrong</strong>: sum of each digit raised to the power of the digit count equals the number (153 = 1³+5³+3³).</p><p><strong>Perfect</strong>: sum of proper divisors equals the number (28 = 1+2+4+7+14). Collect divisors in pairs up to √n for O(√n).</p></div>
+          <pre><code>boolean isArmstrong(int n) {
+  int digits = String.valueOf(n).length(), sum = 0;
+  for (int t = n; t &gt; 0; t /= 10)
+    sum += (int) Math.pow(t % 10, digits);
+  return sum == n;
+}
+
+boolean isPerfect(int n) {
+  if (n &lt; 2) return false;
+  int sum = 1;
+  for (int i = 2; (long) i * i &lt;= n; i++)
+    if (n % i == 0) { sum += i; if (i != n / i) sum += n / i; }
+  return sum == n;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Reverse an integer, and sum its digits.</h2>
+          <div class="seo-a"><p>Both are the same digit loop: peel with <code class="inline">% 10</code>, shrink with <code class="inline">/ 10</code>. For reversal, build <code class="inline">rev = rev * 10 + digit</code> — and mention <strong>overflow</strong>: reversing 1999999999 exceeds int; check before multiplying or use long.</p></div>
+          <pre><code>int reverse(int n) {
+  long rev = 0;                       // long to detect overflow
+  while (n != 0) {
+    rev = rev * 10 + n % 10;
+    n /= 10;
+  }
+  return (rev &lt; Integer.MIN_VALUE || rev &gt; Integer.MAX_VALUE) ? 0 : (int) rev;
+}
+
+int digitSum(int n) {
+  int sum = 0;
+  for (n = Math.abs(n); n &gt; 0; n /= 10) sum += n % 10;
+  return sum;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Compute GCD and LCM (Euclid's algorithm).</h2>
+          <div class="seo-a"><p><strong>Euclid</strong>: gcd(a, b) = gcd(b, a % b) until b is 0 — O(log min(a,b)). Then <code class="inline">lcm = a / gcd * b</code>.</p><p>Divide <em>before</em> multiplying in LCM — <code class="inline">a * b</code> first overflows for large ints.</p></div>
+          <pre><code>int gcd(int a, int b) {
+  while (b != 0) { int t = b; b = a % b; a = t; }
+  return a;
+}
+// recursive: gcd(a, b) = b == 0 ? a : gcd(b, a % b)
+
+long lcm(int a, int b) {
+  return (long) (a / gcd(a, b)) * b;   // divide first: no overflow
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Bit tricks: power-of-two check, count set bits, swap without a temp variable.</h2>
+          <div class="seo-a"><ul><li><strong>Power of two</strong>: <code class="inline">n &gt; 0 &amp;&amp; (n &amp; (n − 1)) == 0</code> — a power of two has exactly one set bit, and n−1 flips it plus everything below.</li><li><strong>Count set bits</strong>: Kernighan's loop — <code class="inline">n &amp;= n − 1</code> clears the lowest set bit; iterations = bit count.</li><li><strong>Swap without temp</strong>: XOR three times (or arithmetic a = a + b...). Party trick — in real code use a temp.</li></ul></div>
+          <pre><code>boolean isPowerOfTwo(int n) { return n &gt; 0 &amp;&amp; (n &amp; (n - 1)) == 0; }
+
+int countSetBits(int n) {
+  int c = 0;
+  while (n != 0) { n &amp;= n - 1; c++; }   // Kernighan
+  return c;
+}
+
+// swap without temp
+a ^= b; b ^= a; a ^= b;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Reverse a singly linked list.</h2>
+          <div class="seo-a"><p>Three pointers walking the list: <code class="inline">prev</code>, <code class="inline">curr</code>, <code class="inline">next</code>. Save next, point curr backwards, advance. O(n) time, O(1) space; <code class="inline">prev</code> is the new head.</p></div>
+          <pre><code>class ListNode { int val; ListNode next; }
+
+ListNode reverse(ListNode head) {
+  ListNode prev = null, curr = head;
+  while (curr != null) {
+    ListNode next = curr.next;   // save
+    curr.next = prev;            // flip
+    prev = curr;                 // advance
+    curr = next;
+  }
+  return prev;                   // new head
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Detect a cycle in a linked list (Floyd's tortoise and hare).</h2>
+          <div class="seo-a"><p>Two pointers: slow moves 1, fast moves 2. If there's a cycle they must meet inside it (fast gains one step per iteration); if fast hits null, no cycle. O(n) time, <strong>O(1) space</strong> — the whole point versus the HashSet approach.</p><p>Follow-up: after meeting, reset one pointer to head; both stepping by 1 meet at the <strong>cycle start</strong>.</p></div>
+          <pre><code>boolean hasCycle(ListNode head) {
+  ListNode slow = head, fast = head;
+  while (fast != null &amp;&amp; fast.next != null) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow == fast) return true;
+  }
+  return false;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find the middle element of a linked list in one pass.</h2>
+          <div class="seo-a"><p>Slow/fast pointers again: fast moves 2, slow moves 1 — when fast reaches the end, slow is at the middle. One pass, no length count. For even lengths this yields the <em>second</em> middle; adjust the loop condition for the first.</p></div>
+          <pre><code>ListNode middle(ListNode head) {
+  ListNode slow = head, fast = head;
+  while (fast != null &amp;&amp; fast.next != null) {
+    slow = slow.next;
+    fast = fast.next.next;
+  }
+  return slow;   // 1-&gt;2-&gt;3-&gt;4-&gt;5 =&gt; 3
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Merge two sorted linked lists.</h2>
+          <div class="seo-a"><p>A <strong>dummy head</strong> + tail pointer: repeatedly attach the smaller front node, advance that list; attach the leftover at the end. O(n+m) time, O(1) space — reusing existing nodes, no copies.</p></div>
+          <pre><code>ListNode merge(ListNode a, ListNode b) {
+  ListNode dummy = new ListNode(), tail = dummy;
+  while (a != null &amp;&amp; b != null) {
+    if (a.val &lt;= b.val) { tail.next = a; a = a.next; }
+    else                { tail.next = b; b = b.next; }
+    tail = tail.next;
+  }
+  tail.next = (a != null) ? a : b;   // leftover
+  return dummy.next;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a queue using two stacks (and a stack using queues).</h2>
+          <div class="seo-a"><p><strong>Queue via two stacks</strong>: push into <code class="inline">in</code>; pop from <code class="inline">out</code>, refilling it by draining <code class="inline">in</code> only when empty. Each element moves at most twice → <strong>amortized O(1)</strong> per operation.</p><p><strong>Stack via one queue</strong>: after enqueueing, rotate the queue (dequeue+enqueue n−1 times) so the newest sits at the front — push O(n), pop O(1).</p></div>
+          <pre><code>class QueueViaStacks {
+  Deque&lt;Integer&gt; in = new ArrayDeque&lt;&gt;(), out = new ArrayDeque&lt;&gt;();
+  void enqueue(int x) { in.push(x); }
+  int dequeue() {
+    if (out.isEmpty())
+      while (!in.isEmpty()) out.push(in.pop());   // reverse once
+    return out.pop();
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Binary search — iterative and recursive.</h2>
+          <div class="seo-a"><p>On a <strong>sorted</strong> array, halve the search space each step: compare the middle, discard the wrong half. O(log n) time; iterative is O(1) space, recursive O(log n) stack.</p><p>The two classic bugs: <code class="inline">mid = lo + (hi − lo) / 2</code> (not <code class="inline">(lo+hi)/2</code> — overflow), and getting <code class="inline">lo &lt;= hi</code> / boundary updates right.</p></div>
+          <pre><code>int binarySearch(int[] a, int target) {
+  int lo = 0, hi = a.length - 1;
+  while (lo &lt;= hi) {
+    int mid = lo + (hi - lo) / 2;      // overflow-safe
+    if (a[mid] == target) return mid;
+    if (a[mid] &lt; target) lo = mid + 1;
+    else hi = mid - 1;
+  }
+  return -1;
+}
+// recursive: search(a, t, lo, mid-1) / (a, t, mid+1, hi)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Tower of Hanoi — explain the approach and complexity.</h2>
+          <div class="seo-a"><p>Move n disks A→C using B: recursively move <strong>n−1 disks A→B</strong>, move the largest disk A→C, then move <strong>n−1 disks B→C</strong>. The recursion IS the answer — three lines.</p><p>Moves: T(n) = 2T(n−1) + 1 = <strong>2ⁿ − 1</strong>, so O(2ⁿ) — the standard example of exponential growth from an innocent recurrence.</p></div>
+          <pre><code>void hanoi(int n, char from, char via, char to) {
+  if (n == 0) return;
+  hanoi(n - 1, from, to, via);            // n-1 out of the way
+  System.out.println(&quot;disk &quot; + n + &quot;: &quot; + from + &quot; -&gt; &quot; + to);
+  hanoi(n - 1, via, from, to);            // n-1 onto the big one
+}
+hanoi(3, 'A', 'B', 'C');   // 7 moves</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="coding";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Docker &amp; Kubernetes Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="23 Docker &amp; Kubernetes interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/docker-kubernetes" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Docker &amp; Kubernetes Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="23 Docker &amp; Kubernetes interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/docker-kubernetes" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Docker &amp; Kubernetes Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Docker and why is it used?","acceptedAnswer":{"@type":"Answer","text":"Docker is a containerization platform that packages an application with its dependencies (libraries, runtime, config) into a portable, isolated unit called a container . Containers share the host OS kernel but run in isolated namespaces. Key benefits: Consistency — \"works on my machine\" becomes \"works everywhere.\" Portability — same image runs on laptop, CI, cloud. Isolation — apps don't interfere with each other. Fast startup — seconds vs minutes for VMs. Efficiency — lightweight compared to full VMs. Docker components: Docker Engine (daemon), Dockerfile (build recipe), Image (read-only template), Container (running instance), Registry (Docker Hub, ECR, GCR)."}},{"@type":"Question","name":"What is the difference between a Docker image and a container?","acceptedAnswer":{"@type":"Answer","text":"Image — a read-only, layered template built from a Dockerfile. Immutable snapshot of the app + dependencies. Stored in a registry (Docker Hub, ECR). Think of it as a class in OOP. Container — a running (or stopped) instance of an image. Writable layer on top of the read-only image layers. Think of it as an object . Relationship: one image → many containers. Stopping a container doesn't delete the image. Deleting a container removes only its writable layer. Image layers are cached and shared — if two images use node:20-alpine as base, that layer is stored once on disk."}},{"@type":"Question","name":"Dockerfile best practices for production images.","acceptedAnswer":{"@type":"Answer","text":"Key practices for smaller, secure, fast-building images: Use specific tags — node:20.11-alpine not node:latest . Prefer Alpine or distroless — smaller attack surface. Order layers for cache — copy package.json before source code so dependency install is cached. Combine RUN commands — fewer layers, smaller image. Use .dockerignore — exclude node_modules , .git , tests. Don't run as root — add USER nonroot . One process per container — use Compose/K8s for multi-service apps. Pin versions — reproducible builds. Health check — HEALTHCHECK instruction. No secrets in Dockerfile — use build args or runtime env vars."}},{"@type":"Question","name":"What are multi-stage Docker builds and why use them?","acceptedAnswer":{"@type":"Answer","text":"A multi-stage Dockerfile uses multiple FROM stages. Earlier stages compile/build; the final stage copies only the artifacts needed to run. Build tools, compilers, and source code are left behind. Benefits: Smaller images — a Go binary image can be 15 MB instead of 800 MB with the full SDK. More secure — no compiler, shell, or source in production image. Faster deploys — less to pull and scan. Use COPY --from=stage-name to pull artifacts from a previous stage. Name stages with AS builder ."}},{"@type":"Question","name":"What is Docker Compose and when do you use it?","acceptedAnswer":{"@type":"Answer","text":"Docker Compose defines and runs multi-container applications from a single docker-compose.yml file. One command ( docker compose up ) starts all services, networks, and volumes together. Use cases: Local development — app + database + Redis + message broker. Integration testing — spin up dependencies in CI. Small deployments — single-host production (not for large scale — use K8s). Key concepts: services (containers), networks (service discovery by name), volumes (persistent data), depends_on (startup order), environment / env_file ."}},{"@type":"Question","name":"Docker containers vs Virtual Machines — key differences.","acceptedAnswer":{"@type":"Answer","text":"Aspect Container VM Isolation Process-level (namespaces, cgroups) Hardware-level (hypervisor) OS Shares host kernel Full guest OS per VM Startup Seconds Minutes Size MBs GBs Density Hundreds per host Tens per host Portability Image runs anywhere with Docker Heavier, OS-specific Containers are not as isolated as VMs — kernel exploits can affect the host. VMs are better for strong multi-tenant isolation. Many production setups use both: VMs as the host, containers inside."}},{"@type":"Question","name":"What is Kubernetes and what problems does it solve?","acceptedAnswer":{"@type":"Answer","text":"Kubernetes (K8s) is an open-source container orchestration platform that automates deploying, scaling, and managing containerized applications across a cluster of machines. Problems it solves: Scheduling — places containers on nodes with available resources. Self-healing — restarts crashed containers, replaces failed nodes. Scaling — horizontal pod autoscaling based on CPU/memory/custom metrics. Service discovery — stable DNS and load balancing for pods. Rolling updates — zero-downtime deployments with rollback. Config management — ConfigMaps and Secrets decoupled from images. Storage orchestration — attach persistent volumes automatically. Architecture: control plane (API server, scheduler, controller manager, etcd) + worker nodes (kubelet, kube-proxy, container runtime)."}},{"@type":"Question","name":"Explain Pods, Deployments, and Services in Kubernetes.","acceptedAnswer":{"@type":"Answer","text":"Pod — the smallest deployable unit. One or more containers sharing network (same IP) and storage volumes. Ephemeral — pods die and are replaced, never \"repaired.\" Deployment — manages a ReplicaSet of identical pods. Declares desired replica count, container image, and update strategy. You almost never create pods directly — always use Deployments (or StatefulSets/DaemonSets). Service — stable network endpoint for a set of pods. Types: ClusterIP (default) — internal only, accessible within cluster. NodePort — exposes on each node's IP at a static port. LoadBalancer — provisions cloud LB (AWS ELB, GCP LB). ExternalName — DNS CNAME to external service. Flow: Deployment → creates ReplicaSet → creates Pods. Service → routes traffic to matching pods via label selector."}},{"@type":"Question","name":"ConfigMaps vs Secrets in Kubernetes.","acceptedAnswer":{"@type":"Answer","text":"Both decouple configuration from container images. Changes don't require rebuilding the image. ConfigMap — non-sensitive config (app settings, feature flags, config files). Stored as plain text in etcd. Mount as env vars, files, or command-line args. Secret — sensitive data (passwords, API keys, TLS certs). Base64-encoded in etcd (not encrypted by default — enable encryption at rest). Same consumption methods as ConfigMaps. Consumption methods: Environment variable — envFrom or valueFrom . Volume mount — files appear in a directory; auto-updates on change (with sync period). Best practice: use external secret managers (Vault, AWS Secrets Manager, Sealed Secrets) for production; K8s Secrets are convenient but not fully secure without additional hardening."}},{"@type":"Question","name":"What are Kubernetes namespaces and how are they used?","acceptedAnswer":{"@type":"Answer","text":"Namespaces provide logical isolation within a single cluster. Resources in different namespaces are separated by name scope. Common uses: Environment separation — dev , staging , prod . Team isolation — team-payments , team-auth . Resource quotas — limit CPU/memory per namespace. RBAC scoping — grant permissions per namespace. Default namespaces: default , kube-system (K8s components), kube-public , kube-node-lease . Not a security boundary by itself — network policies and RBAC are needed for real isolation."}},{"@type":"Question","name":"Ingress vs LoadBalancer Service — when to use each?","acceptedAnswer":{"@type":"Answer","text":"LoadBalancer Service — provisions a cloud load balancer (one per Service). Each external service gets its own LB IP/DNS. Simple but expensive at scale (one LB per service). Ingress — a single entry point (one LB) that routes HTTP/HTTPS traffic to multiple backend Services based on host name and path rules. Requires an Ingress Controller (nginx, Traefik, AWS ALB Ingress Controller). Feature LoadBalancer Ingress Protocols TCP/UDP (L4) HTTP/HTTPS (L7) Routing One service per LB Path/host-based routing TLS termination At cloud LB At Ingress controller Cost One LB per service One LB for many services Typical pattern: Ingress for HTTP APIs + web apps; LoadBalancer for non-HTTP (databases, gRPC with L4, MQTT)."}},{"@type":"Question","name":"Liveness probe vs Readiness probe — what's the difference?","acceptedAnswer":{"@type":"Answer","text":"Both are health checks kubelet runs against containers, but they trigger different actions: Liveness probe — \"Is the container alive?\" If it fails, kubelet restarts the container . Use when the app can deadlock or get stuck but the process is still running. Readiness probe — \"Is the container ready to serve traffic?\" If it fails, the pod is removed from Service endpoints (no traffic) but NOT restarted. Use during startup (waiting for DB connection) or temporary overload. Startup probe (bonus) — disables liveness/readiness until it passes. For slow-starting apps so liveness doesn't kill them during boot. Probe types: httpGet , tcpSocket , exec (run command). Configure initialDelaySeconds , periodSeconds , failureThreshold ."}},{"@type":"Question","name":"How do rolling updates work in Kubernetes?","acceptedAnswer":{"@type":"Answer","text":"When you change a Deployment spec (e.g., new image tag), Kubernetes performs a rolling update — gradually replacing old pods with new ones with zero downtime (if configured correctly). Strategy settings ( spec.strategy.rollingUpdate ): maxSurge — how many extra pods above desired count during update (e.g., 25% or 1). maxUnavailable — how many pods can be down during update (e.g., 0 for zero-downtime). Process: create new ReplicaSet → scale up new pods → wait for readiness → terminate old pods → repeat until complete. Rollback: kubectl rollout undo deployment/api — reverts to previous ReplicaSet. kubectl rollout history shows revisions. Alternatives: Recreate (kill all, then start new — downtime), Blue/Green (switch Service selector), Canary (via Argo Rollouts or service mesh)."}},{"@type":"Question","name":"What is Horizontal Pod Autoscaler (HPA)?","acceptedAnswer":{"@type":"Answer","text":"HPA automatically scales the number of pod replicas in a Deployment (or ReplicaSet, StatefulSet) based on observed metrics. Default metrics: CPU and memory utilization. With metrics-server installed, HPA compares current usage against targets. Custom metrics: requests per second (via Prometheus adapter), queue depth, any metric from monitoring system. Key fields: minReplicas / maxReplicas — scaling bounds. targetCPUUtilizationPercentage — e.g., 70% means scale up when average CPU across pods exceeds 70% of requested CPU. Requirements: resource requests must be set on containers (HPA needs them to calculate utilization). Install metrics-server in the cluster. Related: VPA (Vertical — adjusts requests/limits), Cluster Autoscaler (adds/removes nodes)."}},{"@type":"Question","name":"Resource requests and limits in Kubernetes.","acceptedAnswer":{"@type":"Answer","text":"Every container should define requests and limits for CPU and memory: Request — guaranteed resources reserved for the container. Scheduler uses requests to place pods on nodes with enough capacity. Limit — maximum resources the container can use. Exceeding memory limit → OOMKilled. Exceeding CPU limit → throttled (not killed). QoS classes (affects eviction priority): Guaranteed — requests = limits for all containers. Last to be evicted. Burstable — requests &lt; limits. Default for most apps. BestEffort — no requests/limits. First evicted under pressure. CPU: 500m = 0.5 core. Memory: 256Mi , 1Gi ."}},{"@type":"Question","name":"Container networking basics in Docker and Kubernetes.","acceptedAnswer":{"@type":"Answer","text":"Docker networking: bridge (default) — containers on same host communicate via virtual bridge. Port mapping ( -p 8080:80 ) for external access. host — container uses host network directly (no isolation). overlay — multi-host networking (Docker Swarm). none — no networking. Kubernetes networking model: Every pod gets a unique IP (flat network — no NAT between pods). All pods can communicate without NAT (by default). Agents on each node (kubelet + CNI plugin) configure networking. CNI plugins (Container Network Interface): Calico, Flannel, Cilium, Weave — implement pod networking, IP allocation, and optionally network policies. Network Policies — firewall rules for pods (allow/deny traffic by label, namespace, port). Default: all traffic allowed. Requires a CNI that supports policies (Calico, Cilium)."}},{"@type":"Question","name":"Why use Kubernetes for microservices?","acceptedAnswer":{"@type":"Answer","text":"Microservices introduce operational complexity — many small services to deploy, scale, monitor, and network. Kubernetes addresses this: Independent scaling — scale the payment service to 10 replicas without touching the auth service. Independent deployment — deploy one service without redeploying the entire monolith. Service discovery — services find each other by DNS, no hardcoded IPs. Resilience — self-healing restarts, health checks, pod disruption budgets. Resource efficiency — bin-pack many services onto shared nodes. Declarative config — GitOps: entire infra state in version-controlled YAML. Portability — same manifests run on AWS EKS, GCP GKE, Azure AKS, on-prem. Trade-offs: steep learning curve, operational overhead, overkill for small teams (&lt;5 services). Alternatives: Docker Compose (dev), managed PaaS (Heroku, Cloud Run), ECS/Fargate."}},{"@type":"Question","name":"OpenShift basics — Routes and Builds.","acceptedAnswer":{"@type":"Answer","text":"OpenShift is Red Hat's enterprise Kubernetes distribution with additional security, developer tools, and integrated CI/CD. Routes — OpenShift's equivalent of Ingress. Exposes a Service externally with a hostname under the cluster domain (e.g., myapp.apps.cluster.example.com ). Handles edge TLS termination. Simpler than configuring Ingress + cert-manager for basic cases. oc expose svc/myapp --hostname=myapp.apps.cluster.example.com Builds — built-in CI for creating container images from source: Source-to-Image (S2I) — push source code, OpenShift builds the image using a builder image (no Dockerfile needed). Docker build — build from Dockerfile in the repo. Pipeline build — Jenkins pipeline integration. Other OpenShift extras: Security Context Constraints (SCC), Projects (namespaces with extra isolation), built-in ImageStreams , oc CLI (wraps kubectl)."}},{"@type":"Question","name":"How does Jenkins CI/CD deploy to Kubernetes?","acceptedAnswer":{"@type":"Answer","text":"Typical pipeline flow: Checkout — clone source from Git. Build & Test — compile, run unit/integration tests. Build image — docker build or Kaniko (no Docker daemon needed). Push image — tag with build number + git SHA, push to registry (ECR, GCR, Harbor). Deploy to K8s — update manifest image tag and apply, or use Helm upgrade. Verify — wait for rollout, run smoke tests. Deployment methods: kubectl apply — sed/envsubst to replace image tag in YAML. Helm upgrade — helm upgrade --install --set image.tag=$BUILD_NUMBER . ArgoCD / Flux — GitOps: Jenkins commits manifest change, ArgoCD syncs. Kubernetes plugin — dynamic Jenkins agents as K8s pods."}},{"@type":"Question","name":"How does persistent storage work in Kubernetes?","acceptedAnswer":{"@type":"Answer","text":"Containers are ephemeral — data in a container filesystem is lost when the pod dies. For databases, file uploads, and logs, use Persistent Volumes . Key resources: PV (PersistentVolume) — cluster-level storage resource (NFS, cloud disk, local SSD). Provisioned by admin or dynamically via StorageClass. PVC (PersistentVolumeClaim) — pod's request for storage (size, access mode). Binds to a matching PV. StorageClass — defines provisioner (e.g., gp3 on AWS EBS, standard on GCE). Enables dynamic provisioning. Access modes: ReadWriteOnce (one node), ReadOnlyMany , ReadWriteMany (NFS, EFS). Mount in pod via volumes and volumeMounts . PVC is referenced by name."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Docker &amp; Kubernetes interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Docker &amp; Kubernetes Interview Questions and Answers</h1>
+      <p>23 hand-picked Docker &amp; Kubernetes interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Docker and why is it used?</h2>
+          <div class="seo-a"><p>Docker is a <strong>containerization platform</strong> that packages an application with its dependencies (libraries, runtime, config) into a portable, isolated unit called a <strong>container</strong>. Containers share the host OS kernel but run in isolated namespaces.</p><p>Key benefits:</p><ul><li><strong>Consistency</strong> — "works on my machine" becomes "works everywhere."</li><li><strong>Portability</strong> — same image runs on laptop, CI, cloud.</li><li><strong>Isolation</strong> — apps don't interfere with each other.</li><li><strong>Fast startup</strong> — seconds vs minutes for VMs.</li><li><strong>Efficiency</strong> — lightweight compared to full VMs.</li></ul><p>Docker components: <strong>Docker Engine</strong> (daemon), <strong>Dockerfile</strong> (build recipe), <strong>Image</strong> (read-only template), <strong>Container</strong> (running instance), <strong>Registry</strong> (Docker Hub, ECR, GCR).</p></div>
+          <pre><code>docker run -d -p 8080:80 --name my-nginx nginx:alpine
+docker ps
+docker logs my-nginx</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between a Docker image and a container?</h2>
+          <div class="seo-a"><p><strong>Image</strong> — a read-only, layered template built from a Dockerfile. Immutable snapshot of the app + dependencies. Stored in a registry (Docker Hub, ECR). Think of it as a <em>class</em> in OOP.</p><p><strong>Container</strong> — a running (or stopped) instance of an image. Writable layer on top of the read-only image layers. Think of it as an <em>object</em>.</p><p>Relationship: one image → many containers. Stopping a container doesn't delete the image. Deleting a container removes only its writable layer.</p><p>Image layers are cached and shared — if two images use <code class="inline">node:20-alpine</code> as base, that layer is stored once on disk.</p></div>
+          <pre><code>docker build -t myapp:1.0 .
+docker run -d --name app1 myapp:1.0
+docker run -d --name app2 myapp:1.0
+docker images          # shows myapp:1.0 once
+docker ps              # shows app1 and app2</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Dockerfile best practices for production images.</h2>
+          <div class="seo-a"><p>Key practices for smaller, secure, fast-building images:</p><ul><li><strong>Use specific tags</strong> — <code class="inline">node:20.11-alpine</code> not <code class="inline">node:latest</code>.</li><li><strong>Prefer Alpine or distroless</strong> — smaller attack surface.</li><li><strong>Order layers for cache</strong> — copy <code class="inline">package.json</code> before source code so dependency install is cached.</li><li><strong>Combine RUN commands</strong> — fewer layers, smaller image.</li><li><strong>Use .dockerignore</strong> — exclude <code class="inline">node_modules</code>, <code class="inline">.git</code>, tests.</li><li><strong>Don't run as root</strong> — add <code class="inline">USER nonroot</code>.</li><li><strong>One process per container</strong> — use Compose/K8s for multi-service apps.</li><li><strong>Pin versions</strong> — reproducible builds.</li><li><strong>Health check</strong> — <code class="inline">HEALTHCHECK</code> instruction.</li><li><strong>No secrets in Dockerfile</strong> — use build args or runtime env vars.</li></ul></div>
+          <pre><code>FROM node:20.11-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+
+FROM node:20.11-alpine
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+USER node
+EXPOSE 3000
+HEALTHCHECK CMD wget -qO- http://localhost:3000/health || exit 1
+CMD [&quot;node&quot;, &quot;server.js&quot;]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are multi-stage Docker builds and why use them?</h2>
+          <div class="seo-a"><p>A multi-stage Dockerfile uses multiple <code class="inline">FROM</code> stages. Earlier stages compile/build; the final stage copies only the artifacts needed to run. Build tools, compilers, and source code are left behind.</p><p>Benefits:</p><ul><li><strong>Smaller images</strong> — a Go binary image can be 15 MB instead of 800 MB with the full SDK.</li><li><strong>More secure</strong> — no compiler, shell, or source in production image.</li><li><strong>Faster deploys</strong> — less to pull and scan.</li></ul><p>Use <code class="inline">COPY --from=stage-name</code> to pull artifacts from a previous stage. Name stages with <code class="inline">AS builder</code>.</p></div>
+          <pre><code># Build stage
+FROM golang:1.22-alpine AS builder
+WORKDIR /src
+COPY . .
+RUN CGO_ENABLED=0 go build -o /app .
+
+# Runtime stage — only the binary
+FROM gcr.io/distroless/static-debian12
+COPY --from=builder /app /app
+ENTRYPOINT [&quot;/app&quot;]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Docker Compose and when do you use it?</h2>
+          <div class="seo-a"><p>Docker Compose defines and runs <strong>multi-container applications</strong> from a single <code class="inline">docker-compose.yml</code> file. One command (<code class="inline">docker compose up</code>) starts all services, networks, and volumes together.</p><p>Use cases:</p><ul><li><strong>Local development</strong> — app + database + Redis + message broker.</li><li><strong>Integration testing</strong> — spin up dependencies in CI.</li><li><strong>Small deployments</strong> — single-host production (not for large scale — use K8s).</li></ul><p>Key concepts: <strong>services</strong> (containers), <strong>networks</strong> (service discovery by name), <strong>volumes</strong> (persistent data), <strong>depends_on</strong> (startup order), <strong>environment</strong> / <strong>env_file</strong>.</p></div>
+          <pre><code>services:
+  api:
+    build: .
+    ports: [&quot;8080:8080&quot;]
+    environment:
+      DB_HOST: db
+    depends_on: [db]
+  db:
+    image: postgres:16-alpine
+    volumes: [pgdata:/var/lib/postgresql/data]
+volumes:
+  pgdata:</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Docker containers vs Virtual Machines — key differences.</h2>
+          <div class="seo-a"><table><tr><th>Aspect</th><th>Container</th><th>VM</th></tr><tr><td><strong>Isolation</strong></td><td>Process-level (namespaces, cgroups)</td><td>Hardware-level (hypervisor)</td></tr><tr><td><strong>OS</strong></td><td>Shares host kernel</td><td>Full guest OS per VM</td></tr><tr><td><strong>Startup</strong></td><td>Seconds</td><td>Minutes</td></tr><tr><td><strong>Size</strong></td><td>MBs</td><td>GBs</td></tr><tr><td><strong>Density</strong></td><td>Hundreds per host</td><td>Tens per host</td></tr><tr><td><strong>Portability</strong></td><td>Image runs anywhere with Docker</td><td>Heavier, OS-specific</td></tr></table><p>Containers are <strong>not</strong> as isolated as VMs — kernel exploits can affect the host. VMs are better for strong multi-tenant isolation. Many production setups use both: VMs as the host, containers inside.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is Kubernetes and what problems does it solve?</h2>
+          <div class="seo-a"><p>Kubernetes (K8s) is an <strong>open-source container orchestration platform</strong> that automates deploying, scaling, and managing containerized applications across a cluster of machines.</p><p>Problems it solves:</p><ul><li><strong>Scheduling</strong> — places containers on nodes with available resources.</li><li><strong>Self-healing</strong> — restarts crashed containers, replaces failed nodes.</li><li><strong>Scaling</strong> — horizontal pod autoscaling based on CPU/memory/custom metrics.</li><li><strong>Service discovery</strong> — stable DNS and load balancing for pods.</li><li><strong>Rolling updates</strong> — zero-downtime deployments with rollback.</li><li><strong>Config management</strong> — ConfigMaps and Secrets decoupled from images.</li><li><strong>Storage orchestration</strong> — attach persistent volumes automatically.</li></ul><p>Architecture: <strong>control plane</strong> (API server, scheduler, controller manager, etcd) + <strong>worker nodes</strong> (kubelet, kube-proxy, container runtime).</p></div>
+          <pre><code>kubectl get nodes
+kubectl get pods -A
+kubectl cluster-info</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain Pods, Deployments, and Services in Kubernetes.</h2>
+          <div class="seo-a"><p><strong>Pod</strong> — the smallest deployable unit. One or more containers sharing network (same IP) and storage volumes. Ephemeral — pods die and are replaced, never "repaired."</p><p><strong>Deployment</strong> — manages a <em>ReplicaSet</em> of identical pods. Declares desired replica count, container image, and update strategy. You almost never create pods directly — always use Deployments (or StatefulSets/DaemonSets).</p><p><strong>Service</strong> — stable network endpoint for a set of pods. Types:</p><ul><li><strong>ClusterIP</strong> (default) — internal only, accessible within cluster.</li><li><strong>NodePort</strong> — exposes on each node's IP at a static port.</li><li><strong>LoadBalancer</strong> — provisions cloud LB (AWS ELB, GCP LB).</li><li><strong>ExternalName</strong> — DNS CNAME to external service.</li></ul><p>Flow: Deployment → creates ReplicaSet → creates Pods. Service → routes traffic to matching pods via label selector.</p></div>
+          <pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 3
+  selector:
+    matchLabels: { app: api }
+  template:
+    metadata:
+      labels: { app: api }
+    spec:
+      containers:
+      - name: api
+        image: myregistry/api:1.2.0
+        ports: [{ containerPort: 8080 }]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-svc
+spec:
+  selector: { app: api }
+  ports: [{ port: 80, targetPort: 8080 }]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>ConfigMaps vs Secrets in Kubernetes.</h2>
+          <div class="seo-a"><p>Both decouple configuration from container images. Changes don't require rebuilding the image.</p><p><strong>ConfigMap</strong> — non-sensitive config (app settings, feature flags, config files). Stored as plain text in etcd. Mount as env vars, files, or command-line args.</p><p><strong>Secret</strong> — sensitive data (passwords, API keys, TLS certs). Base64-encoded in etcd (not encrypted by default — enable encryption at rest). Same consumption methods as ConfigMaps.</p><p>Consumption methods:</p><ul><li><strong>Environment variable</strong> — <code class="inline">envFrom</code> or <code class="inline">valueFrom</code>.</li><li><strong>Volume mount</strong> — files appear in a directory; auto-updates on change (with sync period).</li></ul><p>Best practice: use external secret managers (Vault, AWS Secrets Manager, Sealed Secrets) for production; K8s Secrets are convenient but not fully secure without additional hardening.</p></div>
+          <pre><code>apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  LOG_LEVEL: debug
+  app.properties: |
+    server.port=8080
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-credentials
+type: Opaque
+data:
+  password: cGFzc3dvcmQxMjM=  # base64
+---
+# In pod spec:
+env:
+- name: DB_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: db-credentials
+      key: password</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Kubernetes namespaces and how are they used?</h2>
+          <div class="seo-a"><p>Namespaces provide <strong>logical isolation</strong> within a single cluster. Resources in different namespaces are separated by name scope.</p><p>Common uses:</p><ul><li><strong>Environment separation</strong> — <code class="inline">dev</code>, <code class="inline">staging</code>, <code class="inline">prod</code>.</li><li><strong>Team isolation</strong> — <code class="inline">team-payments</code>, <code class="inline">team-auth</code>.</li><li><strong>Resource quotas</strong> — limit CPU/memory per namespace.</li><li><strong>RBAC scoping</strong> — grant permissions per namespace.</li></ul><p>Default namespaces: <code class="inline">default</code>, <code class="inline">kube-system</code> (K8s components), <code class="inline">kube-public</code>, <code class="inline">kube-node-lease</code>.</p><p>Not a security boundary by itself — network policies and RBAC are needed for real isolation.</p></div>
+          <pre><code>kubectl create namespace staging
+kubectl apply -f deployment.yaml -n staging
+kubectl get pods -n staging
+kubectl config set-context --current --namespace=staging</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Ingress vs LoadBalancer Service — when to use each?</h2>
+          <div class="seo-a"><p><strong>LoadBalancer Service</strong> — provisions a cloud load balancer (one per Service). Each external service gets its own LB IP/DNS. Simple but expensive at scale (one LB per service).</p><p><strong>Ingress</strong> — a single entry point (one LB) that routes HTTP/HTTPS traffic to multiple backend Services based on host name and path rules. Requires an <strong>Ingress Controller</strong> (nginx, Traefik, AWS ALB Ingress Controller).</p><table><tr><th>Feature</th><th>LoadBalancer</th><th>Ingress</th></tr><tr><td>Protocols</td><td>TCP/UDP (L4)</td><td>HTTP/HTTPS (L7)</td></tr><tr><td>Routing</td><td>One service per LB</td><td>Path/host-based routing</td></tr><tr><td>TLS termination</td><td>At cloud LB</td><td>At Ingress controller</td></tr><tr><td>Cost</td><td>One LB per service</td><td>One LB for many services</td></tr></table><p>Typical pattern: Ingress for HTTP APIs + web apps; LoadBalancer for non-HTTP (databases, gRPC with L4, MQTT).</p></div>
+          <pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: api.example.com
+    http:
+      paths:
+      - path: /v1
+        pathType: Prefix
+        backend:
+          service:
+            name: api-svc
+            port: { number: 80 }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Liveness probe vs Readiness probe — what's the difference?</h2>
+          <div class="seo-a"><p>Both are health checks kubelet runs against containers, but they trigger different actions:</p><p><strong>Liveness probe</strong> — "Is the container alive?" If it fails, kubelet <strong>restarts the container</strong>. Use when the app can deadlock or get stuck but the process is still running.</p><p><strong>Readiness probe</strong> — "Is the container ready to serve traffic?" If it fails, the pod is <strong>removed from Service endpoints</strong> (no traffic) but NOT restarted. Use during startup (waiting for DB connection) or temporary overload.</p><p><strong>Startup probe</strong> (bonus) — disables liveness/readiness until it passes. For slow-starting apps so liveness doesn't kill them during boot.</p><p>Probe types: <code class="inline">httpGet</code>, <code class="inline">tcpSocket</code>, <code class="inline">exec</code> (run command). Configure <code class="inline">initialDelaySeconds</code>, <code class="inline">periodSeconds</code>, <code class="inline">failureThreshold</code>.</p></div>
+          <pre><code>livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 8080
+  initialDelaySeconds: 15
+  periodSeconds: 10
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 5</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do rolling updates work in Kubernetes?</h2>
+          <div class="seo-a"><p>When you change a Deployment spec (e.g., new image tag), Kubernetes performs a <strong>rolling update</strong> — gradually replacing old pods with new ones with zero downtime (if configured correctly).</p><p>Strategy settings (<code class="inline">spec.strategy.rollingUpdate</code>):</p><ul><li><strong>maxSurge</strong> — how many extra pods above desired count during update (e.g., 25% or 1).</li><li><strong>maxUnavailable</strong> — how many pods can be down during update (e.g., 0 for zero-downtime).</li></ul><p>Process: create new ReplicaSet → scale up new pods → wait for readiness → terminate old pods → repeat until complete.</p><p><strong>Rollback:</strong> <code class="inline">kubectl rollout undo deployment/api</code> — reverts to previous ReplicaSet. <code class="inline">kubectl rollout history</code> shows revisions.</p><p>Alternatives: <strong>Recreate</strong> (kill all, then start new — downtime), <strong>Blue/Green</strong> (switch Service selector), <strong>Canary</strong> (via Argo Rollouts or service mesh).</p></div>
+          <pre><code>spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    spec:
+      containers:
+      - name: api
+        image: myregistry/api:2.0.0  # change triggers rollout
+
+# Monitor:
+kubectl rollout status deployment/api
+kubectl rollout undo deployment/api</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Horizontal Pod Autoscaler (HPA)?</h2>
+          <div class="seo-a"><p>HPA automatically scales the number of pod replicas in a Deployment (or ReplicaSet, StatefulSet) based on observed metrics.</p><p>Default metrics: <strong>CPU</strong> and <strong>memory</strong> utilization. With metrics-server installed, HPA compares current usage against targets.</p><p>Custom metrics: requests per second (via Prometheus adapter), queue depth, any metric from monitoring system.</p><p>Key fields:</p><ul><li><strong>minReplicas / maxReplicas</strong> — scaling bounds.</li><li><strong>targetCPUUtilizationPercentage</strong> — e.g., 70% means scale up when average CPU across pods exceeds 70% of requested CPU.</li></ul><p>Requirements: resource <strong>requests</strong> must be set on containers (HPA needs them to calculate utilization). Install <strong>metrics-server</strong> in the cluster.</p><p>Related: <strong>VPA</strong> (Vertical — adjusts requests/limits), <strong>Cluster Autoscaler</strong> (adds/removes nodes).</p></div>
+          <pre><code>apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Resource requests and limits in Kubernetes.</h2>
+          <div class="seo-a"><p>Every container should define <strong>requests</strong> and <strong>limits</strong> for CPU and memory:</p><p><strong>Request</strong> — guaranteed resources reserved for the container. Scheduler uses requests to place pods on nodes with enough capacity.</p><p><strong>Limit</strong> — maximum resources the container can use. Exceeding memory limit → OOMKilled. Exceeding CPU limit → throttled (not killed).</p><p>QoS classes (affects eviction priority):</p><ul><li><strong>Guaranteed</strong> — requests = limits for all containers. Last to be evicted.</li><li><strong>Burstable</strong> — requests &lt; limits. Default for most apps.</li><li><strong>BestEffort</strong> — no requests/limits. First evicted under pressure.</li></ul><p>CPU: <code class="inline">500m</code> = 0.5 core. Memory: <code class="inline">256Mi</code>, <code class="inline">1Gi</code>.</p></div>
+          <pre><code>resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Container networking basics in Docker and Kubernetes.</h2>
+          <div class="seo-a"><p><strong>Docker networking:</strong></p><ul><li><strong>bridge</strong> (default) — containers on same host communicate via virtual bridge. Port mapping (<code class="inline">-p 8080:80</code>) for external access.</li><li><strong>host</strong> — container uses host network directly (no isolation).</li><li><strong>overlay</strong> — multi-host networking (Docker Swarm).</li><li><strong>none</strong> — no networking.</li></ul><p><strong>Kubernetes networking model:</strong></p><ul><li>Every pod gets a unique IP (flat network — no NAT between pods).</li><li>All pods can communicate without NAT (by default).</li><li>Agents on each node (kubelet + CNI plugin) configure networking.</li></ul><p><strong>CNI plugins</strong> (Container Network Interface): Calico, Flannel, Cilium, Weave — implement pod networking, IP allocation, and optionally network policies.</p><p><strong>Network Policies</strong> — firewall rules for pods (allow/deny traffic by label, namespace, port). Default: all traffic allowed. Requires a CNI that supports policies (Calico, Cilium).</p></div>
+          <pre><code># NetworkPolicy: only allow frontend → api on port 8080
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: api-allow-frontend
+spec:
+  podSelector:
+    matchLabels: { app: api }
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels: { app: frontend }
+    ports:
+    - port: 8080</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why use Kubernetes for microservices?</h2>
+          <div class="seo-a"><p>Microservices introduce operational complexity — many small services to deploy, scale, monitor, and network. Kubernetes addresses this:</p><ul><li><strong>Independent scaling</strong> — scale the payment service to 10 replicas without touching the auth service.</li><li><strong>Independent deployment</strong> — deploy one service without redeploying the entire monolith.</li><li><strong>Service discovery</strong> — services find each other by DNS, no hardcoded IPs.</li><li><strong>Resilience</strong> — self-healing restarts, health checks, pod disruption budgets.</li><li><strong>Resource efficiency</strong> — bin-pack many services onto shared nodes.</li><li><strong>Declarative config</strong> — GitOps: entire infra state in version-controlled YAML.</li><li><strong>Portability</strong> — same manifests run on AWS EKS, GCP GKE, Azure AKS, on-prem.</li></ul><p>Trade-offs: steep learning curve, operational overhead, overkill for small teams (&lt;5 services). Alternatives: Docker Compose (dev), managed PaaS (Heroku, Cloud Run), ECS/Fargate.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>OpenShift basics — Routes and Builds.</h2>
+          <div class="seo-a"><p>OpenShift is Red Hat's <strong>enterprise Kubernetes distribution</strong> with additional security, developer tools, and integrated CI/CD.</p><p><strong>Routes</strong> — OpenShift's equivalent of Ingress. Exposes a Service externally with a hostname under the cluster domain (e.g., <code class="inline">myapp.apps.cluster.example.com</code>). Handles edge TLS termination. Simpler than configuring Ingress + cert-manager for basic cases.</p><pre><code>oc expose svc/myapp --hostname=myapp.apps.cluster.example.com</code></pre><p><strong>Builds</strong> — built-in CI for creating container images from source:</p><ul><li><strong>Source-to-Image (S2I)</strong> — push source code, OpenShift builds the image using a builder image (no Dockerfile needed).</li><li><strong>Docker build</strong> — build from Dockerfile in the repo.</li><li><strong>Pipeline build</strong> — Jenkins pipeline integration.</li></ul><p>Other OpenShift extras: <strong>Security Context Constraints</strong> (SCC), <strong>Projects</strong> (namespaces with extra isolation), built-in <strong>ImageStreams</strong>, <strong>oc</strong> CLI (wraps kubectl).</p></div>
+          <pre><code>apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: myapp
+spec:
+  to:
+    kind: Service
+    name: myapp-svc
+  port:
+    targetPort: 8080
+  tls:
+    termination: edge</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Jenkins CI/CD deploy to Kubernetes?</h2>
+          <div class="seo-a"><p>Typical pipeline flow:</p><ol><li><strong>Checkout</strong> — clone source from Git.</li><li><strong>Build & Test</strong> — compile, run unit/integration tests.</li><li><strong>Build image</strong> — <code class="inline">docker build</code> or Kaniko (no Docker daemon needed).</li><li><strong>Push image</strong> — tag with build number + git SHA, push to registry (ECR, GCR, Harbor).</li><li><strong>Deploy to K8s</strong> — update manifest image tag and apply, or use Helm upgrade.</li><li><strong>Verify</strong> — wait for rollout, run smoke tests.</li></ol><p>Deployment methods:</p><ul><li><strong>kubectl apply</strong> — sed/envsubst to replace image tag in YAML.</li><li><strong>Helm upgrade</strong> — <code class="inline">helm upgrade --install --set image.tag=$BUILD_NUMBER</code>.</li><li><strong>ArgoCD / Flux</strong> — GitOps: Jenkins commits manifest change, ArgoCD syncs.</li><li><strong>Kubernetes plugin</strong> — dynamic Jenkins agents as K8s pods.</li></ul></div>
+          <pre><code>pipeline {
+  agent any
+  environment {
+    IMAGE = &quot;myregistry/api:${BUILD_NUMBER}&quot;
+  }
+  stages {
+    stage('Build') { steps { sh 'mvn package' } }
+    stage('Docker') {
+      steps {
+        sh 'docker build -t $IMAGE .'
+        sh 'docker push $IMAGE'
+      }
+    }
+    stage('Deploy') {
+      steps {
+        sh 'kubectl set image deployment/api api=$IMAGE -n production'
+        sh 'kubectl rollout status deployment/api -n production'
+      }
+    }
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does persistent storage work in Kubernetes?</h2>
+          <div class="seo-a"><p>Containers are ephemeral — data in a container filesystem is lost when the pod dies. For databases, file uploads, and logs, use <strong>Persistent Volumes</strong>.</p><p>Key resources:</p><ul><li><strong>PV (PersistentVolume)</strong> — cluster-level storage resource (NFS, cloud disk, local SSD). Provisioned by admin or dynamically via StorageClass.</li><li><strong>PVC (PersistentVolumeClaim)</strong> — pod's request for storage (size, access mode). Binds to a matching PV.</li><li><strong>StorageClass</strong> — defines provisioner (e.g., <code class="inline">gp3</code> on AWS EBS, <code class="inline">standard</code> on GCE). Enables dynamic provisioning.</li></ul><p>Access modes: <strong>ReadWriteOnce</strong> (one node), <strong>ReadOnlyMany</strong>, <strong>ReadWriteMany</strong> (NFS, EFS).</p><p>Mount in pod via <code class="inline">volumes</code> and <code class="inline">volumeMounts</code>. PVC is referenced by name.</p></div>
+          <pre><code>apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pg-data
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: gp3
+  resources:
+    requests:
+      storage: 20Gi
+---
+# In pod spec:
+volumes:
+- name: data
+  persistentVolumeClaim:
+    claimName: pg-data
+containers:
+- name: postgres
+  volumeMounts:
+  - name: data
+    mountPath: /var/lib/postgresql/data</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you troubleshoot a failing pod in Kubernetes?</h2>
+          <div class="seo-a"><p>Systematic debugging approach:</p><ol><li><strong>Check pod status</strong> — <code class="inline">kubectl get pods</code>. Look for CrashLoopBackOff, ImagePullBackOff, Pending, OOMKilled.</li><li><strong>Describe pod</strong> — <code class="inline">kubectl describe pod &lt;name&gt;</code>. Events section shows scheduling failures, probe failures, volume mount errors.</li><li><strong>Check logs</strong> — <code class="inline">kubectl logs &lt;pod&gt;</code> or <code class="inline">kubectl logs &lt;pod&gt; --previous</code> for crashed container.</li><li><strong>Exec into container</strong> — <code class="inline">kubectl exec -it &lt;pod&gt; -- /bin/sh</code> to inspect filesystem, test connectivity.</li><li><strong>Check events</strong> — <code class="inline">kubectl get events --sort-by=.lastTimestamp</code>.</li><li><strong>Port-forward</strong> — <code class="inline">kubectl port-forward pod/&lt;name&gt; 8080:8080</code> for local testing.</li></ol><p>Common issues: wrong image tag (ImagePullBackOff), missing ConfigMap/Secret, insufficient resources (Pending), failed liveness probe (restart loop), app error (CrashLoopBackOff), OOM (increase memory limit).</p></div>
+          <pre><code>kubectl get pods -n production
+kubectl describe pod api-7d8f9-xk2lp -n production
+kubectl logs api-7d8f9-xk2lp -n production --previous
+kubectl exec -it api-7d8f9-xk2lp -n production -- sh
+kubectl top pods -n production  # resource usage</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Docker volumes and persistent data.</h2>
+          <div class="seo-a"><p>Container filesystems are ephemeral. Docker provides mechanisms for data that survives container restarts:</p><p><strong>Volumes</strong> — managed by Docker, stored on host at <code class="inline">/var/lib/docker/volumes/</code>. Best choice for persistent data. Can be shared between containers. Work with volume drivers for remote storage (NFS, cloud).</p><p><strong>Bind mounts</strong> — map a host directory into the container. Good for dev (live code reload) but tied to host path.</p><p><strong>tmpfs mounts</strong> — stored in host memory. Fast, not persisted. For secrets or temp data.</p><p>In Compose: named volumes persist across <code class="inline">docker compose down</code> (unless <code class="inline">-v</code> flag). Bind mounts for source code in dev.</p></div>
+          <pre><code># Named volume
+docker run -d -v pgdata:/var/lib/postgresql/data postgres:16
+
+# Bind mount (dev)
+docker run -v $(pwd)/src:/app/src myapp
+
+# Compose
+volumes:
+  pgdata:  # named volume, managed by Docker</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Blue-green vs canary deployment? And how does environment promotion (dev → QA → prod) work?</h2>
+          <div class="seo-a"><ul><li><strong>Blue-green</strong> — two full environments; deploy to the idle one (green), test it, then <strong>switch all traffic at once</strong> (LB/router flip). Instant rollback = flip back. Cost: double infrastructure; watch DB migrations that must serve both versions.</li><li><strong>Canary</strong> — release to a <strong>small slice</strong> (5% of pods/users), watch error rates and latency, then ramp 25→50→100%. Limits blast radius; needs good metrics and often sticky routing.</li><li><strong>Rolling</strong> (K8s default) — replace pods gradually; simplest, but no traffic-percentage control.</li></ul><p><strong>Promotion</strong>: build the image <strong>once</strong>, tag it, and promote the <em>same immutable artifact</em> through dev → QA → prod; only externalized config (ConfigMaps/Secrets/profiles) differs per environment. Rebuilding per environment invalidates all prior testing.</p></div>
+          <pre><code># canary with plain k8s: two deployments, one service selector
+# app-stable: replicas 9,  labels app=api
+# app-canary: replicas 1,  labels app=api, track=canary  -&gt; ~10% traffic
+# service selects app=api (both) — promote by scaling canary up, stable down</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="docker-kubernetes";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Python Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="35 Python interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/python" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Python Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="35 Python interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/python" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Python Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Python and what are its key features?","acceptedAnswer":{"@type":"Answer","text":"Python is a high-level, interpreted, dynamically typed language known for readability and a large standard library. Key features: Interpreted — runs via the interpreter (CPython is the reference); no separate compile step for development. Dynamically typed — types are checked at runtime, not declared upfront. Multi-paradigm — supports OOP, functional (map/filter/lambdas), and procedural styles. Batteries included — rich stdlib for files, HTTP, JSON, dates, threading, asyncio, etc. Strong ecosystem — Django, FastAPI, Flask, pandas, NumPy, pytest, Celery."}},{"@type":"Question","name":"List vs tuple — when do you use each?","acceptedAnswer":{"@type":"Answer","text":"List — mutable, ordered sequence. Use when you need to add, remove, or change elements. Tuple — immutable, ordered sequence. Use for fixed collections (coordinates, DB rows, dict keys), as return values, and when you want hashability (if all elements are hashable). Both preserve insertion order (since Python 3.7+ for dicts; lists/tuples always did)."}},{"@type":"Question","name":"Dictionary vs set — key differences.","acceptedAnswer":{"@type":"Answer","text":"dict — key-value mappings; keys must be hashable and unique; O(1) average lookup by key. Use for records, caches, counts (with Counter ). set — unordered collection of unique hashable elements; O(1) average membership test. Use for deduplication, union/intersection, fast 'in' checks."}},{"@type":"Question","name":"What is mutable vs immutable in Python?","acceptedAnswer":{"@type":"Answer","text":"Immutable — object cannot change after creation: int , float , str , tuple , frozenset , bytes . Operations create new objects. Mutable — object can be modified in place: list , dict , set , custom objects (by default). This matters for default arguments, copying, and thread safety."}},{"@type":"Question","name":"== vs is — what's the difference?","acceptedAnswer":{"@type":"Answer","text":"== compares values (calls __eq__ ). is compares identity — whether two names refer to the same object in memory. Use is only for singletons like None , True , False . Never use is for strings or numbers (small-int caching can fool you)."}},{"@type":"Question","name":"Explain *args and **kwargs.","acceptedAnswer":{"@type":"Answer","text":"*args collects extra positional arguments into a tuple. **kwargs collects extra keyword arguments into a dict. Order in a signature: positional params → *args → keyword-only params → **kwargs . Also used to unpack when calling: func(*items) , func(**options) ."}},{"@type":"Question","name":"What is a list comprehension and when would you use it?","acceptedAnswer":{"@type":"Answer","text":"A concise way to build a list from an iterable with optional filtering: [expr for item in iterable if condition] . Also exists for dicts ( {k: v for ...} ) and sets. Prefer comprehensions over manual append loops for simple transforms — they're faster and more readable. For large data or lazy evaluation, use a generator expression : (expr for item in iterable) ."}},{"@type":"Question","name":"lambda, map, and filter — how do they work?","acceptedAnswer":{"@type":"Answer","text":"lambda — anonymous one-expression function: lambda x: x * 2 . map(fn, iterable) — applies fn to each item; returns an iterator. filter(fn, iterable) — keeps items where fn is truthy. In modern Python, list comprehensions often replace map/filter for readability, but map/filter shine when composing with other iterators."}},{"@type":"Question","name":"What is a decorator in Python?","acceptedAnswer":{"@type":"Answer","text":"A decorator is a callable that wraps another function to extend or modify its behaviour without changing its source. Syntax: @decorator above a function definition. Under the hood: @dec def f(): ... is equivalent to f = dec(f) . Decorators are used for logging, timing, auth checks, caching ( @lru_cache ), and route registration in Flask/FastAPI."}},{"@type":"Question","name":"What is a generator and how does yield work?","acceptedAnswer":{"@type":"Answer","text":"A generator is an iterator produced by a function containing yield . Each yield pauses the function, returns a value, and resumes on the next next() call. State (local variables, instruction pointer) is preserved between yields. Generators are lazy — they produce values one at a time without building the full collection in memory. Ideal for large files, infinite sequences, and pipeline processing."}},{"@type":"Question","name":"What is a context manager and the with statement?","acceptedAnswer":{"@type":"Answer","text":"A context manager guarantees setup and teardown around a block — typically acquiring and releasing a resource. The with statement calls __enter__ at the start and __exit__ at the end (even if an exception occurs). Common uses: file handles, DB connections, locks, temporary directories. contextlib.contextmanager lets you write one with a generator and yield ."}},{"@type":"Question","name":"How does exception handling work in Python?","acceptedAnswer":{"@type":"Answer","text":"try / except catches exceptions; else runs if no exception; finally always runs (cleanup). Catch specific types — except ValueError: — not bare except: . Raise with raise ValueError('msg') or raise to re-raise. Custom exceptions subclass Exception . Use exception chaining: raise NewError() from original ."}},{"@type":"Question","name":"Explain classes, __init__, and inheritance in Python.","acceptedAnswer":{"@type":"Answer","text":"A class defines attributes and methods. __init__ is the constructor — called when an instance is created. self refers to the instance. Inheritance — class Child(Parent): . Override methods; call parent with super().__init__(...) or super().method() . Python supports multiple inheritance; method resolution uses the MRO (C3 linearization)."}},{"@type":"Question","name":"@staticmethod vs @classmethod vs @property.","acceptedAnswer":{"@type":"Answer","text":"@staticmethod — function in a class namespace; no self or cls . Utility grouping. @classmethod — receives cls ; common for alternative constructors like from_dict(cls, data) . @property — exposes a method as a read-only (or read-write with setter) attribute."}},{"@type":"Question","name":"__str__ vs __repr__ — what's the difference?","acceptedAnswer":{"@type":"Answer","text":"__repr__ — unambiguous, developer-facing representation; goal: eval(repr(obj)) should recreate the object when possible. Shown in the REPL and debuggers. __str__ — human-readable, user-facing. Used by print() and str() . Falls back to __repr__ if not defined."}},{"@type":"Question","name":"What is the mutable default argument trap?","acceptedAnswer":{"@type":"Answer","text":"Default argument values are evaluated once at function definition time , not per call. A mutable default (list, dict, set) is shared across all calls. Classic bug: def f(items=[]) — every call appends to the same list. Fix: use None and create a new object inside the function."}},{"@type":"Question","name":"Shallow copy vs deep copy.","acceptedAnswer":{"@type":"Answer","text":"Assignment ( b = a ) — same object, two names. Shallow copy — new container, but nested objects are still shared ( copy.copy() , list.copy() , dict.copy() ). Deep copy — recursively copies nested objects ( copy.deepcopy() )."}},{"@type":"Question","name":"What is duck typing?","acceptedAnswer":{"@type":"Answer","text":"“If it walks like a duck and quacks like a duck, it's a duck.” Python cares about behaviour (methods/attributes), not the object's declared type. Any object with the right methods works — no inheritance required. Modern Python adds typing.Protocol for structural subtyping — formalising duck typing for type checkers."}},{"@type":"Question","name":"What is the GIL and how does it affect concurrency?","acceptedAnswer":{"@type":"Answer","text":"The Global Interpreter Lock (GIL) is a mutex in CPython that allows only one thread to execute Python bytecode at a time. It simplifies memory management (reference counting) but limits CPU-bound parallelism with threads. Implications: I/O-bound work (network, disk) — threads are fine; threads release the GIL while waiting. CPU-bound work — use multiprocessing (separate processes, separate GILs) or offload to C extensions / NumPy. Async I/O — asyncio for many concurrent I/O operations on one thread."}},{"@type":"Question","name":"Threading vs multiprocessing vs asyncio — when to use each?","acceptedAnswer":{"@type":"Answer","text":"Approach Best for Notes threading I/O-bound, blocking libraries GIL limits CPU parallelism; simple for concurrent HTTP/DB calls multiprocessing CPU-bound on multiple cores Separate memory; use Pool or Process asyncio High-concurrency I/O Single-threaded event loop; needs async libraries (aiohttp, asyncpg)"}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Python interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Python Interview Questions and Answers</h1>
+      <p>35 hand-picked Python interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Python and what are its key features?</h2>
+          <div class="seo-a"><p>Python is a <strong>high-level, interpreted, dynamically typed</strong> language known for readability and a large standard library. Key features:</p><ul><li><strong>Interpreted</strong> — runs via the interpreter (CPython is the reference); no separate compile step for development.</li><li><strong>Dynamically typed</strong> — types are checked at runtime, not declared upfront.</li><li><strong>Multi-paradigm</strong> — supports OOP, functional (map/filter/lambdas), and procedural styles.</li><li><strong>Batteries included</strong> — rich stdlib for files, HTTP, JSON, dates, threading, asyncio, etc.</li><li><strong>Strong ecosystem</strong> — Django, FastAPI, Flask, pandas, NumPy, pytest, Celery.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>List vs tuple — when do you use each?</h2>
+          <div class="seo-a"><p><strong>List</strong> — mutable, ordered sequence. Use when you need to add, remove, or change elements.</p><p><strong>Tuple</strong> — immutable, ordered sequence. Use for fixed collections (coordinates, DB rows, dict keys), as return values, and when you want hashability (if all elements are hashable).</p><p>Both preserve insertion order (since Python 3.7+ for dicts; lists/tuples always did).</p></div>
+          <pre><code>coords = (12.9, 77.6)          # fixed — tuple
+items = [&quot;a&quot;, &quot;b&quot;]             # will grow/shrink — list
+items.append(&quot;c&quot;)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Dictionary vs set — key differences.</h2>
+          <div class="seo-a"><p><strong>dict</strong> — key-value mappings; keys must be hashable and unique; O(1) average lookup by key. Use for records, caches, counts (with <code class="inline">Counter</code>).</p><p><strong>set</strong> — unordered collection of unique hashable elements; O(1) average membership test. Use for deduplication, union/intersection, fast 'in' checks.</p></div>
+          <pre><code>seen = set()
+if user_id not in seen:
+    seen.add(user_id)
+
+freq = {}
+freq[key] = freq.get(key, 0) + 1</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is mutable vs immutable in Python?</h2>
+          <div class="seo-a"><p><strong>Immutable</strong> — object cannot change after creation: <code class="inline">int</code>, <code class="inline">float</code>, <code class="inline">str</code>, <code class="inline">tuple</code>, <code class="inline">frozenset</code>, <code class="inline">bytes</code>. Operations create new objects.</p><p><strong>Mutable</strong> — object can be modified in place: <code class="inline">list</code>, <code class="inline">dict</code>, <code class="inline">set</code>, custom objects (by default).</p><p>This matters for default arguments, copying, and thread safety.</p></div>
+          <pre><code>s = &quot;hi&quot;
+s += &quot;!&quot;   # new str object; old &quot;hi&quot; unchanged
+
+lst = [1, 2]
+lst.append(3)  # same list object, mutated in place</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>== vs is — what's the difference?</h2>
+          <div class="seo-a"><p><code class="inline">==</code> compares <strong>values</strong> (calls <code class="inline">__eq__</code>). <code class="inline">is</code> compares <strong>identity</strong> — whether two names refer to the same object in memory.</p><p>Use <code class="inline">is</code> only for singletons like <code class="inline">None</code>, <code class="inline">True</code>, <code class="inline">False</code>. Never use <code class="inline">is</code> for strings or numbers (small-int caching can fool you).</p></div>
+          <pre><code>a = [1, 2]
+b = [1, 2]
+a == b   # True  (same values)
+a is b   # False (different list objects)
+
+x = None
+x is None  # correct idiom</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain *args and **kwargs.</h2>
+          <div class="seo-a"><p><code class="inline">*args</code> collects extra <strong>positional</strong> arguments into a tuple. <code class="inline">**kwargs</code> collects extra <strong>keyword</strong> arguments into a dict.</p><p>Order in a signature: positional params → <code class="inline">*args</code> → keyword-only params → <code class="inline">**kwargs</code>.</p><p>Also used to <em>unpack</em> when calling: <code class="inline">func(*items)</code>, <code class="inline">func(**options)</code>.</p></div>
+          <pre><code>def log(level, *msgs, **meta):
+    for m in msgs:
+        print(level, m, meta)
+
+log(&quot;INFO&quot;, &quot;started&quot;, &quot;ok&quot;, user=42)
+
+opts = {&quot;timeout&quot;: 5}
+connect(host, **opts)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a list comprehension and when would you use it?</h2>
+          <div class="seo-a"><p>A concise way to build a list from an iterable with optional filtering: <code class="inline">[expr for item in iterable if condition]</code>.</p><p>Also exists for dicts (<code class="inline">{k: v for ...}</code>) and sets. Prefer comprehensions over manual <code class="inline">append</code> loops for simple transforms — they're faster and more readable.</p><p>For large data or lazy evaluation, use a <strong>generator expression</strong>: <code class="inline">(expr for item in iterable)</code>.</p></div>
+          <pre><code>squares = [x * x for x in range(10)]
+evens = [x for x in nums if x % 2 == 0]
+
+# generator — no list allocated
+sum(x * x for x in range(1_000_000))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>lambda, map, and filter — how do they work?</h2>
+          <div class="seo-a"><p><code class="inline">lambda</code> — anonymous one-expression function: <code class="inline">lambda x: x * 2</code>.</p><p><code class="inline">map(fn, iterable)</code> — applies <code class="inline">fn</code> to each item; returns an iterator.</p><p><code class="inline">filter(fn, iterable)</code> — keeps items where <code class="inline">fn</code> is truthy.</p><p>In modern Python, list comprehensions often replace map/filter for readability, but map/filter shine when composing with other iterators.</p></div>
+          <pre><code>nums = [1, 2, 3, 4]
+list(map(lambda x: x * 2, nums))       # [2, 4, 6, 8]
+list(filter(lambda x: x % 2 == 0, nums))  # [2, 4]
+
+# often clearer:
+[x * 2 for x in nums]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a decorator in Python?</h2>
+          <div class="seo-a"><p>A decorator is a <strong>callable that wraps another function</strong> to extend or modify its behaviour without changing its source. Syntax: <code class="inline">@decorator</code> above a function definition.</p><p>Under the hood: <code class="inline">@dec def f(): ...</code> is equivalent to <code class="inline">f = dec(f)</code>. Decorators are used for logging, timing, auth checks, caching (<code class="inline">@lru_cache</code>), and route registration in Flask/FastAPI.</p></div>
+          <pre><code>from functools import wraps
+
+def retry(fn):
+    @wraps(fn)
+    def wrapper(*a, **kw):
+        for _ in range(3):
+            try: return fn(*a, **kw)
+            except Exception: pass
+        raise
+    return wrapper
+
+@retry
+def fetch(): ...</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a generator and how does yield work?</h2>
+          <div class="seo-a"><p>A generator is an iterator produced by a function containing <code class="inline">yield</code>. Each <code class="inline">yield</code> pauses the function, returns a value, and resumes on the next <code class="inline">next()</code> call. State (local variables, instruction pointer) is preserved between yields.</p><p>Generators are <strong>lazy</strong> — they produce values one at a time without building the full collection in memory. Ideal for large files, infinite sequences, and pipeline processing.</p></div>
+          <pre><code>def read_lines(path):
+    with open(path) as f:
+        for line in f:
+            yield line.strip()  # one line at a time
+
+for line in read_lines(&quot;huge.log&quot;):
+    process(line)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a context manager and the with statement?</h2>
+          <div class="seo-a"><p>A context manager guarantees <strong>setup and teardown</strong> around a block — typically acquiring and releasing a resource. The <code class="inline">with</code> statement calls <code class="inline">__enter__</code> at the start and <code class="inline">__exit__</code> at the end (even if an exception occurs).</p><p>Common uses: file handles, DB connections, locks, temporary directories. <code class="inline">contextlib.contextmanager</code> lets you write one with a generator and <code class="inline">yield</code>.</p></div>
+          <pre><code>with open(&quot;data.txt&quot;) as f:
+    data = f.read()
+# file closed automatically
+
+from contextlib import contextmanager
+
+@contextmanager
+def timer():
+    start = time.perf_counter()
+    yield
+    print(time.perf_counter() - start)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does exception handling work in Python?</h2>
+          <div class="seo-a"><p><code class="inline">try</code> / <code class="inline">except</code> catches exceptions; <code class="inline">else</code> runs if no exception; <code class="inline">finally</code> always runs (cleanup). Catch specific types — <code class="inline">except ValueError:</code> — not bare <code class="inline">except:</code>.</p><p>Raise with <code class="inline">raise ValueError('msg')</code> or <code class="inline">raise</code> to re-raise. Custom exceptions subclass <code class="inline">Exception</code>. Use exception chaining: <code class="inline">raise NewError() from original</code>.</p></div>
+          <pre><code>try:
+    val = int(user_input)
+except ValueError as e:
+    logger.warning(&quot;bad input: %s&quot;, e)
+    val = 0
+finally:
+    cleanup()</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain classes, __init__, and inheritance in Python.</h2>
+          <div class="seo-a"><p>A <strong>class</strong> defines attributes and methods. <code class="inline">__init__</code> is the constructor — called when an instance is created. <code class="inline">self</code> refers to the instance.</p><p><strong>Inheritance</strong> — <code class="inline">class Child(Parent):</code>. Override methods; call parent with <code class="inline">super().__init__(...)</code> or <code class="inline">super().method()</code>.</p><p>Python supports multiple inheritance; method resolution uses the <strong>MRO</strong> (C3 linearization).</p></div>
+          <pre><code>class Animal:
+    def __init__(self, name):
+        self.name = name
+
+class Dog(Animal):
+    def speak(self):
+        return f&quot;{self.name} says woof&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>@staticmethod vs @classmethod vs @property.</h2>
+          <div class="seo-a"><ul><li><code class="inline">@staticmethod</code> — function in a class namespace; no <code class="inline">self</code> or <code class="inline">cls</code>. Utility grouping.</li><li><code class="inline">@classmethod</code> — receives <code class="inline">cls</code>; common for alternative constructors like <code class="inline">from_dict(cls, data)</code>.</li><li><code class="inline">@property</code> — exposes a method as a read-only (or read-write with setter) attribute.</li></ul></div>
+          <pre><code>class User:
+    def __init__(self, email): self.email = email
+
+    @classmethod
+    def from_row(cls, row): return cls(row[&quot;email&quot;])
+
+    @property
+    def domain(self): return self.email.split(&quot;@&quot;)[1]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>__str__ vs __repr__ — what's the difference?</h2>
+          <div class="seo-a"><p><code class="inline">__repr__</code> — unambiguous, developer-facing representation; goal: <code class="inline">eval(repr(obj))</code> should recreate the object when possible. Shown in the REPL and debuggers.</p><p><code class="inline">__str__</code> — human-readable, user-facing. Used by <code class="inline">print()</code> and <code class="inline">str()</code>. Falls back to <code class="inline">__repr__</code> if not defined.</p></div>
+          <pre><code>class Point:
+    def __init__(self, x, y): self.x, self.y = x, y
+    def __repr__(self): return f&quot;Point({self.x}, {self.y})&quot;
+    def __str__(self): return f&quot;({self.x}, {self.y})&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the mutable default argument trap?</h2>
+          <div class="seo-a"><p>Default argument values are evaluated <strong>once at function definition time</strong>, not per call. A mutable default (list, dict, set) is shared across all calls.</p><p>Classic bug: <code class="inline">def f(items=[])</code> — every call appends to the same list. Fix: use <code class="inline">None</code> and create a new object inside the function.</p></div>
+          <pre><code># BUG
+def add(item, bucket=[]):
+    bucket.append(item)
+    return bucket
+
+# FIX
+def add(item, bucket=None):
+    if bucket is None:
+        bucket = []
+    bucket.append(item)
+    return bucket</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Shallow copy vs deep copy.</h2>
+          <div class="seo-a"><p><strong>Assignment</strong> (<code class="inline">b = a</code>) — same object, two names.</p><p><strong>Shallow copy</strong> — new container, but nested objects are still shared (<code class="inline">copy.copy()</code>, <code class="inline">list.copy()</code>, <code class="inline">dict.copy()</code>).</p><p><strong>Deep copy</strong> — recursively copies nested objects (<code class="inline">copy.deepcopy()</code>).</p></div>
+          <pre><code>import copy
+a = [[1, 2], [3, 4]]
+b = copy.copy(a)       # outer list new, inner lists shared
+c = copy.deepcopy(a)  # fully independent</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is duck typing?</h2>
+          <div class="seo-a"><p>“If it walks like a duck and quacks like a duck, it's a duck.” Python cares about <strong>behaviour</strong> (methods/attributes), not the object's declared type. Any object with the right methods works — no inheritance required.</p><p>Modern Python adds <code class="inline">typing.Protocol</code> for structural subtyping — formalising duck typing for type checkers.</p></div>
+          <pre><code>def save(writer):
+    writer.write(data)  # anything with .write() works
+
+# file, StringIO, custom class — all fine</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the GIL and how does it affect concurrency?</h2>
+          <div class="seo-a"><p>The <strong>Global Interpreter Lock (GIL)</strong> is a mutex in CPython that allows only one thread to execute Python bytecode at a time. It simplifies memory management (reference counting) but limits CPU-bound parallelism with threads.</p><p><strong>Implications:</strong></p><ul><li><strong>I/O-bound</strong> work (network, disk) — threads are fine; threads release the GIL while waiting.</li><li><strong>CPU-bound</strong> work — use <code class="inline">multiprocessing</code> (separate processes, separate GILs) or offload to C extensions / NumPy.</li><li><strong>Async I/O</strong> — <code class="inline">asyncio</code> for many concurrent I/O operations on one thread.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Threading vs multiprocessing vs asyncio — when to use each?</h2>
+          <div class="seo-a"><table><tr><th>Approach</th><th>Best for</th><th>Notes</th></tr><tr><td><strong>threading</strong></td><td>I/O-bound, blocking libraries</td><td>GIL limits CPU parallelism; simple for concurrent HTTP/DB calls</td></tr><tr><td><strong>multiprocessing</strong></td><td>CPU-bound on multiple cores</td><td>Separate memory; use Pool or Process</td></tr><tr><td><strong>asyncio</strong></td><td>High-concurrency I/O</td><td>Single-threaded event loop; needs async libraries (aiohttp, asyncpg)</td></tr></table></div>
+          <pre><code># asyncio
+async def fetch_all(urls):
+    async with aiohttp.ClientSession() as s:
+        tasks = [s.get(u) for u in urls]
+        return await asyncio.gather(*tasks)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are type hints and do they affect runtime?</h2>
+          <div class="seo-a"><p>Type hints annotate expected types for parameters and return values: <code class="inline">def greet(name: str) -> str:</code>. They are <strong>not enforced at runtime</strong> by default — they're for static analysis (mypy, pyright), IDE autocomplete, and documentation.</p><p>Use <code class="inline">Optional[T]</code>, <code class="inline">list[str]</code> (3.9+), <code class="inline">Union</code>, <code class="inline">TypedDict</code>, <code class="inline">Protocol</code> for richer contracts.</p></div>
+          <pre><code>from typing import Optional
+
+def find_user(id: int) -&gt; Optional[dict]:
+    ...
+
+def process(items: list[str]) -&gt; int:
+    return len(items)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are dataclasses?</h2>
+          <div class="seo-a"><p><code class="inline">@dataclass</code> auto-generates <code class="inline">__init__</code>, <code class="inline">__repr__</code>, <code class="inline">__eq__</code> from class attributes. Reduces boilerplate for data-holding objects.</p><p>Options: <code class="inline">frozen=True</code> (immutable), <code class="inline">slots=True</code> (memory), <code class="inline">order=True</code> (comparison). For validation at scale, pair with <strong>Pydantic</strong> models.</p></div>
+          <pre><code>from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class Point:
+    x: float
+    y: float</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a virtual environment and why use one?</h2>
+          <div class="seo-a"><p>A virtual environment is an <strong>isolated Python installation</strong> with its own packages, separate from the system Python. Created with <code class="inline">python -m venv .venv</code>; activated before installing deps.</p><p>Prevents version conflicts between projects. Dependencies are listed in <code class="inline">requirements.txt</code> or <code class="inline">pyproject.toml</code> and installed with <code class="inline">pip install -r requirements.txt</code>.</p></div>
+          <pre><code>python -m venv .venv
+source .venv/bin/activate   # Linux/Mac
+.venv\Scripts\activate      # Windows
+pip install -r requirements.txt</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Flask vs FastAPI vs Django — when would you pick each?</h2>
+          <div class="seo-a"><ul><li><strong>Flask</strong> — minimal microframework; you choose ORM, auth, structure. Good for small APIs, prototypes, full control.</li><li><strong>FastAPI</strong> — modern async API framework; automatic OpenAPI docs, Pydantic validation, high performance. Great for REST/JSON microservices.</li><li><strong>Django</strong> — batteries-included (ORM, admin, auth, migrations). Best for full web apps, CMS, rapid CRUD, monoliths.</li></ul></div>
+          <pre><code># FastAPI
+from fastapi import FastAPI
+app = FastAPI()
+
+@app.get(&quot;/users/{id}&quot;)
+async def get_user(id: int): ...</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does SQLAlchemy ORM work at a high level?</h2>
+          <div class="seo-a"><p>SQLAlchemy maps Python classes to database tables. Define a <strong>Model</strong> with columns; the <strong>Session</strong> tracks changes and commits transactions.</p><p>Two layers: <strong>Core</strong> (SQL expression language) and <strong>ORM</strong> (object mapping). Use <code class="inline">session.query(User).filter_by(email=...)</code> or 2.0-style <code class="inline">select(User).where(...)</code>.</p><p>Migrations are typically handled by <strong>Alembic</strong>.</p></div>
+          <pre><code>class User(Base):
+    __tablename__ = &quot;users&quot;
+    id = Column(Integer, primary_key=True)
+    email = Column(String, unique=True)
+
+user = session.query(User).filter_by(email=&quot;a@b.com&quot;).first()</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you write tests with pytest?</h2>
+          <div class="seo-a"><p>pytest discovers test functions named <code class="inline">test_*</code>. Use plain <code class="inline">assert</code> — pytest rewrites assertions for clear failure output.</p><p><strong>Fixtures</strong> (<code class="inline">@pytest.fixture</code>) provide setup/teardown and dependency injection. <code class="inline">conftest.py</code> shares fixtures across a package. Use <code class="inline">monkeypatch</code>, <code class="inline">tmp_path</code>, and <code class="inline">pytest.mark.parametrize</code> for parametrized tests.</p></div>
+          <pre><code>import pytest
+
+@pytest.fixture
+def client():
+    app.config[&quot;TESTING&quot;] = True
+    return app.test_client()
+
+def test_health(client):
+    r = client.get(&quot;/health&quot;)
+    assert r.status_code == 200</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Python manage memory?</h2>
+          <div class="seo-a"><p>CPython uses <strong>reference counting</strong> — when an object's refcount hits zero, it's freed immediately. A <strong>generational garbage collector</strong> handles circular references (refcount alone can't).</p><p>Objects live in a private heap. Interning caches small ints and some strings. For large data, prefer generators and <code class="inline">__slots__</code> to reduce per-instance dict overhead.</p></div>
+          <pre><code>import sys
+sys.getrefcount(obj)  # inspect refcount (debug only)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does @functools.lru_cache do?</h2>
+          <div class="seo-a"><p>Memoizes function results — caches up to <code class="inline">maxsize</code> recent calls (LRU eviction). Arguments must be hashable. Huge win for expensive pure functions called repeatedly with the same inputs.</p><p><code class="inline">@lru_cache(maxsize=None)</code> caches everything (unbounded). Use <code class="inline">.cache_info()</code> and <code class="inline">.cache_clear()</code> for introspection.</p></div>
+          <pre><code>from functools import lru_cache
+
+@lru_cache(maxsize=128)
+def fib(n):
+    if n &lt; 2: return n
+    return fib(n-1) + fib(n-2)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does if __name__ == '__main__' mean?</h2>
+          <div class="seo-a"><p>Every Python file is a <strong>module</strong>. When run directly, <code class="inline">__name__</code> is <code class="inline">'__main__'</code>. When imported, <code class="inline">__name__</code> is the module path (e.g. <code class="inline">'utils.helpers'</code>).</p><p>The guard runs code only when the file is executed, not when imported — standard pattern for CLI entry points and quick tests.</p></div>
+          <pre><code>def main():
+    print(&quot;running&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    main()</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>global vs nonlocal — when are they needed?</h2>
+          <div class="seo-a"><p>By default, assignment inside a function creates a <strong>local</strong> variable. <code class="inline">global x</code> declares assignment targets the module-level <code class="inline">x</code>. <code class="inline">nonlocal x</code> targets the enclosing (non-global) scope — used in nested functions/closures.</p><p>Prefer returning values or mutable containers over mutating globals. Closures capturing variables by reference are usually cleaner than <code class="inline">nonlocal</code>.</p></div>
+          <pre><code>count = 0
+
+def outer():
+    n = 0
+    def inner():
+        nonlocal n
+        n += 1
+        return n
+    return inner</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the Method Resolution Order (MRO)?</h2>
+          <div class="seo-a"><p>When a class inherits from multiple parents, Python uses <strong>C3 linearization</strong> to determine the order it searches for methods. View with <code class="inline">ClassName.mro()</code> or <code class="inline">ClassName.__mro__</code>.</p><p>Prevents the 'diamond problem' ambiguity — each class appears once, parents before children, preserving local precedence order.</p></div>
+          <pre><code>class A: def f(self): return &quot;A&quot;
+class B(A): pass
+class C(A): pass
+class D(B, C): pass
+
+D.mro()  # D, B, C, A, object</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does __slots__ do?</h2>
+          <div class="seo-a"><p><code class="inline">__slots__</code> restricts instance attributes to a fixed set and replaces the per-instance <code class="inline">__dict__</code> with compact slot storage. Saves memory when creating millions of small objects.</p><p>Tradeoffs: can't add arbitrary attributes at runtime; multiple inheritance gets tricky; no weakrefs unless <code class="inline">'__weakref__'</code> is in slots.</p></div>
+          <pre><code>class Point:
+    __slots__ = (&quot;x&quot;, &quot;y&quot;)
+    def __init__(self, x, y):
+        self.x, self.y = x, y</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do background task queues like Celery work?</h2>
+          <div class="seo-a"><p>The web request <strong>enqueues</strong> a task to a message broker (Redis/RabbitMQ). <strong>Worker processes</strong> pull tasks and execute them asynchronously. Results can be stored in a backend (Redis, DB).</p><p>Use for: sending emails, image processing, report generation — anything slow that shouldn't block the HTTP response.</p></div>
+          <pre><code># tasks.py
+@celery.task
+def send_email(user_id):
+    ...
+
+# view
+send_email.delay(user_id)  # returns immediately</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Pydantic and why is it popular?</h2>
+          <div class="seo-a"><p>Pydantic defines <strong>data models</strong> with type annotations and validates/parses input at runtime. Invalid data raises clear errors. Serialises to/from JSON dicts.</p><p>Core to FastAPI request/response validation. Pydantic v2 is Rust-backed (<code class="inline">pydantic-core</code>) — much faster than v1.</p></div>
+          <pre><code>from pydantic import BaseModel, EmailStr
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    age: int
+
+user = UserCreate(email=&quot;a@b.com&quot;, age=25)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do enumerate and zip do?</h2>
+          <div class="seo-a"><p><code class="inline">enumerate(iterable)</code> yields <code class="inline">(index, value)</code> pairs — avoids manual counter variables.</p><p><code class="inline">zip(a, b)</code> pairs elements from multiple iterables. Stops at the shortest. Use <code class="inline">zip(a, b, strict=True)</code> (3.10+) to error on length mismatch.</p></div>
+          <pre><code>names = [&quot;Ada&quot;, &quot;Bob&quot;]
+for i, name in enumerate(names):
+    print(i, name)
+
+for a, b in zip([1, 2], [&quot;x&quot;, &quot;y&quot;]):
+    print(a, b)</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="python";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

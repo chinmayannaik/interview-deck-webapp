@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>ML Fundamentals Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="24 ML Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/ml-fundamentals" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="ML Fundamentals Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="24 ML Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/ml-fundamentals" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ML Fundamentals Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Supervised vs unsupervised vs reinforcement learning.","acceptedAnswer":{"@type":"Answer","text":"Supervised — learn from labelled data (input → known output). Tasks: classification, regression. Example: spam detection, house price prediction. Unsupervised — find patterns in unlabelled data. Tasks: clustering, dimensionality reduction, anomaly detection. Example: customer segmentation. Reinforcement — agent learns by interacting with an environment, receiving rewards/penalties. Example: game playing, robotics, RLHF for LLM alignment."}},{"@type":"Question","name":"Training vs inference in machine learning.","acceptedAnswer":{"@type":"Answer","text":"Training — the model learns patterns from data by adjusting weights to minimise a loss function. Computationally expensive; done offline or periodically. Inference — using the trained model to make predictions on new, unseen data. Must be fast and reliable for production serving. Training uses backward propagation and optimisers (Adam, SGD). Inference is forward-pass only."}},{"@type":"Question","name":"Classification vs regression.","acceptedAnswer":{"@type":"Answer","text":"Classification — predict a category (discrete label). Binary (spam/not spam) or multi-class (cat/dog/bird). Output: class probabilities. Regression — predict a continuous number . Example: house price, temperature, revenue forecast. Output: a real-valued number. Same algorithms can do both with different loss functions and output layers."}},{"@type":"Question","name":"Overfitting vs underfitting.","acceptedAnswer":{"@type":"Answer","text":"Overfitting — model memorises training data (including noise) and fails on new data. Signs: high training accuracy, low validation accuracy. Fixes: more data, regularisation, simpler model, dropout, early stopping. Underfitting — model is too simple to capture patterns. Signs: poor performance on both training and validation. Fixes: more features, complex model, train longer. Goal: generalisation — good performance on unseen data."}},{"@type":"Question","name":"Explain the bias-variance tradeoff.","acceptedAnswer":{"@type":"Answer","text":"Total prediction error = bias² + variance + irreducible noise. High bias (underfitting) — model is too simple, makes systematic errors. Low training AND validation error gap, but both are high. High variance (overfitting) — model is too sensitive to training data fluctuations. Low training error, high validation error. Increasing model complexity reduces bias but increases variance — find the sweet spot."}},{"@type":"Question","name":"Why split data into train, validation, and test sets?","acceptedAnswer":{"@type":"Answer","text":"Training set (~70-80%) — model learns from this. Validation set (~10-15%) — tune hyperparameters, select model architecture, decide when to stop training. Test set (~10-15%) — final unbiased evaluation, touched once at the end. Using test data during development causes data leakage — you overfit to the test set indirectly."}},{"@type":"Question","name":"What is k-fold cross-validation?","acceptedAnswer":{"@type":"Answer","text":"Split data into k folds. Train on k-1 folds, validate on the remaining fold. Repeat k times, each fold serving as validation once. Average the k scores for a robust performance estimate. Useful when data is limited — every sample gets to be in both training and validation. Common: k=5 or k=10. Stratified k-fold preserves class distribution in each fold (important for imbalanced data)."}},{"@type":"Question","name":"Common loss functions and when to use them.","acceptedAnswer":{"@type":"Answer","text":"MSE / MAE — regression. MSE penalises large errors more; MAE is robust to outliers. Cross-entropy / log loss — classification. Measures distance between predicted probabilities and true labels. Hinge loss — SVM classification. Focal loss — classification with class imbalance; down-weights easy examples. The loss function defines what 'wrong' means — choose one aligned with your business metric."}},{"@type":"Question","name":"What is gradient descent?","acceptedAnswer":{"@type":"Answer","text":"An optimisation algorithm that iteratively adjusts model weights in the direction that reduces the loss (opposite to the gradient). Batch GD — uses entire dataset per step; accurate but slow. Stochastic GD (SGD) — one sample per step; noisy but fast. Mini-batch GD — compromise; batch of 32–256 samples. Standard in deep learning. Adam — adaptive learning rate; default optimiser for most neural nets."}},{"@type":"Question","name":"How does a neural network work at a high level?","acceptedAnswer":{"@type":"Answer","text":"A network of layers of neurons connected by weighted edges: Input layer — receives features. Hidden layers — transform inputs through weighted sums + activation functions, learning hierarchical features. Output layer — produces predictions (softmax for classification, linear for regression). Training: forward pass (compute output) → compute loss → backward pass (backpropagation computes gradients) → update weights."}},{"@type":"Question","name":"Common activation functions and their roles.","acceptedAnswer":{"@type":"Answer","text":"ReLU — max(0, x) . Default for hidden layers. Fast, avoids vanishing gradient. Dead ReLU problem (neurons output 0 forever). Sigmoid — squashes to (0,1). Used for binary classification output. Vanishing gradient in deep networks. Softmax — multi-class output; probabilities sum to 1. Tanh — squashes to (-1,1). Sometimes used in hidden layers. GELU / Swish — smooth variants used in transformers (BERT, GPT)."}},{"@type":"Question","name":"CNN vs RNN vs Transformer — when to use each?","acceptedAnswer":{"@type":"Answer","text":"Architecture Strength Typical use CNN Spatial/local patterns via convolutions Image classification, object detection, medical imaging RNN/LSTM Sequential data, temporal dependencies Time series, early NLP (largely replaced) Transformer Long-range dependencies, parallel training NLP, vision (ViT), multimodal, LLMs Transformers dominate NLP and are increasingly used for vision, audio, and tabular data too."}},{"@type":"Question","name":"What is feature engineering and why does it matter?","acceptedAnswer":{"@type":"Answer","text":"Transforming raw data into informative inputs the model can learn from. Examples: Normalising/scaling numerical features (StandardScaler, MinMaxScaler) Encoding categoricals (one-hot, label encoding, target encoding) Creating derived features (age from birthdate, day-of-week from timestamp) Handling missing values (imputation, indicator columns) Text: TF-IDF, tokenisation (or use embeddings for deep learning) Deep learning reduces manual feature engineering but preprocessing still matters."}},{"@type":"Question","name":"Precision, recall, and F1 score.","acceptedAnswer":{"@type":"Answer","text":"Precision — of predicted positives, how many are actually positive? TP / (TP + FP) . \"When I say yes, how often am I right?\" Recall — of actual positives, how many did I catch? TP / (TP + FN) . \"Of all real positives, how many did I find?\" F1 — harmonic mean of precision and recall. Balances both. Choose based on cost: spam filter needs high precision (don't block real emails); cancer screening needs high recall (don't miss cases)."}},{"@type":"Question","name":"How do you read a confusion matrix?","acceptedAnswer":{"@type":"Answer","text":"A table comparing predicted vs actual labels: Predicted Pos Neg Actual Pos TP FN Neg FP TN TP — correctly predicted positive FP — false alarm (Type I error) FN — missed positive (Type II error) TN — correctly predicted negative All classification metrics derive from these four counts."}},{"@type":"Question","name":"What is ROC-AUC?","acceptedAnswer":{"@type":"Answer","text":"ROC curve — plots True Positive Rate (recall) vs False Positive Rate at various classification thresholds. AUC (Area Under Curve) — single number summarising ROC. 1.0 = perfect; 0.5 = random guessing. Threshold-independent metric — useful for comparing models regardless of the chosen decision threshold. Good for imbalanced datasets when you haven't decided on a threshold yet."}},{"@type":"Question","name":"How do you tune hyperparameters?","acceptedAnswer":{"@type":"Answer","text":"Hyperparameters are set before training (learning rate, tree depth, number of layers) — not learned from data. Methods: Grid search — try all combinations from a predefined grid. Exhaustive but expensive. Random search — sample random combinations. Often finds good configs faster than grid. Bayesian optimisation — model the objective function; sample intelligently (Optuna, Hyperopt). Always tune on validation set, evaluate final config on test set."}},{"@type":"Question","name":"What is transfer learning?","acceptedAnswer":{"@type":"Answer","text":"Using a model pre-trained on a large dataset as a starting point for your specific task. Instead of training from scratch, you fine-tune the last layers (or the whole model) on your smaller dataset. Examples: ImageNet-pretrained ResNet for medical imaging; BERT/GPT for NLP tasks; Whisper for speech. Saves data, compute, and time — almost always better than training from scratch on small datasets."}},{"@type":"Question","name":"What is data leakage and how do you prevent it?","acceptedAnswer":{"@type":"Answer","text":"When information from outside the training set leaks into training, giving unrealistically good evaluation metrics that don't hold in production. Common causes: Fitting scaler/encoder on full dataset before splitting Using future data to predict the past (time series) Target leakage — a feature that directly encodes the label Duplicate records across train and test Fix: split first, then preprocess. Use pipelines. Audit features for leakage."}},{"@type":"Question","name":"How do you handle imbalanced datasets?","acceptedAnswer":{"@type":"Answer","text":"Right metrics — use F1, precision-recall, AUC — not accuracy. Class weights — penalise misclassifying the minority class more ( class_weight='balanced' ). Oversampling — duplicate minority samples (SMOTE generates synthetic ones). Undersampling — reduce majority class (loses data). Threshold tuning — adjust decision threshold to favour recall or precision. Ensemble methods — combine models trained on balanced subsets."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="ML Fundamentals interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>ML Fundamentals Interview Questions and Answers</h1>
+      <p>24 hand-picked ML Fundamentals interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Supervised vs unsupervised vs reinforcement learning.</h2>
+          <div class="seo-a"><ul><li><strong>Supervised</strong> — learn from labelled data (input → known output). Tasks: classification, regression. Example: spam detection, house price prediction.</li><li><strong>Unsupervised</strong> — find patterns in unlabelled data. Tasks: clustering, dimensionality reduction, anomaly detection. Example: customer segmentation.</li><li><strong>Reinforcement</strong> — agent learns by interacting with an environment, receiving rewards/penalties. Example: game playing, robotics, RLHF for LLM alignment.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Training vs inference in machine learning.</h2>
+          <div class="seo-a"><p><strong>Training</strong> — the model learns patterns from data by adjusting weights to minimise a loss function. Computationally expensive; done offline or periodically.</p><p><strong>Inference</strong> — using the trained model to make predictions on new, unseen data. Must be fast and reliable for production serving.</p><p>Training uses backward propagation and optimisers (Adam, SGD). Inference is forward-pass only.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Classification vs regression.</h2>
+          <div class="seo-a"><p><strong>Classification</strong> — predict a <em>category</em> (discrete label). Binary (spam/not spam) or multi-class (cat/dog/bird). Output: class probabilities.</p><p><strong>Regression</strong> — predict a <em>continuous number</em>. Example: house price, temperature, revenue forecast. Output: a real-valued number.</p><p>Same algorithms can do both with different loss functions and output layers.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Overfitting vs underfitting.</h2>
+          <div class="seo-a"><p><strong>Overfitting</strong> — model memorises training data (including noise) and fails on new data. Signs: high training accuracy, low validation accuracy. Fixes: more data, regularisation, simpler model, dropout, early stopping.</p><p><strong>Underfitting</strong> — model is too simple to capture patterns. Signs: poor performance on both training and validation. Fixes: more features, complex model, train longer.</p><p>Goal: <strong>generalisation</strong> — good performance on unseen data.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain the bias-variance tradeoff.</h2>
+          <div class="seo-a"><p>Total prediction error = <strong>bias²</strong> + <strong>variance</strong> + irreducible noise.</p><ul><li><strong>High bias</strong> (underfitting) — model is too simple, makes systematic errors. Low training AND validation error gap, but both are high.</li><li><strong>High variance</strong> (overfitting) — model is too sensitive to training data fluctuations. Low training error, high validation error.</li></ul><p>Increasing model complexity reduces bias but increases variance — find the sweet spot.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why split data into train, validation, and test sets?</h2>
+          <div class="seo-a"><ul><li><strong>Training set</strong> (~70-80%) — model learns from this.</li><li><strong>Validation set</strong> (~10-15%) — tune hyperparameters, select model architecture, decide when to stop training.</li><li><strong>Test set</strong> (~10-15%) — final unbiased evaluation, touched <em>once</em> at the end.</li></ul><p>Using test data during development causes <strong>data leakage</strong> — you overfit to the test set indirectly.</p></div>
+          <pre><code>from sklearn.model_selection import train_test_split
+
+X_train, X_temp, y_train, y_temp = train_test_split(X, y, test_size=0.3)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is k-fold cross-validation?</h2>
+          <div class="seo-a"><p>Split data into k folds. Train on k-1 folds, validate on the remaining fold. Repeat k times, each fold serving as validation once. Average the k scores for a robust performance estimate.</p><p>Useful when data is limited — every sample gets to be in both training and validation. Common: k=5 or k=10.</p><p><strong>Stratified k-fold</strong> preserves class distribution in each fold (important for imbalanced data).</p></div>
+          <pre><code>from sklearn.model_selection import cross_val_score
+scores = cross_val_score(model, X, y, cv=5, scoring='f1')
+print(scores.mean(), scores.std())</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Common loss functions and when to use them.</h2>
+          <div class="seo-a"><ul><li><strong>MSE / MAE</strong> — regression. MSE penalises large errors more; MAE is robust to outliers.</li><li><strong>Cross-entropy / log loss</strong> — classification. Measures distance between predicted probabilities and true labels.</li><li><strong>Hinge loss</strong> — SVM classification.</li><li><strong>Focal loss</strong> — classification with class imbalance; down-weights easy examples.</li></ul><p>The loss function defines what 'wrong' means — choose one aligned with your business metric.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is gradient descent?</h2>
+          <div class="seo-a"><p>An optimisation algorithm that iteratively adjusts model weights in the <strong>direction that reduces the loss</strong> (opposite to the gradient).</p><ul><li><strong>Batch GD</strong> — uses entire dataset per step; accurate but slow.</li><li><strong>Stochastic GD (SGD)</strong> — one sample per step; noisy but fast.</li><li><strong>Mini-batch GD</strong> — compromise; batch of 32–256 samples. Standard in deep learning.</li><li><strong>Adam</strong> — adaptive learning rate; default optimiser for most neural nets.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does a neural network work at a high level?</h2>
+          <div class="seo-a"><p>A network of <strong>layers of neurons</strong> connected by weighted edges:</p><ol><li><strong>Input layer</strong> — receives features.</li><li><strong>Hidden layers</strong> — transform inputs through weighted sums + activation functions, learning hierarchical features.</li><li><strong>Output layer</strong> — produces predictions (softmax for classification, linear for regression).</li></ol><p>Training: forward pass (compute output) → compute loss → backward pass (backpropagation computes gradients) → update weights.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Common activation functions and their roles.</h2>
+          <div class="seo-a"><ul><li><strong>ReLU</strong> — <code class="inline">max(0, x)</code>. Default for hidden layers. Fast, avoids vanishing gradient. Dead ReLU problem (neurons output 0 forever).</li><li><strong>Sigmoid</strong> — squashes to (0,1). Used for binary classification output. Vanishing gradient in deep networks.</li><li><strong>Softmax</strong> — multi-class output; probabilities sum to 1.</li><li><strong>Tanh</strong> — squashes to (-1,1). Sometimes used in hidden layers.</li><li><strong>GELU / Swish</strong> — smooth variants used in transformers (BERT, GPT).</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>CNN vs RNN vs Transformer — when to use each?</h2>
+          <div class="seo-a"><table><tr><th>Architecture</th><th>Strength</th><th>Typical use</th></tr><tr><td><strong>CNN</strong></td><td>Spatial/local patterns via convolutions</td><td>Image classification, object detection, medical imaging</td></tr><tr><td><strong>RNN/LSTM</strong></td><td>Sequential data, temporal dependencies</td><td>Time series, early NLP (largely replaced)</td></tr><tr><td><strong>Transformer</strong></td><td>Long-range dependencies, parallel training</td><td>NLP, vision (ViT), multimodal, LLMs</td></tr></table><p>Transformers dominate NLP and are increasingly used for vision, audio, and tabular data too.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is feature engineering and why does it matter?</h2>
+          <div class="seo-a"><p>Transforming raw data into <strong>informative inputs</strong> the model can learn from. Examples:</p><ul><li>Normalising/scaling numerical features (StandardScaler, MinMaxScaler)</li><li>Encoding categoricals (one-hot, label encoding, target encoding)</li><li>Creating derived features (age from birthdate, day-of-week from timestamp)</li><li>Handling missing values (imputation, indicator columns)</li><li>Text: TF-IDF, tokenisation (or use embeddings for deep learning)</li></ul><p>Deep learning reduces manual feature engineering but preprocessing still matters.</p></div>
+          <pre><code>from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)  # use train stats!</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Precision, recall, and F1 score.</h2>
+          <div class="seo-a"><ul><li><strong>Precision</strong> — of predicted positives, how many are actually positive? <code class="inline">TP / (TP + FP)</code>. "When I say yes, how often am I right?"</li><li><strong>Recall</strong> — of actual positives, how many did I catch? <code class="inline">TP / (TP + FN)</code>. "Of all real positives, how many did I find?"</li><li><strong>F1</strong> — harmonic mean of precision and recall. Balances both.</li></ul><p>Choose based on cost: spam filter needs high precision (don't block real emails); cancer screening needs high recall (don't miss cases).</p></div>
+          <pre><code>from sklearn.metrics import precision_score, recall_score, f1_score
+print(f1_score(y_true, y_pred))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you read a confusion matrix?</h2>
+          <div class="seo-a"><p>A table comparing predicted vs actual labels:</p><pre><code>                 Predicted
+              Pos    Neg
+Actual Pos    TP     FN
+       Neg    FP     TN</code></pre><ul><li><strong>TP</strong> — correctly predicted positive</li><li><strong>FP</strong> — false alarm (Type I error)</li><li><strong>FN</strong> — missed positive (Type II error)</li><li><strong>TN</strong> — correctly predicted negative</li></ul><p>All classification metrics derive from these four counts.</p></div>
+          <pre><code>from sklearn.metrics import confusion_matrix
+print(confusion_matrix(y_true, y_pred))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is ROC-AUC?</h2>
+          <div class="seo-a"><p><strong>ROC curve</strong> — plots True Positive Rate (recall) vs False Positive Rate at various classification thresholds.</p><p><strong>AUC</strong> (Area Under Curve) — single number summarising ROC. 1.0 = perfect; 0.5 = random guessing.</p><p>Threshold-independent metric — useful for comparing models regardless of the chosen decision threshold. Good for imbalanced datasets when you haven't decided on a threshold yet.</p></div>
+          <pre><code>from sklearn.metrics import roc_auc_score
+auc = roc_auc_score(y_true, y_prob)  # needs probability scores, not class labels</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you tune hyperparameters?</h2>
+          <div class="seo-a"><p>Hyperparameters are set <em>before</em> training (learning rate, tree depth, number of layers) — not learned from data.</p><p>Methods:</p><ul><li><strong>Grid search</strong> — try all combinations from a predefined grid. Exhaustive but expensive.</li><li><strong>Random search</strong> — sample random combinations. Often finds good configs faster than grid.</li><li><strong>Bayesian optimisation</strong> — model the objective function; sample intelligently (Optuna, Hyperopt).</li></ul><p>Always tune on validation set, evaluate final config on test set.</p></div>
+          <pre><code>from sklearn.model_selection import GridSearchCV
+grid = GridSearchCV(model, param_grid, cv=5, scoring='f1')
+grid.fit(X_train, y_train)
+print(grid.best_params_)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is transfer learning?</h2>
+          <div class="seo-a"><p>Using a model <strong>pre-trained on a large dataset</strong> as a starting point for your specific task. Instead of training from scratch, you fine-tune the last layers (or the whole model) on your smaller dataset.</p><p>Examples: ImageNet-pretrained ResNet for medical imaging; BERT/GPT for NLP tasks; Whisper for speech.</p><p>Saves data, compute, and time — almost always better than training from scratch on small datasets.</p></div>
+          <pre><code>from transformers import AutoModelForSequenceClassification
+model = AutoModelForSequenceClassification.from_pretrained(
+  &quot;bert-base-uncased&quot;, num_labels=3
+)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is data leakage and how do you prevent it?</h2>
+          <div class="seo-a"><p>When <strong>information from outside the training set</strong> leaks into training, giving unrealistically good evaluation metrics that don't hold in production.</p><p>Common causes:</p><ul><li>Fitting scaler/encoder on full dataset before splitting</li><li>Using future data to predict the past (time series)</li><li>Target leakage — a feature that directly encodes the label</li><li>Duplicate records across train and test</li></ul><p>Fix: split first, then preprocess. Use pipelines. Audit features for leakage.</p></div>
+          <pre><code>from sklearn.pipeline import Pipeline
+pipe = Pipeline([
+  ('scaler', StandardScaler()),
+  ('model', LogisticRegression())
+])
+pipe.fit(X_train, y_train)  # scaler fits only on train</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle imbalanced datasets?</h2>
+          <div class="seo-a"><ul><li><strong>Right metrics</strong> — use F1, precision-recall, AUC — not accuracy.</li><li><strong>Class weights</strong> — penalise misclassifying the minority class more (<code class="inline">class_weight='balanced'</code>).</li><li><strong>Oversampling</strong> — duplicate minority samples (SMOTE generates synthetic ones).</li><li><strong>Undersampling</strong> — reduce majority class (loses data).</li><li><strong>Threshold tuning</strong> — adjust decision threshold to favour recall or precision.</li><li><strong>Ensemble methods</strong> — combine models trained on balanced subsets.</li></ul></div>
+          <pre><code>from sklearn.utils.class_weight import compute_class_weight
+weights = compute_class_weight('balanced', classes=np.unique(y), y=y)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are ensemble methods?</h2>
+          <div class="seo-a"><p>Combine multiple models for better performance than any single model:</p><ul><li><strong>Bagging</strong> — train many models on random subsets, average predictions. Example: <strong>Random Forest</strong> (bagged decision trees).</li><li><strong>Boosting</strong> — train models sequentially, each correcting previous errors. Examples: <strong>XGBoost</strong>, <strong>LightGBM</strong>, <strong>CatBoost</strong>.</li><li><strong>Stacking</strong> — train a meta-model on base model predictions.</li></ul><p>Gradient boosted trees dominate tabular data competitions and production ML.</p></div>
+          <pre><code>import xgboost as xgb
+model = xgb.XGBClassifier(n_estimators=100, max_depth=6)
+model.fit(X_train, y_train)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>L1 vs L2 regularization.</h2>
+          <div class="seo-a"><p>Both add a penalty term to the loss function to prevent large weights:</p><ul><li><strong>L1 (Lasso)</strong> — penalty = λΣ|w|. Drives some weights to exactly zero → <strong>feature selection</strong>. Sparse models.</li><li><strong>L2 (Ridge)</strong> — penalty = λΣw². Shrinks weights toward zero but rarely to exactly zero. Smoother models.</li><li><strong>Elastic Net</strong> — combines L1 + L2.</li></ul><p>In neural nets, L2 regularisation is called <strong>weight decay</strong>.</p></div>
+          <pre><code>from sklearn.linear_model import Lasso, Ridge
+lasso = Lasso(alpha=0.1)   # L1
+ridge = Ridge(alpha=1.0)   # L2</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is batch normalization?</h2>
+          <div class="seo-a"><p>Normalises the inputs to each layer during training — zero mean, unit variance within each mini-batch. Reduces <strong>internal covariate shift</strong> (changing input distributions as earlier layers update).</p><p>Benefits: faster training, allows higher learning rates, acts as mild regularisation. Standard in CNNs and feedforward networks. Layer Normalisation is preferred in transformers (normalises across features, not batch).</p></div>
+          <pre><code>import torch.nn as nn
+layer = nn.Sequential(
+  nn.Linear(256, 128),
+  nn.BatchNorm1d(128),
+  nn.ReLU()
+)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is MLOps and why does it matter?</h2>
+          <div class="seo-a"><p>MLOps applies DevOps principles to ML: <strong>reproducible training, automated deployment, monitoring, and retraining</strong>.</p><p>Key practices:</p><ul><li><strong>Version everything</strong> — data, code, model weights, configs (MLflow, DVC).</li><li><strong>CI/CD for models</strong> — automated testing, validation gates before deployment.</li><li><strong>Model serving</strong> — REST/gRPC endpoints, batch inference, edge deployment.</li><li><strong>Monitoring</strong> — track prediction drift, data drift, latency, error rates.</li><li><strong>Retraining pipelines</strong> — trigger when performance degrades or new data arrives.</li></ul></div>
+          
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="ml-fundamentals";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>Kafka Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="22 Kafka interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/kafka" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="Kafka Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="22 Kafka interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/kafka" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="Kafka Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Apache Kafka and what problems does it solve?","acceptedAnswer":{"@type":"Answer","text":"Kafka is a distributed event streaming platform — a high-throughput, fault-tolerant, durable log for publishing and subscribing to streams of events. Use cases: Event streaming — real-time data pipelines between services. Message queuing — decouple producers and consumers. Event sourcing / CQRS — durable log of all state changes. Log aggregation — collect logs/metrics from many sources. Unlike traditional message brokers, Kafka retains messages (configurable retention) and allows consumers to replay history."}},{"@type":"Question","name":"Explain topics, partitions, and brokers.","acceptedAnswer":{"@type":"Answer","text":"Broker — a Kafka server that stores data and serves clients. A cluster has multiple brokers for fault tolerance. Topic — a named category/feed of messages (like a table in a DB). Partition — a topic is split into partitions for parallelism. Each partition is an ordered, immutable sequence of messages. Offset — a unique sequential ID for each message within a partition. More partitions = more parallelism (more consumers can read concurrently)."}},{"@type":"Question","name":"How does a Kafka producer work?","acceptedAnswer":{"@type":"Answer","text":"The producer sends records to a topic. Key config: key — determines partition (hash of key % num partitions). Same key → same partition. acks — durability guarantee: 0 (fire-and-forget), 1 (leader ack), all (all ISR replicas ack). retries — automatic retry on transient failures. idempotence — exactly-once per partition (no duplicates on retry). Producer batches messages for efficiency and compresses (snappy, lz4, zstd)."}},{"@type":"Question","name":"What is a consumer group?","acceptedAnswer":{"@type":"Answer","text":"A consumer group is a set of consumers that jointly consume a topic. Kafka assigns each partition to exactly one consumer in the group — enabling parallel consumption while avoiding duplicate processing within the group. Rules: Consumers in the same group share the work (load balancing). Consumers in different groups each get all messages (pub/sub). Max useful consumers per group = number of partitions."}},{"@type":"Question","name":"What are offsets and how are they committed?","acceptedAnswer":{"@type":"Answer","text":"An offset is the consumer's position in a partition log. Committing an offset tells Kafka \"I've processed up to here.\" Auto-commit — periodic background commit ( enable.auto.commit=true ). Risk: message processed but crash before commit → reprocessed; commit before processing → lost on crash. Manual commit — commit after successful processing. commitSync() (blocking) or commitAsync() . Offsets are stored in the internal __consumer_offsets topic."}},{"@type":"Question","name":"How does Kafka replication work?","acceptedAnswer":{"@type":"Answer","text":"Each partition has one leader and zero or more followers (replicas). Producers and consumers talk to the leader; followers replicate data. ISR (In-Sync Replicas) — followers caught up with the leader. acks=all waits for all ISR replicas. If a leader dies, a follower from ISR is elected as the new leader. Set replication.factor=3 in production for fault tolerance."}},{"@type":"Question","name":"At-most-once, at-least-once, and exactly-once semantics.","acceptedAnswer":{"@type":"Answer","text":"Semantic How Tradeoff At-most-once Commit offset before processing Messages may be lost on crash At-least-once Commit offset after processing Messages may be reprocessed (duplicates) Exactly-once Idempotent producer + transactional consumer Higher latency, more complex Most apps use at-least-once + idempotent consumers (deduplicate by message ID)."}},{"@type":"Question","name":"Kafka vs RabbitMQ — when to use each?","acceptedAnswer":{"@type":"Answer","text":"Kafka RabbitMQ Model Distributed commit log Traditional message broker (AMQP) Throughput Very high (millions/sec) Moderate (tens of thousands/sec) Message retention Configurable (days/forever) Deleted after ack Replay Yes — re-read from any offset No — once consumed, gone Routing Topic + partition key Rich (exchanges, bindings, routing keys) Best for Event streaming, analytics, log pipelines Task queues, RPC, complex routing"}},{"@type":"Question","name":"How do you guarantee message ordering in Kafka?","acceptedAnswer":{"@type":"Answer","text":"Ordering is guaranteed only within a single partition . To preserve order for related events (e.g. all events for order #123): Use the same partition key (order ID) — hash routes to the same partition. Use a single partition topic if global ordering is required (limits throughput). Don't increase partitions without understanding the ordering impact."}},{"@type":"Question","name":"How does Kafka retain messages?","acceptedAnswer":{"@type":"Answer","text":"Messages are stored on disk (sequential writes — very fast). Retention controlled by: retention.ms — time-based (default 7 days). retention.bytes — size-based per partition. log compaction — keeps only the latest value per key (like a changelog/topic). Consumers track their own offset — slow consumers don't block others. But if a consumer falls behind beyond retention, data is lost for that consumer."}},{"@type":"Question","name":"What is a consumer group rebalance?","acceptedAnswer":{"@type":"Answer","text":"When consumers join or leave a group (startup, shutdown, crash, timeout), Kafka reassigns partitions among remaining consumers. During rebalance, consumption pauses — a \"stop-the-world\" event. Triggers: new consumer joins, consumer misses heartbeat ( session.timeout.ms ), partition count changes. Mitigate: cooperative rebalancing (incremental), static group membership, keep max.poll.interval.ms above processing time."}},{"@type":"Question","name":"What is the Schema Registry?","acceptedAnswer":{"@type":"Answer","text":"A separate service (Confluent) that stores schemas for Kafka message keys and values. Supports Avro, JSON Schema, and Protobuf. Benefits: Schema evolution — backward/forward compatibility rules. Compact serialization — Avro stores schema ID in the message, not the full schema. Contract enforcement — producers can't publish incompatible data."}},{"@type":"Question","name":"What is Kafka Connect?","acceptedAnswer":{"@type":"Answer","text":"A framework for streaming data between Kafka and external systems without writing custom producer/consumer code. Uses connectors: Source connectors — ingest from DB (Debezium CDC), files, APIs into Kafka topics. Sink connectors — export from Kafka to Elasticsearch, S3, JDBC, etc. Runs as a distributed, scalable service with fault tolerance and offset management built in."}},{"@type":"Question","name":"What is Kafka Streams?","acceptedAnswer":{"@type":"Answer","text":"A client library (not a separate cluster) for building real-time stream processing applications. Provides: map, filter, groupBy, aggregate, join operations on streams. Stateful processing with local RocksDB stores. Exactly-once semantics within the Kafka ecosystem. Windowing (tumbling, hopping, session windows). Alternative: Apache Flink or ksqlDB for more complex processing at scale."}},{"@type":"Question","name":"KRaft vs ZooKeeper — what changed?","acceptedAnswer":{"@type":"Answer","text":"Historically, Kafka depended on Apache ZooKeeper for cluster metadata, leader election, and controller management. KRaft (Kafka Raft) mode removes this dependency — Kafka manages its own metadata quorum using the Raft consensus protocol. Benefits: simpler deployment (one less system), faster metadata operations, better scalability for large partition counts. KRaft is the default in Kafka 3.3+."}},{"@type":"Question","name":"Key Kafka metrics to monitor.","acceptedAnswer":{"@type":"Answer","text":"Consumer lag — how far behind consumers are. High lag = processing bottleneck or consumer failure. Under-replicated partitions — replicas falling behind leader. Risk of data loss. Request rate / latency — broker throughput and response times. Active controller count — should always be 1. Offline partitions — partitions with no leader. Critical alert. Tools: Prometheus + Grafana, Confluent Control Center, LinkedIn Burrow for lag monitoring."}},{"@type":"Question","name":"How do you handle poison messages in Kafka?","acceptedAnswer":{"@type":"Answer","text":"A poison message repeatedly fails processing and blocks the partition. Patterns: Dead Letter Topic (DLT) — after N retries, publish the message to a separate topic for manual inspection. Skip and commit — log the error, commit offset, move on (data loss risk). Quarantine — store in a DB with error details for replay after fix. Spring Kafka and Kafka Connect have built-in DLT support."}},{"@type":"Question","name":"Using Kafka with Spring Boot.","acceptedAnswer":{"@type":"Answer","text":"spring-kafka provides: @KafkaListener(topics = \"orders\", groupId = \"processor\") — declarative consumer. KafkaTemplate — send messages programmatically. Auto-configuration from spring.kafka.* properties. Error handling with DefaultErrorHandler and dead letter topics. @RetryableTopic — automatic retry with backoff to DLT."}},{"@type":"Question","name":"What are compacted topics?","acceptedAnswer":{"@type":"Answer","text":"Log compaction retains only the latest value for each key — older values with the same key are eventually removed. The topic acts as a changelog (key → latest state). Use cases: user profile updates, config changes, CDC snapshots. Combined with retention.ms for time + key-based cleanup."}},{"@type":"Question","name":"How do you choose the number of partitions?","acceptedAnswer":{"@type":"Answer","text":"Consider: Target throughput — more partitions = more parallel consumers and producers. Consumer parallelism — max consumers per group = partition count. Ordering needs — fewer partitions = easier ordering. Broker resources — each partition has overhead (files, memory). Rule of thumb: start with # of consumers you need × 2 . Increasing partitions later is possible but can break key-based ordering if keys hash differently."}}]}
   </script>
 </head>
 
@@ -326,6 +330,158 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="Kafka interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Kafka Interview Questions and Answers</h1>
+      <p>22 hand-picked Kafka interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Apache Kafka and what problems does it solve?</h2>
+          <div class="seo-a"><p>Kafka is a <strong>distributed event streaming platform</strong> — a high-throughput, fault-tolerant, durable log for publishing and subscribing to streams of events. Use cases:</p><ul><li><strong>Event streaming</strong> — real-time data pipelines between services.</li><li><strong>Message queuing</strong> — decouple producers and consumers.</li><li><strong>Event sourcing / CQRS</strong> — durable log of all state changes.</li><li><strong>Log aggregation</strong> — collect logs/metrics from many sources.</li></ul><p>Unlike traditional message brokers, Kafka <strong>retains</strong> messages (configurable retention) and allows consumers to replay history.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain topics, partitions, and brokers.</h2>
+          <div class="seo-a"><ul><li><strong>Broker</strong> — a Kafka server that stores data and serves clients. A cluster has multiple brokers for fault tolerance.</li><li><strong>Topic</strong> — a named category/feed of messages (like a table in a DB).</li><li><strong>Partition</strong> — a topic is split into partitions for parallelism. Each partition is an ordered, immutable sequence of messages.</li><li><strong>Offset</strong> — a unique sequential ID for each message within a partition.</li></ul><p>More partitions = more parallelism (more consumers can read concurrently).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does a Kafka producer work?</h2>
+          <div class="seo-a"><p>The producer sends records to a topic. Key config:</p><ul><li><strong>key</strong> — determines partition (hash of key % num partitions). Same key → same partition.</li><li><strong>acks</strong> — durability guarantee: <code class="inline">0</code> (fire-and-forget), <code class="inline">1</code> (leader ack), <code class="inline">all</code> (all ISR replicas ack).</li><li><strong>retries</strong> — automatic retry on transient failures.</li><li><strong>idempotence</strong> — exactly-once per partition (no duplicates on retry).</li></ul><p>Producer batches messages for efficiency and compresses (snappy, lz4, zstd).</p></div>
+          <pre><code>Properties props = new Properties();
+props.put(&quot;acks&quot;, &quot;all&quot;);
+props.put(&quot;enable.idempotence&quot;, true);
+Producer&lt;String, Order&gt; producer = new KafkaProducer&lt;&gt;(props);
+producer.send(new ProducerRecord&lt;&gt;(&quot;orders&quot;, orderId, order));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a consumer group?</h2>
+          <div class="seo-a"><p>A <strong>consumer group</strong> is a set of consumers that jointly consume a topic. Kafka assigns each partition to <strong>exactly one consumer</strong> in the group — enabling parallel consumption while avoiding duplicate processing within the group.</p><p>Rules:</p><ul><li>Consumers in the <em>same</em> group share the work (load balancing).</li><li>Consumers in <em>different</em> groups each get all messages (pub/sub).</li><li>Max useful consumers per group = number of partitions.</li></ul></div>
+          <pre><code>props.put(&quot;group.id&quot;, &quot;order-processor&quot;);
+props.put(&quot;auto.offset.reset&quot;, &quot;earliest&quot;);
+KafkaConsumer&lt;String, Order&gt; consumer = new KafkaConsumer&lt;&gt;(props);
+consumer.subscribe(List.of(&quot;orders&quot;));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are offsets and how are they committed?</h2>
+          <div class="seo-a"><p>An <strong>offset</strong> is the consumer's position in a partition log. Committing an offset tells Kafka "I've processed up to here."</p><ul><li><strong>Auto-commit</strong> — periodic background commit (<code class="inline">enable.auto.commit=true</code>). Risk: message processed but crash before commit → reprocessed; commit before processing → lost on crash.</li><li><strong>Manual commit</strong> — commit after successful processing. <code class="inline">commitSync()</code> (blocking) or <code class="inline">commitAsync()</code>.</li></ul><p>Offsets are stored in the internal <code class="inline">__consumer_offsets</code> topic.</p></div>
+          <pre><code>while (true) {
+  ConsumerRecords&lt;String, Order&gt; records = consumer.poll(Duration.ofMillis(100));
+  for (var record : records) {
+    process(record.value());
+  }
+  consumer.commitSync();  // after batch processed
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Kafka replication work?</h2>
+          <div class="seo-a"><p>Each partition has one <strong>leader</strong> and zero or more <strong>followers</strong> (replicas). Producers and consumers talk to the leader; followers replicate data.</p><p><strong>ISR (In-Sync Replicas)</strong> — followers caught up with the leader. <code class="inline">acks=all</code> waits for all ISR replicas. If a leader dies, a follower from ISR is elected as the new leader.</p><p>Set <code class="inline">replication.factor=3</code> in production for fault tolerance.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>At-most-once, at-least-once, and exactly-once semantics.</h2>
+          <div class="seo-a"><table><tr><th>Semantic</th><th>How</th><th>Tradeoff</th></tr><tr><td><strong>At-most-once</strong></td><td>Commit offset before processing</td><td>Messages may be lost on crash</td></tr><tr><td><strong>At-least-once</strong></td><td>Commit offset after processing</td><td>Messages may be reprocessed (duplicates)</td></tr><tr><td><strong>Exactly-once</strong></td><td>Idempotent producer + transactional consumer</td><td>Higher latency, more complex</td></tr></table><p>Most apps use at-least-once + <strong>idempotent consumers</strong> (deduplicate by message ID).</p></div>
+          <pre><code>props.put(&quot;enable.idempotence&quot;, true);
+props.put(&quot;transactional.id&quot;, &quot;order-tx&quot;);
+producer.initTransactions();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Kafka vs RabbitMQ — when to use each?</h2>
+          <div class="seo-a"><table><tr><th></th><th>Kafka</th><th>RabbitMQ</th></tr><tr><td><strong>Model</strong></td><td>Distributed commit log</td><td>Traditional message broker (AMQP)</td></tr><tr><td><strong>Throughput</strong></td><td>Very high (millions/sec)</td><td>Moderate (tens of thousands/sec)</td></tr><tr><td><strong>Message retention</strong></td><td>Configurable (days/forever)</td><td>Deleted after ack</td></tr><tr><td><strong>Replay</strong></td><td>Yes — re-read from any offset</td><td>No — once consumed, gone</td></tr><tr><td><strong>Routing</strong></td><td>Topic + partition key</td><td>Rich (exchanges, bindings, routing keys)</td></tr><tr><td><strong>Best for</strong></td><td>Event streaming, analytics, log pipelines</td><td>Task queues, RPC, complex routing</td></tr></table></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you guarantee message ordering in Kafka?</h2>
+          <div class="seo-a"><p>Ordering is guaranteed <strong>only within a single partition</strong>. To preserve order for related events (e.g. all events for order #123):</p><ul><li>Use the same <strong>partition key</strong> (order ID) — hash routes to the same partition.</li><li>Use a <strong>single partition</strong> topic if global ordering is required (limits throughput).</li><li>Don't increase partitions without understanding the ordering impact.</li></ul></div>
+          <pre><code>producer.send(new ProducerRecord&lt;&gt;(&quot;orders&quot;, order.getId(), event));
+// all events for same order ID land in same partition</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Kafka retain messages?</h2>
+          <div class="seo-a"><p>Messages are stored on disk (sequential writes — very fast). Retention controlled by:</p><ul><li><strong>retention.ms</strong> — time-based (default 7 days).</li><li><strong>retention.bytes</strong> — size-based per partition.</li><li><strong>log compaction</strong> — keeps only the latest value per key (like a changelog/topic).</li></ul><p>Consumers track their own offset — slow consumers don't block others. But if a consumer falls behind beyond retention, data is lost for that consumer.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is a consumer group rebalance?</h2>
+          <div class="seo-a"><p>When consumers join or leave a group (startup, shutdown, crash, timeout), Kafka <strong>reassigns partitions</strong> among remaining consumers. During rebalance, consumption pauses — a "stop-the-world" event.</p><p>Triggers: new consumer joins, consumer misses heartbeat (<code class="inline">session.timeout.ms</code>), partition count changes.</p><p>Mitigate: cooperative rebalancing (incremental), static group membership, keep <code class="inline">max.poll.interval.ms</code> above processing time.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the Schema Registry?</h2>
+          <div class="seo-a"><p>A separate service (Confluent) that stores <strong>schemas</strong> for Kafka message keys and values. Supports Avro, JSON Schema, and Protobuf.</p><p>Benefits:</p><ul><li><strong>Schema evolution</strong> — backward/forward compatibility rules.</li><li><strong>Compact serialization</strong> — Avro stores schema ID in the message, not the full schema.</li><li><strong>Contract enforcement</strong> — producers can't publish incompatible data.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is Kafka Connect?</h2>
+          <div class="seo-a"><p>A framework for <strong>streaming data between Kafka and external systems</strong> without writing custom producer/consumer code. Uses connectors:</p><ul><li><strong>Source connectors</strong> — ingest from DB (Debezium CDC), files, APIs into Kafka topics.</li><li><strong>Sink connectors</strong> — export from Kafka to Elasticsearch, S3, JDBC, etc.</li></ul><p>Runs as a distributed, scalable service with fault tolerance and offset management built in.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is Kafka Streams?</h2>
+          <div class="seo-a"><p>A <strong>client library</strong> (not a separate cluster) for building real-time stream processing applications. Provides:</p><ul><li>map, filter, groupBy, aggregate, join operations on streams.</li><li>Stateful processing with local RocksDB stores.</li><li>Exactly-once semantics within the Kafka ecosystem.</li><li>Windowing (tumbling, hopping, session windows).</li></ul><p>Alternative: Apache Flink or ksqlDB for more complex processing at scale.</p></div>
+          <pre><code>StreamsBuilder builder = new StreamsBuilder();
+builder.stream(&quot;orders&quot;)
+  .groupByKey()
+  .count()
+  .toStream()
+  .to(&quot;order-counts&quot;);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>KRaft vs ZooKeeper — what changed?</h2>
+          <div class="seo-a"><p>Historically, Kafka depended on <strong>Apache ZooKeeper</strong> for cluster metadata, leader election, and controller management. <strong>KRaft</strong> (Kafka Raft) mode removes this dependency — Kafka manages its own metadata quorum using the Raft consensus protocol.</p><p>Benefits: simpler deployment (one less system), faster metadata operations, better scalability for large partition counts. KRaft is the default in Kafka 3.3+.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Key Kafka metrics to monitor.</h2>
+          <div class="seo-a"><ul><li><strong>Consumer lag</strong> — how far behind consumers are. High lag = processing bottleneck or consumer failure.</li><li><strong>Under-replicated partitions</strong> — replicas falling behind leader. Risk of data loss.</li><li><strong>Request rate / latency</strong> — broker throughput and response times.</li><li><strong>Active controller count</strong> — should always be 1.</li><li><strong>Offline partitions</strong> — partitions with no leader. Critical alert.</li></ul><p>Tools: Prometheus + Grafana, Confluent Control Center, LinkedIn Burrow for lag monitoring.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle poison messages in Kafka?</h2>
+          <div class="seo-a"><p>A <strong>poison message</strong> repeatedly fails processing and blocks the partition. Patterns:</p><ul><li><strong>Dead Letter Topic (DLT)</strong> — after N retries, publish the message to a separate topic for manual inspection.</li><li><strong>Skip and commit</strong> — log the error, commit offset, move on (data loss risk).</li><li><strong>Quarantine</strong> — store in a DB with error details for replay after fix.</li></ul><p>Spring Kafka and Kafka Connect have built-in DLT support.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Using Kafka with Spring Boot.</h2>
+          <div class="seo-a"><p><code class="inline">spring-kafka</code> provides:</p><ul><li><code class="inline">@KafkaListener(topics = "orders", groupId = "processor")</code> — declarative consumer.</li><li><code class="inline">KafkaTemplate</code> — send messages programmatically.</li><li>Auto-configuration from <code class="inline">spring.kafka.*</code> properties.</li><li>Error handling with <code class="inline">DefaultErrorHandler</code> and dead letter topics.</li><li><code class="inline">@RetryableTopic</code> — automatic retry with backoff to DLT.</li></ul></div>
+          <pre><code>@KafkaListener(topics = &quot;orders&quot;, groupId = &quot;processor&quot;)
+public void handle(Order order) {
+  orderService.process(order);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are compacted topics?</h2>
+          <div class="seo-a"><p>Log compaction retains only the <strong>latest value for each key</strong> — older values with the same key are eventually removed. The topic acts as a <strong>changelog</strong> (key → latest state).</p><p>Use cases: user profile updates, config changes, CDC snapshots. Combined with retention.ms for time + key-based cleanup.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you choose the number of partitions?</h2>
+          <div class="seo-a"><p>Consider:</p><ul><li><strong>Target throughput</strong> — more partitions = more parallel consumers and producers.</li><li><strong>Consumer parallelism</strong> — max consumers per group = partition count.</li><li><strong>Ordering needs</strong> — fewer partitions = easier ordering.</li><li><strong>Broker resources</strong> — each partition has overhead (files, memory).</li></ul><p>Rule of thumb: start with <code class="inline"># of consumers you need × 2</code>. Increasing partitions later is possible but can break key-based ordering if keys hash differently.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is an idempotent producer?</h2>
+          <div class="seo-a"><p>With <code class="inline">enable.idempotence=true</code>, the producer assigns a PID (Producer ID) and sequence numbers per partition. If a batch is retried due to network error, the broker deduplicates using the sequence number — preventing duplicate messages within a session.</p><p>Required settings: <code class="inline">acks=all</code>, <code class="inline">retries &gt; 0</code>, <code class="inline">max.in.flight.requests.per.connection ≤ 5</code>.</p></div>
+          <pre><code>props.put(&quot;enable.idempotence&quot;, true);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How is Kafka used in event sourcing?</h2>
+          <div class="seo-a"><p><strong>Event sourcing</strong> — store state changes as a sequence of events, not current state. Kafka's durable log is a natural event store:</p><ol><li>Commands produce events to a topic.</li><li>Events are the source of truth.</li><li>Current state is derived by replaying events (or reading from a materialised view).</li></ol><p><strong>CQRS</strong> — separate write (command) and read (query) models, connected via Kafka events.</p></div>
+          
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +555,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="kafka";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

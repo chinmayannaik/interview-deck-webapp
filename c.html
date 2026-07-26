@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>C Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 C interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/c" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="C Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 C interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/c" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="C Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is C and what is it used for?","acceptedAnswer":{"@type":"Answer","text":"C is a procedural, compiled, low-level language created in 1972. It provides direct memory access via pointers and maps closely to machine operations. Used for: operating systems (Linux kernel), embedded systems, device drivers, databases (PostgreSQL, Redis), language runtimes (Python interpreter, JVM), and performance-critical libraries."}},{"@type":"Question","name":"What is a pointer in C?","acceptedAnswer":{"@type":"Answer","text":"A pointer is a variable that stores the memory address of another variable. Declared with * : int *p; &amp;x — address-of operator (get address of x). *p — dereference (access value at address). Pointers enable dynamic memory, arrays, strings, function callbacks, and efficient parameter passing by reference."}},{"@type":"Question","name":"malloc, calloc, realloc, and free.","acceptedAnswer":{"@type":"Answer","text":"malloc(size) — allocate uninitialized bytes on the heap. Returns void* or NULL on failure. calloc(n, size) — allocate and zero-initialize n elements. realloc(ptr, new_size) — resize existing allocation (may move memory). free(ptr) — release heap memory. Must match every malloc/calloc/realloc. Heap memory persists until freed — unlike stack variables that die when the function returns."}},{"@type":"Question","name":"Stack vs heap memory.","acceptedAnswer":{"@type":"Answer","text":"Stack Heap Allocation Automatic (local variables) Manual (malloc/free) Lifetime Function scope Until freed Speed Very fast Slower Size Limited (~1-8 MB) Limited by RAM Fragmentation None Possible"}},{"@type":"Question","name":"Relationship between arrays and pointers.","acceptedAnswer":{"@type":"Answer","text":"An array name decays to a pointer to its first element in most contexts. arr[i] is equivalent to *(arr + i) . Key differences: sizeof(arr) gives total array size; sizeof(ptr) gives pointer size (8 bytes on 64-bit). Arrays can't be reassigned; pointers can."}},{"@type":"Question","name":"How are strings represented in C?","acceptedAnswer":{"@type":"Answer","text":"C has no built-in string type. Strings are null-terminated char arrays — the '\\0' character marks the end. Use string.h : strlen , strcpy , strncpy (safer), strcmp , strcat . Always ensure the destination buffer is large enough."}},{"@type":"Question","name":"What is a struct?","acceptedAnswer":{"@type":"Answer","text":"A struct groups related variables under one type. Members are stored contiguously in memory (with possible padding for alignment). Access with dot notation ( s.field ) or arrow ( ptr-&gt;field ) for pointers to structs."}},{"@type":"Question","name":"What are function pointers?","acceptedAnswer":{"@type":"Answer","text":"A variable that stores the address of a function. Syntax: return_type (*name)(param_types) . Used for: callbacks (qsort comparator, signal handlers), plugin architectures, state machines, and implementing polymorphism-like behavior in C."}},{"@type":"Question","name":"C preprocessor directives.","acceptedAnswer":{"@type":"Answer","text":"#include — paste header file contents (<> for system, \"\" for local). #define — text substitution / macros. #ifdef / #ifndef / #endif — conditional compilation (header guards). #pragma once — non-standard but widely supported header guard. Macros are processed before compilation — no type checking."}},{"@type":"Question","name":"static, extern, const, and volatile.","acceptedAnswer":{"@type":"Answer","text":"static (variable) — persists between function calls; file scope if at file level. extern — declares a variable defined elsewhere (shared across files). const — read-only; compiler may place in read-only memory. volatile — tells compiler the value may change unexpectedly (hardware registers, ISR). No optimization caching."}},{"@type":"Question","name":"What is undefined behavior in C?","acceptedAnswer":{"@type":"Answer","text":"Behavior the C standard does not define — the program can do anything (crash, wrong result, appear to work). Common sources: Dereferencing NULL or dangling pointers Signed integer overflow Buffer overflow / out-of-bounds access Use after free Uninitialized variables Modifying a string literal"}},{"@type":"Question","name":"Bitwise operators in C.","acceptedAnswer":{"@type":"Answer","text":"&amp; AND — mask bits | OR — set bits ^ XOR — toggle bits ~ NOT — flip all bits &lt;&lt; left shift — multiply by 2^n &gt;&gt; right shift — divide by 2^n Used for: flags, embedded registers, fast arithmetic, permission bitmasks."}},{"@type":"Question","name":"Recursion in C — how does it work?","acceptedAnswer":{"@type":"Answer","text":"A function calls itself with a smaller subproblem until a base case stops recursion. Each call pushes a new stack frame. Risks: stack overflow on deep recursion (limited stack size). Tail recursion may be optimized by the compiler but isn't guaranteed in C."}},{"@type":"Question","name":"File I/O in C.","acceptedAnswer":{"@type":"Answer","text":"Use FILE* from stdio.h : fopen(path, mode) — open ('r', 'w', 'a', 'rb'). fread/fwrite — binary I/O. fgets/fprintf — text I/O. fclose — always close; flush buffers. Check return values — fopen returns NULL on failure."}},{"@type":"Question","name":"Implement a singly linked list node in C.","acceptedAnswer":{"@type":"Answer","text":"A node is a struct with data and a pointer to the next node. The list is a pointer to the head node. Operations: insert (head/tail), delete, search, traverse. Memory must be manually managed with malloc/free."}},{"@type":"Question","name":"enum and typedef.","acceptedAnswer":{"@type":"Answer","text":"enum — named integer constants. Compiler assigns sequential values unless specified. Improves readability over magic numbers. typedef — creates an alias for an existing type. Simplifies complex types (especially function pointers and structs)."}},{"@type":"Question","name":"sizeof and struct padding.","acceptedAnswer":{"@type":"Answer","text":"sizeof returns the size in bytes of a type or variable. sizeof(arr)/sizeof(arr[0]) gives array length. Structs may have padding — the compiler inserts unused bytes so members align to their natural boundaries (e.g. int on 4-byte boundary). Reordering members can reduce struct size."}},{"@type":"Question","name":"What is a void pointer?","acceptedAnswer":{"@type":"Answer","text":"void* is a generic pointer that can point to any data type. Cannot be dereferenced directly — must be cast to the correct type first. Used in: malloc (returns void*), qsort/bsearch callbacks, generic data structures, and low-level system programming."}},{"@type":"Question","name":"Why do header files need include guards?","acceptedAnswer":{"@type":"Answer","text":"Without guards, including a header twice causes duplicate definition errors. Include guards prevent re-processing: #ifndef FILE_H / #define FILE_H / ... / #endif or #pragma once . Headers declare (function prototypes, types); source files (.c) define (implementations)."}},{"@type":"Question","name":"What causes a segmentation fault and how do you debug it?","acceptedAnswer":{"@type":"Answer","text":"A segfault occurs when a program accesses memory it doesn't have permission to access. Common causes: NULL pointer dereference Buffer overflow Use after free Stack overflow (deep recursion) Writing to read-only memory Debug with: gdb (core dumps), Valgrind (memory errors), AddressSanitizer (-fsanitize=address)."}}]}
   </script>
 </head>
 
@@ -326,6 +330,177 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="C interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>C Interview Questions and Answers</h1>
+      <p>20 hand-picked C interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is C and what is it used for?</h2>
+          <div class="seo-a"><p>C is a <strong>procedural, compiled, low-level</strong> language created in 1972. It provides direct memory access via pointers and maps closely to machine operations.</p><p>Used for: operating systems (Linux kernel), embedded systems, device drivers, databases (PostgreSQL, Redis), language runtimes (Python interpreter, JVM), and performance-critical libraries.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is a pointer in C?</h2>
+          <div class="seo-a"><p>A <strong>pointer</strong> is a variable that stores the <em>memory address</em> of another variable. Declared with <code class="inline">*</code>: <code class="inline">int *p;</code></p><ul><li><code class="inline">&amp;x</code> — address-of operator (get address of x).</li><li><code class="inline">*p</code> — dereference (access value at address).</li></ul><p>Pointers enable dynamic memory, arrays, strings, function callbacks, and efficient parameter passing by reference.</p></div>
+          <pre><code>int x = 42;
+int *p = &amp;x;   // p holds address of x
+printf(&quot;%d&quot;, *p);  // 42</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>malloc, calloc, realloc, and free.</h2>
+          <div class="seo-a"><ul><li><strong>malloc(size)</strong> — allocate uninitialized bytes on the heap. Returns void* or NULL on failure.</li><li><strong>calloc(n, size)</strong> — allocate and zero-initialize n elements.</li><li><strong>realloc(ptr, new_size)</strong> — resize existing allocation (may move memory).</li><li><strong>free(ptr)</strong> — release heap memory. Must match every malloc/calloc/realloc.</li></ul><p>Heap memory persists until freed — unlike stack variables that die when the function returns.</p></div>
+          <pre><code>int *arr = malloc(10 * sizeof(int));
+if (arr == NULL) { /* handle error */ }
+// use arr...
+free(arr);
+arr = NULL;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Stack vs heap memory.</h2>
+          <div class="seo-a"><table><tr><th></th><th>Stack</th><th>Heap</th></tr><tr><td><strong>Allocation</strong></td><td>Automatic (local variables)</td><td>Manual (malloc/free)</td></tr><tr><td><strong>Lifetime</strong></td><td>Function scope</td><td>Until freed</td></tr><tr><td><strong>Speed</strong></td><td>Very fast</td><td>Slower</td></tr><tr><td><strong>Size</strong></td><td>Limited (~1-8 MB)</td><td>Limited by RAM</td></tr><tr><td><strong>Fragmentation</strong></td><td>None</td><td>Possible</td></tr></table></div>
+          <pre><code>int* bad() {
+  int x = 5;
+  return &amp;x;  // BUG: x is on the stack
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Relationship between arrays and pointers.</h2>
+          <div class="seo-a"><p>An array name <strong>decays to a pointer</strong> to its first element in most contexts. <code class="inline">arr[i]</code> is equivalent to <code class="inline">*(arr + i)</code>.</p><p>Key differences: <code class="inline">sizeof(arr)</code> gives total array size; <code class="inline">sizeof(ptr)</code> gives pointer size (8 bytes on 64-bit). Arrays can't be reassigned; pointers can.</p></div>
+          <pre><code>void print(int *arr, int len) {
+  for (int i = 0; i &lt; len; i++)
+    printf(&quot;%d &quot;, arr[i]);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How are strings represented in C?</h2>
+          <div class="seo-a"><p>C has no built-in string type. Strings are <strong>null-terminated char arrays</strong> — the <code class="inline">'\0'</code> character marks the end.</p><p>Use <code class="inline">string.h</code>: <code class="inline">strlen</code>, <code class="inline">strcpy</code>, <code class="inline">strncpy</code> (safer), <code class="inline">strcmp</code>, <code class="inline">strcat</code>. Always ensure the destination buffer is large enough.</p></div>
+          <pre><code>char name[50];
+strncpy(name, &quot;Alice&quot;, sizeof(name) - 1);
+name[sizeof(name) - 1] = '\0';</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a struct?</h2>
+          <div class="seo-a"><p>A <strong>struct</strong> groups related variables under one type. Members are stored contiguously in memory (with possible padding for alignment).</p><p>Access with dot notation (<code class="inline">s.field</code>) or arrow (<code class="inline">ptr-&gt;field</code>) for pointers to structs.</p></div>
+          <pre><code>struct Point { int x; int y; };
+struct Point p = {10, 20};
+struct Point *ptr = &amp;p;
+printf(&quot;%d&quot;, ptr-&gt;x);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are function pointers?</h2>
+          <div class="seo-a"><p>A variable that stores the address of a function. Syntax: <code class="inline">return_type (*name)(param_types)</code>.</p><p>Used for: callbacks (qsort comparator, signal handlers), plugin architectures, state machines, and implementing polymorphism-like behavior in C.</p></div>
+          <pre><code>int add(int a, int b) { return a + b; }
+
+int (*op)(int, int) = add;
+printf(&quot;%d&quot;, op(3, 4));  // 7</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>C preprocessor directives.</h2>
+          <div class="seo-a"><ul><li><code class="inline">#include</code> — paste header file contents (<> for system, "" for local).</li><li><code class="inline">#define</code> — text substitution / macros.</li><li><code class="inline">#ifdef / #ifndef / #endif</code> — conditional compilation (header guards).</li><li><code class="inline">#pragma once</code> — non-standard but widely supported header guard.</li></ul><p>Macros are processed before compilation — no type checking.</p></div>
+          <pre><code>#ifndef MY_HEADER_H
+#define MY_HEADER_H
+// declarations
+#endif</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>static, extern, const, and volatile.</h2>
+          <div class="seo-a"><ul><li><strong>static (variable)</strong> — persists between function calls; file scope if at file level.</li><li><strong>extern</strong> — declares a variable defined elsewhere (shared across files).</li><li><strong>const</strong> — read-only; compiler may place in read-only memory.</li><li><strong>volatile</strong> — tells compiler the value may change unexpectedly (hardware registers, ISR). No optimization caching.</li></ul></div>
+          <pre><code>static int count = 0;  // persists between calls
+void increment() { count++; }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is undefined behavior in C?</h2>
+          <div class="seo-a"><p>Behavior the C standard does not define — the program can do <em>anything</em> (crash, wrong result, appear to work). Common sources:</p><ul><li>Dereferencing NULL or dangling pointers</li><li>Signed integer overflow</li><li>Buffer overflow / out-of-bounds access</li><li>Use after free</li><li>Uninitialized variables</li><li>Modifying a string literal</li></ul></div>
+          <pre><code>char *s = &quot;hello&quot;;
+s[0] = 'H';  // UB: string literals are read-only</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Bitwise operators in C.</h2>
+          <div class="seo-a"><ul><li><code class="inline">&amp;</code> AND — mask bits</li><li><code class="inline">|</code> OR — set bits</li><li><code class="inline">^</code> XOR — toggle bits</li><li><code class="inline">~</code> NOT — flip all bits</li><li><code class="inline">&lt;&lt;</code> left shift — multiply by 2^n</li><li><code class="inline">&gt;&gt;</code> right shift — divide by 2^n</li></ul><p>Used for: flags, embedded registers, fast arithmetic, permission bitmasks.</p></div>
+          <pre><code>#define FLAG_READ  0x01
+#define FLAG_WRITE 0x02
+int perms = FLAG_READ | FLAG_WRITE;
+if (perms &amp; FLAG_READ) { /* can read */ }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Recursion in C — how does it work?</h2>
+          <div class="seo-a"><p>A function calls itself with a smaller subproblem until a <strong>base case</strong> stops recursion. Each call pushes a new stack frame.</p><p>Risks: stack overflow on deep recursion (limited stack size). Tail recursion may be optimized by the compiler but isn't guaranteed in C.</p></div>
+          <pre><code>int factorial(int n) {
+  if (n &lt;= 1) return 1;       // base case
+  return n * factorial(n - 1);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>File I/O in C.</h2>
+          <div class="seo-a"><p>Use <code class="inline">FILE*</code> from <code class="inline">stdio.h</code>:</p><ul><li><code class="inline">fopen(path, mode)</code> — open ('r', 'w', 'a', 'rb').</li><li><code class="inline">fread/fwrite</code> — binary I/O.</li><li><code class="inline">fgets/fprintf</code> — text I/O.</li><li><code class="inline">fclose</code> — always close; flush buffers.</li></ul><p>Check return values — fopen returns NULL on failure.</p></div>
+          <pre><code>FILE *f = fopen(&quot;data.txt&quot;, &quot;r&quot;);
+if (!f) { perror(&quot;fopen&quot;); return -1; }
+char buf[256];
+while (fgets(buf, sizeof(buf), f)) printf(&quot;%s&quot;, buf);
+fclose(f);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a singly linked list node in C.</h2>
+          <div class="seo-a"><p>A node is a struct with data and a pointer to the next node. The list is a pointer to the head node.</p><p>Operations: insert (head/tail), delete, search, traverse. Memory must be manually managed with malloc/free.</p></div>
+          <pre><code>struct Node {
+  int data;
+  struct Node *next;
+};
+
+void push_front(struct Node **head, int val) {
+  struct Node *n = malloc(sizeof(struct Node));
+  n-&gt;data = val;
+  n-&gt;next = *head;
+  *head = n;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>enum and typedef.</h2>
+          <div class="seo-a"><p><strong>enum</strong> — named integer constants. Compiler assigns sequential values unless specified. Improves readability over magic numbers.</p><p><strong>typedef</strong> — creates an alias for an existing type. Simplifies complex types (especially function pointers and structs).</p></div>
+          <pre><code>typedef enum { IDLE, RUNNING, STOPPED } State;
+
+typedef struct Node Node;
+struct Node { int data; Node *next; };</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>sizeof and struct padding.</h2>
+          <div class="seo-a"><p><code class="inline">sizeof</code> returns the size in bytes of a type or variable. <code class="inline">sizeof(arr)/sizeof(arr[0])</code> gives array length.</p><p>Structs may have <strong>padding</strong> — the compiler inserts unused bytes so members align to their natural boundaries (e.g. int on 4-byte boundary). Reordering members can reduce struct size.</p></div>
+          <pre><code>struct Bad  { char a; int b; };  // likely 8 bytes (3 padding)
+struct Good { int b; char a; };  // likely 8 bytes (3 padding at end)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a void pointer?</h2>
+          <div class="seo-a"><p><code class="inline">void*</code> is a generic pointer that can point to any data type. Cannot be dereferenced directly — must be cast to the correct type first.</p><p>Used in: malloc (returns void*), qsort/bsearch callbacks, generic data structures, and low-level system programming.</p></div>
+          <pre><code>void *generic = malloc(100);
+int *ints = (int *)generic;
+free(generic);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why do header files need include guards?</h2>
+          <div class="seo-a"><p>Without guards, including a header twice causes <strong>duplicate definition</strong> errors. Include guards prevent re-processing:</p><p><code class="inline">#ifndef FILE_H / #define FILE_H / ... / #endif</code> or <code class="inline">#pragma once</code>.</p><p>Headers declare (function prototypes, types); source files (.c) define (implementations).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What causes a segmentation fault and how do you debug it?</h2>
+          <div class="seo-a"><p>A <strong>segfault</strong> occurs when a program accesses memory it doesn't have permission to access. Common causes:</p><ul><li>NULL pointer dereference</li><li>Buffer overflow</li><li>Use after free</li><li>Stack overflow (deep recursion)</li><li>Writing to read-only memory</li></ul><p>Debug with: gdb (core dumps), Valgrind (memory errors), AddressSanitizer (-fsanitize=address).</p></div>
+          <pre><code>gcc -g -Wall -fsanitize=address -o app app.c
+gdb ./app
+# run, then: bt (backtrace on crash)</code></pre>
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +574,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="c";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>JavaScript Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="64 JavaScript interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/javascript" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="JavaScript Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="64 JavaScript interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/javascript" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="JavaScript Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a closure? Give a real use.","acceptedAnswer":{"@type":"Answer","text":"A closure is a function that keeps access to variables from its outer (lexical) scope even after the outer function has returned. The inner function \"remembers\" the environment it was created in. Uses: data privacy (private variables), function factories, and holding state in callbacks — e.g. a debounce keeps its timer id in a closure."}},{"@type":"Question","name":"var vs let vs const, and what is hoisting?","acceptedAnswer":{"@type":"Answer","text":"var — function-scoped, hoisted and initialised to undefined , re-declarable. let — block-scoped, hoisted but in the Temporal Dead Zone (error if used before declaration). const — block-scoped, assigned once. The binding is constant, not the object — you can still mutate a const array/object. Hoisting : declarations are moved to the top of their scope at compile time. var and function declarations are usable early; let/const are not."}},{"@type":"Question","name":"Explain the event loop, microtasks vs macrotasks.","acceptedAnswer":{"@type":"Answer","text":"JS is single-threaded. The call stack runs synchronous code. Async callbacks wait in queues and the event loop pushes them onto the stack when it's empty. Microtask queue — Promise .then , queueMicrotask , await continuations. Fully drained after each task. Macrotask queue — setTimeout , setInterval , I/O, UI events. Microtasks always run before the next macrotask."}},{"@type":"Question","name":"== vs === ?","acceptedAnswer":{"@type":"Answer","text":"== compares after type coercion ( 0 == \"0\" is true ). === checks value and type with no coercion. Always use === unless you deliberately want coercion (e.g. x == null to catch both null and undefined)."}},{"@type":"Question","name":"How does the this keyword work?","acceptedAnswer":{"@type":"Answer","text":"this depends on how a function is called : Regular call → global object, or undefined in strict mode. Method call obj.fn() → obj . Arrow function → no own this ; inherits from the enclosing scope. call / apply / bind → set this explicitly."}},{"@type":"Question","name":"Promise vs async/await, and how do you handle errors?","acceptedAnswer":{"@type":"Answer","text":"A Promise represents a future value (pending → fulfilled/rejected). async/await is syntactic sugar that lets asynchronous code read synchronously. Errors: .catch() on a chain, or try/catch around await . Use Promise.all for parallel and Promise.allSettled when you need every result regardless of failures."}},{"@type":"Question","name":"Debounce vs throttle — what and when?","acceptedAnswer":{"@type":"Answer","text":"Debounce delays execution until events stop firing for a specified time. If another event occurs before the delay ends, the timer resets. It is ideal for search boxes, autocomplete, and validation. Throttle limits execution to at most once every specified interval, regardless of how many events occur. It is ideal for scroll, resize, drag, and mouse movement events."}},{"@type":"Question","name":"map vs forEach vs reduce.","acceptedAnswer":{"@type":"Answer","text":"map returns a new transformed array. forEach just iterates and returns nothing. reduce folds an array into a single value (sum, group-by, flatten, etc.)."}},{"@type":"Question","name":"Shallow copy vs deep copy.","acceptedAnswer":{"@type":"Answer","text":"Shallow copy creates a new object but copies only the first level. Nested objects and arrays are still shared references, so modifying them affects both the original and the copied object. Deep copy creates a completely independent clone, including all nested objects and arrays. Modern JavaScript provides structuredClone() for deep cloning. The older JSON.parse(JSON.stringify()) approach works only for simple JSON data and loses Dates, Maps, Sets, functions, undefined values, and class instances."}},{"@type":"Question","name":"Explain prototypal inheritance.","acceptedAnswer":{"@type":"Answer","text":"Prototypal inheritance is JavaScript's way of sharing properties and methods between objects. Every object has a hidden link called a [[Prototype]] . If a property or method is not found on an object, JavaScript automatically looks for it in its prototype, then continues searching up the prototype chain until it finds it or reaches null ."}},{"@type":"Question","name":"What is the Temporal Dead Zone (TDZ)?","acceptedAnswer":{"@type":"Answer","text":"The span between entering a scope and the point where a let / const variable is declared. The binding is hoisted but not initialised, so accessing it in that window throws a ReferenceError ."}},{"@type":"Question","name":"Spread vs Rest operator.","acceptedAnswer":{"@type":"Answer","text":"Although both use the ... syntax, they perform opposite operations. Spread expands an array or object into individual elements, while Rest collects multiple values into an array or object."}},{"@type":"Question","name":"null vs undefined.","acceptedAnswer":{"@type":"Answer","text":"undefined — a variable declared but not assigned, or a missing property/return. Set by the engine. null — an intentional 'no value', set by the developer. Quirk: typeof null is 'object' (a historical bug)."}},{"@type":"Question","name":"What is a higher-order function?","acceptedAnswer":{"@type":"Answer","text":"A function that takes a function as an argument and/or returns a function . Examples: map , filter , setTimeout , and any function factory."}},{"@type":"Question","name":"What is currying?","acceptedAnswer":{"@type":"Answer","text":"Currying is a functional programming technique that transforms a function with multiple arguments into a sequence of functions, each taking one argument. Each function remembers its argument using a closure until all required arguments are provided. Currying enables partial application , code reuse, and function composition."}},{"@type":"Question","name":"What is event delegation?","acceptedAnswer":{"@type":"Answer","text":"Event delegation is a technique where you attach a single event listener to a parent element instead of adding listeners to each child. It works because events bubble from the target element up to its parent, allowing the parent to handle events from its children."}},{"@type":"Question","name":"Event bubbling vs capturing.","acceptedAnswer":{"@type":"Answer","text":"When an event fires, it travels capturing phase (top → target) then bubbling phase (target → top). Listeners run in the bubbling phase by default; pass { capture: true } for the capture phase. stopPropagation() halts travel; preventDefault() cancels the default action."}},{"@type":"Question","name":"What is callback hell and how do you avoid it?","acceptedAnswer":{"@type":"Answer","text":"Callback Hell is a situation where asynchronous callbacks become deeply nested, making code hard to read and maintain. It is commonly avoided using Promises and async/await ."}},{"@type":"Question","name":"How do you make an object immutable?","acceptedAnswer":{"@type":"Answer","text":"You can make an object immutable using Object.freeze() . It prevents adding, removing, or modifying an object's properties. However, Object.freeze() is shallow , meaning nested objects can still be modified unless they are also frozen."}},{"@type":"Question","name":"When would you use a Set or a Map?","acceptedAnswer":{"@type":"Answer","text":"Use a Set when you need to store unique values or quickly check if a value exists. Use a Map when you need to store key/value pairs where keys can be of any data type (including objects), while preserving insertion order."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="JavaScript interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>JavaScript Interview Questions and Answers</h1>
+      <p>64 hand-picked JavaScript interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is a closure? Give a real use.</h2>
+          <div class="seo-a"><p>A <strong>closure</strong> is a function that keeps access to variables from its outer (lexical) scope even after the outer function has returned. The inner function "remembers" the environment it was created in.</p><p>Uses: <strong>data privacy</strong> (private variables), function factories, and holding state in callbacks — e.g. a <code class="inline">debounce</code> keeps its timer id in a closure.</p></div>
+          <pre><code>function counter() { let n = 0; return () =&gt; ++n; }
+const next = counter();
+next(); // 1  → n survives but stays private</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>var vs let vs const, and what is hoisting?</h2>
+          <div class="seo-a"><ul><li><strong>var</strong> — function-scoped, hoisted and initialised to <code class="inline">undefined</code>, re-declarable.</li><li><strong>let</strong> — block-scoped, hoisted but in the <strong>Temporal Dead Zone</strong> (error if used before declaration).</li><li><strong>const</strong> — block-scoped, assigned once. The <em>binding</em> is constant, not the object — you can still mutate a <code class="inline">const</code> array/object.</li></ul><p><strong>Hoisting</strong>: declarations are moved to the top of their scope at compile time. <code class="inline">var</code> and function declarations are usable early; <code class="inline">let/const</code> are not.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain the event loop, microtasks vs macrotasks.</h2>
+          <div class="seo-a"><p>JS is single-threaded. The <strong>call stack</strong> runs synchronous code. Async callbacks wait in queues and the <strong>event loop</strong> pushes them onto the stack when it's empty.</p><ul><li><strong>Microtask queue</strong> — Promise <code class="inline">.then</code>, <code class="inline">queueMicrotask</code>, <code class="inline">await</code> continuations. Fully drained after each task.</li><li><strong>Macrotask queue</strong> — <code class="inline">setTimeout</code>, <code class="inline">setInterval</code>, I/O, UI events.</li></ul><p>Microtasks always run before the next macrotask.</p></div>
+          <pre><code>console.log(1);
+setTimeout(() =&gt; console.log(2), 0);
+Promise.resolve().then(() =&gt; console.log(3));
+console.log(4);
+// → 1, 4, 3, 2</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>== vs === ?</h2>
+          <div class="seo-a"><p><strong>==</strong> compares after type coercion (<code class="inline">0 == "0"</code> is <code class="inline">true</code>). <strong>===</strong> checks value <em>and</em> type with no coercion.</p><p>Always use <code class="inline">===</code> unless you deliberately want coercion (e.g. <code class="inline">x == null</code> to catch both null and undefined).</p></div>
+          <pre><code>0 == '';    // true
+0 === '';   // false
+null == undefined; // true</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does the this keyword work?</h2>
+          <div class="seo-a"><p><code class="inline">this</code> depends on <em>how a function is called</em>:</p><ul><li>Regular call → global object, or <code class="inline">undefined</code> in strict mode.</li><li>Method call <code class="inline">obj.fn()</code> → <code class="inline">obj</code>.</li><li><strong>Arrow function</strong> → no own <code class="inline">this</code>; inherits from the enclosing scope.</li><li><code class="inline">call</code> / <code class="inline">apply</code> / <code class="inline">bind</code> → set <code class="inline">this</code> explicitly.</li></ul></div>
+          <pre><code>const obj = {
+  name: 'A',
+  greet() { setTimeout(() =&gt; console.log(this.name), 0); }
+};
+obj.greet(); // 'A' — arrow keeps this</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Promise vs async/await, and how do you handle errors?</h2>
+          <div class="seo-a"><p>A <strong>Promise</strong> represents a future value (pending → fulfilled/rejected). <strong>async/await</strong> is syntactic sugar that lets asynchronous code read synchronously.</p><p>Errors: <code class="inline">.catch()</code> on a chain, or <code class="inline">try/catch</code> around <code class="inline">await</code>. Use <code class="inline">Promise.all</code> for parallel and <code class="inline">Promise.allSettled</code> when you need every result regardless of failures.</p></div>
+          <pre><code>async function load() {
+  try {
+    const res = await fetch('/api/user');
+    return await res.json();
+  } catch (e) { /* handle */ }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Debounce vs throttle — what and when?</h2>
+          <div class="seo-a"><p><strong>Debounce</strong> delays execution until events stop firing for a specified time. If another event occurs before the delay ends, the timer resets. It is ideal for search boxes, autocomplete, and validation.</p><p><strong>Throttle</strong> limits execution to at most once every specified interval, regardless of how many events occur. It is ideal for scroll, resize, drag, and mouse movement events.</p></div>
+          <pre><code>// Debounce
+function debounce(fn, delay) {
+  let timer;
+
+  return (...args) =&gt; {
+    clearTimeout(timer);
+    timer = setTimeout(() =&gt; {
+      fn(...args);
+    }, delay);
+  };
+}
+
+// Throttle
+function throttle(fn, delay) {
+  let lastCall = 0;
+
+  return (...args) =&gt; {
+    const now = Date.now();
+
+    if (now - lastCall &gt;= delay) {
+      lastCall = now;
+      fn(...args);
+    }
+  };
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>map vs forEach vs reduce.</h2>
+          <div class="seo-a"><p><strong>map</strong> returns a new transformed array. <strong>forEach</strong> just iterates and returns nothing. <strong>reduce</strong> folds an array into a single value (sum, group-by, flatten, etc.).</p></div>
+          <pre><code>const nums = [1, 2, 3];
+nums.map(n =&gt; n * 2);           // [2, 4, 6]
+nums.reduce((a, b) =&gt; a + b, 0); // 6</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Shallow copy vs deep copy.</h2>
+          <div class="seo-a"><p><strong>Shallow copy</strong> creates a new object but copies only the first level. Nested objects and arrays are still shared references, so modifying them affects both the original and the copied object.</p><p><strong>Deep copy</strong> creates a completely independent clone, including all nested objects and arrays. Modern JavaScript provides <code class="inline">structuredClone()</code> for deep cloning. The older <code class="inline">JSON.parse(JSON.stringify())</code> approach works only for simple JSON data and loses Dates, Maps, Sets, functions, undefined values, and class instances.</p></div>
+          <pre><code>const original = {
+  name: 'John',
+  address: {
+    city: 'Bangalore'
+  }
+};
+
+// Shallow Copy
+const shallow = { ...original };
+shallow.address.city = 'Mumbai';
+
+console.log(original.address.city); // Mumbai
+
+// Deep Copy
+const deep = structuredClone(original);
+deep.address.city = 'Delhi';
+
+console.log(original.address.city); // Mumbai
+console.log(deep.address.city);     // Delhi</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain prototypal inheritance.</h2>
+          <div class="seo-a"><p><strong>Prototypal inheritance</strong> is JavaScript's way of sharing properties and methods between objects. Every object has a hidden link called a <code class="inline">[[Prototype]]</code>. If a property or method is not found on an object, JavaScript automatically looks for it in its prototype, then continues searching up the <strong>prototype chain</strong> until it finds it or reaches <code class="inline">null</code>.</p></div>
+          <pre><code>class Animal {
+  speak() {
+    return 'Some sound';
+  }
+}
+
+class Dog extends Animal {
+  bark() {
+    return 'Woof!';
+  }
+}
+
+const dog = new Dog();
+
+console.log(dog.bark());
+console.log(dog.speak());</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the Temporal Dead Zone (TDZ)?</h2>
+          <div class="seo-a"><p>The span between entering a scope and the point where a <code class="inline">let</code>/<code class="inline">const</code> variable is declared. The binding is hoisted but not initialised, so accessing it in that window throws a <code class="inline">ReferenceError</code>.</p></div>
+          <pre><code>console.log(x); // ReferenceError (TDZ)
+let x = 5;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Spread vs Rest operator.</h2>
+          <div class="seo-a"><p>Although both use the <code class="inline">...</code> syntax, they perform opposite operations. <strong>Spread</strong> expands an array or object into individual elements, while <strong>Rest</strong> collects multiple values into an array or object.</p></div>
+          <pre><code>const merged = [...a, ...b];       // Spread
+
+function sum(...nums) {
+  return nums.reduce((a, b) =&gt; a + b, 0);
+}                               // Rest in function parameters
+
+const { id, ...others } = obj;  // Rest in object destructuring</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>null vs undefined.</h2>
+          <div class="seo-a"><p><strong>undefined</strong> — a variable declared but not assigned, or a missing property/return. Set by the engine.</p><p><strong>null</strong> — an intentional 'no value', set by the developer.</p><p>Quirk: <code class="inline">typeof null</code> is <code class="inline">'object'</code> (a historical bug).</p></div>
+          <pre><code>const name = input ?? 'Guest'; // keeps 0 and '' but replaces null/undefined</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a higher-order function?</h2>
+          <div class="seo-a"><p>A function that <strong>takes a function as an argument</strong> and/or <strong>returns a function</strong>. Examples: <code class="inline">map</code>, <code class="inline">filter</code>, <code class="inline">setTimeout</code>, and any function factory.</p></div>
+          <pre><code>const withLog = fn =&gt; (...args) =&gt; { console.log(args); return fn(...args); };</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is currying?</h2>
+          <div class="seo-a"><p><strong>Currying</strong> is a functional programming technique that transforms a function with multiple arguments into a sequence of functions, each taking one argument. Each function remembers its argument using a <strong>closure</strong> until all required arguments are provided. Currying enables <strong>partial application</strong>, code reuse, and function composition.</p></div>
+          <pre><code>// Curried Function
+const add = a =&gt; b =&gt; c =&gt; a + b + c;
+
+console.log(add(1)(2)(3)); // 6
+
+// Partial Application
+const multiply = a =&gt; b =&gt; a * b;
+
+const double = multiply(2);
+const triple = multiply(3);
+
+console.log(double(10)); // 20
+console.log(triple(10)); // 30</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is event delegation?</h2>
+          <div class="seo-a"><p><strong>Event delegation</strong> is a technique where you attach a single event listener to a <strong>parent element</strong> instead of adding listeners to each child. It works because events <strong>bubble</strong> from the target element up to its parent, allowing the parent to handle events from its children.</p></div>
+          <pre><code>const list = document.getElementById('list');
+
+list.addEventListener('click', (event) =&gt; {
+  const item = event.target.closest('.item');
+
+  if (item) {
+    console.log(item.dataset.id);
+  }
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Event bubbling vs capturing.</h2>
+          <div class="seo-a"><p>When an event fires, it travels <strong>capturing</strong> phase (top → target) then <strong>bubbling</strong> phase (target → top). Listeners run in the bubbling phase by default; pass <code class="inline">{ capture: true }</code> for the capture phase.</p><p><code class="inline">stopPropagation()</code> halts travel; <code class="inline">preventDefault()</code> cancels the default action.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is callback hell and how do you avoid it?</h2>
+          <div class="seo-a"><p><strong>Callback Hell</strong> is a situation where asynchronous callbacks become deeply nested, making code hard to read and maintain. It is commonly avoided using <strong>Promises</strong> and <strong>async/await</strong>.</p></div>
+          <pre><code>function getUser(id, callback) {
+  setTimeout(() =&gt; callback({ id, name: 'John' }), 1000);
+}
+
+function getOrders(user, callback) {
+  setTimeout(() =&gt; callback(['Laptop', 'Phone']), 1000);
+}
+
+function getPayment(orders, callback) {
+  setTimeout(() =&gt; callback('Payment Successful'), 1000);
+}
+
+// Callback Hell
+getUser(1, (user) =&gt; {
+  getOrders(user, (orders) =&gt; {
+    getPayment(orders, (payment) =&gt; {
+      console.log(payment);
+    });
+  });
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you make an object immutable?</h2>
+          <div class="seo-a"><p>You can make an object immutable using <code class="inline">Object.freeze()</code>. It prevents adding, removing, or modifying an object's properties. However, <code class="inline">Object.freeze()</code> is <strong>shallow</strong>, meaning nested objects can still be modified unless they are also frozen.</p></div>
+          <pre><code>const user = Object.freeze({
+  name: 'John',
+  age: 25
+});
+
+user.age = 30; // Ignored (or throws in strict mode)
+
+console.log(user.age); // 25</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>When would you use a Set or a Map?</h2>
+          <div class="seo-a"><p>Use a <strong>Set</strong> when you need to store <strong>unique values</strong> or quickly check if a value exists. Use a <strong>Map</strong> when you need to store <strong>key/value pairs</strong> where keys can be of <em>any data type</em> (including objects), while preserving insertion order.</p></div>
+          <pre><code>const unique = [...new Set([1, 1, 2, 3])];
+// [1, 2, 3]
+
+const map = new Map();
+map.set('name', 'John');
+map.set(1, 'One');
+map.set({ id: 1 }, 'Object Key');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do ?. and ?? do?</h2>
+          <div class="seo-a"><p><strong>Optional chaining</strong> <code class="inline">?.</code> short-circuits to <code class="inline">undefined</code> instead of throwing when accessing a property on null/undefined.</p><p><strong>Nullish coalescing</strong> <code class="inline">??</code> returns the right side only when the left is null/undefined (unlike <code class="inline">||</code>, it keeps 0, '', and false).</p></div>
+          <pre><code>const city = user?.address?.city ?? 'Unknown';</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Function declaration vs expression vs arrow function.</h2>
+          <div class="seo-a"><ul><li><strong>Function Declaration</strong> — fully hoisted, can be called before its definition, has its own <code class="inline">this</code> and <code class="inline">arguments</code>.</li><li><strong>Function Expression</strong> — assigned to a variable, not callable before initialization, commonly used for callbacks and closures.</li><li><strong>Arrow Function</strong> — concise syntax, lexically binds <code class="inline">this</code>, has no own <code class="inline">arguments</code>, <code class="inline">prototype</code>, or <code class="inline">new</code>. Best suited for callbacks and functional programming.</li></ul></div>
+          <pre><code>function decl() {}         // hoisted
+const expr = function () {};// not hoisted
+const arrow = () =&gt; {};     // lexical this</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is an IIFE and the module pattern?</h2>
+          <div class="seo-a"><p>An <strong>IIFE (Immediately Invoked Function Expression)</strong> is a function that runs immediately after it is created. It creates its own private scope, so variables inside it cannot be accessed from outside. The <strong>Module Pattern</strong> uses an IIFE to keep data private while exposing only the functions that should be accessible.</p></div>
+          <pre><code>const counter = (function () {
+  let count = 0; // Private variable
+
+  return {
+    increment() {
+      count++;
+    },
+    getCount() {
+      return count;
+    }
+  };
+})();
+
+counter.increment();
+console.log(counter.getCount()); // 1</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain destructuring with defaults and renaming.</h2>
+          <div class="seo-a"><p>Unpack arrays/objects into variables in one statement, with defaults for missing values and renaming for objects. Also enables clean swaps and nested extraction.</p></div>
+          <pre><code>const { name = 'Guest', id: userId } = user;
+const [first, , third] = list;
+[a, b] = [b, a]; // swap</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Object.keys(), Object.values(), Object.entries() and Object.fromEntries().</h2>
+          <div class="seo-a"><p>These methods help you work with JavaScript objects. <code class="inline">Object.keys()</code> returns an array of property names, <code class="inline">Object.values()</code> returns an array of values, <code class="inline">Object.entries()</code> returns key-value pairs, and <code class="inline">Object.fromEntries()</code> converts key-value pairs back into an object.</p></div>
+          <pre><code>const user = {
+  name: 'John',
+  age: 25
+};
+
+console.log(Object.keys(user));
+// ['name', 'age']
+
+console.log(Object.values(user));
+// ['John', 25]
+
+console.log(Object.entries(user));
+// [['name', 'John'], ['age', 25]]
+
+const updated = Object.fromEntries(
+  Object.entries(user).map(([key, value]) =&gt; [key, String(value)])
+);
+
+console.log(updated);
+// { name: 'John', age: '25' }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>JSON.stringify / parse — gotchas?</h2>
+          <div class="seo-a"><p><code class="inline">JSON.stringify()</code> converts a JavaScript object into a JSON string, while <code class="inline">JSON.parse()</code> converts a JSON string back into a JavaScript object.</p><p><strong>Common gotchas:</strong> <code class="inline">undefined</code>, functions, and symbols are omitted; <code class="inline">Date</code> objects become ISO strings; <code class="inline">NaN</code> and <code class="inline">Infinity</code> become <code class="inline">null</code>; <code class="inline">BigInt</code> throws an error; circular references cause <code class="inline">JSON.stringify()</code> to fail. Use a <strong>replacer</strong> and <strong>reviver</strong> to customize serialization and deserialization.</p></div>
+          <pre><code>const obj = {
+  name: 'John',
+  created: new Date(),
+  score: NaN
+};
+
+const json = JSON.stringify(obj, null, 2);
+console.log(json);
+
+const parsed = JSON.parse(json, (key, value) =&gt; {
+  if (key === 'created') return new Date(value);
+  return value;
+});
+
+console.log(parsed);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does fetch() work, and how do you cancel a request?</h2>
+          <div class="seo-a"><p><code class="inline">fetch()</code> is used to make HTTP requests. It returns a <strong>Promise</strong> that resolves to a <code class="inline">Response</code> object. Unlike many developers expect, <code class="inline">fetch()</code> does <strong>not</strong> throw an error for HTTP status codes like <strong>404</strong> or <strong>500</strong>; you must check <code class="inline">response.ok</code> yourself. To cancel an ongoing request, use an <code class="inline">AbortController</code>.</p></div>
+          <pre><code>const controller = new AbortController();
+
+fetch('https://api.example.com/users', {
+  signal: controller.signal
+})
+  .then(response =&gt; {
+    if (!response.ok) {
+      throw new Error('Request failed');
+    }
+    return response.json();
+  })
+  .then(data =&gt; console.log(data))
+  .catch(error =&gt; console.log(error));
+
+// Cancel the request
+controller.abort();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Promise.all() vs Promise.allSettled() vs Promise.race() vs Promise.any().</h2>
+          <div class="seo-a"><p>These Promise methods are used to handle multiple asynchronous operations. <code class="inline">Promise.all()</code> waits for all promises to succeed, <code class="inline">Promise.allSettled()</code> waits for all promises regardless of success or failure, <code class="inline">Promise.race()</code> returns the first promise that settles, and <code class="inline">Promise.any()</code> returns the first promise that successfully resolves.</p></div>
+          <pre><code>const p1 = Promise.resolve('A');
+const p2 = Promise.reject('Failed');
+const p3 = Promise.resolve('C');
+
+Promise.all([p1, p3]);
+Promise.allSettled([p1, p2, p3]);
+Promise.race([p1, p2, p3]);
+Promise.any([p2, p3]);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are generators and iterators?</h2>
+          <div class="seo-a"><p>An <strong>iterator</strong> is an object that allows sequential access to a collection using the <code class="inline">next()</code> method. A <strong>generator</strong> is a special function declared with <code class="inline">function*</code> that automatically creates an iterator. It can pause execution using <code class="inline">yield</code> and resume later, making it ideal for lazy evaluation, large datasets, and infinite sequences.</p></div>
+          <pre><code>// Generator Function
+function* numbers() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+const gen = numbers();
+
+console.log(gen.next()); // { value: 1, done: false }
+console.log(gen.next()); // { value: 2, done: false }
+console.log(gen.next()); // { value: 3, done: false }
+console.log(gen.next()); // { value: undefined, done: true }
+
+// Using for...of
+for (const n of numbers()) {
+  console.log(n);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a Symbol and where is it used?</h2>
+          <div class="seo-a"><p>A <strong>Symbol</strong> is a unique and immutable primitive value introduced in ES6. It is mainly used as a unique object property key so that it does not conflict with other property names. Even if two Symbols have the same description, they are always different.</p></div>
+          <pre><code>const id = Symbol('id');
+
+const user = {
+  name: 'John',
+  [id]: 101
+};
+
+console.log(user[id]); // 101</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are WeakMap and WeakSet? When should you use them?</h2>
+          <div class="seo-a"><p><code class="inline">WeakMap</code> and <code class="inline">WeakSet</code> are similar to <code class="inline">Map</code> and <code class="inline">Set</code>, but they store <strong>objects only</strong> using weak references. If an object is no longer used anywhere else in the application, JavaScript can automatically remove it from a WeakMap or WeakSet during garbage collection, helping prevent memory leaks.</p></div>
+          <pre><code>const cache = new WeakMap();
+
+const user = {
+  name: 'John'
+};
+
+cache.set(user, {
+  lastLogin: 'Today'
+});
+
+console.log(cache.get(user));
+// { lastLogin: 'Today' }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why does a for-loop with var log the wrong value in setTimeout()?</h2>
+          <div class="seo-a"><p><code class="inline">var</code> is <strong>function-scoped</strong>, so all <code class="inline">setTimeout()</code> callbacks share the same <code class="inline">i</code> variable. By the time they execute, the loop has finished and <code class="inline">i</code> has its final value. <code class="inline">let</code> is <strong>block-scoped</strong>, so each loop iteration gets its own copy of <code class="inline">i</code>, producing the expected output.</p></div>
+          <pre><code>// Using var
+for (var i = 0; i &lt; 3; i++) {
+  setTimeout(() =&gt; {
+    console.log(i);
+  }, 1000);
+}
+// Output: 3 3 3
+
+// Using let
+for (let i = 0; i &lt; 3; i++) {
+  setTimeout(() =&gt; {
+    console.log(i);
+  }, 1000);
+}
+// Output: 0 1 2</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>typeof vs instanceof.</h2>
+          <div class="seo-a"><p>Use <code class="inline">typeof</code> to check the <strong>type of primitive values</strong> like strings, numbers, booleans, undefined, and functions. Use <code class="inline">instanceof</code> to check whether an <strong>object was created from a particular class or constructor</strong>, such as <code class="inline">Array</code>, <code class="inline">Date</code>, or custom classes.</p></div>
+          <pre><code>typeof 'Hello';          // 'string'
+typeof 123;              // 'number'
+typeof true;             // 'boolean'
+typeof undefined;        // 'undefined'
+typeof function() {};    // 'function'
+
+typeof [];               // 'object'
+Array.isArray([]);       // true
+[] instanceof Array;     // true
+new Date() instanceof Date; // true</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you check for NaN correctly?</h2>
+          <div class="seo-a"><p>Use <code class="inline">Number.isNaN()</code> to check if a value is <code class="inline">NaN</code>. Avoid the global <code class="inline">isNaN()</code> because it converts (coerces) values before checking, which can produce unexpected results.</p></div>
+          <pre><code>Number.isNaN(NaN);       // true
+Number.isNaN('foo');     // false
+
+isNaN('foo');            // true (coerces 'foo' to NaN)
+isNaN('123');            // false</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you update the DOM efficiently?</h2>
+          <div class="seo-a"><p>To update the DOM efficiently, reduce the number of DOM changes. Instead of updating elements one by one, batch your changes and apply them together. You can use a <code class="inline">DocumentFragment</code>, toggle CSS classes instead of repeatedly changing inline styles, and use <code class="inline">requestAnimationFrame()</code> for smooth visual updates.</p></div>
+          <pre><code>const fragment = document.createDocumentFragment();
+
+items.forEach(item =&gt; {
+  const li = document.createElement('li');
+  li.textContent = item;
+  fragment.appendChild(li);
+});
+
+list.appendChild(fragment); // Updates the DOM once</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a pure function and why prefer it?</h2>
+          <div class="seo-a"><p>A <strong>pure function</strong> always produces the same output for the same input and does <strong>not cause side effects</strong>. It does not modify external variables, mutate its arguments, perform I/O operations, or depend on external state. Pure functions are predictable, easy to test, reusable, cacheable (memoization), and form the foundation of functional programming, Redux, and NgRx reducers.</p></div>
+          <pre><code>// ✅ Pure Function
+const add = (a, b) =&gt; a + b;
+
+console.log(add(2, 3)); // 5
+console.log(add(2, 3)); // 5
+
+// ❌ Impure Function
+let total = 0;
+
+function addToTotal(value) {
+  total += value;
+  return total;
+}
+
+console.log(addToTotal(5)); // 5
+console.log(addToTotal(5)); // 10</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the data types in JavaScript?</h2>
+          <div class="seo-a"><p><strong>Primitive</strong> (immutable, copied by value): <code class="inline">string</code>, <code class="inline">number</code>, <code class="inline">boolean</code>, <code class="inline">bigint</code>, <code class="inline">symbol</code>, <code class="inline">undefined</code>, <code class="inline">null</code>.</p><p><strong>Non-primitive</strong> (reference type): <code class="inline">object</code> — which includes arrays, functions, and dates.</p></div>
+          <pre><code>typeof 'a';     // 'string'
+typeof 10n;     // 'bigint'
+typeof null;    // 'object' (historical bug)
+typeof [];      // 'object'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you convert between strings and numbers?</h2>
+          <div class="seo-a"><p><strong>Number → string</strong>: <code class="inline">String(n)</code>, <code class="inline">n.toString()</code>, or a template literal <code class="inline">`${n}`</code>.</p><p><strong>String → number</strong>: <code class="inline">Number(s)</code>, <code class="inline">parseInt(s)</code> (integer), <code class="inline">parseFloat(s)</code> (decimal), or the unary <code class="inline">+s</code>.</p></div>
+          <pre><code>Number('123');      // 123
+parseInt('123.45');  // 123
+parseFloat('123.45');// 123.45
++'123';              // 123
+(123).toString();    // '123'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Synchronous vs asynchronous programming.</h2>
+          <div class="seo-a"><p><strong>Synchronous programming</strong> executes code one statement at a time. Each operation must finish before the next one starts, so long-running tasks block the execution.</p><p><strong>Asynchronous programming</strong> allows time-consuming operations like API calls, timers, and file I/O to run without blocking the main thread. Once completed, the result is handled later using callbacks, Promises, or <code class="inline">async/await</code>, keeping the application responsive.</p></div>
+          <pre><code>// Synchronous
+console.log('Start');
+console.log('Processing...');
+console.log('End');
+
+// Asynchronous
+console.log('Start');
+
+setTimeout(() =&gt; {
+  console.log('Timer Finished');
+}, 2000);
+
+console.log('End');
+
+// Output:
+// Start
+// End
+// Timer Finished</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Is JavaScript single-threaded or multi-threaded?</h2>
+          <div class="seo-a"><p>JavaScript is <strong>single-threaded</strong> — one call stack, one thing at a time. It <em>feels</em> concurrent because of the <strong>event loop</strong>: async work is offloaded to the browser/Node APIs and their callbacks are queued back onto the stack when it's free. (Web Workers add real parallel threads, but they don't share the main thread.)</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is an event listener?</h2>
+          <div class="seo-a"><p>An <strong>event listener</strong> is a function that waits for a specific event (such as a click, key press, or mouse movement) to occur on an HTML element. When that event happens, the function is automatically executed. Event listeners are usually attached using <code class="inline">addEventListener()</code>.</p></div>
+          <pre><code>const btn = document.getElementById('save');
+
+btn.addEventListener('click', () =&gt; {
+  console.log('Button clicked');
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>slice() vs splice().</h2>
+          <div class="seo-a"><p><code class="inline">slice()</code> returns a <strong>new array</strong> without changing the original array. <code class="inline">splice()</code> <strong>modifies the original array</strong> by adding, removing, or replacing elements, and returns the removed elements.</p></div>
+          <pre><code>const arr = ['a', 'b', 'c', 'd'];
+
+const copied = arr.slice(1, 3);
+console.log(copied); // ['b', 'c']
+console.log(arr);    // ['a', 'b', 'c', 'd']
+
+const removed = arr.splice(1, 2);
+console.log(removed); // ['b', 'c']
+console.log(arr);     // ['a', 'd']</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>call() vs apply() vs bind().</h2>
+          <div class="seo-a"><p>All set <code class="inline">this</code> explicitly. <strong>call</strong> invokes immediately with arguments listed individually; <strong>apply</strong> invokes immediately with arguments as an array; <strong>bind</strong> returns a <em>new</em> function with <code class="inline">this</code> permanently bound (call it later).</p></div>
+          <pre><code>greet.call(obj, 'hi', '!');
+greet.apply(obj, ['hi', '!']);
+const bound = greet.bind(obj); bound('hi', '!');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are template literals?</h2>
+          <div class="seo-a"><p><strong>Template literals</strong> are strings enclosed in <strong>backticks (<code class="inline">`</code>)</strong> instead of quotes. They allow you to embed variables and expressions using <code class="inline">${...}</code> and create multi-line strings without using string concatenation.</p></div>
+          <pre><code>const name = 'John';
+const age = 25;
+
+const message = `Hello ${name}, you are ${age} years old.`;
+console.log(message);
+
+const multiLine = `Line 1
+Line 2
+Line 3`;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does garbage collection work in JavaScript?</h2>
+          <div class="seo-a"><p>JavaScript uses <strong>automatic garbage collection (GC)</strong> to reclaim memory occupied by objects that are no longer <strong>reachable</strong>. Modern JavaScript engines (such as V8) primarily use the <strong>Mark-and-Sweep</strong> algorithm. Developers cannot manually free memory, but they can prevent memory leaks by removing unnecessary references, clearing timers, and unregistering event listeners.</p></div>
+          <pre><code>// Object becomes unreachable
+let user = {
+  name: 'John'
+};
+
+user = null; // Previous object is now eligible for garbage collection
+
+// Prevent memory leaks
+const timer = setInterval(() =&gt; {
+  console.log('Running...');
+}, 1000);
+
+clearInterval(timer);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you add or access properties dynamically on an object?</h2>
+          <div class="seo-a"><p>Use <strong>bracket notation</strong> when the key is dynamic or not a valid identifier: <code class="inline">obj[key] = value</code>. Dot notation (<code class="inline">obj.key</code>) only works for fixed, valid names.</p></div>
+          <pre><code>const student = { name: 'A' };
+const field = 'rollNumber';
+student[field] = 42;   // { name: 'A', rollNumber: 42 }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>for...of vs for...in.</h2>
+          <div class="seo-a"><p><strong>for...of</strong> loops through the <strong>values</strong> of an iterable like an Array, String, Map, or Set. <strong>for...in</strong> loops through the <strong>keys (property names)</strong> of an object. Use <code class="inline">for...of</code> for arrays and <code class="inline">for...in</code> for objects.</p></div>
+          <pre><code>const fruits = ['Apple', 'Banana', 'Orange'];
+
+// for...of (values)
+for (const fruit of fruits) {
+  console.log(fruit);
+}
+// Apple
+// Banana
+// Orange
+
+const user = {
+  name: 'John',
+  age: 25
+};
+
+// for...in (keys)
+for (const key in user) {
+  console.log(key, user[key]);
+}
+// name John
+// age 25</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>setTimeout() vs setInterval().</h2>
+          <div class="seo-a"><p><code class="inline">setTimeout()</code> executes a function <strong>once</strong> after a specified delay. <code class="inline">setInterval()</code> executes a function <strong>repeatedly</strong> at a fixed time interval until it is stopped.</p></div>
+          <pre><code>// Runs once after 2 seconds
+const timeoutId = setTimeout(() =&gt; {
+  console.log('Executed once');
+}, 2000);
+
+// Cancel if needed
+clearTimeout(timeoutId);
+
+// Runs every 2 seconds
+const intervalId = setInterval(() =&gt; {
+  console.log('Runs repeatedly');
+}, 2000);
+
+// Stop the interval
+clearInterval(intervalId);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is variable shadowing?</h2>
+          <div class="seo-a"><p>When a variable declared in an inner scope has the <strong>same name</strong> as one in an outer scope, the inner one <em>shadows</em> (hides) the outer within that block. Common with function parameters and block-scoped <code class="inline">let</code>/<code class="inline">const</code>.</p></div>
+          <pre><code>let x = 1;
+function f() { let x = 2; return x; } // inner x shadows outer
+f(); // 2, outer x still 1</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Generator function vs normal function.</h2>
+          <div class="seo-a"><p>A <strong>normal function</strong> runs from start to finish and returns a single value. A <strong>generator function</strong> (written using <code class="inline">function*</code>) can pause its execution using <code class="inline">yield</code> and continue later. Instead of returning a value directly, it returns an <strong>iterator</strong> that produces values one at a time.</p></div>
+          <pre><code>function* numbers() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+const iterator = numbers();
+
+console.log(iterator.next());
+// { value: 1, done: false }
+
+console.log(iterator.next());
+// { value: 2, done: false }
+
+console.log(iterator.next());
+// { value: 3, done: false }
+
+console.log(iterator.next());
+// { value: undefined, done: true }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Mutable vs immutable in JavaScript.</h2>
+          <div class="seo-a"><p><strong>Mutable</strong> values can be changed after they are created, while <strong>immutable</strong> values cannot. In JavaScript, <strong>primitive values</strong> (string, number, boolean, null, undefined, symbol, bigint) are immutable, whereas <strong>objects and arrays</strong> are mutable.</p></div>
+          <pre><code>// Immutable (String)
+let name = 'John';
+let upper = name.toUpperCase();
+
+console.log(name);  // 'John'
+console.log(upper); // 'JOHN'
+
+// Mutable (Array)
+const numbers = [1, 2];
+numbers.push(3);
+
+console.log(numbers); // [1, 2, 3]
+
+// Mutable (Object)
+const user = { name: 'John' };
+user.age = 25;
+
+console.log(user); // { name: 'John', age: 25 }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are truthy and falsy values?</h2>
+          <div class="seo-a"><p>In a boolean context (<code class="inline">if</code>, <code class="inline">&amp;&amp;</code>, <code class="inline">!</code>), every value coerces to <code class="inline">true</code> or <code class="inline">false</code>. There are exactly <strong>8 falsy values</strong>: <code class="inline">false</code>, <code class="inline">0</code>, <code class="inline">-0</code>, <code class="inline">0n</code>, <code class="inline">""</code>, <code class="inline">null</code>, <code class="inline">undefined</code>, and <code class="inline">NaN</code>. <strong>Everything else is truthy</strong> — including <code class="inline">"0"</code>, <code class="inline">"false"</code>, <code class="inline">[]</code>, and <code class="inline">{}</code>.</p></div>
+          <pre><code>if ([]) console.log('runs');   // [] is truthy!
+Boolean('0');  // true
+Boolean(0);    // false
+Boolean(NaN);  // false</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does &quot;use strict&quot; do?</h2>
+          <div class="seo-a"><p><code class="inline">'use strict'</code> enables <strong>Strict Mode</strong>, which makes JavaScript more secure by preventing common mistakes. For example, it throws an error if you use an undeclared variable, disallows duplicate parameter names, and changes some unsafe JavaScript behaviors into errors.</p></div>
+          <pre><code>'use strict';
+
+x = 10; // ❌ ReferenceError: x is not defined
+
+let y = 20; // ✅ Correct
+console.log(y);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>find, filter, some, every, includes — what do they do?</h2>
+          <div class="seo-a"><ul><li><strong>filter</strong> — returns a <em>new array</em> of all items passing a test.</li><li><strong>find</strong> — returns the <em>first</em> matching item (or <code class="inline">undefined</code>).</li><li><strong>findIndex</strong> — the index of the first match (or <code class="inline">-1</code>).</li><li><strong>some</strong> — <code class="inline">true</code> if <em>at least one</em> item passes.</li><li><strong>every</strong> — <code class="inline">true</code> if <em>all</em> items pass.</li><li><strong>includes</strong> — <code class="inline">true</code> if the array contains a value (uses <code class="inline">===</code>).</li></ul></div>
+          <pre><code>const nums = [1, 2, 3, 4];
+nums.filter(n =&gt; n % 2 === 0); // [2, 4]
+nums.find(n =&gt; n &gt; 2);        // 3
+nums.some(n =&gt; n &gt; 3);        // true
+nums.every(n =&gt; n &gt; 0);       // true
+nums.includes(2);             // true</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is an Execution Context in JavaScript?</h2>
+          <div class="seo-a"><p>An <strong>Execution Context</strong> is the environment in which JavaScript code runs. It contains information about <strong>variables</strong>, <strong>functions</strong>, the value of <code class="inline">this</code>, and how the code should execute. Every JavaScript program starts with a <strong>Global Execution Context</strong>, and every function call creates a new <strong>Function Execution Context</strong>.</p></div>
+          <pre><code>let message = 'Hello';
+
+function greet(name) {
+  const text = message + ' ' + name;
+  console.log(text);
+}
+
+greet('John');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Lexical Scope?</h2>
+          <div class="seo-a"><p><strong>Lexical Scope</strong> means JavaScript determines where variables are accessible based on <strong>where functions and variables are written in the code</strong>, not where they are called. An inner function can access variables from its own scope as well as all outer scopes. This behavior is known as the <strong>scope chain</strong> and is the foundation of <strong>closures</strong>.</p></div>
+          <pre><code>const name = 'John';
+
+function outer() {
+  const city = 'Bangalore';
+
+  function inner() {
+    console.log(name);
+    console.log(city);
+  }
+
+  inner();
+}
+
+outer();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between localStorage, sessionStorage, and Cookies?</h2>
+          <div class="seo-a"><p><strong>localStorage</strong>, <strong>sessionStorage</strong>, and <strong>Cookies</strong> are browser storage mechanisms used to store data on the client side. <strong>localStorage</strong> stores data permanently until it is manually removed, <strong>sessionStorage</strong> stores data only for the current browser tab, while <strong>Cookies</strong> are small pieces of data that can automatically be sent to the server with every HTTP request.</p></div>
+          <pre><code>// localStorage
+localStorage.setItem('theme', 'dark');
+console.log(localStorage.getItem('theme'));
+
+// sessionStorage
+sessionStorage.setItem('user', 'John');
+console.log(sessionStorage.getItem('user'));
+
+// Cookie
+document.cookie = 'language=en; max-age=3600';</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>__proto__ vs prototype — what's the difference?</h2>
+          <div class="seo-a"><p><strong><code class="inline">prototype</code></strong> — a property that exists <em>only on functions</em>: the object that will become the prototype of instances created with <code class="inline">new</code>. Methods you want shared go here.</p><p><strong><code class="inline">__proto__</code></strong> — the actual internal link (<code class="inline">[[Prototype]]</code>) that <em>every object</em> has, pointing at the object it inherits from. Lookup walks this chain.</p><p>They meet at construction: <code class="inline">new Foo()</code> sets the instance's <code class="inline">__proto__</code> to <code class="inline">Foo.prototype</code>.</p></div>
+          <pre><code>function Dog(name) { this.name = name; }
+Dog.prototype.bark = function () { return this.name + ' woofs'; };
+
+const d = new Dog('Rex');
+Object.getPrototypeOf(d) === Dog.prototype;  // true — the link
+d.bark();  // found via the chain: d -&gt; Dog.prototype -&gt; Object.prototype</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What do Array flat() and flatMap() do?</h2>
+          <div class="seo-a"><p><code class="inline">flat(depth = 1)</code> — flattens nested arrays by the given depth (<code class="inline">Infinity</code> for fully flat). <code class="inline">flatMap(fn)</code> — <code class="inline">map</code> then <code class="inline">flat(1)</code> in one pass: each element maps to an array, results are concatenated.</p><p>flatMap doubles as a <strong>map-and-filter</strong> in one step: return <code class="inline">[]</code> to drop an element, <code class="inline">[x]</code> to keep one, <code class="inline">[x, y]</code> to expand.</p></div>
+          <pre><code>[1, [2, [3, [4]]]].flat(Infinity);          // [1, 2, 3, 4]
+
+orders.flatMap(o =&gt; o.items);                // List&lt;List&lt;T&gt;&gt; -&gt; List&lt;T&gt;
+nums.flatMap(n =&gt; n % 2 ? [n * 10] : []);    // filter + map in one pass</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are reflow and repaint?</h2>
+          <div class="seo-a"><p><strong>Reflow (layout)</strong> — the browser recomputes <em>geometry</em>: positions and sizes of elements. Triggered by DOM structure changes, size/position CSS, font changes, window resize. Expensive — it can cascade through descendants and ancestors.</p><p><strong>Repaint</strong> — redrawing <em>pixels</em> without geometry change (color, background, visibility). Cheaper than reflow; every reflow implies a repaint, not vice versa.</p><p><strong>Layout thrashing</strong> — the killer pattern: interleaving writes with reads of layout properties (<code class="inline">offsetHeight</code>, <code class="inline">getBoundingClientRect</code>) forces a synchronous reflow per iteration.</p></div>
+          <pre><code>// thrashing: read-write-read-write forces layout each loop
+items.forEach(el =&gt; { el.style.width = el.offsetWidth + 10 + 'px'; });
+
+// batched: read all, then write all
+const widths = items.map(el =&gt; el.offsetWidth);
+items.forEach((el, i) =&gt; { el.style.width = widths[i] + 10 + 'px'; });</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>ESM import/export vs CommonJS require — what's the difference?</h2>
+          <div class="seo-a"><ul><li><strong>CommonJS</strong> (<code class="inline">require</code>/<code class="inline">module.exports</code>) — Node's original system. <strong>Synchronous, dynamic</strong> (require anywhere, even conditionally), exports are a copied value at call time.</li><li><strong>ESM</strong> (<code class="inline">import</code>/<code class="inline">export</code>) — the language standard. <strong>Static</strong>: imports/exports are declared at top level and analyzable <em>without running the code</em> — which is what enables <strong>tree-shaking</strong>, live read-only bindings, and async loading (<code class="inline">import()</code> for code splitting).</li></ul><p>Browsers and modern bundlers are ESM-native; Node supports both (<code class="inline">"type": "module"</code> or .mjs). Angular/TS code is written as ESM and compiled.</p></div>
+          <pre><code>// CommonJS — dynamic, sync
+const { readFile } = require('fs');
+if (dev) { const mock = require('./mock'); }   // legal
+
+// ESM — static graph + async dynamic import for splitting
+import { map } from 'rxjs';
+const { Chart } = await import('chart.js');    // lazy chunk</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Polyfill vs transpilation (Babel)?</h2>
+          <div class="seo-a"><p>Two different compatibility problems:</p><ul><li><strong>Transpilation</strong> — rewriting new <em>syntax</em> into old syntax at build time (Babel/TypeScript/esbuild): arrow functions → functions, optional chaining → ternary chains. Syntax can always be rewritten.</li><li><strong>Polyfill</strong> — runtime code that <em>implements missing APIs</em> (<code class="inline">Array.prototype.flat</code>, <code class="inline">fetch</code>, <code class="inline">Promise</code>) by patching globals (core-js). APIs can't be transpiled away — the function either exists in the browser or must be provided.</li></ul><p>A build targets browsers via <strong>browserslist</strong>; the toolchain decides which syntax to lower and which polyfills to include.</p></div>
+          <pre><code>// you write:
+const name = user?.profile?.name ?? 'guest';
+// transpiled for old targets:
+var name = (user &amp;&amp; user.profile &amp;&amp; user.profile.name) != null ? ... : 'guest';
+
+// polyfill (conceptually):
+if (!Array.prototype.flat) { Array.prototype.flat = function (d) { ... }; }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a memoize function.</h2>
+          <div class="seo-a"><p>Memoization caches a pure function's results by argument, so repeat calls return instantly. The classic implementation is a closure over a <code class="inline">Map</code> keyed by the serialized arguments.</p><p>Points to mention while writing it: only valid for <strong>pure functions</strong>; the key strategy (JSON.stringify breaks on object key order and non-serializable args — a nested Map or WeakMap per object arg is the robust version); unbounded cache growth (real libraries add LRU eviction).</p></div>
+          <pre><code>function memoize(fn) {
+  const cache = new Map();
+  return function (...args) {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
+    return result;
+  };
+}
+
+const slowSquare = n =&gt; { for (let i = 0; i &lt; 1e7; i++); return n * n; };
+const fast = memoize(slowSquare);
+fast(9); // computed
+fast(9); // cached — instant</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>ES6+ features rundown — which do you actually use?</h2>
+          <div class="seo-a"><p>The working set worth naming with a use for each:</p><ul><li><strong>let/const</strong> — block scope; <strong>arrow functions</strong> — lexical this;</li><li><strong>Template literals</strong>, <strong>destructuring</strong>, <strong>spread/rest</strong>, <strong>default params</strong> — everyday ergonomics;</li><li><strong>Promises → async/await</strong> (ES2017) — async flow;</li><li><strong>Modules</strong> (import/export), <strong>classes</strong>;</li><li><strong>Map/Set</strong>, <strong>Symbol</strong>, <strong>generators</strong>;</li><li>Later highlights: optional chaining <code class="inline">?.</code> + nullish <code class="inline">??</code> (ES2020), <code class="inline">Promise.allSettled</code>, <code class="inline">flat/flatMap</code> (ES2019), <code class="inline">Array.at(-1)</code>, top-level await, <code class="inline">structuredClone</code>, <code class="inline">#private</code> fields (ES2022).</li></ul></div>
+          <pre><code>const { name = 'guest', ...rest } = user ?? {};
+const tags = [...new Set(items.flatMap(i =&gt; i.tags))];
+const last = tags.at(-1);
+await Promise.allSettled(jobs.map(j =&gt; run(j)));</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="javascript";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>HTML Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="30 HTML interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/html" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="HTML Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="30 HTML interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/html" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="HTML Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is semantic HTML and why does it matter?","acceptedAnswer":{"@type":"Answer","text":"Using elements that describe their meaning — &lt;header&gt; , &lt;nav&gt; , &lt;main&gt; , &lt;article&gt; , &lt;footer&gt; — instead of generic &lt;div&gt; s. Benefits: better accessibility (screen readers understand structure), improved SEO , and more maintainable markup."}},{"@type":"Question","name":"What does <!DOCTYPE html> do?","acceptedAnswer":{"@type":"Answer","text":"It tells the browser to render in standards mode rather than legacy 'quirks mode'. Without it, older browsers emulate 1990s bugs and box models, breaking layouts."}},{"@type":"Question","name":"Block vs inline vs inline-block elements.","acceptedAnswer":{"@type":"Answer","text":"Block — starts on a new line, takes full width ( div , p , section ). Inline — flows within text, ignores width/height ( span , a ). inline-block — flows inline but respects width/height/margins."}},{"@type":"Question","name":"What does the viewport meta tag do?","acceptedAnswer":{"@type":"Answer","text":"It controls how mobile browsers scale the page. Without it, phones render at desktop width and zoom out. width=device-width, initial-scale=1 makes the layout match the device's real width — essential for responsive design."}},{"@type":"Question","name":"What are data-* attributes?","acceptedAnswer":{"@type":"Answer","text":"Data attributes are custom HTML attributes used to store application-specific data on an element. They start with data- and can be accessed in JavaScript using the dataset API."}},{"@type":"Question","name":"localStorage vs sessionStorage vs cookies.","acceptedAnswer":{"@type":"Answer","text":"localStorage — ~5–10MB, persists until cleared, not sent to the server. sessionStorage — same API, cleared when the tab closes. cookies — small (~4KB), sent with every HTTP request; used for auth/session tokens."}},{"@type":"Question","name":"script defer vs async.","acceptedAnswer":{"@type":"Answer","text":"Both download the script without blocking HTML parsing. async — runs as soon as it's downloaded, order not guaranteed. For independent scripts (analytics). defer — runs after parsing, in order. For app scripts that depend on the DOM or each other."}},{"@type":"Question","name":"What native form validation does HTML5 provide?","acceptedAnswer":{"@type":"Answer","text":"Attributes like required , type=\"email\" , min / max , pattern , and minlength validate input before submit, with built-in error UI — no JS needed for basics."}},{"@type":"Question","name":"How do you make a page accessible?","acceptedAnswer":{"@type":"Answer","text":"Semantic elements + correct heading order. alt text on images; labels tied to inputs. Keyboard operability and visible focus states. ARIA roles/attributes only when native elements can't express the semantics. Sufficient colour contrast."}},{"@type":"Question","name":"How do you serve responsive images?","acceptedAnswer":{"@type":"Answer","text":"Use srcset + sizes so the browser picks the best resolution for the device, or &lt;picture&gt; for art direction / modern formats (WebP/AVIF) with fallbacks. Add loading=\"lazy\" for offscreen images."}},{"@type":"Question","name":"Which meta tags matter for SEO and sharing?","acceptedAnswer":{"@type":"Answer","text":"&lt;title&gt; and &lt;meta name=\"description\"&gt; for search results; Open Graph ( og:title , og:image ) and Twitter Card tags for rich link previews; canonical to avoid duplicate-content penalties."}},{"@type":"Question","name":"What makes a site a Progressive Web App (PWA)?","acceptedAnswer":{"@type":"Answer","text":"A Progressive Web App (PWA) combines modern web technologies to deliver a native app-like experience. The three core requirements are a Web App Manifest (defines the app's name, icons, theme, and display mode), a Service Worker (enables offline support, caching, and background functionality), and HTTPS (required for security and service workers). Together, these allow users to install the website, launch it like an app, and continue using it even with limited or no internet connection."}},{"@type":"Question","name":"What are Web Components?","acceptedAnswer":{"@type":"Answer","text":"Web Components are a set of browser standards for building reusable, framework-independent UI components. They consist of Custom Elements (custom HTML tags), Shadow DOM (encapsulated DOM and styles), and HTML Templates using &lt;template&gt; and &lt;slot&gt; . Since they are browser-native, they can be used with Angular, React, Vue, or plain JavaScript."}},{"@type":"Question","name":"Why do input types matter (email, number, tel, date)?","acceptedAnswer":{"@type":"Answer","text":"The right type gives free validation, the correct mobile keyboard (numeric/email layout), native pickers (date/color), and better accessibility — improving UX with zero JS."}},{"@type":"Question","name":"What does the native <dialog> element give you?","acceptedAnswer":{"@type":"Answer","text":"A built-in modal/popup with showModal() / close() , automatic focus trapping, backdrop ( ::backdrop ), and Esc -to-close — accessibility that used to require a library."}},{"@type":"Question","name":"What are <details> and <summary>?","acceptedAnswer":{"@type":"Answer","text":"A native, zero-JS disclosure widget: &lt;summary&gt; is the always-visible label and the rest of &lt;details&gt; expands/collapses on click — accessible and keyboard-friendly out of the box (this app's cards use the same idea)."}},{"@type":"Question","name":"Why add rel=\"noopener\" to target=\"_blank\" links?","acceptedAnswer":{"@type":"Answer","text":"Without it, the newly opened page can access window.opener and hijack the original tab (tabnabbing). rel=\"noopener\" severs that reference; noreferrer also hides the referrer. Modern browsers imply noopener, but set it explicitly."}},{"@type":"Question","name":"What is the difference between preload, prefetch, and preconnect?","acceptedAnswer":{"@type":"Answer","text":"These resource hints help improve page performance. preload fetches a critical resource needed for the current page as early as possible. prefetch downloads a low-priority resource that is likely to be needed on a future page. preconnect establishes the DNS, TCP, and TLS connection to another origin before any requests are made, reducing connection latency."}},{"@type":"Question","name":"Canvas vs SVG — when to use which?","acceptedAnswer":{"@type":"Answer","text":"SVG is vector, DOM-based, scalable, and stylable/accessible — good for icons, charts, and anything interactive or resolution-independent. Canvas is an immediate-mode pixel bitmap — better for lots of objects, games, and heavy pixel manipulation."}},{"@type":"Question","name":"What does tabindex do?","acceptedAnswer":{"@type":"Answer","text":"tabindex=\"0\" — makes a non-focusable element focusable in normal order. tabindex=\"-1\" — focusable via script only (not Tab), for managing focus. tabindex=\"1+\" — avoid; it breaks natural tab order."}}]}
   </script>
 </head>
 
@@ -326,6 +330,208 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="HTML interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>HTML Interview Questions and Answers</h1>
+      <p>30 hand-picked HTML interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is semantic HTML and why does it matter?</h2>
+          <div class="seo-a"><p>Using elements that describe their meaning — <code class="inline">&lt;header&gt;</code>, <code class="inline">&lt;nav&gt;</code>, <code class="inline">&lt;main&gt;</code>, <code class="inline">&lt;article&gt;</code>, <code class="inline">&lt;footer&gt;</code> — instead of generic <code class="inline">&lt;div&gt;</code>s.</p><p>Benefits: better <strong>accessibility</strong> (screen readers understand structure), improved <strong>SEO</strong>, and more maintainable markup.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does &lt;!DOCTYPE html&gt; do?</h2>
+          <div class="seo-a"><p>It tells the browser to render in <strong>standards mode</strong> rather than legacy 'quirks mode'. Without it, older browsers emulate 1990s bugs and box models, breaking layouts.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Block vs inline vs inline-block elements.</h2>
+          <div class="seo-a"><ul><li><strong>Block</strong> — starts on a new line, takes full width (<code class="inline">div</code>, <code class="inline">p</code>, <code class="inline">section</code>).</li><li><strong>Inline</strong> — flows within text, ignores width/height (<code class="inline">span</code>, <code class="inline">a</code>).</li><li><strong>inline-block</strong> — flows inline but respects width/height/margins.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does the viewport meta tag do?</h2>
+          <div class="seo-a"><p>It controls how mobile browsers scale the page. Without it, phones render at desktop width and zoom out. <code class="inline">width=device-width, initial-scale=1</code> makes the layout match the device's real width — essential for responsive design.</p></div>
+          <pre><code>&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are data-* attributes?</h2>
+          <div class="seo-a"><p>Data attributes are custom HTML attributes used to store application-specific data on an element. They start with <code class="inline">data-</code> and can be accessed in JavaScript using the <code class="inline">dataset</code> API.</p></div>
+          <pre><code>&lt;li data-id=&quot;42&quot; data-name=&quot;Angular&quot;&gt;Angular&lt;/li&gt;
+
+const item = document.querySelector('li');
+console.log(item.dataset.id);   // '42'
+console.log(item.dataset.name); // 'Angular'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>localStorage vs sessionStorage vs cookies.</h2>
+          <div class="seo-a"><ul><li><strong>localStorage</strong> — ~5–10MB, persists until cleared, not sent to the server.</li><li><strong>sessionStorage</strong> — same API, cleared when the tab closes.</li><li><strong>cookies</strong> — small (~4KB), sent with every HTTP request; used for auth/session tokens.</li></ul></div>
+          <pre><code>localStorage.setItem('theme', 'dark');
+localStorage.getItem('theme');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>script defer vs async.</h2>
+          <div class="seo-a"><p>Both download the script without blocking HTML parsing.</p><ul><li><strong>async</strong> — runs as soon as it's downloaded, order not guaranteed. For independent scripts (analytics).</li><li><strong>defer</strong> — runs after parsing, in order. For app scripts that depend on the DOM or each other.</li></ul></div>
+          <pre><code>&lt;script src=&quot;app.js&quot; defer&gt;&lt;/script&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What native form validation does HTML5 provide?</h2>
+          <div class="seo-a"><p>Attributes like <code class="inline">required</code>, <code class="inline">type="email"</code>, <code class="inline">min</code>/<code class="inline">max</code>, <code class="inline">pattern</code>, and <code class="inline">minlength</code> validate input before submit, with built-in error UI — no JS needed for basics.</p></div>
+          <pre><code>&lt;input type=&quot;email&quot; required pattern=&quot;.+@company\.com&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you make a page accessible?</h2>
+          <div class="seo-a"><ul><li>Semantic elements + correct heading order.</li><li><code class="inline">alt</code> text on images; labels tied to inputs.</li><li>Keyboard operability and visible focus states.</li><li>ARIA roles/attributes only when native elements can't express the semantics.</li><li>Sufficient colour contrast.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you serve responsive images?</h2>
+          <div class="seo-a"><p>Use <code class="inline">srcset</code> + <code class="inline">sizes</code> so the browser picks the best resolution for the device, or <code class="inline">&lt;picture&gt;</code> for art direction / modern formats (WebP/AVIF) with fallbacks. Add <code class="inline">loading="lazy"</code> for offscreen images.</p></div>
+          <pre><code>&lt;img src=&quot;s.jpg&quot; srcset=&quot;s.jpg 480w, l.jpg 1080w&quot; loading=&quot;lazy&quot; alt=&quot;...&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Which meta tags matter for SEO and sharing?</h2>
+          <div class="seo-a"><p><code class="inline">&lt;title&gt;</code> and <code class="inline">&lt;meta name="description"&gt;</code> for search results; <strong>Open Graph</strong> (<code class="inline">og:title</code>, <code class="inline">og:image</code>) and <strong>Twitter Card</strong> tags for rich link previews; <code class="inline">canonical</code> to avoid duplicate-content penalties.</p></div>
+          <pre><code>&lt;meta property=&quot;og:title&quot; content=&quot;...&quot;&gt;
+&lt;link rel=&quot;canonical&quot; href=&quot;https://site.com/page&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What makes a site a Progressive Web App (PWA)?</h2>
+          <div class="seo-a"><p>A Progressive Web App (PWA) combines modern web technologies to deliver a native app-like experience. The three core requirements are a <strong>Web App Manifest</strong> (defines the app's name, icons, theme, and display mode), a <strong>Service Worker</strong> (enables offline support, caching, and background functionality), and <strong>HTTPS</strong> (required for security and service workers). Together, these allow users to install the website, launch it like an app, and continue using it even with limited or no internet connection.</p></div>
+          <pre><code>&lt;link rel=&quot;manifest&quot; href=&quot;manifest.json&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Web Components?</h2>
+          <div class="seo-a"><p>Web Components are a set of browser standards for building reusable, framework-independent UI components. They consist of <strong>Custom Elements</strong> (custom HTML tags), <strong>Shadow DOM</strong> (encapsulated DOM and styles), and <strong>HTML Templates</strong> using <code class="inline">&lt;template&gt;</code> and <code class="inline">&lt;slot&gt;</code>. Since they are browser-native, they can be used with Angular, React, Vue, or plain JavaScript.</p></div>
+          <pre><code>class MyCard extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: 'open' }).innerHTML = `
+      &lt;style&gt;
+        div { border: 1px solid #ccc; padding: 12px; }
+      &lt;/style&gt;
+      &lt;div&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;`;
+  }
+}
+
+customElements.define('my-card', MyCard);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why do input types matter (email, number, tel, date)?</h2>
+          <div class="seo-a"><p>The right <code class="inline">type</code> gives free validation, the correct <strong>mobile keyboard</strong> (numeric/email layout), native pickers (date/color), and better accessibility — improving UX with zero JS.</p></div>
+          <pre><code>&lt;input type=&quot;email&quot; inputmode=&quot;email&quot;&gt;
+&lt;input type=&quot;number&quot; inputmode=&quot;numeric&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does the native &lt;dialog&gt; element give you?</h2>
+          <div class="seo-a"><p>A built-in modal/popup with <code class="inline">showModal()</code>/<code class="inline">close()</code>, automatic focus trapping, backdrop (<code class="inline">::backdrop</code>), and <code class="inline">Esc</code>-to-close — accessibility that used to require a library.</p></div>
+          <pre><code>&lt;dialog id=&quot;m&quot;&gt;&lt;form method=&quot;dialog&quot;&gt;&lt;button&gt;OK&lt;/button&gt;&lt;/form&gt;&lt;/dialog&gt;
+&lt;script&gt;m.showModal();&lt;/script&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are &lt;details&gt; and &lt;summary&gt;?</h2>
+          <div class="seo-a"><p>A native, zero-JS disclosure widget: <code class="inline">&lt;summary&gt;</code> is the always-visible label and the rest of <code class="inline">&lt;details&gt;</code> expands/collapses on click — accessible and keyboard-friendly out of the box (this app's cards use the same idea).</p></div>
+          <pre><code>&lt;details&gt;&lt;summary&gt;Show answer&lt;/summary&gt;&lt;p&gt;Hidden content&lt;/p&gt;&lt;/details&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why add rel=&quot;noopener&quot; to target=&quot;_blank&quot; links?</h2>
+          <div class="seo-a"><p>Without it, the newly opened page can access <code class="inline">window.opener</code> and hijack the original tab (tabnabbing). <code class="inline">rel="noopener"</code> severs that reference; <code class="inline">noreferrer</code> also hides the referrer. Modern browsers imply noopener, but set it explicitly.</p></div>
+          <pre><code>&lt;a href=&quot;https://ext.com&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;Link&lt;/a&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between preload, prefetch, and preconnect?</h2>
+          <div class="seo-a"><p>These resource hints help improve page performance. <strong>preload</strong> fetches a critical resource needed for the current page as early as possible. <strong>prefetch</strong> downloads a low-priority resource that is likely to be needed on a future page. <strong>preconnect</strong> establishes the DNS, TCP, and TLS connection to another origin before any requests are made, reducing connection latency.</p></div>
+          <pre><code>&lt;link rel=&quot;preload&quot; href=&quot;font.woff2&quot; as=&quot;font&quot; crossorigin&gt;
+&lt;link rel=&quot;prefetch&quot; href=&quot;next-page.js&quot;&gt;
+&lt;link rel=&quot;preconnect&quot; href=&quot;https://fonts.googleapis.com&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Canvas vs SVG — when to use which?</h2>
+          <div class="seo-a"><p><strong>SVG</strong> is vector, DOM-based, scalable, and stylable/accessible — good for icons, charts, and anything interactive or resolution-independent. <strong>Canvas</strong> is an immediate-mode pixel bitmap — better for lots of objects, games, and heavy pixel manipulation.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does tabindex do?</h2>
+          <div class="seo-a"><ul><li><code class="inline">tabindex="0"</code> — makes a non-focusable element focusable in normal order.</li><li><code class="inline">tabindex="-1"</code> — focusable via script only (not Tab), for managing focus.</li><li><code class="inline">tabindex="1+"</code> — avoid; it breaks natural tab order.</li></ul></div>
+          <pre><code>&lt;div role=&quot;button&quot; tabindex=&quot;0&quot;&gt;Custom button&lt;/div&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the Critical Rendering Path?</h2>
+          <div class="seo-a"><p>The steps the browser takes to turn HTML/CSS/JS into pixels: build the <strong>DOM</strong> and <strong>CSSOM</strong>, combine into the render tree, then layout and paint. CSS is render-blocking and synchronous JS is parser-blocking — optimise by inlining critical CSS, deferring JS, and minimising above-the-fold work.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is an ARIA live region?</h2>
+          <div class="seo-a"><p>An ARIA live region is an element with the <code class="inline">aria-live</code> attribute that automatically announces dynamic content changes to screen readers without moving keyboard focus. Use <code class="inline">aria-live="polite"</code> for non-urgent updates and <code class="inline">aria-live="assertive"</code> for critical messages that should be announced immediately.</p></div>
+          <pre><code>&lt;div aria-live=&quot;polite&quot;&gt;12 results found&lt;/div&gt;
+&lt;div aria-live=&quot;assertive&quot;&gt;Your session has expired.&lt;/div&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the &lt;noscript&gt; tag?</h2>
+          <div class="seo-a"><p>The <code class="inline">&lt;noscript&gt;</code> element defines content that is displayed only when JavaScript is disabled or not supported by the browser. It is commonly used to inform users that JavaScript is required, provide alternative content, or include fallback resources.</p></div>
+          <pre><code>&lt;noscript&gt;
+  &lt;p&gt;This application requires JavaScript to function properly. Please enable JavaScript in your browser.&lt;/p&gt;
+&lt;/noscript&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the DOM?</h2>
+          <div class="seo-a"><p>The <strong>Document Object Model</strong> is the browser's in-memory, tree-shaped representation of your HTML. Each tag becomes a <em>node</em>, and JavaScript can read and change these nodes (<code class="inline">querySelector</code>, <code class="inline">textContent</code>, <code class="inline">createElement</code>) to update the page dynamically.</p><p>The DOM is a <em>live</em> API, not the original HTML source — frameworks like Angular/React manipulate it (often via a virtual DOM or their own diffing) instead of you touching it by hand.</p></div>
+          <pre><code>document.querySelector('h1').textContent = 'Hi';
+const li = document.createElement('li');
+document.body.appendChild(li);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Form method GET vs POST — what's the difference?</h2>
+          <div class="seo-a"><ul><li><strong>GET</strong> — appends form data to the URL as query params. Visible, bookmarkable, cached, length-limited. Use for <em>searches/filters</em> (idempotent reads).</li><li><strong>POST</strong> — sends data in the request body. Not in the URL, not cached, no size limit. Use for <em>creating/changing</em> data (logins, submissions).</li></ul><p>Never send passwords or sensitive data with GET — it lands in URLs, history, and server logs.</p></div>
+          <pre><code>&lt;form method=&quot;get&quot; action=&quot;/search&quot;&gt;...&lt;/form&gt;
+&lt;form method=&quot;post&quot; action=&quot;/login&quot;&gt;...&lt;/form&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between id and class?</h2>
+          <div class="seo-a"><ul><li><strong>id</strong> uniquely identifies a single element on the page and should only be used once.</li><li><strong>class</strong> can be reused across multiple elements.</li><li><strong>CSS Specificity</strong>: <code class="inline">#id</code> has higher specificity than <code class="inline">.class</code>.</li><li><strong>JavaScript</strong>: Access an id using <code class="inline">getElementById()</code>, while classes are commonly selected using <code class="inline">querySelectorAll()</code>.</li></ul></div>
+          <pre><code>&lt;div id=&quot;header&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;card&quot;&gt;&lt;/div&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why should you use the label element with the for attribute?</h2>
+          <div class="seo-a"><p>The <code class="inline">label</code> element improves accessibility by associating descriptive text with an input. Clicking the label automatically focuses the corresponding input, making forms easier to use for both mouse and keyboard users as well as screen readers.</p></div>
+          <pre><code>&lt;label for=&quot;email&quot;&gt;Email&lt;/label&gt;
+&lt;input id=&quot;email&quot; type=&quot;email&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why is the alt attribute important for images?</h2>
+          <div class="seo-a"><p>The <code class="inline">alt</code> attribute provides alternative text when an image cannot be displayed. It is also read by screen readers for visually impaired users and helps search engines understand image content. Decorative images should use <code class="inline">alt=""</code>.</p></div>
+          <pre><code>&lt;img src=&quot;profile.jpg&quot; alt=&quot;Profile photo of John Doe&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is an iframe and what security precautions should you take?</h2>
+          <div class="seo-a"><p>An <code class="inline">iframe</code> embeds another webpage inside the current page. It is commonly used for videos, maps, and third-party widgets. Since embedded content may be untrusted, use the <code class="inline">sandbox</code> attribute to restrict its capabilities and improve security.</p></div>
+          <pre><code>&lt;iframe
+  src=&quot;https://example.com&quot;
+  sandbox=&quot;allow-scripts allow-same-origin&quot;&gt;
+&lt;/iframe&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the autocomplete attribute and why is it useful?</h2>
+          <div class="seo-a"><p>The <code class="inline">autocomplete</code> attribute tells the browser whether it should automatically fill form fields using previously saved user information. It improves user experience by reducing typing and supports values like <code class="inline">email</code>, <code class="inline">username</code>, <code class="inline">current-password</code>, and <code class="inline">new-password</code>.</p></div>
+          <pre><code>&lt;input type=&quot;email&quot; autocomplete=&quot;email&quot;&gt;
+&lt;input type=&quot;password&quot; autocomplete=&quot;current-password&quot;&gt;
+&lt;input type=&quot;password&quot; autocomplete=&quot;new-password&quot;&gt;</code></pre>
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +605,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="html";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->

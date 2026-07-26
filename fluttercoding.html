@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Flutter Coding Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="100 Flutter Coding interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/fluttercoding" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Flutter Coding Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="100 Flutter Coding interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/fluttercoding" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Flutter Coding Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Build a counter app using Provider and ChangeNotifier.","acceptedAnswer":{"@type":"Answer","text":"Create a ChangeNotifier model that holds the count and calls notifyListeners() on change. Expose it via ChangeNotifierProvider at the top of the tree, and read/update it in widgets with context.watch&lt;CounterModel&gt;() (rebuilds) or context.read&lt;CounterModel&gt;() (fire-and-forget calls)."}},{"@type":"Question","name":"Build a simple todo list with add, toggle-complete, and delete.","acceptedAnswer":{"@type":"Answer","text":"Keep a List&lt;Todo&gt; in a StatefulWidget . Adding/removing/toggling all call setState to mutate the list and trigger a rebuild. Render with ListView.builder and use each item's id as a ValueKey so Flutter tracks identity correctly across reorders/deletes."}},{"@type":"Question","name":"Implement a debounced search field in Flutter.","acceptedAnswer":{"@type":"Answer","text":"Listen to the TextEditingController , cancel any pending Timer on each keystroke, and start a new short-delay timer that fires the actual API call—so a network request only fires after the user pauses typing."}},{"@type":"Question","name":"Implement infinite scroll pagination in a ListView.","acceptedAnswer":{"@type":"Answer","text":"Attach a ScrollController to the ListView and listen for the scroll position nearing maxScrollExtent ; when close enough, fetch the next page and append it to the data list with setState . Guard with an isLoading flag to avoid firing duplicate requests."}},{"@type":"Question","name":"Fetch and render API data using FutureBuilder.","acceptedAnswer":{"@type":"Answer","text":"Store the Future in initState (not in build , or it re-fetches on every rebuild), then pass it to FutureBuilder and branch on snapshot.connectionState and snapshot.hasError to render loading, error, or data states."}},{"@type":"Question","name":"Build a live countdown timer using Stream and StreamBuilder.","acceptedAnswer":{"@type":"Answer","text":"Use Stream.periodic to emit a decreasing value every second, take() to limit it, and feed it to a StreamBuilder so the UI updates automatically each tick without manual setState calls."}},{"@type":"Question","name":"Build a login form with email/password validation.","acceptedAnswer":{"@type":"Answer","text":"Wrap fields in a Form with a GlobalKey&lt;FormState&gt; . Each TextFormField validates its own input (email format, min password length); on submit, call formKey.currentState!.validate() and only proceed if it returns true."}},{"@type":"Question","name":"Build a reusable custom button widget with a loading state.","acceptedAnswer":{"@type":"Answer","text":"Wrap the design in a StatelessWidget exposing label , onPressed , and isLoading as parameters. When isLoading is true, disable the button (pass null as the callback) and swap the label for a small CircularProgressIndicator ."}},{"@type":"Question","name":"Build a bottom navigation bar that preserves each tab's state.","acceptedAnswer":{"@type":"Answer","text":"Use BottomNavigationBar to switch a selected index, but render all tab pages inside an IndexedStack instead of swapping widgets directly— IndexedStack keeps every child alive in the tree (just hidden), preserving scroll position and state when switching tabs."}},{"@type":"Question","name":"Build a layout that switches between mobile and tablet designs.","acceptedAnswer":{"@type":"Answer","text":"Use LayoutBuilder to read the available width from constraints.maxWidth and branch the widget tree at a breakpoint (e.g. 600px)—rendering a single column on narrow screens and a two-pane layout on wider ones."}},{"@type":"Question","name":"Implement a counter using the Bloc/Cubit pattern.","acceptedAnswer":{"@type":"Answer","text":"Define a Cubit&lt;int&gt; exposing increment() / decrement() methods that call emit() with the new state. Provide it with BlocProvider and rebuild the UI with BlocBuilder&lt;CounterCubit, int&gt; ."}},{"@type":"Question","name":"Add an auth-token interceptor with automatic refresh using Dio.","acceptedAnswer":{"@type":"Answer","text":"Register an InterceptorsWrapper that attaches the current access token to every outgoing request in onRequest . In onError , check for a 401, call the refresh-token endpoint, update stored tokens, and retry the original request via handler.resolve(await dio.fetch(options)) ."}},{"@type":"Question","name":"Write a Dart function to check if a string is a palindrome.","acceptedAnswer":{"@type":"Answer","text":"Normalize the string (lowercase, strip non-alphanumeric characters if needed), then compare it to its reverse. This runs in O(n) time and O(n) space."}},{"@type":"Question","name":"Write a Dart function to compute the nth Fibonacci number, and explain how to optimize the naive recursive version.","acceptedAnswer":{"@type":"Answer","text":"The naive recursive solution recomputes overlapping subproblems, giving O(2^n) time. Adding memoization (caching already-computed results in a Map) brings it down to O(n) time and O(n) space. An iterative version achieves O(n) time with O(1) space."}},{"@type":"Question","name":"Write a Dart function to flatten an arbitrarily nested list.","acceptedAnswer":{"@type":"Answer","text":"Recursively walk each element: if it's itself a List , recurse into it and spread the flattened result; otherwise add it directly to the output. This handles any depth of nesting."}},{"@type":"Question","name":"Implement a generic debounce function from scratch in Dart.","acceptedAnswer":{"@type":"Answer","text":"A debounce wraps a callback so repeated calls within a delay window cancel the pending invocation and restart the timer—only the last call within the quiet period actually executes. Implemented with a closure holding a single Timer? across calls."}},{"@type":"Question","name":"Solve the Two Sum problem in Dart.","acceptedAnswer":{"@type":"Answer","text":"Iterate through the list once, tracking each value's index in a Map . For each element, check whether target - element already exists in the map—if so, return both indices. This runs in O(n) time and O(n) space, versus O(n²) for the brute-force nested loop."}},{"@type":"Question","name":"Build a stopwatch with start, pause, and reset.","acceptedAnswer":{"@type":"Answer","text":"Use a Timer.periodic (e.g. every 30-50ms) to increment an elapsed-time counter and call setState . Start creates the timer, pause cancels it while keeping the elapsed value, and reset cancels the timer and zeroes the counter."}},{"@type":"Question","name":"Build a quiz app that tracks the score across questions.","acceptedAnswer":{"@type":"Answer","text":"Keep a List&lt;Question&gt; , a currentIndex , and a score in state. Selecting an answer checks it against the correct answer, increments the score if correct, then advances currentIndex ; when the index reaches the list length, show a results screen."}},{"@type":"Question","name":"Build a shopping cart with add, remove, quantity adjustment, and a running total.","acceptedAnswer":{"@type":"Answer","text":"Model the cart as a Map&lt;Product, int&gt; (product to quantity) inside a ChangeNotifier . Adding increments the quantity (or inserts at 1), removing decrements/removes at 0, and a getter computes the total by summing price * quantity across entries."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="#frontend" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span class="pg-header-label">Playground</span>
+          <span class="pg-header-js">JS</span>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="random-btn" type="button" title="Random question (R)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+              Random
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Flutter Coding interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Flutter Coding Interview Questions and Answers</h1>
+      <p>100 hand-picked Flutter Coding interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Build a counter app using Provider and ChangeNotifier.</h2>
+          <div class="seo-a"><p>Create a <code class="inline">ChangeNotifier</code> model that holds the count and calls <code class="inline">notifyListeners()</code> on change. Expose it via <code class="inline">ChangeNotifierProvider</code> at the top of the tree, and read/update it in widgets with <code class="inline">context.watch&lt;CounterModel&gt;()</code> (rebuilds) or <code class="inline">context.read&lt;CounterModel&gt;()</code> (fire-and-forget calls).</p></div>
+          <pre><code>class CounterModel extends ChangeNotifier {
+  int _count = 0;
+  int get count =&gt; _count;
+  void increment() { _count++; notifyListeners(); }
+}
+
+// UI
+Text('${context.watch&lt;CounterModel&gt;().count}');
+ElevatedButton(
+  onPressed: () =&gt; context.read&lt;CounterModel&gt;().increment(),
+  child: Text('+'),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a simple todo list with add, toggle-complete, and delete.</h2>
+          <div class="seo-a"><p>Keep a <code class="inline">List&lt;Todo&gt;</code> in a <code class="inline">StatefulWidget</code>. Adding/removing/toggling all call <code class="inline">setState</code> to mutate the list and trigger a rebuild. Render with <code class="inline">ListView.builder</code> and use each item's id as a <code class="inline">ValueKey</code> so Flutter tracks identity correctly across reorders/deletes.</p></div>
+          <pre><code>List&lt;Todo&gt; todos = [];
+
+void add(String title) =&gt; setState(() =&gt; todos.add(Todo(title)));
+void toggle(Todo t) =&gt; setState(() =&gt; t.done = !t.done);
+void remove(Todo t) =&gt; setState(() =&gt; todos.remove(t));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a debounced search field in Flutter.</h2>
+          <div class="seo-a"><p>Listen to the <code class="inline">TextEditingController</code>, cancel any pending <code class="inline">Timer</code> on each keystroke, and start a new short-delay timer that fires the actual API call—so a network request only fires after the user pauses typing.</p></div>
+          <pre><code>Timer? _debounce;
+
+void onChanged(String query) {
+  _debounce?.cancel();
+  _debounce = Timer(const Duration(milliseconds: 400), () {
+    searchApi(query);
+  });
+}
+
+@override
+void dispose() {
+  _debounce?.cancel();
+  super.dispose();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement infinite scroll pagination in a ListView.</h2>
+          <div class="seo-a"><p>Attach a <code class="inline">ScrollController</code> to the <code class="inline">ListView</code> and listen for the scroll position nearing <code class="inline">maxScrollExtent</code>; when close enough, fetch the next page and append it to the data list with <code class="inline">setState</code>. Guard with an <code class="inline">isLoading</code> flag to avoid firing duplicate requests.</p></div>
+          <pre><code>final controller = ScrollController();
+bool isLoading = false;
+
+@override
+void initState() {
+  super.initState();
+  controller.addListener(() {
+    if (controller.position.pixels &gt;=
+        controller.position.maxScrollExtent - 200 &amp;&amp; !isLoading) {
+      loadMore();
+    }
+  });
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Fetch and render API data using FutureBuilder.</h2>
+          <div class="seo-a"><p>Store the Future in <code class="inline">initState</code> (not in <code class="inline">build</code>, or it re-fetches on every rebuild), then pass it to <code class="inline">FutureBuilder</code> and branch on <code class="inline">snapshot.connectionState</code> and <code class="inline">snapshot.hasError</code> to render loading, error, or data states.</p></div>
+          <pre><code>late Future&lt;List&lt;User&gt;&gt; usersFuture;
+
+@override
+void initState() {
+  super.initState();
+  usersFuture = api.fetchUsers();
+}
+
+FutureBuilder&lt;List&lt;User&gt;&gt;(
+  future: usersFuture,
+  builder: (context, snapshot) {
+    if (snapshot.connectionState != ConnectionState.done) {
+      return const CircularProgressIndicator();
+    }
+    if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+    return ListView(children: [for (final u in snapshot.data!) Text(u.name)]);
+  },
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a live countdown timer using Stream and StreamBuilder.</h2>
+          <div class="seo-a"><p>Use <code class="inline">Stream.periodic</code> to emit a decreasing value every second, <code class="inline">take()</code> to limit it, and feed it to a <code class="inline">StreamBuilder</code> so the UI updates automatically each tick without manual <code class="inline">setState</code> calls.</p></div>
+          <pre><code>Stream&lt;int&gt; countdown(int from) =&gt; Stream.periodic(
+  const Duration(seconds: 1), (i) =&gt; from - i - 1,
+).take(from);
+
+StreamBuilder&lt;int&gt;(
+  stream: countdown(10),
+  builder: (context, snapshot) =&gt; Text('${snapshot.data ?? 10}'),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a login form with email/password validation.</h2>
+          <div class="seo-a"><p>Wrap fields in a <code class="inline">Form</code> with a <code class="inline">GlobalKey&lt;FormState&gt;</code>. Each <code class="inline">TextFormField</code> validates its own input (email format, min password length); on submit, call <code class="inline">formKey.currentState!.validate()</code> and only proceed if it returns true.</p></div>
+          <pre><code>final formKey = GlobalKey&lt;FormState&gt;();
+
+Form(
+  key: formKey,
+  child: Column(children: [
+    TextFormField(
+      validator: (v) =&gt; v != null &amp;&amp; v.contains('@') ? null : 'Invalid email',
+    ),
+    TextFormField(
+      obscureText: true,
+      validator: (v) =&gt; (v?.length ?? 0) &gt;= 6 ? null : 'Min 6 characters',
+    ),
+  ]),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a reusable custom button widget with a loading state.</h2>
+          <div class="seo-a"><p>Wrap the design in a <code class="inline">StatelessWidget</code> exposing <code class="inline">label</code>, <code class="inline">onPressed</code>, and <code class="inline">isLoading</code> as parameters. When <code class="inline">isLoading</code> is true, disable the button (pass <code class="inline">null</code> as the callback) and swap the label for a small <code class="inline">CircularProgressIndicator</code>.</p></div>
+          <pre><code>class AppButton extends StatelessWidget {
+  final String label;
+  final VoidCallback? onPressed;
+  final bool isLoading;
+  const AppButton({super.key, required this.label, this.onPressed, this.isLoading = false});
+
+  @override
+  Widget build(BuildContext context) =&gt; ElevatedButton(
+    onPressed: isLoading ? null : onPressed,
+    child: isLoading
+        ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))
+        : Text(label),
+  );
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a bottom navigation bar that preserves each tab's state.</h2>
+          <div class="seo-a"><p>Use <code class="inline">BottomNavigationBar</code> to switch a selected index, but render all tab pages inside an <code class="inline">IndexedStack</code> instead of swapping widgets directly—<code class="inline">IndexedStack</code> keeps every child alive in the tree (just hidden), preserving scroll position and state when switching tabs.</p></div>
+          <pre><code>int index = 0;
+final pages = [HomePage(), SearchPage(), ProfilePage()];
+
+Scaffold(
+  body: IndexedStack(index: index, children: pages),
+  bottomNavigationBar: BottomNavigationBar(
+    currentIndex: index,
+    onTap: (i) =&gt; setState(() =&gt; index = i),
+    items: const [],
+  ),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a layout that switches between mobile and tablet designs.</h2>
+          <div class="seo-a"><p>Use <code class="inline">LayoutBuilder</code> to read the available width from <code class="inline">constraints.maxWidth</code> and branch the widget tree at a breakpoint (e.g. 600px)—rendering a single column on narrow screens and a two-pane layout on wider ones.</p></div>
+          <pre><code>LayoutBuilder(
+  builder: (context, constraints) {
+    if (constraints.maxWidth &lt; 600) {
+      return const MobileLayout();
+    }
+    return const TabletLayout();
+  },
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a counter using the Bloc/Cubit pattern.</h2>
+          <div class="seo-a"><p>Define a <code class="inline">Cubit&lt;int&gt;</code> exposing <code class="inline">increment()</code>/<code class="inline">decrement()</code> methods that call <code class="inline">emit()</code> with the new state. Provide it with <code class="inline">BlocProvider</code> and rebuild the UI with <code class="inline">BlocBuilder&lt;CounterCubit, int&gt;</code>.</p></div>
+          <pre><code>class CounterCubit extends Cubit&lt;int&gt; {
+  CounterCubit() : super(0);
+  void increment() =&gt; emit(state + 1);
+  void decrement() =&gt; emit(state - 1);
+}
+
+BlocBuilder&lt;CounterCubit, int&gt;(
+  builder: (context, count) =&gt; Text('$count'),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Add an auth-token interceptor with automatic refresh using Dio.</h2>
+          <div class="seo-a"><p>Register an <code class="inline">InterceptorsWrapper</code> that attaches the current access token to every outgoing request in <code class="inline">onRequest</code>. In <code class="inline">onError</code>, check for a 401, call the refresh-token endpoint, update stored tokens, and retry the original request via <code class="inline">handler.resolve(await dio.fetch(options))</code>.</p></div>
+          <pre><code>dio.interceptors.add(InterceptorsWrapper(
+  onRequest: (options, handler) {
+    options.headers['Authorization'] = 'Bearer $accessToken';
+    handler.next(options);
+  },
+  onError: (error, handler) async {
+    if (error.response?.statusCode == 401) {
+      accessToken = await refreshToken();
+      return handler.resolve(await dio.fetch(error.requestOptions));
+    }
+    handler.next(error);
+  },
+));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a Dart function to check if a string is a palindrome.</h2>
+          <div class="seo-a"><p>Normalize the string (lowercase, strip non-alphanumeric characters if needed), then compare it to its reverse. This runs in <strong>O(n)</strong> time and O(n) space.</p></div>
+          <pre><code>bool isPalindrome(String input) {
+  final s = input.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+  return s == s.split('').reversed.join();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a Dart function to compute the nth Fibonacci number, and explain how to optimize the naive recursive version.</h2>
+          <div class="seo-a"><p>The naive recursive solution recomputes overlapping subproblems, giving <strong>O(2^n)</strong> time. Adding <strong>memoization</strong> (caching already-computed results in a Map) brings it down to <strong>O(n)</strong> time and O(n) space. An iterative version achieves O(n) time with O(1) space.</p></div>
+          <pre><code>final _cache = &lt;int, int&gt;{};
+
+int fib(int n) {
+  if (n &lt;= 1) return n;
+  return _cache[n] ??= fib(n - 1) + fib(n - 2);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a Dart function to flatten an arbitrarily nested list.</h2>
+          <div class="seo-a"><p>Recursively walk each element: if it's itself a <code class="inline">List</code>, recurse into it and spread the flattened result; otherwise add it directly to the output. This handles any depth of nesting.</p></div>
+          <pre><code>List&lt;dynamic&gt; flatten(List&lt;dynamic&gt; input) {
+  final result = &lt;dynamic&gt;[];
+  for (final item in input) {
+    if (item is List) {
+      result.addAll(flatten(item));
+    } else {
+      result.add(item);
+    }
+  }
+  return result;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a generic debounce function from scratch in Dart.</h2>
+          <div class="seo-a"><p>A debounce wraps a callback so repeated calls within a delay window cancel the pending invocation and restart the timer—only the last call within the quiet period actually executes. Implemented with a closure holding a single <code class="inline">Timer?</code> across calls.</p></div>
+          <pre><code>void Function() debounce(void Function() action, Duration delay) {
+  Timer? timer;
+  return () {
+    timer?.cancel();
+    timer = Timer(delay, action);
+  };
+}
+
+final debouncedSave = debounce(() =&gt; save(), const Duration(milliseconds: 500));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Solve the Two Sum problem in Dart.</h2>
+          <div class="seo-a"><p>Iterate through the list once, tracking each value's index in a <code class="inline">Map</code>. For each element, check whether <code class="inline">target - element</code> already exists in the map—if so, return both indices. This runs in <strong>O(n)</strong> time and O(n) space, versus O(n²) for the brute-force nested loop.</p></div>
+          <pre><code>List&lt;int&gt; twoSum(List&lt;int&gt; nums, int target) {
+  final seen = &lt;int, int&gt;{};
+  for (var i = 0; i &lt; nums.length; i++) {
+    final complement = target - nums[i];
+    if (seen.containsKey(complement)) return [seen[complement]!, i];
+    seen[nums[i]] = i;
+  }
+  throw ArgumentError('No solution found');
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a stopwatch with start, pause, and reset.</h2>
+          <div class="seo-a"><p>Use a <code class="inline">Timer.periodic</code> (e.g. every 30-50ms) to increment an elapsed-time counter and call <code class="inline">setState</code>. Start creates the timer, pause cancels it while keeping the elapsed value, and reset cancels the timer and zeroes the counter.</p></div>
+          <pre><code>Timer? _timer;
+Duration _elapsed = Duration.zero;
+
+void start() {
+  _timer?.cancel();
+  _timer = Timer.periodic(const Duration(milliseconds: 30), (_) {
+    setState(() =&gt; _elapsed += const Duration(milliseconds: 30));
+  });
+}
+void pause() =&gt; _timer?.cancel();
+void reset() { _timer?.cancel(); setState(() =&gt; _elapsed = Duration.zero); }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a quiz app that tracks the score across questions.</h2>
+          <div class="seo-a"><p>Keep a <code class="inline">List&lt;Question&gt;</code>, a <code class="inline">currentIndex</code>, and a <code class="inline">score</code> in state. Selecting an answer checks it against the correct answer, increments the score if correct, then advances <code class="inline">currentIndex</code>; when the index reaches the list length, show a results screen.</p></div>
+          <pre><code>int currentIndex = 0;
+int score = 0;
+
+void answer(String selected) {
+  if (selected == questions[currentIndex].correctAnswer) score++;
+  setState(() =&gt; currentIndex++);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a shopping cart with add, remove, quantity adjustment, and a running total.</h2>
+          <div class="seo-a"><p>Model the cart as a <code class="inline">Map&lt;Product, int&gt;</code> (product to quantity) inside a <code class="inline">ChangeNotifier</code>. Adding increments the quantity (or inserts at 1), removing decrements/removes at 0, and a getter computes the total by summing <code class="inline">price * quantity</code> across entries.</p></div>
+          <pre><code>class Cart extends ChangeNotifier {
+  final Map&lt;Product, int&gt; _items = {};
+
+  void add(Product p) { _items[p] = (_items[p] ?? 0) + 1; notifyListeners(); }
+  void remove(Product p) {
+    if ((_items[p] ?? 0) &lt;= 1) { _items.remove(p); } else { _items[p] = _items[p]! - 1; }
+    notifyListeners();
+  }
+  double get total =&gt; _items.entries.fold(0, (sum, e) =&gt; sum + e.key.price * e.value);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a weather app screen that fetches and displays current conditions.</h2>
+          <div class="seo-a"><p>Fetch weather data in <code class="inline">initState</code> and store the Future; render with <code class="inline">FutureBuilder</code>, mapping the response to a model (temperature, condition, icon). Add a manual refresh button that re-assigns the Future and calls <code class="inline">setState</code> to re-trigger the FutureBuilder.</p></div>
+          <pre><code>late Future&lt;Weather&gt; weatherFuture;
+
+void refresh() =&gt; setState(() =&gt; weatherFuture = api.fetchWeather(city));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a basic chat screen UI (message list + input bar).</h2>
+          <div class="seo-a"><p>Render messages with <code class="inline">ListView.builder(reverse: true)</code> so the list stays pinned to the newest message at the bottom, feeding it a reversed data list (or just inserting new messages at index 0). Pair it with a bottom input row (TextField + send IconButton) wrapped in a <code class="inline">SafeArea</code> so it isn't hidden by the keyboard or home indicator.</p></div>
+          <pre><code>ListView.builder(
+  reverse: true,
+  itemCount: messages.length,
+  itemBuilder: (context, i) =&gt; MessageBubble(message: messages[messages.length - 1 - i]),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build an image gallery using GridView.builder.</h2>
+          <div class="seo-a"><p><code class="inline">GridView.builder</code> with a <code class="inline">SliverGridDelegateWithFixedCrossAxisCount</code> (or <code class="inline">...WithMaxCrossAxisExtent</code> for responsive column counts) lazily builds only the visible thumbnails, using <code class="inline">Image.network</code> with a placeholder/error builder for each cell.</p></div>
+          <pre><code>GridView.builder(
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+  itemCount: images.length,
+  itemBuilder: (context, i) =&gt; Image.network(images[i], fit: BoxFit.cover),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build an expandable/collapsible FAQ list.</h2>
+          <div class="seo-a"><p><code class="inline">ExpansionTile</code> handles the expand/collapse animation and state internally—just give each one a <code class="inline">title</code> (the question) and a <code class="inline">children</code> list (the answer). For a custom look, track expanded state per item manually with an <code class="inline">AnimatedCrossFade</code> or <code class="inline">AnimatedSize</code>.</p></div>
+          <pre><code>ExpansionTile(
+  title: Text(faq.question),
+  children: [Padding(padding: const EdgeInsets.all(16), child: Text(faq.answer))],
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a drag-to-reorder list.</h2>
+          <div class="seo-a"><p><code class="inline">ReorderableListView</code> handles the drag gesture and animation automatically; you just implement <code class="inline">onReorder(oldIndex, newIndex)</code> to update your underlying list's order (adjusting the index since Flutter passes newIndex as if the item hadn't been removed yet). Each child needs a unique <code class="inline">key</code>.</p></div>
+          <pre><code>ReorderableListView(
+  onReorder: (oldIndex, newIndex) {
+    setState(() {
+      if (newIndex &gt; oldIndex) newIndex--;
+      final item = items.removeAt(oldIndex);
+      items.insert(newIndex, item);
+    });
+  },
+  children: [for (final i in items) ListTile(key: ValueKey(i.id), title: Text(i.name))],
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a reusable star-rating widget.</h2>
+          <div class="seo-a"><p>Render N icon widgets in a Row, filling stars up to the current <code class="inline">rating</code> value; wrap each in a <code class="inline">GestureDetector</code> that sets the rating to its index+1 on tap and calls a passed-in <code class="inline">onChanged</code> callback so the parent controls the actual state.</p></div>
+          <pre><code>Row(children: List.generate(5, (i) =&gt; GestureDetector(
+  onTap: () =&gt; onChanged(i + 1),
+  child: Icon(i &lt; rating ? Icons.star : Icons.star_border, color: Colors.amber),
+)));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a search bar that filters a local list as the user types.</h2>
+          <div class="seo-a"><p>Keep the full source list and a <code class="inline">filtered</code> list in state. On each <code class="inline">TextField</code> change, filter the source list case-insensitively and call <code class="inline">setState</code> to update the displayed list—no debounce/API call needed since it's all in-memory.</p></div>
+          <pre><code>void onSearch(String query) {
+  setState(() {
+    filtered = allItems.where((i) =&gt; i.name.toLowerCase().contains(query.toLowerCase())).toList();
+  });
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a screen with a custom-styled TabBar and three tabs.</h2>
+          <div class="seo-a"><p>Use a <code class="inline">DefaultTabController</code> (or a manual <code class="inline">TabController</code> with a <code class="inline">SingleTickerProviderStateMixin</code>) with a <code class="inline">TabBar</code> in the AppBar's <code class="inline">bottom</code> slot, and a matching <code class="inline">TabBarView</code> in the body holding one widget per tab in the same order.</p></div>
+          <pre><code>DefaultTabController(
+  length: 3,
+  child: Scaffold(
+    appBar: AppBar(bottom: const TabBar(tabs: [Tab(text: 'A'), Tab(text: 'B'), Tab(text: 'C')])),
+    body: const TabBarView(children: [PageA(), PageB(), PageC()]),
+  ),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a draggable bottom sheet that expands from partial to full height.</h2>
+          <div class="seo-a"><p><code class="inline">DraggableScrollableSheet</code> lets a bottom sheet be dragged between a min, initial, and max fractional size of the screen, with its own scroll controller so content scrolls once the sheet reaches max size instead of dragging further.</p></div>
+          <pre><code>DraggableScrollableSheet(
+  initialChildSize: 0.4,
+  minChildSize: 0.2,
+  maxChildSize: 0.9,
+  builder: (context, scrollController) =&gt; ListView.builder(
+    controller: scrollController,
+    itemCount: items.length,
+    itemBuilder: (context, i) =&gt; ListTile(title: Text(items[i])),
+  ),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a splash screen that navigates to home after a delay.</h2>
+          <div class="seo-a"><p>In <code class="inline">initState</code>, start a <code class="inline">Future.delayed</code> (or check an async auth-status call) and then call <code class="inline">Navigator.pushReplacement</code> so the splash screen isn't left in the back stack (preventing the user from navigating back to it).</p></div>
+          <pre><code>@override
+void initState() {
+  super.initState();
+  Future.delayed(const Duration(seconds: 2), () {
+    if (!mounted) return;
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) =&gt; const HomePage()));
+  });
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build an onboarding intro slider with page indicator dots.</h2>
+          <div class="seo-a"><p>Use a <code class="inline">PageView.builder</code> for the swipeable slides and listen to its <code class="inline">PageController</code> to track the current page index, rendering a row of dots that highlight the active index. A 'Next'/'Get Started' button on the last page navigates away.</p></div>
+          <pre><code>final controller = PageController();
+int currentPage = 0;
+
+PageView.builder(
+  controller: controller,
+  onPageChanged: (i) =&gt; setState(() =&gt; currentPage = i),
+  itemCount: slides.length,
+  itemBuilder: (context, i) =&gt; OnboardSlide(slides[i]),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a light/dark theme switcher using Provider.</h2>
+          <div class="seo-a"><p>A <code class="inline">ChangeNotifier</code> holds a <code class="inline">ThemeMode</code> field and a toggle method that calls <code class="inline">notifyListeners()</code>. <code class="inline">MaterialApp</code> reads it with <code class="inline">context.watch</code> and passes it to its <code class="inline">themeMode</code> parameter, alongside separate <code class="inline">theme</code> and <code class="inline">darkTheme</code> definitions.</p></div>
+          <pre><code>class ThemeController extends ChangeNotifier {
+  ThemeMode mode = ThemeMode.system;
+  void toggle() {
+    mode = mode == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+    notifyListeners();
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a reusable snackbar utility function for success/error messages.</h2>
+          <div class="seo-a"><p>Wrap <code class="inline">ScaffoldMessenger.of(context).showSnackBar</code> in a static helper that takes a message and a type (success/error), picking a background color and icon accordingly—centralizing styling so every screen shows consistent feedback with one function call.</p></div>
+          <pre><code>class AppSnackbar {
+  static void show(BuildContext context, String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? Colors.red : Colors.green,
+      ));
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a widget that shows a banner when the device loses internet connectivity.</h2>
+          <div class="seo-a"><p>The <code class="inline">connectivity_plus</code> package exposes <code class="inline">Connectivity().onConnectivityChanged</code> as a Stream; feed it into a <code class="inline">StreamBuilder</code> at the app's root, and conditionally show a persistent banner ('No internet connection') when the result is <code class="inline">ConnectivityResult.none</code>.</p></div>
+          <pre><code>StreamBuilder&lt;List&lt;ConnectivityResult&gt;&gt;(
+  stream: Connectivity().onConnectivityChanged,
+  builder: (context, snapshot) {
+    final offline = snapshot.data?.contains(ConnectivityResult.none) ?? false;
+    return offline ? const OfflineBanner() : const SizedBox.shrink();
+  },
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a biometric (fingerprint/Face ID) login gate using local_auth.</h2>
+          <div class="seo-a"><p>The <code class="inline">local_auth</code> package's <code class="inline">authenticate()</code> method triggers the native biometric prompt and returns a bool; check <code class="inline">canCheckBiometrics</code> first to confirm the device supports it, and always provide a fallback (PIN/password) path for devices or users without biometrics enrolled.</p></div>
+          <pre><code>final auth = LocalAuthentication();
+if (await auth.canCheckBiometrics) {
+  final didAuth = await auth.authenticate(
+    localizedReason: 'Please authenticate to continue',
+  );
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement picking an image and uploading it to an API with progress tracking.</h2>
+          <div class="seo-a"><p>Pick the file with <code class="inline">image_picker</code>, then build a <code class="inline">FormData</code> with <code class="inline">MultipartFile.fromFile</code> and send it via Dio's <code class="inline">post</code>, passing an <code class="inline">onSendProgress</code> callback to update a progress indicator as bytes are uploaded.</p></div>
+          <pre><code>final formData = FormData.fromMap({
+  'file': await MultipartFile.fromFile(image.path, filename: 'upload.jpg'),
+});
+await dio.post('/upload', data: formData, onSendProgress: (sent, total) {
+  setState(() =&gt; progress = sent / total);
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a video player screen with play/pause controls.</h2>
+          <div class="seo-a"><p>Initialize a <code class="inline">VideoPlayerController</code> from a network/asset source in <code class="inline">initState</code>, await <code class="inline">initialize()</code>, then wrap the <code class="inline">VideoPlayer</code> widget with custom play/pause buttons calling <code class="inline">controller.play()</code>/<code class="inline">pause()</code>. Always dispose the controller.</p></div>
+          <pre><code>late VideoPlayerController controller;
+
+@override
+void initState() {
+  super.initState();
+  controller = VideoPlayerController.networkUrl(Uri.parse(url))..initialize().then((_) =&gt; setState(() {}));
+}
+
+@override
+void dispose() { controller.dispose(); super.dispose(); }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a custom circular progress indicator that shows a percentage in the center.</h2>
+          <div class="seo-a"><p>Stack a <code class="inline">CircularProgressIndicator(value: progress)</code> (or a <code class="inline">CustomPainter</code> drawing an arc with <code class="inline">Canvas.drawArc</code> for full styling control) with a centered <code class="inline">Text('${(progress * 100).round()}%')</code> using a <code class="inline">Stack</code> + <code class="inline">Alignment.center</code>.</p></div>
+          <pre><code>Stack(
+  alignment: Alignment.center,
+  children: [
+    CircularProgressIndicator(value: progress, strokeWidth: 8),
+    Text('${(progress * 100).round()}%'),
+  ],
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement the core logic for a basic calculator app (digits, operators, equals).</h2>
+          <div class="seo-a"><p>Keep the current input string, a pending operator, and a stored first operand in state. Digit taps append to the display string; an operator tap stores the current value and operator, clearing the display for the next number; equals applies the stored operator between the stored value and the current display value.</p></div>
+          <pre><code>String display = '0';
+double? stored;
+String? pendingOp;
+
+void onOperator(String op) {
+  stored = double.parse(display);
+  pendingOp = op;
+  display = '0';
+}
+void onEquals() {
+  final current = double.parse(display);
+  display = switch (pendingOp) {
+    '+' =&gt; (stored! + current).toString(),
+    '-' =&gt; (stored! - current).toString(),
+    _ =&gt; display,
+  };
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a currency converter that fetches live exchange rates.</h2>
+          <div class="seo-a"><p>Fetch a rates map (base currency to rate) from an API once and cache it in state; conversion itself is then a pure local calculation (<code class="inline">amount * rate</code>) on every keystroke, avoiding an API call per digit typed. Refresh the rates periodically or via a manual refresh button.</p></div>
+          <pre><code>double convert(double amount, double rate) =&gt; amount * rate;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a notes app that persists notes locally using Hive.</h2>
+          <div class="seo-a"><p>Register a Hive adapter for the Note model (or store as a Map for simplicity), open a Hive box at startup, and treat the box like a reactive local database—use <code class="inline">ValueListenableBuilder</code> on <code class="inline">box.listenable()</code> to automatically rebuild the UI whenever notes are added, edited, or deleted, without manual setState plumbing.</p></div>
+          <pre><code>final box = await Hive.openBox('notes');
+
+ValueListenableBuilder(
+  valueListenable: box.listenable(),
+  builder: (context, Box box, _) =&gt; ListView(
+    children: box.values.map((n) =&gt; ListTile(title: Text(n.title))).toList(),
+  ),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a favorite/bookmark toggle that persists across app restarts.</h2>
+          <div class="seo-a"><p>Store favorited item IDs as a <code class="inline">Set&lt;String&gt;</code> (serialized to a <code class="inline">List&lt;String&gt;</code> for <code class="inline">shared_preferences</code>, since it can't store sets directly). Toggling adds/removes the ID from the set, persists it, and calls <code class="inline">notifyListeners()</code> so every screen showing that item reflects the change immediately.</p></div>
+          <pre><code>Future&lt;void&gt; toggleFavorite(String id) async {
+  favorites.contains(id) ? favorites.remove(id) : favorites.add(id);
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setStringList('favorites', favorites.toList());
+  notifyListeners();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a multi-step form wizard (e.g. a 3-step signup flow).</h2>
+          <div class="seo-a"><p>Use a <code class="inline">PageView</code> with <code class="inline">NeverScrollableScrollPhysics</code> (so users can't swipe past validation) driven by a <code class="inline">PageController</code>; each step has its own <code class="inline">Form</code>/<code class="inline">GlobalKey&lt;FormState&gt;</code>, and 'Next' only advances the page if that step's form validates. Collect all step data into one shared model object passed down to each step.</p></div>
+          <pre><code>void next() {
+  if (formKeys[currentStep].currentState!.validate()) {
+    pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement date selection using showDatePicker, and format the result.</h2>
+          <div class="seo-a"><p><code class="inline">showDatePicker</code> returns a <code class="inline">Future&lt;DateTime?&gt;</code> that resolves to null if the user cancels. Store the selected date in state and format it for display using the <code class="inline">intl</code> package's <code class="inline">DateFormat</code> rather than manually concatenating date fields.</p></div>
+          <pre><code>final picked = await showDatePicker(
+  context: context,
+  initialDate: DateTime.now(),
+  firstDate: DateTime(2000),
+  lastDate: DateTime(2100),
+);
+if (picked != null) setState(() =&gt; selectedDate = picked);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a 6-digit OTP verification input with auto-focus advance.</h2>
+          <div class="seo-a"><p>Use 6 individual single-character <code class="inline">TextField</code>s, each with its own <code class="inline">FocusNode</code> and <code class="inline">TextEditingController</code>; on each field's <code class="inline">onChanged</code>, if a digit was entered, request focus on the next field's FocusNode (or the previous one on backspace/empty), and concatenate all controllers' text to validate the full code.</p></div>
+          <pre><code>void onChanged(int index, String value) {
+  if (value.isNotEmpty &amp;&amp; index &lt; 5) {
+    focusNodes[index + 1].requestFocus();
+  } else if (value.isEmpty &amp;&amp; index &gt; 0) {
+    focusNodes[index - 1].requestFocus();
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement Google Sign-In with Firebase Auth.</h2>
+          <div class="seo-a"><p>Trigger the native Google sign-in flow via the <code class="inline">google_sign_in</code> package to get an auth token, then exchange it for a Firebase credential with <code class="inline">GoogleAuthProvider.credential(...)</code> and sign in to Firebase via <code class="inline">FirebaseAuth.instance.signInWithCredential(...)</code>, giving you a unified Firebase user regardless of provider.</p></div>
+          <pre><code>final googleUser = await GoogleSignIn().signIn();
+final googleAuth = await googleUser!.authentication;
+final credential = GoogleAuthProvider.credential(
+  accessToken: googleAuth.accessToken,
+  idToken: googleAuth.idToken,
+);
+await FirebaseAuth.instance.signInWithCredential(credential);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a list with section headers that stick to the top while scrolling.</h2>
+          <div class="seo-a"><p>Use a <code class="inline">CustomScrollView</code> with one <code class="inline">SliverPersistentHeader(pinned: true)</code> per section (implementing a <code class="inline">SliverPersistentHeaderDelegate</code> for the section label) followed by a <code class="inline">SliverList</code> of that section's items—so headers pin to the top as their section scrolls past, then get pushed off by the next section's header.</p></div>
+          <pre><code>CustomScrollView(slivers: [
+  for (final section in sections) ...[
+    SliverPersistentHeader(pinned: true, delegate: SectionHeaderDelegate(section.title)),
+    SliverList(delegate: SliverChildListDelegate(section.items.map((i) =&gt; ListTile(title: Text(i))).toList())),
+  ],
+]);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a shimmer/skeleton loading placeholder while content loads.</h2>
+          <div class="seo-a"><p>The <code class="inline">shimmer</code> package wraps a gray placeholder layout (boxes matching the shape of real content) in a <code class="inline">Shimmer.fromColors</code> widget that animates a moving gradient over it. Show the shimmer skeleton while <code class="inline">FutureBuilder</code>'s connectionState is waiting, then swap to real content once data arrives.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Build a reusable error/empty-state widget pattern for list screens.</h2>
+          <div class="seo-a"><p>A small stateless <code class="inline">StateView</code> widget takes an icon, message, and optional retry callback/button—reused across every screen for 'no results', 'no internet', and 'something went wrong', so the same three states aren't reimplemented ad hoc on each screen.</p></div>
+          <pre><code>class StateView extends StatelessWidget {
+  final IconData icon;
+  final String message;
+  final VoidCallback? onRetry;
+  const StateView({super.key, required this.icon, required this.message, this.onRetry});
+
+  @override
+  Widget build(BuildContext context) =&gt; Center(child: Column(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(icon, size: 48),
+      Text(message),
+      if (onRetry != null) ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
+    ],
+  ));
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a retry mechanism with exponential backoff for a failing API call.</h2>
+          <div class="seo-a"><p>Wrap the API call in a loop up to a max attempt count; on failure, wait an increasing delay (e.g. doubling each time, optionally with jitter) before retrying, and rethrow once the max attempts are exhausted. This avoids hammering a struggling server while still recovering from transient failures.</p></div>
+          <pre><code>Future&lt;T&gt; retry&lt;T&gt;(Future&lt;T&gt; Function() action, {int maxAttempts = 3}) async {
+  var attempt = 0;
+  while (true) {
+    try {
+      return await action();
+    } catch (e) {
+      attempt++;
+      if (attempt &gt;= maxAttempts) rethrow;
+      await Future.delayed(Duration(seconds: 1 &lt;&lt; attempt));
+    }
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Design an offline-first data layer that syncs local changes when connectivity returns.</h2>
+          <div class="seo-a"><p>A repository always reads/writes to local storage (Hive/sqflite) first for instant UI response, queuing an 'unsynced' flag on each changed record. A background sync routine—triggered on connectivity restore or app resume—pushes queued changes to the API, then marks them synced or handles conflicts (e.g. last-write-wins or a merge strategy).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Build a real-time chat feature using WebSockets.</h2>
+          <div class="seo-a"><p>Connect with <code class="inline">WebSocketChannel.connect(uri)</code>; its <code class="inline">.stream</code> is a broadcast Stream of incoming messages fed directly into a <code class="inline">StreamBuilder</code>, and <code class="inline">channel.sink.add(message)</code> sends outgoing messages. Always close the channel (<code class="inline">channel.sink.close()</code>) in dispose to avoid a dangling connection.</p></div>
+          <pre><code>final channel = WebSocketChannel.connect(Uri.parse('wss://example.com/chat'));
+channel.sink.add(jsonEncode({'text': 'hello'}));
+
+StreamBuilder(
+  stream: channel.stream,
+  builder: (context, snapshot) =&gt; Text(snapshot.data?.toString() ?? ''),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Add a search icon to an AppBar that expands into a search field.</h2>
+          <div class="seo-a"><p>Toggle a boolean <code class="inline">isSearching</code> state; when true, replace the AppBar's <code class="inline">title</code> with a <code class="inline">TextField</code> and swap the search icon for a close icon that resets the state and clears the query. For a full search experience, Flutter's built-in <code class="inline">showSearch(context: context, delegate: MySearchDelegate())</code> handles this pattern with its own dedicated screen.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Add unread-count badges to a bottom navigation bar's icons.</h2>
+          <div class="seo-a"><p>Wrap each tab icon in a <code class="inline">Badge</code> widget (Material 3's built-in <code class="inline">Badge</code>, or a <code class="inline">Stack</code> + <code class="inline">Positioned</code> circle for older versions), conditionally showing it only when that tab's unread count is greater than zero, sourced from a shared state/provider tracking notification counts per tab.</p></div>
+          <pre><code>BottomNavigationBarItem(
+  icon: Badge(
+    label: Text('$unreadCount'),
+    isLabelVisible: unreadCount &gt; 0,
+    child: const Icon(Icons.chat),
+  ),
+  label: 'Chats',
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a side drawer navigation menu.</h2>
+          <div class="seo-a"><p>Pass a <code class="inline">Drawer</code> widget to <code class="inline">Scaffold(drawer: ...)</code>, containing a <code class="inline">ListView</code> of menu items (often with a <code class="inline">DrawerHeader</code> showing user info at top); each item's <code class="inline">onTap</code> should first call <code class="inline">Navigator.pop(context)</code> to close the drawer, then navigate to the target screen.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Build a settings screen with toggle switches and a slider.</h2>
+          <div class="seo-a"><p>Each setting (notifications on/off, font size) is a controlled widget—<code class="inline">Switch(value: ..., onChanged: ...)</code> or <code class="inline">Slider(value: ..., onChanged: ...)</code>—backed by a settings model/provider that persists changes immediately to <code class="inline">shared_preferences</code> as the user interacts, rather than requiring a separate 'Save' button.</p></div>
+          <pre><code>SwitchListTile(
+  title: const Text('Enable notifications'),
+  value: settings.notificationsEnabled,
+  onChanged: (v) =&gt; settings.setNotifications(v),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a custom-styled slider from scratch using GestureDetector.</h2>
+          <div class="seo-a"><p>Use a <code class="inline">GestureDetector</code>'s <code class="inline">onHorizontalDragUpdate</code> to read the drag's local position, clamp it to the track's width, and convert it to a 0-1 value which drives the thumb's position and the value reported to the parent—giving full control over the visual design that the built-in <code class="inline">Slider</code> doesn't allow.</p></div>
+          <pre><code>GestureDetector(
+  onHorizontalDragUpdate: (details) {
+    final box = context.findRenderObject() as RenderBox;
+    final localX = box.globalToLocal(details.globalPosition).dx;
+    final value = (localX / box.size.width).clamp(0.0, 1.0);
+    onChanged(value);
+  },
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a simple color picker grid.</h2>
+          <div class="seo-a"><p>Render a <code class="inline">Wrap</code> or <code class="inline">GridView</code> of predefined color swatches, each a tappable circle that sets the selected color in state and shows a check/border on the currently selected one; expose the selection via an <code class="inline">onColorSelected</code> callback so the parent controls what happens with it.</p></div>
+          <pre><code>Wrap(children: colors.map((c) =&gt; GestureDetector(
+  onTap: () =&gt; onSelected(c),
+  child: CircleAvatar(backgroundColor: c, child: c == selected ? const Icon(Icons.check) : null),
+)).toList());</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a multi-select dropdown for choosing multiple tags.</h2>
+          <div class="seo-a"><p>Show current selections as chips, and tapping opens a <code class="inline">showModalBottomSheet</code> or dialog with a checkbox list bound to a <code class="inline">Set&lt;String&gt;</code> of selected values; toggling a checkbox adds/removes from the set, and closing the sheet returns the updated set to the parent.</p></div>
+          <pre><code>Set&lt;String&gt; selected = {};
+
+void toggle(String tag) {
+  setState(() =&gt; selected.contains(tag) ? selected.remove(tag) : selected.add(tag));
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build an autocomplete text field that suggests matches as the user types.</h2>
+          <div class="seo-a"><p>Flutter's built-in <code class="inline">Autocomplete&lt;T&gt;</code> widget handles the overlay suggestion list, keyboard navigation, and selection callback for you—just provide <code class="inline">optionsBuilder</code> to filter your data source based on the current text value.</p></div>
+          <pre><code>Autocomplete&lt;String&gt;(
+  optionsBuilder: (textValue) =&gt; allCities.where(
+    (city) =&gt; city.toLowerCase().contains(textValue.text.toLowerCase()),
+  ),
+  onSelected: (city) =&gt; print('Selected: $city'),
+);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Format a phone number field as the user types (e.g. (123) 456-7890).</h2>
+          <div class="seo-a"><p>Attach a custom <code class="inline">TextInputFormatter</code> to the <code class="inline">TextField</code>'s <code class="inline">inputFormatters</code> that strips non-digit characters from the raw input, then re-inserts formatting characters (parentheses, dash) at fixed digit positions, returning a new <code class="inline">TextEditingValue</code> with the cursor repositioned correctly.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Write a reusable validator that chains multiple rules (required, min length, pattern).</h2>
+          <div class="seo-a"><p>Compose small validator functions (<code class="inline">String? Function(String?)</code>) into one that runs each in order and returns the first non-null error message, short-circuiting on the first failure—so a single field can combine 'required' + 'min length' + 'format' rules declaratively.</p></div>
+          <pre><code>String? Function(String?) combine(List&lt;String? Function(String?)&gt; validators) {
+  return (value) {
+    for (final v in validators) {
+      final error = v(value);
+      if (error != null) return error;
+    }
+    return null;
+  };
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a form where the user can dynamically add or remove fields (e.g. multiple phone numbers).</h2>
+          <div class="seo-a"><p>Keep a <code class="inline">List</code> of controllers (one per dynamic field) in state. 'Add' appends a new <code class="inline">TextEditingController</code> and rebuilds; 'remove' disposes that specific controller and removes it from the list. Use the list index (or a generated id, not the controller itself) as each row's <code class="inline">Key</code>.</p></div>
+          <pre><code>List&lt;TextEditingController&gt; controllers = [TextEditingController()];
+
+void addField() =&gt; setState(() =&gt; controllers.add(TextEditingController()));
+void removeField(int i) {
+  controllers[i].dispose();
+  setState(() =&gt; controllers.removeAt(i));
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Download a file with Dio and show download progress.</h2>
+          <div class="seo-a"><p><code class="inline">dio.download(url, savePath, onReceiveProgress: (received, total))</code> streams the file directly to disk while reporting progress, avoiding loading the whole file into memory first—important for large files.</p></div>
+          <pre><code>await dio.download(url, savePath, onReceiveProgress: (received, total) {
+  if (total != -1) setState(() =&gt; progress = received / total);
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Build a custom disk cache manager for downloaded images.</h2>
+          <div class="seo-a"><p>On first request, check if a hashed version of the URL exists as a file in the app's cache directory (<code class="inline">path_provider</code>'s <code class="inline">getTemporaryDirectory()</code>); if not, download it and write it to disk before returning the bytes, so subsequent requests read from disk instead of the network.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Implement infinite-scroll pagination in a GridView.</h2>
+          <div class="seo-a"><p>Same pattern as an infinite-scroll ListView: attach a <code class="inline">ScrollController</code>, detect nearing <code class="inline">maxScrollExtent</code>, and append the next page's items to the data list—the only difference is the grid uses a <code class="inline">SliverGridDelegate</code> instead of a linear layout, so the same scroll-position logic applies unchanged.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Build a list where items animate in and out when added/removed (AnimatedList).</h2>
+          <div class="seo-a"><p><code class="inline">AnimatedList</code> requires a <code class="inline">GlobalKey&lt;AnimatedListState&gt;</code>; instead of calling setState directly, call <code class="inline">listKey.currentState!.insertItem(index)</code> or <code class="inline">removeItem(index, builder)</code>, which drives an animation for exactly that item while keeping the underlying data list in sync manually.</p></div>
+          <pre><code>final listKey = GlobalKey&lt;AnimatedListState&gt;();
+
+void addItem(Item item) {
+  items.add(item);
+  listKey.currentState!.insertItem(items.length - 1);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a Hero animation from a grid thumbnail to a full-screen detail view.</h2>
+          <div class="seo-a"><p>Wrap the thumbnail image and the detail screen's full image in matching <code class="inline">Hero(tag: item.id, ...)</code> widgets; when navigating between the two routes via <code class="inline">Navigator.push</code>, Flutter automatically animates the shared element between its two positions/sizes.</p></div>
+          <pre><code>// Grid tile
+Hero(tag: item.id, child: Image.network(item.thumbUrl));
+
+// Detail screen
+Hero(tag: item.id, child: Image.network(item.fullUrl));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a custom page transition animation (e.g. slide-up) using PageRouteBuilder.</h2>
+          <div class="seo-a"><p><code class="inline">PageRouteBuilder</code> lets you override <code class="inline">transitionsBuilder</code>, wrapping the destination page in an animated widget (like <code class="inline">SlideTransition</code>) driven by the provided <code class="inline">animation</code> controller—giving full control over enter/exit transitions beyond MaterialPageRoute's default.</p></div>
+          <pre><code>Navigator.push(context, PageRouteBuilder(
+  pageBuilder: (context, animation, secondaryAnimation) =&gt; const DetailPage(),
+  transitionsBuilder: (context, animation, secondaryAnimation, child) =&gt; SlideTransition(
+    position: Tween(begin: const Offset(0, 1), end: Offset.zero).animate(animation),
+    child: child,
+  ),
+));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement per-tab navigation stacks in a bottom-navigation app (each tab keeps its own back stack).</h2>
+          <div class="seo-a"><p>Give each tab its own nested <code class="inline">Navigator</code> (with a unique <code class="inline">GlobalKey&lt;NavigatorState&gt;</code>) inside an <code class="inline">IndexedStack</code>, so pushing a detail screen within Tab A doesn't affect Tab B's stack, and switching tabs preserves each one's navigation history independently.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Handle an incoming deep link and navigate to the corresponding screen.</h2>
+          <div class="seo-a"><p>Parse the incoming URI's path/query parameters into a route name and arguments, then use the navigator (ideally via go_router's declarative route matching, or a manual <code class="inline">Navigator.pushNamed</code>) to open the matching screen—handling the case where the app is cold-started from the link versus already running.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Implement an async counter/data-fetcher using Riverpod's AsyncNotifier.</h2>
+          <div class="seo-a"><p><code class="inline">AsyncNotifier&lt;T&gt;</code> exposes <code class="inline">state</code> as an <code class="inline">AsyncValue&lt;T&gt;</code> (data/loading/error) automatically, and its <code class="inline">build()</code> method is where you fetch the initial data. Methods can update state optimistically or re-fetch, and the UI just calls <code class="inline">.when(data:, loading:, error:)</code> on the watched state.</p></div>
+          <pre><code>class CounterNotifier extends AsyncNotifier&lt;int&gt; {
+  @override
+  Future&lt;int&gt; build() async =&gt; 0;
+
+  Future&lt;void&gt; increment() async {
+    final current = state.value ?? 0;
+    state = AsyncValue.data(current + 1);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a repository that returns cached data immediately and falls back to it if the network call fails.</h2>
+          <div class="seo-a"><p>The repository first tries the remote data source; on success, it writes the fresh result to the local cache and returns it. On failure (timeout, no connection), it catches the error and returns whatever is in the local cache instead of propagating the failure, only throwing if the cache is also empty.</p></div>
+          <pre><code>Future&lt;List&lt;Post&gt;&gt; getPosts() async {
+  try {
+    final posts = await remote.fetchPosts();
+    await local.savePosts(posts);
+    return posts;
+  } catch (_) {
+    final cached = await local.getPosts();
+    if (cached.isNotEmpty) return cached;
+    rethrow;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Combine debouncing with request cancellation for a search-as-you-type feature.</h2>
+          <div class="seo-a"><p>Debounce keystrokes with a Timer as usual, but also cancel the previous in-flight request using a Dio <code class="inline">CancelToken</code> before firing a new one—this prevents a slow earlier response from arriving after a newer one and overwriting the UI with stale results (a race condition debounce alone doesn't fully solve).</p></div>
+          <pre><code>CancelToken? _cancelToken;
+
+Future&lt;void&gt; search(String query) async {
+  _cancelToken?.cancel();
+  _cancelToken = CancelToken();
+  try {
+    final results = await dio.get('/search?q=$query', cancelToken: _cancelToken);
+  } catch (e) {
+    if (e is! DioException || e.type != DioExceptionType.cancel) rethrow;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a throttle function that limits how often an action can run.</h2>
+          <div class="seo-a"><p>Unlike debounce (which waits for a pause), <strong>throttle</strong> guarantees the action runs at most once per fixed interval, executing immediately on the first call and then ignoring subsequent calls until the interval elapses—useful for things like limiting scroll-triggered API calls.</p></div>
+          <pre><code>void Function() throttle(void Function() action, Duration interval) {
+  DateTime? lastRun;
+  return () {
+    final now = DateTime.now();
+    if (lastRun == null || now.difference(lastRun!) &gt;= interval) {
+      lastRun = now;
+      action();
+    }
+  };
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement an LRU (Least Recently Used) cache in Dart.</h2>
+          <div class="seo-a"><p>A <code class="inline">LinkedHashMap</code> preserves insertion order and lets you re-insert a key to move it to the end (marking it 'most recently used'). On <code class="inline">get</code>, remove and re-add the key to refresh its position; on <code class="inline">put</code>, evict the oldest entry (the map's first key) once capacity is exceeded. Both operations run in O(1).</p></div>
+          <pre><code>class LRUCache&lt;K, V&gt; {
+  final int capacity;
+  final _map = &lt;K, V&gt;{};
+  LRUCache(this.capacity);
+
+  V? get(K key) {
+    if (!_map.containsKey(key)) return null;
+    final value = _map.remove(key) as V;
+    _map[key] = value;
+    return value;
+  }
+
+  void put(K key, V value) {
+    _map.remove(key);
+    _map[key] = value;
+    if (_map.length &gt; capacity) _map.remove(_map.keys.first);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement binary search on a sorted list in Dart.</h2>
+          <div class="seo-a"><p>Binary search repeatedly halves the search range by comparing the middle element to the target, running in <strong>O(log n)</strong> time versus O(n) for a linear scan—but it requires the input list to already be sorted.</p></div>
+          <pre><code>int binarySearch(List&lt;int&gt; sorted, int target) {
+  var low = 0, high = sorted.length - 1;
+  while (low &lt;= high) {
+    final mid = low + (high - low) ~/ 2;
+    if (sorted[mid] == target) return mid;
+    if (sorted[mid] &lt; target) { low = mid + 1; } else { high = mid - 1; }
+  }
+  return -1;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement merge sort in Dart.</h2>
+          <div class="seo-a"><p>Merge sort recursively splits the list in half until sublists have one element, then merges sorted sublists back together in order. It runs in guaranteed <strong>O(n log n)</strong> time (unlike quicksort's worst-case O(n²)) but uses O(n) extra space for the merge step.</p></div>
+          <pre><code>List&lt;int&gt; mergeSort(List&lt;int&gt; list) {
+  if (list.length &lt;= 1) return list;
+  final mid = list.length ~/ 2;
+  final left = mergeSort(list.sublist(0, mid));
+  final right = mergeSort(list.sublist(mid));
+  final result = &lt;int&gt;[];
+  var i = 0, j = 0;
+  while (i &lt; left.length &amp;&amp; j &lt; right.length) {
+    result.add(left[i] &lt;= right[j] ? left[i++] : right[j++]);
+  }
+  result.addAll(left.skip(i));
+  result.addAll(right.skip(j));
+  return result;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement quicksort in Dart.</h2>
+          <div class="seo-a"><p>Quicksort picks a pivot, partitions the list into elements less than and greater than the pivot, then recursively sorts each partition. Average time is <strong>O(n log n)</strong>, but a poor pivot choice on already-sorted input can degrade to O(n²).</p></div>
+          <pre><code>List&lt;int&gt; quickSort(List&lt;int&gt; list) {
+  if (list.length &lt;= 1) return list;
+  final pivot = list[list.length ~/ 2];
+  final less = list.where((x) =&gt; x &lt; pivot).toList();
+  final equal = list.where((x) =&gt; x == pivot).toList();
+  final greater = list.where((x) =&gt; x &gt; pivot).toList();
+  return [...quickSort(less), ...equal, ...quickSort(greater)];
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a singly linked list in Dart.</h2>
+          <div class="seo-a"><p>A linked list is a chain of nodes, each holding a value and a reference to the next node, with a <code class="inline">head</code> pointer to the first one. Insertion at the head is O(1); appending at the tail or searching by value is O(n) without a tracked tail pointer.</p></div>
+          <pre><code>class Node&lt;T&gt; {
+  T value;
+  Node&lt;T&gt;? next;
+  Node(this.value);
+}
+
+class LinkedList&lt;T&gt; {
+  Node&lt;T&gt;? head;
+  void addFirst(T value) {
+    final node = Node(value)..next = head;
+    head = node;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a function to reverse a singly linked list in Dart.</h2>
+          <div class="seo-a"><p>Walk the list once, keeping track of the previous node; for each node, redirect its <code class="inline">next</code> pointer to the previous node before moving forward—reversing all links in a single <strong>O(n)</strong> pass with O(1) extra space.</p></div>
+          <pre><code>Node&lt;T&gt;? reverse&lt;T&gt;(Node&lt;T&gt;? head) {
+  Node&lt;T&gt;? prev;
+  var current = head;
+  while (current != null) {
+    final next = current.next;
+    current.next = prev;
+    prev = current;
+    current = next;
+  }
+  return prev;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a Stack (LIFO) data structure in Dart.</h2>
+          <div class="seo-a"><p>A stack can be implemented directly on top of a Dart <code class="inline">List</code>, using <code class="inline">add()</code> for push and <code class="inline">removeLast()</code> for pop—both O(1) operations since they only touch the end of the underlying array.</p></div>
+          <pre><code>class Stack&lt;T&gt; {
+  final _items = &lt;T&gt;[];
+  void push(T item) =&gt; _items.add(item);
+  T pop() =&gt; _items.removeLast();
+  T get peek =&gt; _items.last;
+  bool get isEmpty =&gt; _items.isEmpty;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a Queue (FIFO) using two Stacks.</h2>
+          <div class="seo-a"><p>Push new elements onto an 'in' stack. To dequeue, if the 'out' stack is empty, pop everything from 'in' and push it onto 'out' (reversing the order), then pop from 'out'. Each element moves between stacks at most once, giving <strong>amortized O(1)</strong> per operation overall.</p></div>
+          <pre><code>class QueueFromStacks&lt;T&gt; {
+  final _inStack = &lt;T&gt;[];
+  final _outStack = &lt;T&gt;[];
+
+  void enqueue(T item) =&gt; _inStack.add(item);
+
+  T dequeue() {
+    if (_outStack.isEmpty) {
+      while (_inStack.isNotEmpty) _outStack.add(_inStack.removeLast());
+    }
+    return _outStack.removeLast();
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement insertion and search for a Binary Search Tree in Dart.</h2>
+          <div class="seo-a"><p>Each node holds a value and left/right child references. Insertion recursively compares the new value to the current node, going left if smaller and right if larger, until it finds an empty spot. Search follows the same comparison logic. Both run in <strong>O(log n)</strong> on a balanced tree, but degrade to O(n) on a skewed one.</p></div>
+          <pre><code>class BSTNode {
+  int value;
+  BSTNode? left, right;
+  BSTNode(this.value);
+
+  void insert(int newValue) {
+    if (newValue &lt; value) {
+      left == null ? left = BSTNode(newValue) : left!.insert(newValue);
+    } else {
+      right == null ? right = BSTNode(newValue) : right!.insert(newValue);
+    }
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a function to detect if a list contains any duplicate elements.</h2>
+          <div class="seo-a"><p>Insert each element into a <code class="inline">Set</code> while iterating; if an element is already in the set, a duplicate exists. This runs in <strong>O(n)</strong> time versus O(n²) for comparing every pair.</p></div>
+          <pre><code>bool hasDuplicates(List&lt;int&gt; list) {
+  final seen = &lt;int&gt;{};
+  for (final item in list) {
+    if (!seen.add(item)) return true; // add() returns false if already present
+  }
+  return false;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement Kadane's algorithm to find the maximum sum of a contiguous subarray.</h2>
+          <div class="seo-a"><p>Track a running sum that resets to the current element whenever including previous elements would make it smaller than starting fresh, and track the best sum seen so far. This solves the problem in a single <strong>O(n)</strong> pass, versus O(n²) for checking every subarray.</p></div>
+          <pre><code>int maxSubArray(List&lt;int&gt; nums) {
+  var currentSum = nums[0];
+  var maxSum = nums[0];
+  for (var i = 1; i &lt; nums.length; i++) {
+    currentSum = [nums[i], currentSum + nums[i]].reduce((a, b) =&gt; a &gt; b ? a : b);
+    maxSum = [maxSum, currentSum].reduce((a, b) =&gt; a &gt; b ? a : b);
+  }
+  return maxSum;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a function to check if a string has balanced parentheses/brackets.</h2>
+          <div class="seo-a"><p>Push every opening bracket onto a stack; on a closing bracket, check that it matches the type on top of the stack (pop it if so, otherwise the string is unbalanced). At the end, the stack must be empty for the string to be fully balanced.</p></div>
+          <pre><code>bool isBalanced(String s) {
+  final stack = &lt;String&gt;[];
+  final pairs = {')': '(', ']': '[', '}': '{'};
+  for (final char in s.split('')) {
+    if ('([{'.contains(char)) {
+      stack.add(char);
+    } else if (pairs.containsKey(char)) {
+      if (stack.isEmpty || stack.removeLast() != pairs[char]) return false;
+    }
+  }
+  return stack.isEmpty;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a function to check if two strings are anagrams of each other.</h2>
+          <div class="seo-a"><p>Two strings are anagrams if they contain exactly the same characters with the same frequencies. Sort both strings' characters and compare (<strong>O(n log n)</strong>), or count character frequencies with a Map and compare counts (<strong>O(n)</strong>, faster for longer strings).</p></div>
+          <pre><code>bool isAnagram(String a, String b) {
+  final sortedA = a.toLowerCase().split('')..sort();
+  final sortedB = b.toLowerCase().split('')..sort();
+  return sortedA.join() == sortedB.join();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write FizzBuzz in Dart (print Fizz/Buzz/FizzBuzz for multiples of 3/5/both from 1 to n).</h2>
+          <div class="seo-a"><p>Check divisibility by 15 (3 and 5) first, since checking 3 and 5 separately in the wrong order would print 'Fizz' or 'Buzz' instead of 'FizzBuzz' for multiples of both.</p></div>
+          <pre><code>for (var i = 1; i &lt;= n; i++) {
+  if (i % 15 == 0) {
+    print('FizzBuzz');
+  } else if (i % 3 == 0) {
+    print('Fizz');
+  } else if (i % 5 == 0) {
+    print('Buzz');
+  } else {
+    print(i);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Given a list containing n distinct numbers from 0 to n, find the missing one.</h2>
+          <div class="seo-a"><p>Compute the expected sum of 0..n using the formula <code class="inline">n*(n+1)/2</code>, then subtract the actual sum of the given list—the difference is the missing number. This runs in <strong>O(n)</strong> time and O(1) space, avoiding a sort or a hash set.</p></div>
+          <pre><code>int findMissing(List&lt;int&gt; nums) {
+  final n = nums.length;
+  final expectedSum = n * (n + 1) ~/ 2;
+  final actualSum = nums.fold(0, (a, b) =&gt; a + b);
+  return expectedSum - actualSum;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Merge two already-sorted lists into one sorted list.</h2>
+          <div class="seo-a"><p>Use two pointers, one per list, repeatedly picking the smaller of the two current elements and advancing that pointer, then append whatever remains from the list that isn't exhausted yet. This is the same merge step used inside merge sort, running in <strong>O(n + m)</strong> time.</p></div>
+          <pre><code>List&lt;int&gt; mergeSorted(List&lt;int&gt; a, List&lt;int&gt; b) {
+  final result = &lt;int&gt;[];
+  var i = 0, j = 0;
+  while (i &lt; a.length &amp;&amp; j &lt; b.length) {
+    result.add(a[i] &lt;= b[j] ? a[i++] : b[j++]);
+  }
+  result.addAll(a.skip(i));
+  result.addAll(b.skip(j));
+  return result;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a function to deep clone a nested Map/List structure of primitives.</h2>
+          <div class="seo-a"><p>Recursively check each value's runtime type: if it's a <code class="inline">Map</code>, clone each entry recursively into a new map; if it's a <code class="inline">List</code>, clone each element recursively into a new list; otherwise (a primitive), copy it directly since primitives are already immutable.</p></div>
+          <pre><code>dynamic deepClone(dynamic value) {
+  if (value is Map) {
+    return value.map((k, v) =&gt; MapEntry(k, deepClone(v)));
+  } else if (value is List) {
+    return value.map(deepClone).toList();
+  }
+  return value;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a function that deeply compares two nested Lists/Maps for equality.</h2>
+          <div class="seo-a"><p>Dart's default <code class="inline">==</code> on List/Map is identity-based (or only shallow via <code class="inline">ListEquality</code>/<code class="inline">MapEquality</code> from <code class="inline">package:collection</code>), so a custom deep check must recursively compare each nested structure, handling type mismatches, differing lengths/key sets, and primitive comparisons as base cases.</p></div>
+          <pre><code>bool deepEquals(dynamic a, dynamic b) {
+  if (a is Map &amp;&amp; b is Map) {
+    if (a.length != b.length) return false;
+    return a.keys.every((k) =&gt; b.containsKey(k) &amp;&amp; deepEquals(a[k], b[k]));
+  }
+  if (a is List &amp;&amp; b is List) {
+    if (a.length != b.length) return false;
+    return List.generate(a.length, (i) =&gt; i).every((i) =&gt; deepEquals(a[i], b[i]));
+  }
+  return a == b;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Simulate a producer-consumer pattern using a Dart Stream.</h2>
+          <div class="seo-a"><p>A <code class="inline">StreamController</code> acts as the shared buffer: a 'producer' calls <code class="inline">controller.sink.add(item)</code> as items become available, and a 'consumer' calls <code class="inline">controller.stream.listen((item) => process(item))</code>—Dart's event loop naturally serializes delivery, so no manual locking is needed like in a multi-threaded language.</p></div>
+          <pre><code>final controller = StreamController&lt;int&gt;();
+
+controller.stream.listen((item) =&gt; print('Consumed: $item'));
+
+for (var i = 0; i &lt; 5; i++) {
+  controller.sink.add(i); // produce
+}
+controller.close();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a simple type-safe event bus (pub/sub) using Streams.</h2>
+          <div class="seo-a"><p>A broadcast <code class="inline">StreamController</code> lets multiple independent listeners subscribe to the same event stream. Publishing calls <code class="inline">add(event)</code>; subscribing filters by event type using <code class="inline">stream.where((e) => e is T)</code>—giving a decoupled way for distant parts of the app to communicate without direct references to each other.</p></div>
+          <pre><code>class EventBus {
+  final _controller = StreamController&lt;dynamic&gt;.broadcast();
+  void fire(dynamic event) =&gt; _controller.add(event);
+  Stream&lt;T&gt; on&lt;T&gt;() =&gt; _controller.stream.where((e) =&gt; e is T).cast&lt;T&gt;();
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement a reactive counter using GetX.</h2>
+          <div class="seo-a"><p>GetX's <code class="inline">.obs</code> extension turns a value into an observable (<code class="inline">Rx</code>) type; wrapping UI in <code class="inline">Obx(() => ...)</code> automatically rebuilds whenever any observable it reads changes—no BuildContext, Provider, or StreamBuilder boilerplate required.</p></div>
+          <pre><code>class CounterController extends GetxController {
+  var count = 0.obs;
+  void increment() =&gt; count++;
+}
+
+// UI
+Obx(() =&gt; Text('${controller.count}'));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement state restoration so a form survives the app being killed by the OS.</h2>
+          <div class="seo-a"><p>Mix in <code class="inline">RestorationMixin</code>, provide a unique <code class="inline">restorationId</code>, and register each piece of state that must survive process death (e.g. a <code class="inline">RestorableTextEditingController</code>) inside <code class="inline">restoreState</code> using <code class="inline">registerForRestoration</code>—the OS-provided restoration bucket persists these values so Android/iOS can restore the exact UI after the app is killed in the background and relaunched.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Write a function that counts the frequency of each word in a string.</h2>
+          <div class="seo-a"><p>Split the string on whitespace, normalize case, and use a <code class="inline">Map&lt;String, int&gt;</code> with <code class="inline">update(word, (v) => v + 1, ifAbsent: () => 1)</code> to tally occurrences in a single <strong>O(n)</strong> pass.</p></div>
+          <pre><code>Map&lt;String, int&gt; wordFrequency(String text) {
+  final counts = &lt;String, int&gt;{};
+  for (final word in text.toLowerCase().split(RegExp(r'\s+'))) {
+    if (word.isEmpty) continue;
+    counts.update(word, (v) =&gt; v + 1, ifAbsent: () =&gt; 1);
+  }
+  return counts;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a function that splits a list into chunks of a given size.</h2>
+          <div class="seo-a"><p>Iterate in steps of <code class="inline">size</code>, slicing out a sublist at each step using <code class="inline">sublist(start, end)</code>, clamping the end index to the list's length for the final (possibly shorter) chunk. Runs in <strong>O(n)</strong> overall.</p></div>
+          <pre><code>List&lt;List&lt;T&gt;&gt; chunk&lt;T&gt;(List&lt;T&gt; list, int size) {
+  final chunks = &lt;List&lt;T&gt;&gt;[];
+  for (var i = 0; i &lt; list.length; i += size) {
+    chunks.add(list.sublist(i, i + size &gt; list.length ? list.length : i + size));
+  }
+  return chunks;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a function to find the first non-repeating character in a string.</h2>
+          <div class="seo-a"><p>Make one pass to build a character-frequency <code class="inline">Map</code>, then a second pass over the original string (to preserve order) returning the first character whose count is exactly 1. This runs in <strong>O(n)</strong> time with two linear passes rather than an O(n²) nested-loop comparison.</p></div>
+          <pre><code>String? firstNonRepeating(String s) {
+  final counts = &lt;String, int&gt;{};
+  for (final c in s.split('')) {
+    counts.update(c, (v) =&gt; v + 1, ifAbsent: () =&gt; 1);
+  }
+  for (final c in s.split('')) {
+    if (counts[c] == 1) return c;
+  }
+  return null;
+}</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="fluttercoding";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

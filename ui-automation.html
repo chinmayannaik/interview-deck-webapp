@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>InterviewDeck — Coding &amp; Interview Questions</title>
-  <meta name="description" content="A free, searchable bank of coding and interview questions and answers — Angular, React, JavaScript, TypeScript, Java, Spring Boot, SQL, mobile, DevOps, testing, AI and system design. Practice mode, AI helper, bookmarks and progress tracking." />
+  <title>UI Automation Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 UI Automation interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/" />
+  <link rel="canonical" href="https://www.interviewdeck.in/ui-automation" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="InterviewDeck — Coding &amp; Interview Questions" />
-  <meta property="og:description" content="Master coding and interview questions - a searchable bank with practice mode, bookmarks and progress tracking." />
-  <meta property="og:url" content="https://www.interviewdeck.in/" />
+  <meta property="og:title" content="UI Automation Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 UI Automation interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/ui-automation" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="InterviewDeck — Coding &amp; Interview Questions" />
+  <meta name="twitter:title" content="UI Automation Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,6 +94,10 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Selenium WebDriver? How does it work at a high level?","acceptedAnswer":{"@type":"Answer","text":"Selenium WebDriver is a tool/API for automating browsers. Your test code (e.g. Java) sends commands to a browser driver (ChromeDriver, GeckoDriver), which controls the real browser to click, type, navigate, and assert UI behaviour."}},{"@type":"Question","name":"What are Selenium locators? Which ones do you prefer and why?","acceptedAnswer":{"@type":"Answer","text":"Locators tell WebDriver how to find an element: id , name , cssSelector , xpath , linkText , etc. Prefer stable attributes: id or dedicated test ids ( data-testid ). Avoid long absolute XPaths tied to layout — they break when UI changes."}},{"@type":"Question","name":"Implicit wait vs Explicit wait vs Thread.sleep — which should you use?","acceptedAnswer":{"@type":"Answer","text":"Thread.sleep always waits a fixed time — slow and flaky; avoid in real suites. Implicit wait sets a global timeout for findElement polling — easy but blunt; can hide issues and slow failures. Explicit wait ( WebDriverWait + expected conditions) waits for a specific condition (visible, clickable, text present) — preferred for reliable UI tests."}},{"@type":"Question","name":"What is the Page Object Model (POM)? Why use it?","acceptedAnswer":{"@type":"Answer","text":"Page Object Model is a design pattern where each page/component has a class that stores its locators and user actions (login, search, add to cart). Tests call those methods instead of raw Selenium calls. Benefits: less duplication, easier maintenance when UI changes, and more readable tests."}},{"@type":"Question","name":"What is TestNG and how do you use it with Selenium?","acceptedAnswer":{"@type":"Answer","text":"TestNG is a Java testing framework used to organise and run automated tests. With Selenium you write test methods annotated with @Test , use annotations like @BeforeMethod / @AfterMethod for setup/teardown, and configure suites via testng.xml . It supports assertions, groups, dependencies, data providers, and parallel execution — commonly run through Maven."}},{"@type":"Question","name":"Why do UI automated tests become flaky, and how do you reduce flakiness?","acceptedAnswer":{"@type":"Answer","text":"Flaky tests pass/fail without code changes. Common causes: timing races, unstable locators, shared test data, environment issues, animations, and order-dependent tests. Reduce flakiness with explicit waits, stable locators, isolated data, idempotent setup/cleanup, avoiding sleeps, and quarantining/fixing flakes instead of re-running until green."}},{"@type":"Question","name":"findElement vs findElements in Selenium?","acceptedAnswer":{"@type":"Answer","text":"findElement returns the first matching element or throws NoSuchElementException if none. findElements returns a list (empty if none) — useful to check presence without try/catch."}},{"@type":"Question","name":"How do you handle alerts, frames, and multiple windows in Selenium?","acceptedAnswer":{"@type":"Answer","text":"Alerts : driver.switchTo().alert() then accept/dismiss/getText/sendKeys. Frames : switch by index/name/WebElement, then switch back to default content. Windows : store parent handle, switch to new handle from getWindowHandles() ."}},{"@type":"Question","name":"When do you use the Actions class in Selenium?","acceptedAnswer":{"@type":"Answer","text":"Use Actions for complex user gestures: hover, double-click, right-click, drag-and-drop, key chords. Ordinary click/sendKeys cover most flows; Actions is for advanced interactions."}},{"@type":"Question","name":"How do you handle dropdowns in Selenium?","acceptedAnswer":{"@type":"Answer","text":"For HTML &lt;select&gt; , use Selenium’s Select helper (by visible text/value/index). For custom dropdowns (divs), click the control, wait for options, then click the option element."}},{"@type":"Question","name":"What is StaleElementReferenceException and how do you fix it?","acceptedAnswer":{"@type":"Answer","text":"It means the element you found is no longer attached to the DOM (page refreshed/re-rendered). Fix by re-finding the element after the update, using waits for the new DOM state, and avoiding long-lived WebElement references across navigations."}},{"@type":"Question","name":"How and when do you capture screenshots in UI automation?","acceptedAnswer":{"@type":"Answer","text":"Capture on failure (and optionally on key checkpoints) using TakesScreenshot , save with test name + timestamp, and attach to reports/CI artifacts. Screenshots make Jenkins failures diagnosable."}},{"@type":"Question","name":"How do you do data-driven testing with TestNG DataProvider?","acceptedAnswer":{"@type":"Answer","text":"A @DataProvider supplies rows of input data to a @Test method so the same flow runs with multiple datasets (valid login, invalid password, locked user). Data can be hardcoded or read from Excel/CSV/JSON."}},{"@type":"Question","name":"How do you run Selenium tests in parallel safely?","acceptedAnswer":{"@type":"Answer","text":"Enable TestNG parallel methods/classes and isolate WebDriver per thread (often with ThreadLocal&lt;WebDriver&gt; ). Tests must not share mutable state/users. Use Selenium Grid/cloud for multiple browsers/nodes."}},{"@type":"Question","name":"What is Selenium Grid? When do you use it?","acceptedAnswer":{"@type":"Answer","text":"Selenium Grid runs tests on remote machines/browsers via RemoteWebDriver . Use it for cross-browser coverage and scale (many nodes) in CI instead of only local Chrome."}},{"@type":"Question","name":"How does Maven fit into a Selenium + TestNG framework?","acceptedAnswer":{"@type":"Answer","text":"Maven manages dependencies (Selenium, TestNG, WebDriverManager) and runs tests via Surefire/Failsafe, often pointing at a testng.xml . The same mvn test command runs locally and in Jenkins."}},{"@type":"Question","name":"How do you manage browser drivers (ChromeDriver) today?","acceptedAnswer":{"@type":"Answer","text":"Use Selenium Manager (Selenium 4.6+) or WebDriverManager to resolve matching drivers automatically instead of manually downloading ChromeDriver binaries. Manual driver paths break often after browser updates."}},{"@type":"Question","name":"Hard assert vs soft assert in TestNG?","acceptedAnswer":{"@type":"Answer","text":"Hard assert fails the test immediately on mismatch. Soft assert collects failures and continues, then reports all at assertAll() — useful when checking multiple independent fields on one page."}},{"@type":"Question","name":"How would you structure a maintainable Selenium framework?","acceptedAnswer":{"@type":"Answer","text":"Typical layers: tests (TestNG scenarios), pages (POM), components/services (reusable flows), utilities (waits, screenshots, config), testdata , and driver factory . Keep business-readable tests and push Selenium details downward."}},{"@type":"Question","name":"What should you automate in UI vs leave manual?","acceptedAnswer":{"@type":"Answer","text":"Automate stable, high-value, repetitive paths (smoke, regression critical journeys). Leave exploratory, frequently changing UX experiments, and one-off edge visuals more manual. If a check is cheaper/faster at API level, prefer API automation."}}]}
   </script>
 </head>
 
@@ -326,6 +330,189 @@
       </section>
     </main>
 
+    <section id="seo-prerender" aria-label="UI Automation interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>UI Automation Interview Questions and Answers</h1>
+      <p>20 hand-picked UI Automation interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Selenium WebDriver? How does it work at a high level?</h2>
+          <div class="seo-a"><p><strong>Selenium WebDriver</strong> is a tool/API for automating browsers. Your test code (e.g. Java) sends commands to a browser driver (ChromeDriver, GeckoDriver), which controls the real browser to click, type, navigate, and assert UI behaviour.</p></div>
+          <pre><code>WebDriver driver = new ChromeDriver();
+driver.get(&quot;https://example.com/login&quot;);
+driver.findElement(By.id(&quot;email&quot;)).sendKeys(&quot;a@b.com&quot;);
+driver.findElement(By.id(&quot;password&quot;)).sendKeys(&quot;secret&quot;);
+driver.findElement(By.id(&quot;loginBtn&quot;)).click();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Selenium locators? Which ones do you prefer and why?</h2>
+          <div class="seo-a"><p>Locators tell WebDriver how to find an element: <code class="inline">id</code>, <code class="inline">name</code>, <code class="inline">cssSelector</code>, <code class="inline">xpath</code>, <code class="inline">linkText</code>, etc.</p><p>Prefer stable attributes: <code class="inline">id</code> or dedicated test ids (<code class="inline">data-testid</code>). Avoid long absolute XPaths tied to layout — they break when UI changes.</p></div>
+          <pre><code>By.id(&quot;loginBtn&quot;)
+By.cssSelector(&quot;[data-testid='submit-order']&quot;)
+By.xpath(&quot;//button[normalize-space()='Place Order']&quot;)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implicit wait vs Explicit wait vs Thread.sleep — which should you use?</h2>
+          <div class="seo-a"><p><strong>Thread.sleep</strong> always waits a fixed time — slow and flaky; avoid in real suites.</p><p><strong>Implicit wait</strong> sets a global timeout for findElement polling — easy but blunt; can hide issues and slow failures.</p><p><strong>Explicit wait</strong> (<code class="inline">WebDriverWait</code> + expected conditions) waits for a specific condition (visible, clickable, text present) — preferred for reliable UI tests.</p></div>
+          <pre><code>WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+WebElement btn = wait.until(
+  ExpectedConditions.elementToBeClickable(By.id(&quot;placeOrder&quot;))
+);
+btn.click();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the Page Object Model (POM)? Why use it?</h2>
+          <div class="seo-a"><p><strong>Page Object Model</strong> is a design pattern where each page/component has a class that stores its locators and user actions (login, search, add to cart). Tests call those methods instead of raw Selenium calls.</p><p>Benefits: less duplication, easier maintenance when UI changes, and more readable tests.</p></div>
+          <pre><code>public class LoginPage {
+  private By email = By.id(&quot;email&quot;);
+  private By password = By.id(&quot;password&quot;);
+  private By loginBtn = By.id(&quot;loginBtn&quot;);
+  private WebDriver driver;
+
+  public LoginPage(WebDriver driver) { this.driver = driver; }
+
+  public HomePage login(String user, String pass) {
+    driver.findElement(email).sendKeys(user);
+    driver.findElement(password).sendKeys(pass);
+    driver.findElement(loginBtn).click();
+    return new HomePage(driver);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is TestNG and how do you use it with Selenium?</h2>
+          <div class="seo-a"><p><strong>TestNG</strong> is a Java testing framework used to organise and run automated tests. With Selenium you write test methods annotated with <code class="inline">@Test</code>, use annotations like <code class="inline">@BeforeMethod</code>/<code class="inline">@AfterMethod</code> for setup/teardown, and configure suites via <code class="inline">testng.xml</code>.</p><p>It supports assertions, groups, dependencies, data providers, and parallel execution — commonly run through Maven.</p></div>
+          <pre><code>public class LoginTest {
+  WebDriver driver;
+
+  @BeforeMethod
+  public void setUp() {
+    driver = new ChromeDriver();
+  }
+
+  @Test
+  public void validLogin_showsHomePage() {
+    new LoginPage(driver).login(&quot;a@b.com&quot;, &quot;secret&quot;);
+    Assert.assertTrue(new HomePage(driver).isLoaded());
+  }
+
+  @AfterMethod
+  public void tearDown() {
+    driver.quit();
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Why do UI automated tests become flaky, and how do you reduce flakiness?</h2>
+          <div class="seo-a"><p>Flaky tests pass/fail without code changes. Common causes: timing races, unstable locators, shared test data, environment issues, animations, and order-dependent tests.</p><p>Reduce flakiness with explicit waits, stable locators, isolated data, idempotent setup/cleanup, avoiding sleeps, and quarantining/fixing flakes instead of re-running until green.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>findElement vs findElements in Selenium?</h2>
+          <div class="seo-a"><p><code class="inline">findElement</code> returns the first matching element or throws <code class="inline">NoSuchElementException</code> if none. <code class="inline">findElements</code> returns a list (empty if none) — useful to check presence without try/catch.</p></div>
+          <pre><code>List&lt;WebElement&gt; errors = driver.findElements(By.cssSelector(&quot;.error&quot;));
+if (!errors.isEmpty()) { /* assert message */ }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle alerts, frames, and multiple windows in Selenium?</h2>
+          <div class="seo-a"><ul><li><strong>Alerts</strong>: <code class="inline">driver.switchTo().alert()</code> then accept/dismiss/getText/sendKeys.</li><li><strong>Frames</strong>: switch by index/name/WebElement, then switch back to default content.</li><li><strong>Windows</strong>: store parent handle, switch to new handle from <code class="inline">getWindowHandles()</code>.</li></ul></div>
+          <pre><code>String parent = driver.getWindowHandle();
+for (String h : driver.getWindowHandles()) {
+  if (!h.equals(parent)) driver.switchTo().window(h);
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>When do you use the Actions class in Selenium?</h2>
+          <div class="seo-a"><p>Use <code class="inline">Actions</code> for complex user gestures: hover, double-click, right-click, drag-and-drop, key chords. Ordinary click/sendKeys cover most flows; Actions is for advanced interactions.</p></div>
+          <pre><code>Actions a = new Actions(driver);
+a.moveToElement(menu).perform();
+a.dragAndDrop(source, target).perform();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle dropdowns in Selenium?</h2>
+          <div class="seo-a"><p>For HTML <code class="inline">&lt;select&gt;</code>, use Selenium’s <code class="inline">Select</code> helper (by visible text/value/index). For custom dropdowns (divs), click the control, wait for options, then click the option element.</p></div>
+          <pre><code>Select country = new Select(driver.findElement(By.id(&quot;country&quot;)));
+country.selectByVisibleText(&quot;India&quot;);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is StaleElementReferenceException and how do you fix it?</h2>
+          <div class="seo-a"><p>It means the element you found is no longer attached to the DOM (page refreshed/re-rendered). Fix by re-finding the element after the update, using waits for the new DOM state, and avoiding long-lived WebElement references across navigations.</p></div>
+          <pre><code>wait.until(ExpectedConditions.refreshed(
+  ExpectedConditions.elementToBeClickable(By.id(&quot;save&quot;))
+)).click();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How and when do you capture screenshots in UI automation?</h2>
+          <div class="seo-a"><p>Capture on failure (and optionally on key checkpoints) using <code class="inline">TakesScreenshot</code>, save with test name + timestamp, and attach to reports/CI artifacts. Screenshots make Jenkins failures diagnosable.</p></div>
+          <pre><code>File src = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+FileUtils.copyFile(src, new File(&quot;screenshots/&quot; + testName + &quot;.png&quot;));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you do data-driven testing with TestNG DataProvider?</h2>
+          <div class="seo-a"><p>A <code class="inline">@DataProvider</code> supplies rows of input data to a <code class="inline">@Test</code> method so the same flow runs with multiple datasets (valid login, invalid password, locked user). Data can be hardcoded or read from Excel/CSV/JSON.</p></div>
+          <pre><code>@DataProvider(name=&quot;loginData&quot;)
+public Object[][] loginData() {
+  return new Object[][] {
+    {&quot;valid@test.com&quot;, &quot;Valid@123&quot;, true},
+    {&quot;valid@test.com&quot;, &quot;wrong&quot;, false}
+  };
+}
+
+@Test(dataProvider=&quot;loginData&quot;)
+public void login(String user, String pass, boolean ok) { /* ... */ }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you run Selenium tests in parallel safely?</h2>
+          <div class="seo-a"><p>Enable TestNG parallel methods/classes and isolate WebDriver per thread (often with <code class="inline">ThreadLocal&lt;WebDriver&gt;</code>). Tests must not share mutable state/users. Use Selenium Grid/cloud for multiple browsers/nodes.</p></div>
+          <pre><code>parallel=&quot;methods&quot; thread-count=&quot;4&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Selenium Grid? When do you use it?</h2>
+          <div class="seo-a"><p><strong>Selenium Grid</strong> runs tests on remote machines/browsers via <code class="inline">RemoteWebDriver</code>. Use it for cross-browser coverage and scale (many nodes) in CI instead of only local Chrome.</p></div>
+          <pre><code>WebDriver driver = new RemoteWebDriver(gridUrl, chromeOptions);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Maven fit into a Selenium + TestNG framework?</h2>
+          <div class="seo-a"><p>Maven manages dependencies (Selenium, TestNG, WebDriverManager) and runs tests via Surefire/Failsafe, often pointing at a <code class="inline">testng.xml</code>. The same <code class="inline">mvn test</code> command runs locally and in Jenkins.</p></div>
+          <pre><code>mvn clean test -DsuiteXmlFile=smoke.xml</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you manage browser drivers (ChromeDriver) today?</h2>
+          <div class="seo-a"><p>Use Selenium Manager (Selenium 4.6+) or WebDriverManager to resolve matching drivers automatically instead of manually downloading ChromeDriver binaries. Manual driver paths break often after browser updates.</p></div>
+          <pre><code>// Selenium 4.6+ often needs no manual driver setup
+WebDriver driver = new ChromeDriver();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Hard assert vs soft assert in TestNG?</h2>
+          <div class="seo-a"><p><strong>Hard assert</strong> fails the test immediately on mismatch. <strong>Soft assert</strong> collects failures and continues, then reports all at <code class="inline">assertAll()</code> — useful when checking multiple independent fields on one page.</p></div>
+          <pre><code>SoftAssert soft = new SoftAssert();
+soft.assertEquals(title, &quot;Order Details&quot;);
+soft.assertTrue(status.contains(&quot;CREATED&quot;));
+soft.assertAll();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you structure a maintainable Selenium framework?</h2>
+          <div class="seo-a"><p>Typical layers: <strong>tests</strong> (TestNG scenarios), <strong>pages</strong> (POM), <strong>components/services</strong> (reusable flows), <strong>utilities</strong> (waits, screenshots, config), <strong>testdata</strong>, and <strong>driver factory</strong>. Keep business-readable tests and push Selenium details downward.</p></div>
+          <pre><code>tests/ → pages/ → utils/driver/ → testdata/</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What should you automate in UI vs leave manual?</h2>
+          <div class="seo-a"><p>Automate stable, high-value, repetitive paths (smoke, regression critical journeys). Leave exploratory, frequently changing UX experiments, and one-off edge visuals more manual. If a check is cheaper/faster at API level, prefer API automation.</p></div>
+          
+        </article>
+    </section>
+
     <!-- ===== footer ===== -->
     <footer class="site-footer">
       <div class="fi">
@@ -399,6 +586,7 @@
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
+  <script>window.__ENTRY_CAT="ui-automation";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->
