@@ -599,7 +599,7 @@
       showNotebook(true);
       if (mCatEl) mCatEl.value = NOTEBOOK;
       if (window.IQB.select) IQB.select.syncAll();
-      if (updateHash) history.replaceState(null, "", "#" + key);
+      if (updateHash) history.replaceState({ cat: key }, "", "/" + key);
       return;
     }
     showNotebook(false);
@@ -609,7 +609,7 @@
       showPlayground(true);
       if (mCatEl) mCatEl.value = PLAYGROUND;
       if (window.IQB.select) IQB.select.syncAll();
-      if (updateHash) history.replaceState(null, "", "#" + key);
+      if (updateHash) history.replaceState({ cat: key }, "", "/" + key);
       return;
     }
     showPlayground(false);
@@ -628,7 +628,7 @@
     // assigning .value fires no event, so the styled buttons have to be told
     if (window.IQB.select) IQB.select.syncAll();
 
-    if (updateHash) history.replaceState(null, "", "#" + key);
+    if (updateHash) history.replaceState({ cat: key }, "", "/" + key);
     // "nearest", never "center" — see renderSubnav for why
     const activeTab = qs(".tab.active", tabsEl);
     if (activeTab) activeTab.scrollIntoView({ inline: "nearest", block: "nearest" });
@@ -1695,6 +1695,23 @@
     if (isGroup(h) || CATEGORIES.some((c) => c.key === h)) setCategory(h, false);
   }
 
+  /* The active category/group lives in the URL PATH now (/java, /leetcode,
+     /frontend, /playground). Questions still ride the #q= hash (see parseHash).
+     Returns true when the path named a real view, so boot knows whether it
+     overrode the remembered tab. Also drives browser back/forward via popstate. */
+  function parsePath() {
+    const seg = decodeURIComponent(location.pathname.replace(/^\/+|\/+$/g, ""))
+      .replace(/\.html$/, "");
+    if (!seg || seg === "index" || seg === "privacy") return false;
+    if (seg === PLAYGROUND || seg === NOTEBOOK ||
+        isGroup(seg) || CATEGORIES.some((c) => c.key === seg)) {
+      viewPinned = true;
+      setCategory(seg, false);
+      return true;
+    }
+    return false;
+  }
+
   function onKeydown(e) {
     /* isContentEditable matters as much as the tag test: the notebook, the
        per-question notes and the Quick Note window all type into a plain div,
@@ -1828,9 +1845,10 @@
       qs(".tabs-wrap").scrollIntoView({ behavior: "smooth", block: "start" });
     }));
 
-    // keyboard + hash routing
+    // keyboard + path/hash routing
     document.addEventListener("keydown", onKeydown);
     window.addEventListener("hashchange", parseHash);
+    window.addEventListener("popstate", parsePath); // back/forward across /category paths
 
     // the playground lives in the content column, next to the question list
     if (window.IQB.notebookUI) {
@@ -1856,16 +1874,20 @@
     }
     setCategory(startKey, false);
     updatePackChip();
-    parseHash();
 
-    /* SEO entry pages (/angular, /java, …) are static HTML that inject
-       window.__ENTRY_CAT so the live app opens that category on load. A #hash
-       is a more explicit intent and is already handled by parseHash above, so
-       it wins; we only honour the entry category when there is no hash. */
-    if (window.__ENTRY_CAT && !location.hash) {
+    /* The URL wins over the remembered tab. The category/group is in the PATH
+       (/java, /frontend — set by the prerendered entry pages and by in-app
+       navigation); a #q= question deep-link (or a legacy #category link) is
+       then applied on top by parseHash. */
+    const routedByPath = parsePath();
+    /* Legacy fallback: older prerendered pages signalled their category via
+       window.__ENTRY_CAT rather than a matchable path. Only needed when the
+       path itself didn't resolve to a view. */
+    if (!routedByPath && window.__ENTRY_CAT && !location.hash) {
       const ec = window.__ENTRY_CAT;
       if (isGroup(ec) || CATEGORIES.some((c) => c.key === ec)) setCategory(ec, false);
     }
+    parseHash();
     /* the pre-rendered block existed for crawlers and the no-JS first paint;
        the interactive app has now rendered the real list, so drop the static
        duplicate. Harmless (no-op) on pages that were never pre-rendered. */
