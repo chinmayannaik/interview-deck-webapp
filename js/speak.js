@@ -316,7 +316,7 @@
        roots  — () => [el] to read, ignored when `card` is set
        scope  — element to flag with .tts-active (defaults to id) */
   function play(src) {
-    if (!supported) { toast("Read aloud isn't supported in this browser"); return; }
+    if (!supported) { toast("Read aloud not supported"); return; }
     if (src.card) openCard(src.card);
 
     const chunks = chunksFor(src);

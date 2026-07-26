@@ -45,7 +45,7 @@
 
   /* The regions a selection may be quoted from — the same roots highlights.js
      marks with data-hl-region, so the two features agree on what is quotable. */
-  const REGION_SELECTOR = ".qa-qtext, .answer, .qa-deep";
+  const REGION_SELECTOR = ".qa-qtext, .qa-revise, .answer, .qa-deep";
   const MAX_SELECTED = 1200;   // a runaway "select all" must not blow up the doc
   const MAX_COMMENT = 2000;
 
@@ -56,6 +56,7 @@
      configured — fall back to the class so the label is never blank. */
   function regionOf(root) {
     if (root.classList.contains("qa-qtext")) return "question";
+    if (root.classList.contains("qa-revise")) return "revise";
     if (root.classList.contains("qa-deep")) return "deep";
     return "answer";
   }
@@ -270,7 +271,7 @@
         console.warn("[reports] submit failed:", e);
         btn.disabled = false;
         btn.textContent = "Submit";
-        toast("Couldn't submit — check your connection and try again");
+        toast("Couldn't submit — try again");
       }
     }
 

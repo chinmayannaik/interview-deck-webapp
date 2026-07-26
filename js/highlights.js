@@ -11,8 +11,8 @@
    extends with no refactor. One document per question at
      users/{uid}/highlights/{questionId}  →  { ranges: [...], updatedAt }
    where each range is { region, start, end, color }:
-     • region — which highlightable root ("answer" | "deep") the span lives in,
-                 so offsets are unambiguous when a card has more than one.
+     • region — which highlightable root ("question" | "answer" | "deep" | "revise")
+                 the span lives in, so offsets stay unambiguous across roots.
      • start/end — character offsets into that root's textContent.
      • color — a semantic key ("yellow"|"green"|"blue"|"pink") mapped to a
                  theme-aware shade in CSS, not a raw hex.
@@ -214,6 +214,8 @@
     const roots = {};
     const qtext = card.querySelector(".qa-qtext");
     if (qtext) { qtext.dataset.hlRegion = "question"; roots.question = qtext; }
+    const revise = card.querySelector(".qa-revise");
+    if (revise) { revise.dataset.hlRegion = "revise"; roots.revise = revise; }
     const answer = card.querySelector(".answer");
     if (answer) { answer.dataset.hlRegion = "answer"; roots.answer = answer; }
     const deep = card.querySelector(".qa-deep");
@@ -352,8 +354,9 @@
       }, 0);
     }
 
-    // paint the question now (it's shown even while the card is collapsed)
+    // paint always-visible roots now (question anytime; revise when open in Revise)
     if (roots.question) paintRegion("question");
+    if (roots.revise) paintRegion("revise");
 
     const api = { ensureLoaded: ensureLoaded, reload: reload, setRanges: setRanges };
     controllers.set(questionId, api);
@@ -467,7 +470,7 @@
         onmousedown: function (e) {
           e.preventDefault(); e.stopPropagation();
           ink.toggle();
-          if (ink.isOn()) toast("Presentation pen on — draw anywhere. Esc to exit.");
+          if (ink.isOn()) toast("Pen on — Esc to exit");
           close();
         }
       });
@@ -490,7 +493,7 @@
       if (!target || !target.closest) return false;
       const clickedInPanel = panel && panel.contains(target);
       const clickedInButton = btn && btn.contains(target);
-      const clickedInContent = !!target.closest('.qa-qtext, .answer, .qa-deep, .content, .qa-card');
+      const clickedInContent = !!target.closest('.qa-qtext, .qa-revise, .answer, .qa-deep, .content, .qa-card');
       return clickedInPanel || clickedInButton || clickedInContent;
     }
 

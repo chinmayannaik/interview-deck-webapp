@@ -436,7 +436,7 @@
           html: (existing.html || "") + html,
           plain: ((existing.plain || "") + "\n" + plain).trim()
         });
-        toast("Added to your note on this question");
+        toast("Added to question note");
       } else {
         await nb().create({
           id: id,
@@ -446,7 +446,7 @@
           plain: plain,
           tags: selectedTag ? [selectedTag] : []
         });
-        toast("Note saved to this question");
+        toast("Saved to question");
       }
     } else {
       await nb().create({

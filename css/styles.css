@@ -50,7 +50,8 @@ html { overflow-anchor: none; }
   height: 34px;
 }
 .header-shell.is-collapsed .auth-btn,
-.header-shell.is-collapsed .icon-btn {
+.header-shell.is-collapsed .icon-btn,
+.header-shell.is-collapsed .pg-header-btn {
   transform: scale(0.96);
 }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; }
@@ -300,10 +301,10 @@ html { overflow-anchor: none; }
    .content-head next to the title, with its own off switch */
 .pack-chip {
   display: inline-flex; align-items: center; gap: 7px;
-  padding: 5px 6px 5px 11px; border-radius: 100px;
+  padding: 5px 6px 5px 11px; border-radius: var(--r-sm);
   border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border));
   background: color-mix(in srgb, var(--accent) 8%, var(--surface));
-  color: var(--accent); font-weight: 700; font-size: var(--step--1);
+  color: var(--accent-ink); font-weight: 700; font-size: var(--step--1);
 }
 .pack-chip-ic { display: grid; place-items: center; }
 .pack-chip-label { white-space: nowrap; }
@@ -470,6 +471,38 @@ html { overflow-anchor: none; }
 .tabs-arrow:hover { color: var(--accent); }
 .tabs-arrow[hidden] { display: none; }
 
+/* Playground header button — compact pill; lit in playground purple when open */
+.pg-header-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 34px; padding: 0 10px 0 9px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-family: var(--mono); font-size: var(--step--1); font-weight: 600;
+  white-space: nowrap; cursor: pointer; transition: var(--trans);
+}
+.pg-header-btn:hover {
+  border-color: color-mix(in srgb, var(--playground) 40%, var(--border));
+  color: var(--playground);
+  background: color-mix(in srgb, var(--playground) 8%, var(--surface));
+}
+.pg-header-btn.active {
+  background: var(--playground);
+  border-color: var(--playground);
+  color: #fff;
+}
+.pg-header-js {
+  font-size: 10px; font-weight: 700; letter-spacing: .04em;
+  padding: 1px 5px; border-radius: 5px;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+  color: inherit; opacity: .85;
+}
+.pg-header-btn.active .pg-header-js {
+  background: rgba(255, 255, 255, .2);
+  opacity: 1;
+}
+
 /* My Notes header button — lit in the notebook's own teal while its view is
    open, standing in for the active state its old tab used to carry */
 .mynotes-btn.active {
@@ -477,8 +510,18 @@ html { overflow-anchor: none; }
   color: var(--notebook);
 }
 /* same breakpoint as Quick Note: under 640px the header is full — phones open
-   My Notes from the section dropdown instead */
-@media (max-width: 640px) { .mynotes-btn { display: none; } }
+   Playground / My Notes from the section dropdown instead */
+/* Mid widths: keep the control, drop the word so the header stays one row */
+@media (max-width: 1100px) {
+  .pg-header-label { display: none; }
+}
+@media (max-width: 640px) {
+  .mynotes-btn,
+  .pg-header-btn { display: none; }
+}
+/* Tighten the text-only switch on the narrowest phones so the header stays on
+   one row. */
+@media (max-width: 560px) { .mode-opt { padding: 0 9px; } }
 .tab {
   flex: 0 0 auto; display: inline-flex; align-items: center; gap: 7px;
   padding: 8px 14px; border-radius: var(--r-pill); font-size: var(--step--1); font-weight: 600;
@@ -565,49 +608,52 @@ html { overflow-anchor: none; }
 .content-title { font-size: var(--step-2); }
 .content-title .cat-ic { width: 1em; height: 1em; margin-right: .38em; vertical-align: -.1em; }
 .content-title small { font-family: var(--mono); font-size: var(--step--1); color: var(--muted); font-weight: 500; margin-left: 6px; }
-.content-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+/* filters sit on their own row, aligned to the left edge (below the title/pack
+   chip) rather than pushed to the right */
+.content-tools { display: flex; flex-wrap: wrap; gap: 8px; margin-left: 0; flex-basis: 100%; }
+/* Button system (content actions): soft-rect Quiet / Selected / Status.
+   Pills stay for header Learn|Revise and category tabs only. */
 .tool {
   display: inline-flex; align-items: center; gap: 6px;
   font-family: var(--mono); font-size: var(--step--1); padding: 6px 11px; border-radius: var(--r-sm);
   border: 1px solid var(--border); background: var(--surface); color: var(--ink-2);
-  transition: background var(--trans), border-color var(--trans), color var(--trans), transform var(--trans), box-shadow var(--trans);
+  transition: background var(--trans), border-color var(--trans), color var(--trans), transform var(--trans);
 }
 .tool svg {
   transition: transform var(--trans);
 }
 .tool:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 5%, var(--surface));
-  transform: translateY(-1.5px);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 8%, transparent);
+  border-color: var(--border-strong);
+  color: var(--ink);
+  background: var(--surface-2);
 }
 .tool:active {
-  transform: translateY(0) scale(0.96);
-  box-shadow: none;
+  transform: scale(0.97);
 }
 .tool.on {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  color: var(--accent-ink);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
 }
 /* The theme switch only joins the tools on mobile, where it is evicted from the
    header for space. Declared after .tool so it beats that rule's inline-flex. */
 .tool-theme { display: none; }
 .tool.on:hover {
-  background: color-mix(in srgb, var(--accent) 15%, var(--surface));
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--bg);
 }
 .tool:hover svg {
-  transform: scale(1.1);
+  transform: scale(1.06);
 }
 .tool#random-btn:hover svg {
-  transform: scale(1.1) rotate(15deg);
+  transform: scale(1.06) rotate(12deg);
 }
 .tool#expand-all:hover svg {
-  transform: scale(1.1) translateY(1px);
+  transform: scale(1.06) translateY(1px);
 }
 .tool#collapse-all:hover svg {
-  transform: scale(1.1) translateY(-1px);
+  transform: scale(1.06) translateY(-1px);
 }
 
 /* ---------- filters & tools sheet ----------
@@ -645,19 +691,58 @@ html { overflow-anchor: none; }
   .subnav::-webkit-scrollbar { display: none; }
 }
 
-.filter-row { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+.filter-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  margin-bottom: 18px;
+}
+
+/* Difficulty — segmented control with ink selected state */
+.diff-seg {
+  display: inline-flex; align-items: stretch;
+  padding: 3px; gap: 2px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+.diff-seg-opt {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  min-height: 32px; padding: 0 14px;
+  border: none; border-radius: var(--r-pill);
+  background: transparent; color: var(--ink-2);
+  font-family: var(--mono); font-size: var(--step--1); font-weight: 600;
+  white-space: nowrap; cursor: pointer; transition: var(--trans);
+}
+.diff-seg-opt:hover { color: var(--ink); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.diff-seg-opt.active {
+  background: var(--ink); color: var(--bg);
+  box-shadow: none;
+}
+.diff-seg-n {
+  font-variant-numeric: tabular-nums; font-weight: 500;
+  color: var(--muted); font-size: .9em;
+}
+.diff-seg-opt.active .diff-seg-n {
+  color: color-mix(in srgb, var(--bg) 78%, transparent);
+}
+.diff-seg-n[hidden] { display: none; }
+
+/* Soft-rect chips still used for the AI Suggested filter (sits beside the seg). */
 .chip-filter {
-  font-family: var(--mono); font-size: var(--step--1); padding: 5px 11px; border-radius: var(--r-pill);
+  font-family: var(--mono); font-size: var(--step--1); padding: 5px 11px; border-radius: var(--r-sm);
   border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans);
 }
-.chip-filter:hover { border-color: var(--border-strong); }
+.chip-filter:hover { border-color: var(--border-strong); color: var(--ink); background: var(--surface-2); }
 .chip-filter.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
 /* The AI Tutor's curated view chip — accented so it reads as distinct from the
    plain level filters, and carries a count badge of how many questions matched. */
-.chip-filter.ai-suggested { border-color: var(--accent); color: var(--accent); }
-.chip-filter.ai-suggested:hover { border-color: var(--accent); }
-.chip-filter.ai-suggested.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.chip-filter.ai-suggested { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); color: var(--accent-ink); }
+.chip-filter.ai-suggested:hover {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
+  color: var(--accent-ink);
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+}
+.chip-filter.ai-suggested.active { background: var(--accent); color: var(--accent-contrast); border-color: var(--accent); }
 .chip-filter.ai-suggested .chip-n {
   margin-left: 6px; padding: 0 6px; border-radius: var(--r-pill);
   background: color-mix(in srgb, currentColor 18%, transparent); font-size: .85em;
@@ -736,17 +821,11 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 .pg-status.err { color: var(--od-red); }
 .pg-status.warn { color: var(--od-builtin); }
 
-/* ----- splitter ----- */
-.pg-split {
-  cursor: col-resize; position: relative; background: none; border: 0;
-  touch-action: none; /* pointermove must not be eaten by scroll gestures */
-}
-.pg-split::before {
-  content: ""; position: absolute; inset: 0; margin: auto; width: 2px; height: 34px;
-  border-radius: 2px; background: var(--border-strong); transition: var(--trans);
-}
-.pg-split:hover::before, .pg-split:focus-visible::before { background: var(--playground); height: 60px; }
-.pg-split:focus-visible { outline: none; }
+/* ----- splitter -----
+   The control itself is .ce-split, shared with the Solve IDE (css/coding.css);
+   only the Playground's own accent is set here. */
+.playground .ce-split:hover::before,
+.playground .ce-split:focus-visible::before { background: var(--playground); }
 
 /* ----- editor ----- */
 .pg-body { flex: 1; min-height: 0; display: flex; overflow: hidden; }
@@ -759,7 +838,7 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
   font-family: var(--mono); font-size: 13px; line-height: 1.7;
   color: var(--od-dim); text-align: right; padding: 0 10px 0 14px; min-width: 46px;
 }
-.pg-layers { position: relative; flex: 1; min-width: 0; }
+.pg-layers { position: relative; flex: 1; min-width: 0; isolation: isolate; }
 /* The two layers must agree on every metric that affects glyph position, or the
    caret drifts away from the text it is supposedly sitting in. */
 .pg-hl, .pg-editor {
@@ -768,12 +847,22 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
   padding: 12px 16px; border: 0; white-space: pre; overflow-wrap: normal;
   -webkit-font-smoothing: antialiased;
 }
-.pg-hl { pointer-events: none; overflow: hidden; color: var(--od-fg); background: none; }
+/* The highlighted layer sits ON TOP of the textarea (which is why it must not
+   take pointer events). That ordering is what makes selected code readable:
+   the textarea paints its selection rectangles, the coloured glyphs paint over
+   them, and the syntax colours survive. With the textarea on top instead, its
+   selection wash covered the text and a selected comment turned to mud. The
+   caret still shows through — .pg-hl has no background of its own. */
+.pg-hl { pointer-events: none; overflow: hidden; color: var(--od-fg); background: none; z-index: 1; }
 .pg-editor {
   color: transparent; caret-color: var(--od-fg); background: none;
-  resize: none; outline: none; overflow: auto;
+  resize: none; outline: none; overflow: auto; z-index: 0;
 }
-.pg-editor::selection { background: rgba(97, 175, 239, .3); }
+/* Opaque now that nothing of the text is behind it — One Dark's own selection
+   grey, not a blue tint. `color` is pinned because browsers otherwise force a
+   selection foreground and the transparent textarea text becomes visible,
+   double-printing every selected line against the layer above. */
+.pg-editor::selection { background: #3E4451; color: transparent; }
 
 /* One Dark token colours */
 .pg-hl .t-c { color: var(--od-comment); font-style: italic; }
@@ -782,6 +871,14 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 .pg-hl .t-k { color: var(--od-keyword); }
 .pg-hl .t-b, .pg-hl .t-y { color: var(--od-builtin); }
 .pg-hl .t-f { color: var(--od-fn); }
+/* matched bracket pair — an underline rather than a filled box, so it can't be
+   mistaken for a text selection sitting in the layer below */
+.pg-hl .t-m {
+  color: var(--od-fg); background: rgba(97, 175, 239, .18);
+  border-bottom: 1px solid var(--od-fn); border-radius: 2px;
+}
+/* the caret's line number, so you can find your place in a long solution */
+.pg-ln.on { color: var(--od-fg); }
 
 /* ----- output / input ----- */
 .pg-out, .pg-stdin {
@@ -831,7 +928,7 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
   body.pg-mode { overflow: auto; }
   body.pg-mode .main { height: auto; padding: 0 10px 40px; }
   .pg-grid { grid-template-columns: 1fr; grid-template-rows: minmax(320px, 60vh) minmax(200px, auto); gap: 12px; }
-  .pg-split { display: none; }
+  .playground .ce-split { display: none; }
   .pg-bar-actions { margin-left: 0; }
 }
 
@@ -848,16 +945,29 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 .qa-card.open { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)); }
 .qa-card.done { border-left: 3px solid var(--beginner); }
 
-.qa-head { width: 100%; text-align: left; padding: 15px 16px; display: grid; gap: 9px; cursor: pointer; user-select: text; -webkit-user-select: text; }
-/* Open cards close only via the chevron, so the header is no longer a button —
-   drop the pointer cursor that would suggest otherwise. */
-.qa-card.open .qa-head { cursor: default; }
-/* numbered cards get a left gutter for the .qa-qnum medallion; everything else
-   stacks in column 2 so the badges, question and tags stay flush with each other */
-.qa-head.numbered { grid-template-columns: 36px 1fr; column-gap: 14px; }
-.qa-head.numbered > :not(.qa-qnum) { grid-column: 2; }
+.qa-head { width: 100%; text-align: left; padding: 15px 18px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: text; -webkit-user-select: text; }
+/* Open: header (number, tags, question) still toggles; side icons stay default. */
+.qa-card.open .qa-side-actions { cursor: default; }
+.qa-card.open .qa-body { cursor: pointer; }
+.qa-card.open .qa-body-inner :is(.answer, .qa-revise, .qa-revise-row, .code-block, .qa-tip, .qa-explore, .pn-section, .cq-gate, .playground) {
+  cursor: auto;
+}
+.qa-card.open .qa-body-actions { cursor: pointer; }
+.qa-card.open .qa-body-actions :is(button, a, .qa-more) { cursor: pointer; }
+
+/* Compact header: [number] [meta line + question, stacked tight] [controls].
+   The number and the right-side controls centre against the text block (flex
+   align-items:center), so the header reads as one unit — the meta line takes
+   only the height it needs and the question sits right under it, next to the
+   number, instead of the number floating between two full rows. */
+.qa-headmain { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.qa-side-actions { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px; }
+/* star kept a margin-left:auto from when it lived in the flex tag row — reset it
+   here so it doesn't blow a gap open inside this fixed cluster */
+.qa-side-actions .qa-star { margin-left: 0; }
+
 .qa-qnum {
-  grid-column: 1; grid-row: 1 / -1; align-self: center;
+  flex: 0 0 auto;
   width: 36px; height: 36px; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
   font-family: var(--mono); font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums;
@@ -875,7 +985,11 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
   border-color: color-mix(in srgb, var(--beginner) 40%, transparent);
   color: var(--beginner);
 }
-.qa-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.qa-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+/* Card meta badges are just a faint label line — keep them small so they don't
+   compete with the question. (Scoped to the card header; filter chips elsewhere
+   keep their size.) */
+.qa-top .badge { font-size: 8.5px; padding: 1.5px 6px; border-radius: 5px; letter-spacing: .02em; }
 .badge {
   font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .03em;
   text-transform: uppercase; padding: 3px 8px; border-radius: 6px; white-space: nowrap;
@@ -972,8 +1086,75 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 .qa-tip { font-size: var(--step--1); color: var(--ink-2); border-left: 3px solid var(--cat, var(--accent)); padding: 4px 0 4px 12px; margin-top: 12px; background: color-mix(in srgb, var(--cat, var(--accent)) 5%, transparent); border-radius: 0 6px 6px 0; }
 .qa-tip b { color: var(--cat, var(--accent)); font-family: var(--mono); font-size: 10.5px; letter-spacing: .09em; text-transform: uppercase; margin-right: 6px; }
 
-/* Small gap when a Study-in-depth button immediately follows a tip */
-.qa-tip + .deep-btn { margin-top: 10px; display: inline-flex; }
+/* Study extras — DOM order is always:
+     Study in depth → deep panel → Personal Note → note body
+   When both panels are closed, unwrap the note section (display:contents) so
+   the two buttons sit side-by-side. When a panel opens, that control goes full
+   row and the open content sits directly under it (Personal Note below deep). */
+.qa-explore {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin-top: 12px;
+}
+.qa-tip + .qa-explore { margin-top: 10px; }
+.qa-explore .qa-act { margin: 0; }
+
+/* Closed note: toggle becomes a flex peer of Study in depth */
+.qa-explore > .pn-section:not(:has(.pn-body:not([hidden]))) { display: contents; }
+
+/* Open panels claim a full row under their button */
+.qa-explore > .qa-deep:not([hidden]),
+.qa-explore > .pn-section:has(.pn-body:not([hidden])) {
+  flex: 1 1 100%;
+  width: 100%;
+  margin-top: 0;
+}
+.qa-explore > .qa-deep:not([hidden]) { margin-top: 0; }
+
+/* Once either panel is open, force the deep button onto its own row so
+   Personal Note falls below the deep content (not beside Hide deep dive). */
+.qa-explore:has(> .qa-deep:not([hidden])) > .deep-btn,
+.qa-explore:has(.pn-body:not([hidden])) > .deep-btn {
+  flex: 1 1 100%;
+}
+
+/* Closed = quiet chip; open = Selected (category tint) so the active panel is obvious. */
+.qa-explore .deep-btn,
+.qa-explore .pn-toggle {
+  border-color: var(--border) !important;
+  color: var(--ink-2) !important;
+  background: var(--surface);
+  font-weight: 600;
+}
+.qa-explore .deep-btn:not(.is-open):not([aria-expanded="true"]):hover,
+.qa-explore .pn-toggle:not(.is-open):not([aria-expanded="true"]):hover {
+  border-color: var(--border-strong) !important;
+  color: var(--ink) !important;
+  background: var(--surface-2);
+}
+.qa-explore .qa-act.is-open,
+.qa-explore .qa-act[aria-expanded="true"],
+.pn-toggle.is-open,
+.pn-toggle[aria-expanded="true"] {
+  background: color-mix(in srgb, var(--cat, var(--accent)) 16%, var(--surface)) !important;
+  border-color: color-mix(in srgb, var(--cat, var(--accent)) 55%, var(--border)) !important;
+  color: var(--cat, var(--accent)) !important;
+  font-weight: 700;
+  box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--cat, var(--accent)) 60%, transparent);
+}
+
+/* Soft open for deep dive / personal note panels */
+@keyframes qa-panel-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+.qa-deep:not([hidden]),
+.pn-body:not([hidden]) {
+  animation: qa-panel-in .28s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .qa-deep:not([hidden]),
+  .pn-body:not([hidden]) { animation: none; }
+}
 
 /* ---------- reading mode toggle button ---------- */
 .reading-mode-toggle, .scroll-to-top { transition: transform .18s ease, opacity .18s ease; }
@@ -993,9 +1174,10 @@ body.reading-mode .sidebar,
 body.reading-mode .content-head { display: none !important; }
 body.reading-mode .main { grid-template-columns: 1fr !important; gap: 0 !important; padding-top: 12px; }
 body.reading-mode .content { padding-left: 0; padding-right: 0; }
-body.reading-mode .q-list { max-width: 960px; margin: 0 auto; }
-/* ensure cards have larger reading-friendly spacing */
-body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
+/* Use list gap only — an extra card margin used to stack on top of gap (~30px). */
+body.reading-mode .q-list { max-width: 960px; margin: 0 auto; gap: 10px; }
+body.reading-mode .qa-card { border-radius: 10px; }
+body.reading-mode .qa-head { padding: 16px 20px; }
 
 /* Compact brand on small screens: show a shorter title to save header space */
 @media (max-width: 900px) {
@@ -1005,8 +1187,8 @@ body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
   /* hide the second word ('Helper') so the title is shorter on mobile */
 }
 
-/* in-depth study panel */
-.deep-btn { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)) !important; color: var(--cat, var(--accent)) !important; }
+/* in-depth study panel — accent reserved for the open state (see .qa-explore) */
+.deep-btn:not(.is-open) { border-color: var(--border); color: var(--ink-2); }
 .qa-deep {
   margin-top: 12px; padding: 16px 18px; border-radius: var(--r-sm);
   border: 1px solid var(--border); border-left: 3px solid var(--cat, var(--accent));
@@ -1064,7 +1246,8 @@ body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
 
 /* personal note (collapsible, per-question) */
 .pn-section { margin-top: 12px; }
-.pn-toggle.has-note { border-color: color-mix(in srgb, var(--cat, var(--accent)) 45%, var(--border)); color: var(--cat, var(--accent)); }
+.qa-explore > .pn-section { margin-top: 0; }
+/* Has-note is a content hint (dot only) — don't paint the closed chip as "active" */
 .pn-toggle.has-note::after { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--cat, var(--accent)); margin-left: 2px; }
 .pn-body {
   margin-top: 10px; padding: 14px 16px; border-radius: var(--r-sm);
@@ -1108,7 +1291,7 @@ body.reading-mode .qa-card { border-radius: 10px; margin-bottom: 18px; }
   --ink-pen:    #ef2b2b;
 }
 /* applied marks — tint sits under the body text (see dark-theme.css for --hl-l) */
-.answer, .qa-deep, .qa-qtext { --hl-l: 78%; }
+.answer, .qa-deep, .qa-qtext, .qa-revise { --hl-l: 78%; }
 mark.hl { background: transparent; color: inherit; border-radius: 3px; padding: 0 1px; cursor: pointer; box-decoration-break: clone; -webkit-box-decoration-break: clone; transition: filter var(--trans); }
 mark.hl:hover { filter: brightness(0.94); }
 mark.hl-yellow { background: hsl(48 95% var(--hl-l)); }
@@ -1126,7 +1309,11 @@ mark.hl-pink   { background: hsl(330 85% var(--hl-l)); }
   content: ""; position: absolute; width: 10px; height: 10px; border-radius: 50%; right: 6px; bottom: 6px;
   background: var(--pen, var(--hlp-yellow)); border: 1px solid rgba(0,0,0,0.06);
 }
-body.hl-pen .answer, body.hl-pen .qa-deep, body.hl-pen .qa-qtext { cursor: text; }
+body.hl-pen .answer,
+body.hl-pen .qa-deep,
+body.hl-pen .qa-qtext,
+body.hl-pen .qa-revise,
+body.hl-pen .qa-card.open .qa-revise { cursor: text; }
 
 /* generic round swatch (header palette) */
 .hl-swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: transform var(--trans), border-color var(--trans); box-shadow: inset 0 0 0 1px rgba(0,0,0,.14); }
@@ -1231,6 +1418,33 @@ mark.hl-underline {
 .qa-collapse-act svg { transition: transform var(--trans); }
 .qa-collapse-act:focus-visible { outline: none; box-shadow: var(--focus); border-radius: var(--r-sm); }
 
+/* ---------- "⋮ More" overflow menu (card footer) ---------- */
+/* the more button floats to the right; the collapse chevron sits just after it
+   (not its own margin-left:auto, which would split them apart) */
+.qa-more { position: relative; margin-left: auto; }
+.qa-more ~ .qa-collapse-act { margin-left: 8px; }
+.qa-more-btn[aria-expanded="true"] {
+  border-color: var(--border-strong);
+  color: var(--ink);
+  background: var(--surface-2);
+}
+.qa-more-menu {
+  position: absolute; bottom: calc(100% + 6px); right: 0; z-index: 40;
+  min-width: 186px; display: flex; flex-direction: column; gap: 2px;
+  padding: 6px; border: 1px solid var(--border); border-radius: var(--r-md);
+  background: var(--surface); box-shadow: 0 10px 28px rgba(0, 0, 0, .14);
+}
+.qa-more-menu[hidden] { display: none; }
+/* relocated action buttons become full-width, left-aligned menu rows */
+.qa-more-menu .qa-act {
+  width: 100%; justify-content: flex-start; gap: 9px;
+  border: none; background: none; border-radius: var(--r-sm); padding: 8px 10px;
+}
+.qa-more-menu .qa-act:hover { background: var(--surface-2); }
+/* menu always shows the full labels, even where the row would abbreviate them */
+.qa-more-menu :is(.qa-act-word, .qa-act-long) { display: inline; }
+.qa-more-menu .qa-act-short { display: none; }
+
 /* Bottom "collapse" affordance shared by the card, the deep dive and personal
    notes — a full-width, quiet bar (up-chevron + label) that separates from the
    content above with a hairline and warms to the section's accent on hover.
@@ -1252,16 +1466,92 @@ mark.hl-underline {
 .qa-deep .collapse-foot,
 .pn-body .collapse-foot { border-top-color: color-mix(in srgb, var(--cat, var(--accent)) 22%, var(--border)); }
 .qa-act { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: var(--step--1); padding: 6px 11px; border-radius: var(--r-sm); border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); transition: var(--trans); }
-.qa-act:hover { border-color: var(--accent); color: var(--accent); }
+.qa-act:hover { border-color: var(--border-strong); color: var(--ink); background: var(--surface-2); }
 /* Responsive labels — the short form only exists below 560px (see that block). */
 .qa-act-short { display: none; }
+/* Status — Completed is the only green action chip */
 .qa-act.on { background: var(--beginner-soft); border-color: var(--beginner); color: var(--beginner); }
+.qa-act.on:hover { background: var(--beginner-soft); border-color: var(--beginner); color: var(--beginner); }
 
 /* practice mode: hide answers behind a reveal */
 .practice .qa-card:not(.revealed) .qa-body { display: none; }
 .reveal-btn { display: none; }
 .practice .qa-card:not(.revealed) .reveal-btn { display: inline-flex; margin: 0 16px 16px; }
 .reveal-btn { align-items: center; gap: 6px; font-family: var(--mono); font-size: var(--step--1); padding: 7px 13px; border-radius: var(--r-sm); border: 1px dashed var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+
+/* ---------- study-mode switch (header) ---------- */
+.mode-switch {
+  display: inline-flex; flex: 0 0 auto; align-items: center; gap: 2px;
+  padding: 3px; border-radius: var(--r-pill); border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.mode-opt {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 30px; padding: 0 12px; border: none; border-radius: var(--r-pill);
+  background: transparent; color: var(--muted); cursor: pointer;
+  font-size: var(--step--1); font-weight: 600; white-space: nowrap;
+  transition: var(--trans);
+}
+.mode-opt:hover { color: var(--ink); }
+.mode-opt.is-active {
+  background: var(--ink); color: var(--bg);
+  box-shadow: none;
+}
+
+/* ---------- Revise Mode: crisp recap + header Deep Dive / Quick Recap ----------
+   Recap fills the body; the toggle sits in the card head (only while open). */
+.qa-revise-row { display: none; }
+.qa-revise { display: none; }
+.qa-detail-toggle { display: none; }
+
+body.revise-mode .qa-revise-row {
+  display: block;
+  margin-bottom: 2px;
+}
+body.revise-mode .qa-card:not(.detail-open) .qa-revise { display: block; }
+/* Only on an open card — collapsed cards stay a clean title row */
+body.revise-mode .qa-card.open > .qa-detail-toggle {
+  display: inline-flex;
+  flex: 0 0 auto;
+  order: 2;
+  margin-left: auto; /* pin with the icon cluster on the right */
+}
+.qa-side-actions { order: 3; }
+.qa-headmain { order: 1; }
+.qa-qnum { order: 0; }
+
+/* Revise Mode trims the tools row to just Saved / Completed / Uncompleted /
+   Expand all / Collapse all — the filters that help you sweep a revision pass.
+   Discovery/authoring tools (videos, random, notes, highlights) are hidden. */
+body.revise-mode #video-filter,
+body.revise-mode #random-btn,
+body.revise-mode #note-filter { display: none; }
+
+/* In Revise Mode a card still on Revise is pure reading: the recap stands in for
+   the full answer, and everything else — code, tip, deep dive, the personal-note
+   section, and the whole body action row — is hidden to keep it distraction-free.
+   Scoped with :has(.qa-revise) so coding cards (no recap UI / no .detail-open)
+   keep Show Solution content visible. Header listen stays Learn-mode tooling. */
+body.revise-mode .qa-speak { display: none; }
+body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .answer,
+body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .code-block,
+body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .qa-tip,
+body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .qa-explore,
+body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .deep-btn,
+body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .qa-deep,
+body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .pn-section,
+body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .qa-body-actions { display: none; }
+
+.qa-revise {
+  font-size: var(--step-0); line-height: 1.6; color: var(--ink);
+  padding: 2px 0 2px; white-space: pre-line;
+}
+.qa-revise.is-fallback { color: var(--ink-2); }
+.qa-detail-toggle {
+  height: 22px; padding: 0 8px; gap: 4px;
+  font-size: 10.5px; font-weight: 600;
+  white-space: nowrap;
+}
 
 /* empty / no-results */
 .empty {
@@ -1294,8 +1584,20 @@ mark.hl-underline {
 /* pushes the links to the right edge on wide screens; collapses when the row wraps */
 .site-footer .footer-spacer { flex: 1; min-width: 0; }
 
-/* toast */
-.toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: var(--r-pill); font-size: var(--step--1); font-family: var(--mono); box-shadow: var(--shadow-lg); opacity: 0; pointer-events: none; transition: .25s; z-index: 60; }
+/* toast — compact chip; long copy wraps within max-width instead of a wide bar */
+.toast {
+  position: fixed; bottom: 18px; left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  max-width: min(280px, calc(100vw - 32px));
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: var(--ink); color: var(--bg);
+  font-family: var(--mono); font-size: 11px; font-weight: 500;
+  line-height: 1.35; text-align: center;
+  box-shadow: var(--shadow-md);
+  opacity: 0; pointer-events: none; transition: .2s;
+  z-index: 60;
+}
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ---------- sidebar rail ----------
@@ -1365,7 +1667,7 @@ mark.hl-underline {
   #difficulty-filter { display: none; }
 
   /* ---------- mobile header ----------
-     One sticky row: [mark] ......... [profile] [filter] [highlighter] [search].
+     One sticky row: [mark] ......... [filter] [highlighter] [search] [profile].
      The wordmark goes (the mark says it in 30px), the search collapses to an
      icon, and the theme switch moves into the tools sheet — which is what buys
      four comfortable 38px targets at 375px. Everything the reader needs stays
@@ -1381,7 +1683,9 @@ mark.hl-underline {
 
   /* expanded search: the row becomes the search bar. Plain flex swaps, no
      absolute overlay — nothing to mis-position over the sticky header. */
-  .site-header.search-open > :is(.brand, .header-spacer, #auth-btn, #filter-btn, #hl-toggle, #search-toggle) { display: none; }
+  .site-header.search-open > :is(.brand, .header-spacer, #auth-btn, #playground-btn, #filter-btn, #hl-toggle, #search-toggle, .mode-switch) { display: none; }
+  /* the switch stays in the phone header (it's the feature), but tightens up */
+  .mode-opt { padding: 0 10px; height: 28px; }
   .site-header.search-open .header-search { display: block; flex: 1 1 auto; max-width: none; }
   .site-header.search-open .search-close { display: grid; }
 
@@ -1477,7 +1781,7 @@ mark.hl-underline {
     transition: var(--trans);
   }
   .tools-clear { border: 1px solid var(--border); background: var(--surface); color: var(--ink-2); }
-  .tools-clear:hover { border-color: var(--accent); color: var(--accent); }
+  .tools-clear:hover { border-color: var(--border-strong); color: var(--ink); background: var(--surface-2); }
   .tools-done { border: 1px solid var(--accent); background: var(--accent); color: var(--accent-contrast); }
   .tools-done:hover { filter: brightness(1.06); }
 
@@ -1569,6 +1873,57 @@ mark.hl-underline {
 .sel-opt-check { flex: 0 0 auto; width: 13px; height: 13px; color: var(--accent); }
 .sel-opt-check svg { width: 100%; height: 100%; display: block; }
 
+@media (max-width: 640px) {
+  /* Phone cards — 3 columns so the badge row cannot widen the number gutter
+     (that was shoving the question into a narrow right column):
+       row 1 — badges (span) + icons
+       row 2 — number + question (question uses the rest of the width)
+       row 3 — Deep Dive (open + Revise only) */
+  .qa-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "badges badges actions"
+      "num question question"
+      "dive dive dive";
+    column-gap: 8px;
+    row-gap: 8px;
+    align-items: center;
+    padding: 12px 14px;
+  }
+  .qa-headmain { display: contents; order: unset; flex: unset; }
+  .qa-top {
+    grid-area: badges;
+    min-width: 0;
+    flex-wrap: wrap;
+  }
+  .qa-side-actions {
+    grid-area: actions;
+    order: unset;
+    justify-self: end;
+    align-self: start;
+    gap: 4px;
+  }
+  .qa-qnum {
+    grid-area: num;
+    order: unset;
+    align-self: start;
+    width: 26px; height: 26px; font-size: 11px;
+  }
+  .qa-question {
+    grid-area: question;
+    min-width: 0;
+    width: 100%;
+  }
+  body.revise-mode .qa-card.open > .qa-detail-toggle {
+    grid-area: dive;
+    order: unset;
+    margin-left: 0;
+    justify-self: start;
+    height: 26px; padding: 0 10px;
+  }
+}
+
 @media (max-width: 560px) {
   .hero-stats { gap: 18px; }
   /* .content-tools now goes full-width and scrolls from 900px down */
@@ -1582,12 +1937,6 @@ mark.hl-underline {
   .qa-act-long { display: none; }
   .qa-act-short { display: inline; }
   .qa-act-word { display: none; }
-  /* The number medallion's gutter costs 50px (36px column + 14px gap) of a
-     ~343px card, squeezing the question into what's left. Shrink both together:
-     the column width and .qa-qnum are one measurement in two places, and
-     changing only the circle would leave the gutter — and the indent — as-is. */
-  .qa-head.numbered { grid-template-columns: 26px 1fr; column-gap: 10px; }
-  .qa-qnum { width: 26px; height: 26px; font-size: 11px; }
 
   /* Only horizontal air is trimmed — tap targets stay ~35px tall. */
   .qa-body-actions { gap: 6px; }

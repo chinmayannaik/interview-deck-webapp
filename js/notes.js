@@ -32,7 +32,11 @@
   /* ========================================================
      UI — one collapsible section per card
      ======================================================== */
-  function buildSection(questionId) {
+  /* opts.actions — optional host for the toggle button (e.g. the card's
+     side-by-side "Study in depth | Personal Note" row). When set, the toggle
+     lives there and the section only wraps the collapsible body. */
+  function buildSection(questionId, opts) {
+    opts = opts || {};
     let note = null;         // the notebook entry for this question, or null
     let loaded = false;
     let editing = false;
@@ -45,7 +49,9 @@
     toggleBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>Personal Note';
 
     const body = el("div", { class: "pn-body", hidden: "" });
-    const section = el("div", { class: "pn-section", "data-question-id": questionId }, [toggleBtn, body]);
+    const section = el("div", { class: "pn-section", "data-question-id": questionId }, [body]);
+    if (opts.actions) opts.actions.appendChild(toggleBtn);
+    else section.insertBefore(toggleBtn, body);
 
     /* A collapse control at the note's foot mirrors the question card and deep
        dive — close from the bottom without reaching back up to the header
@@ -80,15 +86,20 @@
 
     function isOpen() { return !body.hasAttribute("hidden"); }
 
+    function paintToggle(open) {
+      toggleBtn.setAttribute("aria-expanded", String(open));
+      toggleBtn.classList.toggle("is-open", open);
+    }
+
     function toggleOpen() {
       if (isOpen()) {
         closeEditor();
         body.setAttribute("hidden", "");
-        toggleBtn.setAttribute("aria-expanded", "false");
+        paintToggle(false);
         return;
       }
       body.removeAttribute("hidden");
-      toggleBtn.setAttribute("aria-expanded", "true");
+      paintToggle(true);
       ensureLoaded().then(function () {
         if (!note || !(note.plain || "").trim()) startEdit(); else renderView();
       });
@@ -199,7 +210,7 @@
       refreshIndicator();
       body.innerHTML = "";
       body.setAttribute("hidden", "");
-      toggleBtn.setAttribute("aria-expanded", "false");
+      paintToggle(false);
     }
 
     async function ensureLoaded() {
@@ -240,7 +251,7 @@
      Public API (unchanged — js/app.js calls these)
      ======================================================== */
   IQB.notes = {
-    build: function (questionId) { return buildSection(questionId).el; },
+    build: function (questionId, opts) { return buildSection(questionId, opts).el; },
     onCardOpen: function (questionId) {
       const s = sections.get(questionId);
       if (s) s.ensureLoaded();

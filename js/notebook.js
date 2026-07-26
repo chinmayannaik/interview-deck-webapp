@@ -52,7 +52,7 @@
       if (!quotaWarned) {
         quotaWarned = true;
         console.error("[notebook] local save failed (storage full?):", e);
-        try { IQB.utils.toast("Storage is full — this note may not survive a refresh."); }
+        try { IQB.utils.toast("Storage full — note may not persist"); }
         catch (_) { /* utils may not be loaded yet */ }
       }
       return false;

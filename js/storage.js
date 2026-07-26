@@ -34,11 +34,25 @@
     getPlaygroundSplit() { return read("playgroundSplit", 0); },   // editor width %, 0 = default
     setPlaygroundSplit(v) { write("playgroundSplit", v); },
 
+    /* --- Solve IDE pane sizes ({ x, y } percentages, or null = defaults) ---
+       x = problem pane width, y = editor height inside the code pane. Device-
+       local like the playground splitter: how you like your panes is a
+       property of this screen, not of your account. */
+    getSolveSplit() { return read("solveSplit", null); },
+    setSolveSplit(v) { write("solveSplit", v); },
+
     /* --- focus pack (a pack id from the manifest, or null = off) ---
        Device-local like the theme: which role you're preparing for is a
        per-device study mode, not synced user content. */
     getFocusPack() { return read("focusPack", null); },
     setFocusPack(v) { write("focusPack", v || null); },
+
+    /* --- revise mode (false = Preparation, true = Revise) ---
+       Device-local study mode, like the theme: whether you're deep-learning or
+       doing a fast pre-interview refresh is a property of this screen/session,
+       not synced account content. */
+    getReviseMode() { return read("reviseMode", false); },
+    setReviseMode(v) { write("reviseMode", !!v); },
 
     /* --- bookmarks (array of ids) --- */
     getBookmarks() { return new Set(read("bookmarks", [])); },
@@ -94,6 +108,46 @@
       write("highlights", all);
     },
 
+    /* --- solutions (map id -> { code, lang, status, passed, total, attempts, updatedAt }) ---
+       Local mirror of users/{uid}/solutions/{questionId} — the code the reader
+       last had in the Solve editor for a coding question, plus how it scored.
+       Unlike the playground scratchpad this IS worth reconciling across
+       devices: it's the reader's own work on a specific problem, and picking a
+       half-finished attempt back up on another machine is the whole point.
+       Same last-write-wins model as notes and highlights. */
+    getSolutions() { return read("solutions", {}); },
+    getSolution(id) {
+      const raw = read("solutions", {})[id];
+      if (raw == null || typeof raw.code !== "string") return null;
+      return {
+        code: raw.code,
+        lang: raw.lang || "js",
+        status: raw.status || "attempted",
+        passed: raw.passed || 0,
+        total: raw.total || 0,
+        attempts: raw.attempts || 0,
+        updatedAt: raw.updatedAt || 0
+      };
+    },
+    setSolution(id, sol) {
+      const all = read("solutions", {});
+      all[id] = {
+        code: sol.code || "",
+        lang: sol.lang || "js",
+        status: sol.status || "attempted",
+        passed: sol.passed || 0,
+        total: sol.total || 0,
+        attempts: sol.attempts || 0,
+        updatedAt: sol.updatedAt || Date.now()
+      };
+      write("solutions", all);
+    },
+    deleteSolution(id) {
+      const all = read("solutions", {});
+      delete all[id];
+      write("solutions", all);
+    },
+
     /* --- highlighter pen preference (device-local, not synced) --- */
     getHLPen() { return read("hlPen", { on: false, color: "yellow" }); },
     setHLPen(v) { write("hlPen", v); },
@@ -132,7 +186,8 @@
       // unsaved draft is still the previous user's writing.
       // "hiddenProgress" rides along: it describes the previous user's
       // categories, so it would only confuse the next reader's profile.
-      ["bookmarks", "progress", "notes", "notebook", "highlights", "lastOpened", "quickNoteDraft", "hiddenProgress"].forEach(function (k) {
+      // "solutions" is the reader's own code — same reasoning as "notebook".
+      ["bookmarks", "progress", "notes", "notebook", "highlights", "solutions", "lastOpened", "quickNoteDraft", "hiddenProgress"].forEach(function (k) {
         try { localStorage.removeItem(PREFIX + k); } catch (e) { /* ignore */ }
       });
     },
@@ -146,7 +201,8 @@
         progress: read("progress", []),
         notes: read("notes", {}),
         notebook: read("notebook", {}),
-        highlights: read("highlights", {})
+        highlights: read("highlights", {}),
+        solutions: read("solutions", {})
       }, null, 2);
     },
     importAll(json) {
@@ -156,6 +212,7 @@
       if (data.notes && typeof data.notes === "object") write("notes", data.notes);
       if (data.notebook && typeof data.notebook === "object") write("notebook", data.notebook);
       if (data.highlights && typeof data.highlights === "object") write("highlights", data.highlights);
+      if (data.solutions && typeof data.solutions === "object") write("solutions", data.solutions);
       return true;
     }
   };

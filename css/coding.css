@@ -1,0 +1,269 @@
+/* ============================================================
+   Coding questions — the problem view on the card, and the Solve overlay.
+
+   The editor surface itself reuses the .pg-* rules in styles.css: it is one
+   component, so it must look the same in the Playground tab and here. Only the
+   chrome around it lives in this file.
+   ============================================================ */
+
+/* ---------- problem view (card + overlay left pane) ---------- */
+.cq-problem { display: flex; flex-direction: column; gap: 14px; }
+.cq-statement > :first-child { margin-top: 0; }
+.cq-statement > :last-child { margin-bottom: 0; }
+
+.cq-example {
+  border-left: 3px solid var(--cat, var(--accent));
+  background: var(--surface-2);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+}
+.cq-example-h {
+  font-size: var(--step--1); font-weight: 700;
+  letter-spacing: .02em; margin-bottom: 6px;
+}
+
+/* A two-column definition list: label in the gutter, value in mono. Collapses
+   to stacked rows on a phone, where 90px of label leaves nothing for a
+   nums = [...] line. */
+.cq-io { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin: 0; }
+.cq-io dt {
+  font-size: var(--step--1); font-weight: 600; color: var(--muted);
+  white-space: nowrap;
+}
+.cq-io dd {
+  margin: 0; font-family: var(--mono); font-size: var(--step--1);
+  white-space: pre-wrap; word-break: break-word; min-width: 0;
+}
+.cq-io dd.cq-why { font-family: inherit; color: var(--muted); }
+
+.cq-constraints h4 { margin: 0 0 6px; font-size: var(--step--1); }
+.cq-constraints ul { margin: 0; padding-left: 20px; }
+.cq-constraints li {
+  font-family: var(--mono); font-size: var(--step--1);
+  color: var(--muted); margin-bottom: 2px;
+}
+
+/* ---------- the Show Solution gate ---------- */
+.cq-gate { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.cq-gate > .cq-solution { flex: 1 0 100%; }
+.cq-solution[hidden] { display: none; }
+.cq-solution {
+  margin-top: 4px; padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.cq-reveal { border-style: dashed; }
+
+/* A language tag on each reference block, since a coding question now carries
+   both the JavaScript answer and the original Java one. */
+.cq-code { position: relative; }
+.cq-code-lang {
+  position: absolute; top: 8px; left: 12px; z-index: 1;
+  font-family: var(--mono); font-size: 10px; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase;
+  color: var(--muted); pointer-events: none;
+}
+.cq-code pre { padding-top: 28px; }
+
+/* ---------- the Solve button ---------- */
+.cq-solve { font-weight: 650; }
+.cq-solve.is-solved {
+  color: #fff; background: var(--beginner);
+  border-color: transparent;
+}
+.cq-solve.is-attempted { border-color: var(--cat, var(--accent)); color: var(--cat, var(--accent)); }
+.cq-solve-big { padding: 8px 16px; }
+
+/* The header copy is icon + label; keep it from crowding the star and chevron. */
+.qa-top-actions .cq-solve { margin-right: 2px; }
+@media (max-width: 520px) {
+  .qa-top-actions .cq-solve .qa-act-label { display: none; }
+}
+
+/* ============================================================
+   SOLVE OVERLAY
+   ============================================================ */
+.solve {
+  /* One Dark, fixed in both app themes — same reasoning as .playground. */
+  --od-bg: #282C34;
+  --od-gutter: #21252B;
+  --od-line: #3E4451;
+  --od-fg: #ABB2BF;
+  --od-dim: #5C6370;
+  --od-comment: #5C6370;
+  --od-string: #98C379;
+  --od-number: #D19A66;
+  --od-keyword: #C678DD;
+  --od-builtin: #E5C07B;
+  --od-fn: #61AFEF;
+  --od-red: #E06C75;
+
+  position: fixed; inset: 0; z-index: 120;
+  display: flex; flex-direction: column;
+  background: var(--bg);
+}
+/* Every `display` here would otherwise beat the UA's [hidden] rule. */
+.solve[hidden], .solve-panel[hidden] { display: none; }
+body.solve-open { overflow: hidden; }
+
+.solve-head {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
+  padding: 8px clamp(10px, 2vw, 18px);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.solve-back {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: none; border: 0; cursor: pointer; padding: 6px 8px;
+  color: var(--muted); border-radius: 8px; font-size: var(--step--1);
+}
+.solve-back:hover { color: var(--ink); background: var(--surface-2); }
+.solve-title {
+  font-size: var(--step-0); font-weight: 650; margin: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+}
+.solve-head-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+/* Three columns: problem, the drag handle, editor. The first is sized by
+   --solve-x, which js/codeedit.js writes as the reader drags. */
+.solve-grid {
+  flex: 1; min-height: 0;
+  display: grid; grid-template-columns: var(--solve-x, 42%) 10px 1fr;
+  padding: 12px clamp(10px, 2vw, 18px);
+}
+.solve-pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+
+.solve-problem {
+  overflow-y: auto; padding-right: 6px;
+  font-size: var(--step--1); line-height: 1.65;
+}
+.solve-problem .cq-gate { margin-top: 20px; }
+
+/* the code side is the editor's dark surface, edge to edge */
+.solve-code {
+  background: var(--od-bg); border-radius: 10px; overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .08);
+}
+.solve-code-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+/* --solve-y is the editor's share of that wrapper; the console takes the rest. */
+.solve-code-body > .pg-body { flex: 0 0 var(--solve-y, 58%); min-height: 0; }
+
+/* ---------- the three run controls ----------
+   These used to borrow .pg-clear, whose colour is --od-dim — the same grey the
+   UI uses for disabled text, so a perfectly live button read as switched off.
+   Each one now states its own weight: Run is a real (if quiet) control, Run
+   Test Cases is the one you press while iterating, Submit is the commitment. */
+.solve-btn {
+  display: inline-flex; align-items: center; gap: 6px; margin-left: 8px;
+  font: inherit; font-size: 12px; font-weight: 650; letter-spacing: .01em;
+  padding: 6px 12px; border-radius: 7px; cursor: pointer; white-space: nowrap;
+  border: 1px solid transparent;
+  transition: background var(--trans), border-color var(--trans), color var(--trans);
+}
+.solve-run {
+  color: var(--od-fg); background: rgba(255, 255, 255, .09);
+  border-color: rgba(255, 255, 255, .24);
+}
+.solve-run:hover { color: #fff; background: rgba(255, 255, 255, .17); border-color: rgba(255, 255, 255, .42); }
+.solve-submit { color: #fff; background: var(--playground); }
+.solve-submit:hover { background: color-mix(in srgb, var(--playground) 85%, #fff); }
+/* Whichever button started the run wears Stop. */
+.solve-btn.is-stop { color: #fff; background: var(--advanced); border-color: transparent; }
+.solve-btn.is-stop:hover { background: color-mix(in srgb, var(--advanced) 85%, #fff); }
+/* Only ever during a run — this is the one state that SHOULD look inert. */
+.solve-btn[disabled] { opacity: .4; cursor: default; }
+.solve-btn[disabled]:hover { color: inherit; }
+
+/* the toolbar runs out of room long before the viewport does */
+@media (max-width: 1180px) {
+  .solve-code .pg-hint { display: none; }
+}
+
+.solve-console {
+  flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column;
+}
+.solve-console .pg-pane-head { flex: 0 0 auto; }
+
+.solve-verdict {
+  flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px;
+  padding: 8px 12px; font-size: var(--step--1);
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+}
+.solve-verdict[hidden] { display: none; }
+.solve-verdict strong { font-size: var(--step-0); }
+.solve-verdict.ok strong { color: var(--od-string); }
+.solve-verdict.bad strong { color: var(--od-red); }
+.solve-verdict-detail { color: var(--od-dim); }
+
+.solve-cases { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 12px; }
+.solve-hint {
+  margin: 0 0 10px; font-size: 11px; color: var(--od-dim);
+}
+.solve-case {
+  border: 1px solid rgba(255, 255, 255, .1); border-left-width: 3px;
+  border-radius: 6px; padding: 8px 10px; margin-bottom: 8px;
+  color: var(--od-fg);
+}
+.solve-case.pass { border-left-color: var(--od-string); }
+.solve-case.fail { border-left-color: var(--od-red); }
+.solve-case-h { display: flex; align-items: baseline; gap: 8px; margin-bottom: 5px; }
+.solve-case-n { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--od-dim); }
+.solve-case-tag { font-size: 11px; font-weight: 700; }
+.solve-case.pass .solve-case-tag { color: var(--od-string); }
+.solve-case.fail .solve-case-tag { color: var(--od-red); }
+.solve-case .cq-io dt { color: var(--od-dim); }
+.solve-case .cq-io dd { color: var(--od-fg); }
+.solve-case .cq-io dd.solve-got { color: var(--od-red); }
+
+.solve-console .pg-out { flex: 1; min-height: 0; }
+
+/* ---------- drag handles (js/codeedit.js) ----------
+   The hit area is deliberately wider than the visible line — a 1px target is
+   a fight, and this is a control people reach for constantly. */
+.ce-split {
+  position: relative; flex: 0 0 auto; touch-action: none;
+  background: none; border: 0;
+}
+.ce-split-x { cursor: col-resize; }
+.ce-split-y { cursor: row-resize; height: 10px; }
+.ce-split::before {
+  content: ""; position: absolute; border-radius: 2px;
+  background: var(--border); transition: background var(--trans);
+}
+.ce-split-x::before { left: 50%; transform: translateX(-50%); width: 2px; top: 8px; bottom: 8px; }
+.ce-split-y::before { top: 50%; transform: translateY(-50%); height: 2px; left: 8px; right: 8px; }
+/* inside the dark code pane the divider has to read against One Dark, not the page */
+.solve-code .ce-split::before { background: rgba(255, 255, 255, .14); }
+.ce-split:hover::before, .ce-split:focus-visible::before { background: var(--accent); }
+.solve-code .ce-split:hover::before, .solve-code .ce-split:focus-visible::before { background: var(--od-fn); }
+.ce-split:focus-visible { outline: none; }
+/* a drag must not select the text it sweeps over */
+body.pg-dragging-y { user-select: none; -webkit-user-select: none; cursor: row-resize; }
+
+/* Pane tabs are a phone affordance; on a wide screen both panes are visible. */
+.solve-panes { display: none; }
+.solve-pane-tab {
+  padding: 5px 12px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--border); background: none; color: var(--muted);
+  font-size: var(--step--1);
+}
+.solve-pane-tab.active { background: var(--accent); border-color: transparent; color: #fff; }
+
+@media (max-width: 860px) {
+  /* One pane at a time, so there is nothing for the horizontal handle to sit
+     between — the vertical one still splits editor from results. */
+  .solve-grid { grid-template-columns: 1fr; }
+  .ce-split-x { display: none; }
+  /* Three controls plus a filename don't fit 375px, and the filename is the
+     one that carries no information — there is only ever one file. */
+  .solve-code .pg-pane-name { display: none; }
+  .solve-btn { margin-left: 6px; padding: 6px 10px; }
+  .solve-panes { display: flex; gap: 6px; }
+  /* one pane at a time, chosen by .solve[data-pane] */
+  .solve[data-pane="problem"] .solve-code,
+  .solve[data-pane="code"] .solve-problem { display: none; }
+  /* The header wraps onto a second row rather than dropping controls. */
+  .solve-head { flex-wrap: wrap; }
+  .solve-title { flex: 1 0 100%; order: 3; }
+  .solve-console { flex-basis: 45%; }
+}

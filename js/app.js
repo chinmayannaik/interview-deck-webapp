@@ -69,6 +69,9 @@
   /* Same idea as PLAYGROUND: a tab that holds no questions, so setCategory
      forks before the filter/render path ever sees it. */
   const NOTEBOOK = "notes";
+  /* Where to return when Playground (or My Notes) is toggled off — the last
+     real question view, not the pseudo-tabs themselves. */
+  let lastQuestionsCategory = GROUPS[0] ? GROUPS[0].key : "all";
   const catsFor = (key) => {
     if (key === "all") return null; // no restriction
     if (isGroup(key)) return GROUPS.find((g) => g.key === key).cats;
@@ -128,9 +131,12 @@
     completedOnly: false,
     uncompletedOnly: false,
     hasNoteOnly: false,
-    hasHighlightOnly: false,
     hasVideoOnly: false,
-    practice: false,
+    /* Revise Mode (persisted): when on, an opened card shows only its crisp
+       `revise` recap plus a per-card Learn/Revise toggle. Off = Learn Mode (the
+       full answer/code/tip/deep). Purely a display concern — the CSS
+       (body.revise-mode) does the hiding; this flag drives the header switch. */
+    revise: store.getReviseMode(),
     /* AI Tutor "important questions" curation: aiSuggestedIds is the set of
        question ids the tutor's keywords matched in the current category, and
        aiOnly is the toggle that narrows the list to just those. Both are wiped
@@ -252,21 +258,8 @@
       tabsEl.appendChild(tab);
     });
 
-    if (!window.IQB.playground) return;
-    const pg = el("button", {
-      class: "tab tab-pg", role: "tab", "data-cat": PLAYGROUND,
-      style: "--tab-c: var(--playground)",
-      onclick: () => setCategory(PLAYGROUND, true)
-    }, [
-      el("span", { class: "dot" }),
-      document.createTextNode("Playground"),
-      el("span", { class: "tab-n", text: "JS" })
-    ]);
-    tabsEl.appendChild(pg);
-    /* My Notes is deliberately NOT a tab any more: as the last entry of a
-       scrollable strip it spent its life pushed off-screen, and a personal
-       space isn't a question category anyway. It opens from #mynotes-btn in
-       the header (desktop) and a section-dropdown entry (mobile). */
+    /* Playground and My Notes live in the header (and the phone section
+       dropdown), not the category strip — they aren't question groups. */
   }
 
   /* progress within a given set of categories */
@@ -399,8 +392,25 @@
     if (active) active.scrollIntoView({ inline: "nearest", block: "nearest" });
   }
 
+  /* Counts per difficulty in the current topic (pack + category), so the
+     segment can show "Easy 20" style tallies without applying the level filter. */
+  function difficultyCounts() {
+    const allowed = catsFor(state.category);
+    const map = { all: 0, beginner: 0, intermediate: 0, advanced: 0 };
+    ALL.forEach((item) => {
+      if (!inPack(item)) return;
+      if (allowed && !allowed.includes(item.category)) return;
+      map.all++;
+      if (item.difficulty && map[item.difficulty] != null) map[item.difficulty]++;
+    });
+    return map;
+  }
+
   function buildDifficultyFilter() {
     diffEl.innerHTML = "";
+    const seg = el("div", {
+      class: "diff-seg", role: "tablist", "aria-label": "Difficulty"
+    });
     const opts = [
       { k: "all", label: "All levels" },
       { k: "beginner", label: "Beginner" },
@@ -408,16 +418,36 @@
       { k: "advanced", label: "Advanced" }
     ];
     opts.forEach((o) => {
-      diffEl.appendChild(el("button", {
-        class: "chip-filter" + (state.difficulty === o.k ? " active" : ""),
-        "data-diff": o.k,
+      const btn = el("button", {
+        class: "diff-seg-opt" + (state.difficulty === o.k ? " active" : ""),
+        type: "button", role: "tab",
+        "data-diff": o.k, title: o.label,
+        "aria-selected": state.difficulty === o.k ? "true" : "false",
         onclick: () => setDifficulty(o.k)
-      }, o.label));
+      }, [
+        document.createTextNode(o.label),
+        el("span", { class: "diff-seg-n", "data-diff-n": o.k, text: "0" })
+      ]);
+      seg.appendChild(btn);
     });
+    diffEl.appendChild(seg);
+    syncFilterChips();
   }
   function syncFilterChips() {
-    qsa("[data-diff]", diffEl).forEach((b) =>
-      b.classList.toggle("active", b.dataset.diff === state.difficulty));
+    if (!diffEl) return;
+    const n = difficultyCounts();
+    qsa("[data-diff]", diffEl).forEach((b) => {
+      const on = b.dataset.diff === state.difficulty;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", String(on));
+      const badge = qs("[data-diff-n]", b);
+      if (badge) {
+        const c = n[b.dataset.diff] || 0;
+        badge.textContent = String(c);
+        /* "All" stays label-only when it would just repeat the title count */
+        badge.hidden = b.dataset.diff === "all";
+      }
+    });
     if (mDiffEl) mDiffEl.value = state.difficulty;
     if (window.IQB.select) IQB.select.syncAll();
   }
@@ -441,6 +471,7 @@
        hidden under 640px, and before this entry a phone had NO path to the
        notebook at all (the tab it used to live in sits in the desktop-only
        strip). */
+    if (window.IQB.playground) mCatEl.appendChild(el("option", { value: PLAYGROUND, text: "Playground JS" }));
     if (window.IQB.notebookUI) mCatEl.appendChild(el("option", { value: NOTEBOOK, text: "My Notes" }));
   }
 
@@ -535,6 +566,8 @@
        dropdown funnels through here, so one call covers them all. */
     if (window.IQB.speak && key !== state.category) IQB.speak.stop();
 
+    if (key !== PLAYGROUND && key !== NOTEBOOK) lastQuestionsCategory = key;
+
     state.category = key;
     // A category change abandons any AI-suggested view — its ids belong to the
     // category the reader just left. applyAiSuggestion re-establishes it right
@@ -548,27 +581,35 @@
     // mirror the choice into the reader's cloud profile (no-op when signed out)
     if (window.IQB.sync && IQB.sync.pushSoon) IQB.sync.pushSoon();
 
-    // the header's My Notes button carries the active state a tab would have
+    // header buttons carry the active state their old tabs used to
     const nbBtn = qs("#mynotes-btn");
-    if (nbBtn) nbBtn.classList.toggle("active", key === NOTEBOOK);
+    if (nbBtn) {
+      nbBtn.classList.toggle("active", key === NOTEBOOK);
+      nbBtn.setAttribute("aria-pressed", String(key === NOTEBOOK));
+    }
+    const pgBtn = qs("#playground-btn");
+    if (pgBtn) {
+      pgBtn.classList.toggle("active", key === PLAYGROUND);
+      pgBtn.setAttribute("aria-pressed", String(key === PLAYGROUND));
+    }
 
     if (key === NOTEBOOK) {
-      qsa(".tab", tabsEl).forEach((t) => t.classList.toggle("active", t.dataset.cat === NOTEBOOK));
+      qsa(".tab", tabsEl).forEach((t) => t.classList.remove("active"));
       showPlayground(false);
       showNotebook(true);
+      if (mCatEl) mCatEl.value = NOTEBOOK;
+      if (window.IQB.select) IQB.select.syncAll();
       if (updateHash) history.replaceState(null, "", "#" + key);
-      const nbTab = qs(".tab.active", tabsEl);
-      if (nbTab) nbTab.scrollIntoView({ inline: "nearest", block: "nearest" });
       return;
     }
     showNotebook(false);
 
     if (key === PLAYGROUND) {
-      qsa(".tab", tabsEl).forEach((t) => t.classList.toggle("active", t.dataset.cat === PLAYGROUND));
+      qsa(".tab", tabsEl).forEach((t) => t.classList.remove("active"));
       showPlayground(true);
+      if (mCatEl) mCatEl.value = PLAYGROUND;
+      if (window.IQB.select) IQB.select.syncAll();
       if (updateHash) history.replaceState(null, "", "#" + key);
-      const pgTab = qs(".tab.active", tabsEl);
-      if (pgTab) pgTab.scrollIntoView({ inline: "nearest", block: "nearest" });
       return;
     }
     showPlayground(false);
@@ -602,7 +643,7 @@
   function filtered() {
     const q = state.query.trim().toLowerCase();
     const allowed = catsFor(state.category); // null = no category restriction
-    return ALL.filter((item) => {
+    const items = ALL.filter((item) => {
       if (!inPack(item)) return false;
       if (allowed && !allowed.includes(item.category)) return false;
       if (state.aiOnly && state.aiSuggestedIds && !state.aiSuggestedIds.has(item.id)) return false;
@@ -617,13 +658,19 @@
         const note = window.IQB.notebook ? IQB.notebook.byQuestion(item.id) : null;
         if (!(note && (note.plain || "").trim())) return false;
       }
-      if (state.hasHighlightOnly) {
-        const hl = store.getHL(item.id);
-        if (!(hl && hl.ranges && hl.ranges.length)) return false;
-      }
       if (state.hasVideoOnly && !(item.youtube && item.youtube.trim())) return false;
       if (q && !item._search.includes(q)) return false;
       return true;
+    });
+    /* Revise Mode: keep difficulty order (beginner → …), but float completed
+       questions to the top within each band so a revision pass starts with
+       what the reader already knows. */
+    if (!state.revise) return items;
+    return items.slice().sort((a, b) => {
+      const wA = DIFF_WEIGHT[a.difficulty] || 1;
+      const wB = DIFF_WEIGHT[b.difficulty] || 1;
+      if (wA !== wB) return wA - wB;
+      return (progress.has(a.id) ? 0 : 1) - (progress.has(b.id) ? 0 : 1);
     });
   }
 
@@ -632,6 +679,7 @@
     renderState.items = items;
     renderState.shown = 0;
     syncFilterCount();
+    syncFilterChips();
     syncAiChip();
 
     titleEl.innerHTML = "";
@@ -691,6 +739,56 @@
     return (d.textContent || "").replace(/\s+/g, " ").trim();
   }
 
+  /* The crisp line shown in Revise Mode. Prefers the authored `revise` field;
+     falls back to `tip`, then to a truncated plain-text `answer`, so Revise Mode
+     is never blank while `revise` is still being backfilled across the bank.
+     Returns { text, fallback } — `fallback` lets the card hint (subtly) that the
+     recap is auto-derived rather than hand-written. */
+  function reviseText(q) {
+    if (q.revise && String(q.revise).trim()) {
+      return { text: String(q.revise).trim(), fallback: false };
+    }
+    const tip = stripToText(q.tip || "");
+    if (tip) return { text: tip, fallback: true };
+    const ans = stripToText(q.answer || "");
+    return { text: ans.length > 180 ? ans.slice(0, 179).trimEnd() + "…" : ans, fallback: true };
+  }
+
+  /* Reflect state.revise onto the DOM: the body class the card CSS reads, and
+     the header study-mode switch. Cards left in `.detail-open` from a previous
+     Revise session are reset so leaving and re-entering Revise Mode starts
+     every card back at its recap (and its "Deep Dive" label). */
+  function paintDetailToggle(btn, open) {
+    btn.textContent = open ? "Quick Recap" : "Deep Dive";
+    btn.setAttribute("aria-pressed", String(open));
+    btn.title = open ? "Back to the quick recap" : "Show the full deep dive answer";
+  }
+
+  function applyReviseMode() {
+    document.body.classList.toggle("revise-mode", state.revise);
+    const prep = qs("#mode-prep"), rev = qs("#mode-revise");
+    if (prep) { prep.classList.toggle("is-active", !state.revise); prep.setAttribute("aria-pressed", String(!state.revise)); }
+    if (rev) { rev.classList.toggle("is-active", state.revise); rev.setAttribute("aria-pressed", String(state.revise)); }
+    if (state.revise) {
+      qsa(".qa-card.detail-open").forEach((c) => c.classList.remove("detail-open"));
+      qsa(".qa-detail-toggle").forEach((btn) => paintDetailToggle(btn, false));
+    }
+  }
+
+  function setReviseMode(on, announce) {
+    if (state.revise === on) return;
+    state.revise = on;
+    store.setReviseMode(on);
+    /* Listen is hidden in Revise Mode — stop any in-flight read-aloud so the
+       floating player isn't left speaking with no card control to halt it. */
+    if (on && window.IQB.speak) IQB.speak.stop();
+    applyReviseMode();
+    render(); // re-order: completed floats to the top of each difficulty band
+    if (announce) {
+      toast(on ? "Revise mode" : "Learn mode");
+    }
+  }
+
   /* A bottom "collapse" affordance for long expandable regions (the card, the
      deep dive, a personal note), so the reader can close from where they
      finished reading instead of scrolling back up to the top control. It's
@@ -713,6 +811,10 @@
       "data-id": q.id, "data-category": q.category, "data-difficulty": q.difficulty || "",
       style: `--cat: ${catColor(q.category)}`
     });
+
+    /* Coding questions (manifest `"mode": "coding"`) get the Solve IDE and a
+       card that shows the problem only — see the body section below. */
+    const coding = !!(window.IQB.coding && IQB.coding.solvable(q));
 
     // header (div with button semantics so we can nest the star button)
     const star = el("button", {
@@ -746,19 +848,42 @@
     doneToggle.innerHTML =
       '<svg class="qa-done-check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
 
-    /* Speaker + star + done + expand share one right-aligned group (css/speak.css)
-       — the star kept its own margin-left:auto before read-aloud existed. */
-    const topActions = el("div", { class: "qa-top-actions" }, [
+    /* Revise Mode chip lives in the header action cluster (top-right) so the
+       recap body stays full-width — especially on phones where the old
+       side-by-side squeezed the question. Hidden outside Revise via CSS. */
+    let detailBtn = null;
+    if (!coding) {
+      detailBtn = el("button", {
+        class: "qa-act qa-detail-toggle", type: "button", "aria-pressed": "false",
+        title: "Show the full deep dive answer",
+        onclick: (e) => {
+          e.stopPropagation();
+          const open = !card.classList.contains("detail-open");
+          card.classList.toggle("detail-open", open);
+          paintDetailToggle(detailBtn, open);
+          if (open) {
+            markOpened(q.id);
+            if (window.IQB.notes) IQB.notes.onCardOpen(q.id);
+            if (window.IQB.highlights) IQB.highlights.onCardOpen(q.id);
+          }
+        }
+      }, "Deep Dive");
+    }
+
+    /* Icon cluster (speak / star / done / chevron). Deep Dive is a sibling so
+       mobile can park it on its own row; it's hidden until the card is open. */
+    const sideActions = el("div", { class: "qa-side-actions" }, [
+      coding ? IQB.coding.solveButton(q) : null,
       window.IQB.speak && IQB.speak.supported ? IQB.speak.build(card) : null,
       star,
       doneToggle,
       toggleBtn
     ]);
 
+    // meta line: category + difficulty badges only (no controls)
     const top = el("div", { class: "qa-top" }, [
       el("span", { class: "badge cat", text: labelOf(q.category) }),
-      q.difficulty ? el("span", { class: "badge diff-" + q.difficulty, text: cap(q.difficulty) }) : null,
-      topActions
+      q.difficulty ? el("span", { class: "badge diff-" + q.difficulty, text: cap(q.difficulty) }) : null
     ]);
 
     // question is plain text — use text (not html) so literal tags like
@@ -775,23 +900,28 @@
     // Tags are internal metadata (they drive search, packs and V.Imp weighting)
     // — deliberately NOT rendered on the card; the list stays clean.
 
+    // meta line + question as one tight block, so the number and the right-side
+    // controls centre against it (flex align-items:center) instead of the number
+    // floating between two full-height rows.
+    const headMain = el("div", { class: "qa-headmain" }, [top, question]);
+
     const head = el("div", {
       class: "qa-head" + (qnum ? " numbered" : ""), role: "button", tabindex: "0", "aria-expanded": "false",
-      // Tapping the question only ever OPENS — closing is the chevron's job alone,
-      // so re-reading the question (or a stray tap) can never collapse the card.
-      onclick: () => {
-        if (card.classList.contains("open")) return;
-        // don't open if the user is selecting/highlighting the question text
+      /* Header (number, tags, question text, padding) toggles open/close.
+         Side-action icons keep their own handlers. Skip if the user is
+         selecting/highlighting text in the header. */
+      onclick: (e) => {
+        if (e.target.closest(".qa-side-actions")) return;
         const sel = window.getSelection();
         if (sel && !sel.isCollapsed && sel.anchorNode && head.contains(sel.anchorNode)) return;
         toggleCard(card);
       },
       onkeydown: (e) => {
-        if ((e.key === "Enter" || e.key === " ") && !card.classList.contains("open")) {
+        if (e.key === "Enter" || e.key === " ") {
           e.preventDefault(); toggleCard(card);
         }
       }
-    }, [qnum, top, question]);
+    }, [qnum, headMain, sideActions, detailBtn]);
 
     // reveal button (practice mode)
     const reveal = el("button", {
@@ -810,50 +940,102 @@
 
     // body
     const inner = el("div", { class: "qa-body-inner" });
+
+    /* Coding questions (manifest `"mode": "coding"`) invert the card: the
+       expanded body shows ONLY the problem, and everything that gives the
+       answer away — approach, reference code, tip, deep dive — is collected
+       into `gated` and hidden behind "Show Solution". Reading the question and
+       seeing its answer in the same glance is the one thing a practice site
+       must not do. Every other category is unaffected: `sink` is `inner`. */
+    const gated = [];
+    const sink = coding ? { appendChild: (n) => gated.push(n) } : inner;
+
+    /* Revise Mode: crisp recap in the body; Deep Dive / Quick Recap chip sits
+       in the header action cluster. Coding cards opt out. */
+    if (!coding) {
+      const rv = reviseText(q);
+      inner.appendChild(el("div", { class: "qa-revise-row" }, [
+        el("div", {
+          class: "qa-revise" + (rv.fallback ? " is-fallback" : ""), text: rv.text
+        })
+      ]));
+    }
+
+    if (coding) inner.appendChild(IQB.coding.buildProblem(q));
+
     const answer = el("div", { class: "answer", html: q.answer || "" });
     wrapTables(answer);
-    inner.appendChild(answer);
+    sink.appendChild(answer);
 
+    if (coding && q.solution && q.solution.js) {
+      const jsPre = el("pre", {}, [el("code", { text: q.solution.js })]);
+      const jsCopy = el("button", {
+        class: "copy-btn",
+        onclick: (e) => { e.stopPropagation(); copyText(q.solution.js, e.currentTarget); }
+      }, "Copy");
+      sink.appendChild(el("div", { class: "code-block cq-code" }, [
+        el("span", { class: "cq-code-lang", text: "JavaScript" }), jsCopy, jsPre
+      ]));
+    }
     if (q.code) {
       const pre = el("pre", {}, [el("code", { text: q.code })]);
       const copy = el("button", {
         class: "copy-btn",
         onclick: (e) => { e.stopPropagation(); copyText(q.code, e.currentTarget); }
       }, "Copy");
-      inner.appendChild(el("div", { class: "code-block" }, [copy, pre]));
+      sink.appendChild(el("div", { class: "code-block" + (coding ? " cq-code" : "") }, [
+        coding ? el("span", { class: "cq-code-lang", text: q.lang === "java" ? "Java" : "Reference" }) : null,
+        copy, pre
+      ]));
     }
     if (q.tip) {
       // Tips are authored HTML in the same trusted JSON as q.answer/q.deep (which
       // are injected raw just above/below). Escaping this one field printed the
       // markup as literal text — "<strong>Promise = One value.</strong>".
-      inner.appendChild(el("div", { class: "qa-tip", html: "<b>Tip</b> " + q.tip }));
+      sink.appendChild(el("div", { class: "qa-tip", html: "<b>Tip</b> " + q.tip }));
     }
+
+    /* Study extras: deep-dive button → deep panel → Personal Note → note body.
+       On non-coding cards they share .qa-explore so CSS can sit the two buttons
+       side-by-side when both panels are closed, then restore the stacked
+       open order (button, its panel, then the sibling control). Coding cards
+       gate the deep dive behind Show Solution, so notes stay on the outer body. */
+    const explore = el("div", { class: "qa-explore" });
+    let exploreMounted = false;
+    const ensureExplore = () => {
+      if (!exploreMounted) { sink.appendChild(explore); exploreMounted = true; }
+      return explore;
+    };
 
     // optional in-depth study section
     if (q.deep) {
       const deepContent = el("div", { class: "qa-deep", hidden: "", html: q.deep });
       wrapTables(deepContent);
       const bookSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 1-4 4v14a3 3 0 0 1 3-3h7z"/></svg>';
+      const paintDeepBtn = (open) => {
+        deepBtn.innerHTML = bookSvg + (open ? "Hide deep dive" : "Study in depth");
+        deepBtn.setAttribute("aria-expanded", String(open));
+        deepBtn.classList.toggle("is-open", open);
+      };
       const deepBtn = el("button", {
-        class: "qa-act deep-btn",
+        class: "qa-act deep-btn", type: "button", "aria-expanded": "false",
         onclick: (e) => {
           e.stopPropagation();
-          const hidden = deepContent.hasAttribute("hidden");
-          if (hidden) { deepContent.removeAttribute("hidden"); e.currentTarget.innerHTML = bookSvg + "Hide deep dive"; markOpened(q.id); }
-          else { deepContent.setAttribute("hidden", ""); e.currentTarget.innerHTML = bookSvg + "Study in depth"; }
+          const open = deepContent.hasAttribute("hidden");
+          if (open) { deepContent.removeAttribute("hidden"); markOpened(q.id); }
+          else deepContent.setAttribute("hidden", "");
+          paintDeepBtn(open);
         }
       });
-      deepBtn.innerHTML = bookSvg + "Study in depth";
+      paintDeepBtn(false);
 
       // Close the deep dive from its own foot, then bring its open/close button
       // back into view so the reader keeps their place in the card.
       const collapseDeep = () => {
         deepContent.setAttribute("hidden", "");
-        deepBtn.innerHTML = bookSvg + "Study in depth";
+        paintDeepBtn(false);
         deepBtn.scrollIntoView({ block: "nearest" });
       };
-
-      inner.appendChild(deepBtn);
 
       /* The deep dive's speaker sits INSIDE the panel, pinned top-right.
          It is deliberately icon-only: .qa-deep is a highlight root, and
@@ -869,12 +1051,34 @@
         }));
       }
       deepContent.appendChild(collapseFoot("Hide deep dive", collapseDeep));
-      inner.appendChild(deepContent);
+
+      if (coding) {
+        sink.appendChild(deepBtn);
+        sink.appendChild(deepContent);
+      } else {
+        ensureExplore().appendChild(deepBtn);
+        ensureExplore().appendChild(deepContent);
+      }
+    }
+
+    /* Solve first, then the way out of thinking for yourself. */
+    if (coding) {
+      inner.appendChild(el("div", { class: "cq-gate" }, [
+        IQB.coding.solveButton(q, { big: true }),
+        ...(function () {
+          if (!gated.length) return [];
+          const gate = IQB.coding.buildSolutionGate(gated);
+          return [gate.button, gate.panel];
+        })()
+      ]));
     }
 
     // optional personal-note section (js/notes.js) — reuses the generic
     // per-question user-state layer (IQB.cloud). Loads lazily on card open.
-    if (window.IQB.notes) inner.appendChild(IQB.notes.build(q.id));
+    if (window.IQB.notes) {
+      if (coding) inner.appendChild(IQB.notes.build(q.id));
+      else ensureExplore().appendChild(IQB.notes.build(q.id));
+    }
 
     const doneBtn = el("button", {
       class: "qa-act qa-act-done" + (progress.has(q.id) ? " on" : ""),
@@ -891,7 +1095,11 @@
     });
     linkBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span class="qa-act-label">Copy<span class="qa-act-word">&nbsp;link</span></span>';
 
-    const actions = [doneBtn, linkBtn];
+    /* Secondary actions live in a "⋮ More" overflow menu so the footer keeps just
+       the primary control (Completed). Each menu item is the SAME button/handler
+       as before — Copy link, Ask AI, Report Issue, Learn More — just relocated
+       into the popover. */
+    const menuActions = [linkBtn];
 
     if (window.IQB.tutor) {
       const askAiBtn = el("button", {
@@ -909,17 +1117,13 @@
           });
         }
       });
-      /* The tutor's own mascot, not a second robot drawn here — the previous
-         inline one was a 0 0 24 24 icon whose body ran to roughly y=28, so it
-         rendered clipped at the bottom and sat visibly low against the other
-         action icons. Stroke 2.2 to hold its weight next to their 2.5. */
       askAiBtn.innerHTML =
         IQB.tutor.icon(15, "", 2.2) +
         '<span class="qa-act-label">Ask AI</span>';
-      actions.push(askAiBtn);
+      menuActions.push(askAiBtn);
     }
 
-    if (window.IQB.reports) actions.push(IQB.reports.build(card));
+    if (window.IQB.reports) menuActions.push(IQB.reports.build(card));
     if (q.youtube && q.youtube.trim()) {
       const ytBtn = el("a", {
         class: "qa-act",
@@ -929,8 +1133,40 @@
         onclick: (e) => { e.stopPropagation(); }
       });
       ytBtn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="#FF0000" style="flex-shrink: 0;"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>Learn More`;
-      actions.push(ytBtn);
+      menuActions.push(ytBtn);
     }
+
+    /* The overflow menu itself — opens UPWARD (the button sits at the card foot,
+       so downward would spill past a card that clips its corners). Closes on
+       outside pointer, Escape, or after any item is chosen (capture listener runs
+       before the item's own handler, so the action still fires). */
+    const moreMenu = el("div", { class: "qa-more-menu", role: "menu", hidden: "" }, menuActions);
+    const moreBtn = el("button", {
+      class: "qa-act qa-more-btn", type: "button",
+      "aria-haspopup": "true", "aria-expanded": "false", "aria-label": "More actions", title: "More actions",
+      onclick: (e) => { e.stopPropagation(); toggleMenu(); }
+    });
+    moreBtn.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="flex-shrink:0"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>' +
+      '<span class="qa-act-label">More</span>';
+    const moreWrap = el("div", { class: "qa-more" }, [moreBtn, moreMenu]);
+
+    let menuOpen = false;
+    const onDocDown = (ev) => { if (!moreWrap.contains(ev.target)) closeMenu(); };
+    const onKey = (ev) => { if (ev.key === "Escape") { closeMenu(); moreBtn.focus(); } };
+    function openMenu() {
+      menuOpen = true; moreMenu.removeAttribute("hidden"); moreBtn.setAttribute("aria-expanded", "true");
+      document.addEventListener("pointerdown", onDocDown, true);
+      document.addEventListener("keydown", onKey);
+    }
+    function closeMenu() {
+      if (!menuOpen) return;
+      menuOpen = false; moreMenu.setAttribute("hidden", ""); moreBtn.setAttribute("aria-expanded", "false");
+      document.removeEventListener("pointerdown", onDocDown, true);
+      document.removeEventListener("keydown", onKey);
+    }
+    function toggleMenu() { menuOpen ? closeMenu() : openMenu(); }
+    moreMenu.addEventListener("click", () => closeMenu(), true);
 
     /* A second exit for long answers — an icon-only up-chevron pushed to the
        right of the action row, so the reader can collapse without scrolling back
@@ -941,22 +1177,54 @@
     });
     collapseAct.innerHTML =
       '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>';
-    actions.push(collapseAct);
 
-    inner.appendChild(el("div", { class: "qa-body-actions" }, actions));
+    inner.appendChild(el("div", { class: "qa-body-actions" }, [doneBtn, moreWrap, collapseAct]));
 
-    /* The body no longer closes the card on click — that was the source of
-       accidental collapses (a tap meant to select answer text or scroll would
-       shut the whole card). Closing is now the top chevron or this button. */
     const body = el("div", { class: "qa-body" }, [inner]);
 
     card.append(head, reveal, body);
+
+    /* Open-card body chrome: empty padding / footer gap collapses the answer.
+       Answer content and controls stay put. Header open/close is handled above. */
+    card.addEventListener("click", (e) => {
+      if (!card.classList.contains("open")) return;
+      if (e.target.closest(".qa-head")) return; // head has its own toggle
+      if (clickShouldKeepCardOpen(e, card)) return;
+      toggleCard(card);
+    });
 
     // register highlightable roots (.answer / .qa-deep) + selection wiring.
     // Reuses the same per-question user-state layer as notes (IQB.cloud).
     if (window.IQB.highlights) IQB.highlights.register(q.id, card);
 
     return card;
+  }
+
+  /* True when a click landed on body content/controls that should NOT collapse
+     an open card — answer, tip, notes, menus, form fields. */
+  function clickShouldKeepCardOpen(e, card) {
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed && sel.anchorNode && card.contains(sel.anchorNode)) return true;
+
+    const t = e.target;
+    if (!(t instanceof Element)) return true;
+
+    return !!t.closest([
+      "button", "a", "input", "textarea", "select", "label", "summary",
+      ".answer",
+      ".qa-revise",
+      ".qa-revise-row",
+      ".code-block",
+      ".qa-tip",
+      ".qa-explore",
+      ".pn-section",
+      ".qa-more",
+      ".cq-gate",
+      ".playground",
+      ".table-scroll",
+      ".hl-toolbar",
+      ".reveal-btn"
+    ].join(","));
   }
 
   function toggleCard(card) {
@@ -996,6 +1264,20 @@
     updateProgressBar();
     if (state.bookmarkedOnly) render();
   }
+  /* Mark complete without a card to click — the Solve overlay (js/coding.js)
+     calls this when a submission passes every test case. Deliberately NOT a
+     toggle: solving an already-completed question must not un-complete it. */
+  function markComplete(id) {
+    if (progress.has(id)) return;
+    const card = document.querySelector('.qa-card[data-id="' + CSS.escape(id) + '"]');
+    if (card) { toggleDone(id, card); return; }   // card on screen → keep its UI in step
+    progress.add(id);
+    store.saveProgress(progress);
+    syncPush();
+    updateProgressBar();
+    if (state.completedOnly || state.uncompletedOnly || state.revise) render();
+  }
+
   function toggleDone(id, card) {
     const isCompleted = !progress.has(id);
     if (isCompleted) progress.add(id); else progress.delete(id);
@@ -1021,7 +1303,7 @@
     if (isCompleted && card.classList.contains("open")) {
       toggleCard(card);
     }
-    if (state.completedOnly || state.uncompletedOnly) render();
+    if (state.completedOnly || state.uncompletedOnly || state.revise) render();
   }
   /* Read-aloud expands a card before speaking it (and reveals it in practice
      mode) so the reader can see the block being highlighted. Same side effects
@@ -1148,8 +1430,8 @@
     setCategory(key, false);
     updatePackChip();
     toast(pack
-      ? "Focus pack on — " + pack.label + " (" + c.all + " questions)"
-      : "Focus pack off — all questions");
+      ? "Focus: " + pack.label + " (" + c.all + ")"
+      : "Focus pack off");
     return true;
   }
   function getFocusPacks() {
@@ -1288,7 +1570,7 @@
     return ids.length;
   }
 
-  /* The "✨ AI Suggested (n)" chip lives at the end of the level-filter row, and
+  /* The "✨ AI Suggested (n)" chip sits beside the difficulty segment, and
      only while a suggestion is active. Clicking it toggles the curated view on
      and off without discarding the suggestion; navigating categories discards it
      (see setCategory), which removes the chip on the next render. */
@@ -1301,14 +1583,14 @@
       chip = el("button", { id: "ai-suggested-chip", class: "chip-filter ai-suggested",
         title: "Questions the AI Helper picked as important" });
       chip.addEventListener("click", () => { state.aiOnly = !state.aiOnly; syncAiChip(); render(); });
-      diffEl.appendChild(chip);
+      diffEl.appendChild(chip); // after .diff-seg
     }
     chip.classList.toggle("active", !!state.aiOnly);
     chip.innerHTML = "";
     chip.appendChild(document.createTextNode("✨ AI Suggested"));
     chip.appendChild(el("span", { class: "chip-n", text: String(count) }));
   }
-  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, hideProgressRow: hideProgressRow, unhideProgress: unhideProgress, setCategory: setCategory, restoreView: restoreView, copyText: copyText, currentCategory: currentCategory, categoryTags: categoryTags, applyAiSuggestion: applyAiSuggestion, setFocusPack: setFocusPack, getFocusPacks: getFocusPacks, getActiveFocusPack: getActiveFocusPack };
+  IQB.app = { getData: getSyncData, setData: setSyncData, getProgressSummary: getProgressSummary, hideProgressRow: hideProgressRow, unhideProgress: unhideProgress, setCategory: setCategory, restoreView: restoreView, copyText: copyText, currentCategory: currentCategory, categoryTags: categoryTags, applyAiSuggestion: applyAiSuggestion, setFocusPack: setFocusPack, getFocusPacks: getFocusPacks, getActiveFocusPack: getActiveFocusPack, markComplete: markComplete };
   function updateProgressBar() {
     const prog = sidebarProgress(state.category);
     const fill = qs("#progress-fill", sideEl);
@@ -1525,26 +1807,17 @@
       e.currentTarget.classList.toggle("on", state.hasNoteOnly);
       render();
     });
-    on("#highlight-filter", "click", (e) => {
-      state.hasHighlightOnly = !state.hasHighlightOnly;
-      e.currentTarget.classList.toggle("on", state.hasHighlightOnly);
-      render();
-    });
     on("#video-filter", "click", (e) => {
       state.hasVideoOnly = !state.hasVideoOnly;
       e.currentTarget.classList.toggle("on", state.hasVideoOnly);
       render();
     });
-    on("#practice-toggle", "click", (e) => {
-      state.practice = !state.practice;
-      listEl.classList.toggle("practice", state.practice);
-      e.currentTarget.classList.toggle("on", state.practice);
-      toast(
-        state.practice
-          ? "Practice mode on — answers hidden"
-          : "Practice mode off",
-      );
-    });
+    /* Study-mode switch (Preparation <-> Revise). Segmented, persisted. Sets a
+       body class the card CSS keys off; nothing needs re-rendering because every
+       card already carries its recap + detail button. */
+    on("#mode-prep", "click", () => setReviseMode(false, true));
+    on("#mode-revise", "click", () => setReviseMode(true, true));
+    applyReviseMode(); // reflect the persisted choice on boot
     const importInput = qs("#import-file");
     on("#import-btn", "click", () => importInput && importInput.click());
     if (importInput) importInput.addEventListener("change", (e) => { if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ""; });
@@ -1597,11 +1870,27 @@
     initReadingMode();
     initSidebarToggle();
     initTabsScrollHint();
-    // My Notes lives in the header, not the tab strip — see buildTabs
+    // Playground + My Notes live in the header, not the tab strip — see buildTabs.
+    // Click again while open → back to the last questions category.
+    const pgBtn = qs("#playground-btn");
+    if (pgBtn) {
+      if (window.IQB.playground) {
+        pgBtn.setAttribute("aria-pressed", "false");
+        pgBtn.addEventListener("click", () => {
+          if (state.category === PLAYGROUND) setCategory(lastQuestionsCategory, true);
+          else setCategory(PLAYGROUND, true);
+        });
+      } else pgBtn.hidden = true;
+    }
     const nbBtn = qs("#mynotes-btn");
     if (nbBtn) {
-      if (window.IQB.notebookUI) nbBtn.addEventListener("click", () => setCategory(NOTEBOOK, true));
-      else nbBtn.hidden = true;
+      if (window.IQB.notebookUI) {
+        nbBtn.setAttribute("aria-pressed", "false");
+        nbBtn.addEventListener("click", () => {
+          if (state.category === NOTEBOOK) setCategory(lastQuestionsCategory, true);
+          else setCategory(NOTEBOOK, true);
+        });
+      } else nbBtn.hidden = true;
     }
     if (window.IQB.tour && typeof window.IQB.tour.init === "function") {
       window.IQB.tour.init();
@@ -1616,7 +1905,6 @@
     completedOnly: "#completed-filter",
     uncompletedOnly: "#uncompleted-filter",
     hasNoteOnly: "#note-filter",
-    hasHighlightOnly: "#highlight-filter",
     hasVideoOnly: "#video-filter"
   };
 
