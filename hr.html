@@ -5,23 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 
-  <title>SQL for Testers Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="20 SQL for Testers interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <title>Behavioral Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="22 Behavioral interview questions across 1 topics (Behavioral), with detailed answers. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
-  <link rel="canonical" href="https://www.interviewdeck.in/sql-testing" />
+  <link rel="canonical" href="https://www.interviewdeck.in/hr" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
-  <meta property="og:title" content="SQL for Testers Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="20 SQL for Testers interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
-  <meta property="og:url" content="https://www.interviewdeck.in/sql-testing" />
+  <meta property="og:title" content="Behavioral Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="22 Behavioral interview questions across 1 topics (Behavioral), with detailed answers. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/hr" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="SQL for Testers Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:title" content="Behavioral Interview Questions &amp; Answers — InterviewDeck" />
   <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
   <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -94,10 +94,6 @@
       } catch (e) {}
       document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
     })();
-  </script>
-
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why do testers need SQL? Give practical examples.","acceptedAnswer":{"@type":"Answer","text":"Testers use SQL to validate data behind the UI/API — confirm records were created, updated, or deleted correctly, and investigate defects with evidence. Examples: after placing an order in UI, check orders table status; after API create customer, verify row values; compare counts before/after a batch job."}},{"@type":"Question","name":"How do you write a basic SELECT query to validate test data?","acceptedAnswer":{"@type":"Answer","text":"Use SELECT columns FROM table WHERE filters match your test entity. Start specific (by id/email) so you don’t scan unrelated rows."}},{"@type":"Question","name":"How do JOINs help in testing? Example for order + customer validation.","acceptedAnswer":{"@type":"Answer","text":"JOINs combine related tables so you can validate relationships: an order belongs to the right customer, line items belong to the order, payments link to the order. INNER JOIN shows matched pairs; LEFT JOIN helps find missing children (order without payment row)."}},{"@type":"Question","name":"How do COUNT/SUM help in test validation?","acceptedAnswer":{"@type":"Answer","text":"Aggregates verify volume and totals. COUNT(*) confirms how many rows were created/updated. SUM checks money/quantity totals match UI/API values."}},{"@type":"Question","name":"How do NULLs affect SQL checks in testing?","acceptedAnswer":{"@type":"Answer","text":"NULL means \"unknown/missing\". You cannot compare with = ; use IS NULL / IS NOT NULL . For testers, unexpected NULLs often mean a field was not persisted (address, payment reference, status)."}},{"@type":"Question","name":"How do you combine UI/API testing with DB validation?","acceptedAnswer":{"@type":"Answer","text":"Treat layers as one story: perform action via UI or API, then verify persistence with SQL, then optionally re-fetch via API/UI. This finds bugs where the UI says success but data is wrong/missing, or API returns OK while DB transaction rolled back."}},{"@type":"Question","name":"How do testers use INSERT/UPDATE/DELETE safely?","acceptedAnswer":{"@type":"Answer","text":"Use DML to prepare or cleanup test data in QA — create a known user/order, update a status to a precondition, delete temporary rows after. Prefer QA databases only; never run destructive scripts on production. Prefer transactions/rollback or isolated test schemas when available."}},{"@type":"Question","name":"When do you choose INNER JOIN vs LEFT JOIN in test validation?","acceptedAnswer":{"@type":"Answer","text":"Use INNER JOIN when both sides must exist (order must have a customer). Use LEFT JOIN when you need all left rows and want to detect missing right-side children (orders missing payments)."}},{"@type":"Question","name":"How do GROUP BY and HAVING help in testing?","acceptedAnswer":{"@type":"Answer","text":"GROUP BY buckets rows (e.g. orders per status). HAVING filters those buckets (statuses with count &gt; 0, customers with more than 3 open orders). Useful for batch-job and reconciliation checks."}},{"@type":"Question","name":"How can subqueries help find data issues?","acceptedAnswer":{"@type":"Answer","text":"Subqueries help express “rows that match/don’t match another set” — e.g. orders whose customer is inactive, or payments without a matching order. EXISTS / NOT EXISTS are often clearer for presence checks."}},{"@type":"Question","name":"How do you detect duplicate records with SQL?","acceptedAnswer":{"@type":"Answer","text":"Group by the business key that should be unique and use HAVING COUNT(*) &gt; 1 . Duplicates often appear after retry bugs or missing unique constraints."}},{"@type":"Question","name":"How do you validate date/time fields in testing with SQL?","acceptedAnswer":{"@type":"Answer","text":"Filter with clear ranges, beware timezones, and validate business rules like “cancel allowed within 60 minutes”. Compare timestamps from API/UI with DB values and check formatting/precision issues."}},{"@type":"Question","name":"How do you use LIKE for test data discovery?","acceptedAnswer":{"@type":"Answer","text":"LIKE helps find seeded test rows by prefix/suffix patterns (e.g. all QA emails). Use it for investigation, not as a substitute for exact key lookups in assertions."}},{"@type":"Question","name":"Why do testers care about database transactions?","acceptedAnswer":{"@type":"Answer","text":"Transactions keep multi-step writes atomic — all succeed or all roll back. Testers should verify failure paths don’t leave partial data (order header without items, payment captured without order)."}},{"@type":"Question","name":"Do testers need to know indexes? What should you understand?","acceptedAnswer":{"@type":"Answer","text":"You don’t design DBs daily, but you should know indexes speed lookups and that missing indexes can make QA checks/jobs slow. If a validation query on large tables is extremely slow, raise it — it may affect app performance too."}},{"@type":"Question","name":"How do you validate UI/API field mapping to database columns?","acceptedAnswer":{"@type":"Answer","text":"Build a mapping checklist: each important UI/API field → DB column/table. After create/update, compare values field-by-field (types, enums, rounding for money, trimming spaces)."}},{"@type":"Question","name":"How do you test soft delete vs hard delete in DB?","acceptedAnswer":{"@type":"Answer","text":"Hard delete removes the row. Soft delete keeps the row but marks it inactive ( is_deleted / deleted_at /status). Tests should verify the chosen behaviour: row gone vs flagged, and that APIs no longer return deleted entities."}},{"@type":"Question","name":"How do IN and BETWEEN help write validation queries?","acceptedAnswer":{"@type":"Answer","text":"IN checks membership in a set of values (statuses, ids). BETWEEN checks inclusive ranges (dates/amounts). Both make validation queries readable for multi-value assertions."}},{"@type":"Question","name":"COUNT(*) vs COUNT(column) — why does it matter in testing?","acceptedAnswer":{"@type":"Answer","text":"COUNT(*) counts rows. COUNT(column) counts non-NULL values in that column. If you count a nullable column, you may under-count rows and misjudge data quality."}},{"@type":"Question","name":"How do you do data reconciliation testing with SQL?","acceptedAnswer":{"@type":"Answer","text":"Reconciliation compares two sources of truth — e.g. source file vs DB, order service vs billing table, API totals vs SUM of lines. You check counts, totals, and mismatched keys between sets."}}]}
   </script>
 </head>
 
@@ -330,7 +326,7 @@
       </section>
     </main>
 
-    <section id="seo-prerender" aria-label="SQL for Testers interview questions">
+    <section id="seo-prerender" aria-label="Behavioral interview questions">
       <style>
         #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
           font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
@@ -343,177 +339,13 @@
         #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
-      <h1>SQL for Testers Interview Questions and Answers</h1>
-      <p>20 hand-picked SQL for Testers interview questions with
-         detailed answers. Open the interactive version above to search, filter
-         by difficulty, run code, bookmark questions and track your progress.</p>
-      
-        <article class="seo-q">
-          <h2>Why do testers need SQL? Give practical examples.</h2>
-          <div class="seo-a"><p>Testers use SQL to <strong>validate data</strong> behind the UI/API — confirm records were created, updated, or deleted correctly, and investigate defects with evidence.</p><p>Examples: after placing an order in UI, check <code class="inline">orders</code> table status; after API create customer, verify row values; compare counts before/after a batch job.</p></div>
-          <pre><code>-- After creating order ORD-1001 via API/UI
-SELECT order_id, status, total_amount
-FROM orders
-WHERE order_id = 'ORD-1001';</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do you write a basic SELECT query to validate test data?</h2>
-          <div class="seo-a"><p>Use <code class="inline">SELECT</code> columns <code class="inline">FROM</code> table <code class="inline">WHERE</code> filters match your test entity. Start specific (by id/email) so you don’t scan unrelated rows.</p></div>
-          <pre><code>SELECT customer_id, email, status
-FROM customers
-WHERE email = 'qa.user+123@test.com';</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do JOINs help in testing? Example for order + customer validation.</h2>
-          <div class="seo-a"><p>JOINs combine related tables so you can validate relationships: an order belongs to the right customer, line items belong to the order, payments link to the order.</p><p><code class="inline">INNER JOIN</code> shows matched pairs; <code class="inline">LEFT JOIN</code> helps find missing children (order without payment row).</p></div>
-          <pre><code>SELECT o.order_id, c.email, o.status, o.total_amount
-FROM orders o
-INNER JOIN customers c ON c.customer_id = o.customer_id
-WHERE o.order_id = 'ORD-1001';
-
--- Orders missing payment rows
-SELECT o.order_id
-FROM orders o
-LEFT JOIN payments p ON p.order_id = o.order_id
-WHERE p.payment_id IS NULL;</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do COUNT/SUM help in test validation?</h2>
-          <div class="seo-a"><p>Aggregates verify volume and totals. <code class="inline">COUNT(*)</code> confirms how many rows were created/updated. <code class="inline">SUM</code> checks money/quantity totals match UI/API values.</p></div>
-          <pre><code>-- How many items in an order?
-SELECT COUNT(*) AS item_count
-FROM order_items
-WHERE order_id = 'ORD-1001';
-
--- Does item sum match order total?
-SELECT SUM(line_total) AS items_total
-FROM order_items
-WHERE order_id = 'ORD-1001';</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do NULLs affect SQL checks in testing?</h2>
-          <div class="seo-a"><p><code class="inline">NULL</code> means "unknown/missing". You cannot compare with <code class="inline">=</code>; use <code class="inline">IS NULL</code> / <code class="inline">IS NOT NULL</code>.</p><p>For testers, unexpected NULLs often mean a field was not persisted (address, payment reference, status).</p></div>
-          <pre><code>SELECT order_id, shipping_city
-FROM orders
-WHERE order_id = 'ORD-1001'
-  AND shipping_city IS NULL;</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do you combine UI/API testing with DB validation?</h2>
-          <div class="seo-a"><p>Treat layers as one story: perform action via UI or API, then verify persistence with SQL, then optionally re-fetch via API/UI.</p><p>This finds bugs where the UI says success but data is wrong/missing, or API returns OK while DB transaction rolled back.</p></div>
-          <pre><code>1) POST /orders  → 201 orderId=ORD-1001
-2) SQL: SELECT status, total_amount FROM orders WHERE order_id='ORD-1001'
-3) GET /orders/ORD-1001 → body matches DB</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do testers use INSERT/UPDATE/DELETE safely?</h2>
-          <div class="seo-a"><p>Use DML to prepare or cleanup test data in QA — create a known user/order, update a status to a precondition, delete temporary rows after. Prefer QA databases only; never run destructive scripts on production. Prefer transactions/rollback or isolated test schemas when available.</p></div>
-          <pre><code>INSERT INTO customers(email, status) VALUES ('qa+1@test.com', 'ACTIVE');
-UPDATE orders SET status='CREATED' WHERE order_id='ORD-QA-1';
-DELETE FROM order_items WHERE order_id='ORD-QA-1';</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>When do you choose INNER JOIN vs LEFT JOIN in test validation?</h2>
-          <div class="seo-a"><p>Use <strong>INNER JOIN</strong> when both sides must exist (order must have a customer). Use <strong>LEFT JOIN</strong> when you need all left rows and want to detect missing right-side children (orders missing payments).</p></div>
-          <pre><code>-- Orders with customer (both must exist)
-SELECT o.order_id, c.email
-FROM orders o
-INNER JOIN customers c ON c.customer_id = o.customer_id;
-
--- Orders missing payments
-SELECT o.order_id
-FROM orders o
-LEFT JOIN payments p ON p.order_id = o.order_id
-WHERE p.payment_id IS NULL;</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do GROUP BY and HAVING help in testing?</h2>
-          <div class="seo-a"><p><code class="inline">GROUP BY</code> buckets rows (e.g. orders per status). <code class="inline">HAVING</code> filters those buckets (statuses with count &gt; 0, customers with more than 3 open orders). Useful for batch-job and reconciliation checks.</p></div>
-          <pre><code>SELECT status, COUNT(*) AS cnt
-FROM orders
-WHERE created_at &gt;= CURRENT_DATE
-GROUP BY status
-HAVING COUNT(*) &gt; 0;</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How can subqueries help find data issues?</h2>
-          <div class="seo-a"><p>Subqueries help express “rows that match/don’t match another set” — e.g. orders whose customer is inactive, or payments without a matching order. <code class="inline">EXISTS</code>/<code class="inline">NOT EXISTS</code> are often clearer for presence checks.</p></div>
-          <pre><code>SELECT o.order_id
-FROM orders o
-WHERE NOT EXISTS (
-  SELECT 1 FROM payments p WHERE p.order_id = o.order_id
-);</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do you detect duplicate records with SQL?</h2>
-          <div class="seo-a"><p>Group by the business key that should be unique and use <code class="inline">HAVING COUNT(*) &gt; 1</code>. Duplicates often appear after retry bugs or missing unique constraints.</p></div>
-          <pre><code>SELECT email, COUNT(*)
-FROM customers
-GROUP BY email
-HAVING COUNT(*) &gt; 1;</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do you validate date/time fields in testing with SQL?</h2>
-          <div class="seo-a"><p>Filter with clear ranges, beware timezones, and validate business rules like “cancel allowed within 60 minutes”. Compare timestamps from API/UI with DB values and check formatting/precision issues.</p></div>
-          <pre><code>SELECT order_id, created_at, cancelled_at
-FROM orders
-WHERE order_id = 'ORD-1001'
-  AND cancelled_at &lt;= created_at + INTERVAL '60' MINUTE;</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do you use LIKE for test data discovery?</h2>
-          <div class="seo-a"><p><code class="inline">LIKE</code> helps find seeded test rows by prefix/suffix patterns (e.g. all QA emails). Use it for investigation, not as a substitute for exact key lookups in assertions.</p></div>
-          <pre><code>SELECT email FROM customers WHERE email LIKE 'qa.order+%@test.com';</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>Why do testers care about database transactions?</h2>
-          <div class="seo-a"><p>Transactions keep multi-step writes atomic — all succeed or all roll back. Testers should verify failure paths don’t leave partial data (order header without items, payment captured without order).</p></div>
-          <pre><code>-- After failed payment attempt, order should not be PAID
-SELECT status FROM orders WHERE order_id='ORD-1001';</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>Do testers need to know indexes? What should you understand?</h2>
-          <div class="seo-a"><p>You don’t design DBs daily, but you should know indexes speed lookups and that missing indexes can make QA checks/jobs slow. If a validation query on large tables is extremely slow, raise it — it may affect app performance too.</p></div>
-          <pre><code>-- Conceptual: email lookup benefits from index on customers(email)</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do you validate UI/API field mapping to database columns?</h2>
-          <div class="seo-a"><p>Build a mapping checklist: each important UI/API field → DB column/table. After create/update, compare values field-by-field (types, enums, rounding for money, trimming spaces).</p></div>
-          <pre><code>API totalAmount=99.90  &lt;=&gt;  orders.total_amount=99.90
-API status=CREATED     &lt;=&gt;  orders.status='CREATED'</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do you test soft delete vs hard delete in DB?</h2>
-          <div class="seo-a"><p><strong>Hard delete</strong> removes the row. <strong>Soft delete</strong> keeps the row but marks it inactive (<code class="inline">is_deleted</code>/<code class="inline">deleted_at</code>/status). Tests should verify the chosen behaviour: row gone vs flagged, and that APIs no longer return deleted entities.</p></div>
-          <pre><code>SELECT customer_id, is_deleted, deleted_at
-FROM customers
-WHERE email='qa+del@test.com';</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do IN and BETWEEN help write validation queries?</h2>
-          <div class="seo-a"><p><code class="inline">IN</code> checks membership in a set of values (statuses, ids). <code class="inline">BETWEEN</code> checks inclusive ranges (dates/amounts). Both make validation queries readable for multi-value assertions.</p></div>
-          <pre><code>SELECT *
-FROM orders
-WHERE status IN ('CREATED','PAID')
-  AND total_amount BETWEEN 100 AND 500;</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>COUNT(*) vs COUNT(column) — why does it matter in testing?</h2>
-          <div class="seo-a"><p><code class="inline">COUNT(*)</code> counts rows. <code class="inline">COUNT(column)</code> counts non-NULL values in that column. If you count a nullable column, you may under-count rows and misjudge data quality.</p></div>
-          <pre><code>SELECT COUNT(*) AS rows_total,
-       COUNT(shipping_city) AS city_populated
-FROM orders
-WHERE created_at &gt;= CURRENT_DATE;</code></pre>
-        </article>
-        <article class="seo-q">
-          <h2>How do you do data reconciliation testing with SQL?</h2>
-          <div class="seo-a"><p>Reconciliation compares two sources of truth — e.g. source file vs DB, order service vs billing table, API totals vs SUM of lines. You check counts, totals, and mismatched keys between sets.</p></div>
-          <pre><code>-- Orders missing in billing
-SELECT o.order_id
-FROM orders o
-LEFT JOIN bills b ON b.order_id = o.order_id
-WHERE o.status='DELIVERED' AND b.bill_id IS NULL;</code></pre>
-        </article>
+      <h1>Behavioral Interview Questions</h1>
+      <p>22 Behavioral interview questions across 1
+         topics, each with detailed answers, code examples and practice mode.
+         Pick a topic:</p>
+      <ul class="seo-topics">
+        <li><a href="/behavioral">Behavioral interview questions</a> — 22</li>
+      </ul>
     </section>
 
     <!-- ===== footer ===== -->
@@ -589,7 +421,7 @@ WHERE o.status='DELIVERED' AND b.bill_id IS NULL;</code></pre>
       }
     } catch (e) { /* storage unavailable — production path stands */ }
   </script>
-  <script>window.__ENTRY_CAT="sql-testing";</script>
+  <script>window.__ENTRY_CAT="hr";</script>
   <script src="js/utils.js"></script>
   <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
        rich-text toolbar all reach for it. -->
