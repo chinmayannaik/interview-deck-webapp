@@ -1583,6 +1583,19 @@ body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .qa-body-actions { d
   padding: 2px 0 2px; white-space: pre-line;
 }
 .qa-revise.is-fallback { color: var(--ink-2); }
+
+/* Rich recap (authored revise with **bold**, `code`, and • bullets). Renders
+   real block elements, so it drops the pre-line whitespace the plain path needs. */
+.qa-revise.is-rich { white-space: normal; }
+.qa-revise-p { margin: 0 0 7px; }
+.qa-revise-p:last-child { margin-bottom: 0; }
+.qa-revise-ul { margin: 5px 0 0; padding: 0 0 0 1.25em; list-style: none; }
+.qa-revise-ul li { position: relative; margin: 4px 0; }
+.qa-revise-ul li::before {
+  content: "•"; position: absolute; left: -0.95em;
+  color: var(--accent-ink); font-weight: 700;
+}
+.qa-revise.is-rich strong { color: var(--ink); font-weight: 650; }
 .qa-detail-toggle {
   height: 22px; padding: 0 8px; gap: 4px;
   font-size: 10.5px; font-weight: 600;

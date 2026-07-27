@@ -755,6 +755,44 @@
     return { text: ans.length > 180 ? ans.slice(0, 179).trimEnd() + "…" : ans, fallback: true };
   }
 
+  /* Authored recaps carry a tiny, fixed markup so Revise Mode reads as rich
+     text instead of a wall of plain lines:
+        **bold**      → <strong>   (key term / the thing to remember)
+        `code`        → inline code
+        lines led by "• " or "- " → a bullet list
+        any other line → a lead/summary paragraph
+     The string is HTML-escaped FIRST, then only these patterns are expanded,
+     so nothing the content contains can inject markup (a single "*" in *ngIf,
+     a "<" in <app-root>, or "&&" all render as literal text). Only used for
+     hand-written recaps; auto-derived fallbacks stay plain text. */
+  function escHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function reviseInline(s) {
+    // code first: a `**` sitting inside a code span must stay literal
+    return escHtml(s)
+      .replace(/`([^`]+)`/g, function (_, c) { return '<code class="inline">' + c + "</code>"; })
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  }
+  function reviseHtml(text) {
+    const lines = String(text).split("\n");
+    let out = "", inList = false;
+    function closeList() { if (inList) { out += "</ul>"; inList = false; } }
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      if (/^[•\-]\s+/.test(line)) {
+        if (!inList) { out += '<ul class="qa-revise-ul">'; inList = true; }
+        out += "<li>" + reviseInline(line.replace(/^[•\-]\s+/, "")) + "</li>";
+      } else {
+        closeList();
+        out += '<p class="qa-revise-p">' + reviseInline(line) + "</p>";
+      }
+    }
+    closeList();
+    return out;
+  }
+
   /* Reflect state.revise onto the DOM: the body class the card CSS reads, and
      the header study-mode switch. Cards left in `.detail-open` from a previous
      Revise session are reset so leaving and re-entering Revise Mode starts
@@ -956,9 +994,9 @@
     if (!coding) {
       const rv = reviseText(q);
       inner.appendChild(el("div", { class: "qa-revise-row" }, [
-        el("div", {
-          class: "qa-revise" + (rv.fallback ? " is-fallback" : ""), text: rv.text
-        })
+        el("div", rv.fallback
+          ? { class: "qa-revise is-fallback", text: rv.text }
+          : { class: "qa-revise is-rich", html: reviseHtml(rv.text) })
       ]));
     }
 
