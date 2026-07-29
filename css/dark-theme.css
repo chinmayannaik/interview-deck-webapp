@@ -96,6 +96,7 @@
    on the .answer rule in styles.css. */
 :root[data-theme="dark"] .answer,
 :root[data-theme="dark"] .qa-deep,
+:root[data-theme="dark"] .qa-revise,
 :root[data-theme="dark"] .qa-qtext { --hl-l: 34%; }
 
 /* The underline highlight style is pinned to solid black, which is invisible on
