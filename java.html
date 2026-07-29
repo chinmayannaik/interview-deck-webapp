@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>Java Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="174 Java interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="175 Java interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/java" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="Java Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="174 Java interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="175 Java interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/java" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -348,7 +348,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>Java Interview Questions and Answers</h1>
-      <p>174 hand-picked Java interview questions with
+      <p>175 hand-picked Java interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -1676,6 +1676,18 @@ void withdrawRejectsOverdraft() {
 System.out.println(1 + 2 + &quot;abc&quot;);  // 3abc
 System.out.println(&quot;&quot; + (1 + 2));   // 3
 System.out.println('a' + 1);        // 98 — char + int is arithmetic!</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What happens if a static block (static initializer) throws an exception?</h2>
+          <div class="seo-a"><p>A static block runs <strong>once</strong>, when the class is first loaded. If it throws, the class <strong>fails to initialize</strong> and the JVM wraps the original exception in an <code class="inline">ExceptionInInitializerError</code>.</p><p>The important part: that class is now <strong>permanently unusable</strong> for the rest of the program. Any later attempt to use it doesn't re-run the block — it fails immediately with <code class="inline">NoClassDefFoundError</code>, which can be confusing because the real cause happened earlier.</p><p>Note a checked exception isn't even allowed to escape a static block — you must handle it or wrap it in an unchecked one.</p></div>
+          <pre><code>class Config {
+    static final int VALUE;
+    static {
+        VALUE = Integer.parseInt(System.getProperty(&quot;x&quot;)); // NumberFormatException if unset
+    }
+}
+// First use of Config -&gt; ExceptionInInitializerError
+// Every use after that -&gt; NoClassDefFoundError</code></pre>
         </article>
     </section>
 
