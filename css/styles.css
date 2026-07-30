@@ -1546,15 +1546,18 @@ body.revise-mode .qa-revise-row {
   margin-bottom: 2px;
 }
 body.revise-mode .qa-card:not(.detail-open) .qa-revise { display: block; }
-/* Deep Dive / Quick Recap toggle: a right-aligned chip in its own strip at the
-   top of the OPEN card's body (Revise Mode only). Its own strip means it never
-   overlaps the recap or the full answer — content simply starts below it. */
+/* Deep Dive / Quick Recap toggle: floated into the top-right corner of the OPEN
+   card's body (Revise Mode only). Floating (not a full-width strip) means the
+   recap/answer text wraps to its left with no empty band, and it never overlaps
+   the text. */
 body.revise-mode .qa-card.open .qa-detail-bar {
-  display: flex;
-  justify-content: flex-end;
-  margin: -2px 0 8px;
+  display: block;
+  float: right;
+  margin: 0 0 4px 12px;
 }
 body.revise-mode .qa-card.open .qa-detail-toggle { display: inline-flex; }
+/* Contain the float so a short recap can't let the chip spill past the body. */
+body.revise-mode .qa-card.open .qa-body-inner::after { content: ""; display: block; clear: both; }
 .qa-side-actions { order: 3; }
 .qa-headmain { order: 1; }
 .qa-qnum { order: 0; }
