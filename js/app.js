@@ -887,9 +887,10 @@
     doneToggle.innerHTML =
       '<svg class="qa-done-check" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
 
-    /* Revise Mode chip lives in the header action cluster (top-right) so the
-       recap body stays full-width — especially on phones where the old
-       side-by-side squeezed the question. Hidden outside Revise via CSS. */
+    /* Revise Mode toggle: lets the reader flip a card between its crisp recap and
+       the full deep-dive answer, then back. It's mounted top-right of the card
+       BODY (its own strip — see qa-detail-bar below) so it never overlaps the
+       recap or the answer text. Hidden outside Revise / on coding cards via CSS. */
     let detailBtn = null;
     if (!coding) {
       detailBtn = el("button", {
@@ -909,8 +910,8 @@
       }, "Deep Dive");
     }
 
-    /* Icon cluster (speak / star / done / chevron). Deep Dive is a sibling so
-       mobile can park it on its own row; it's hidden until the card is open. */
+    /* Icon cluster (speak / star / done / chevron). The Deep Dive toggle now
+       lives in the card body (qa-detail-bar), not here. */
     const sideActions = el("div", { class: "qa-side-actions" }, [
       coding ? IQB.coding.solveButton(q) : null,
       window.IQB.speak && IQB.speak.supported ? IQB.speak.build(card) : null,
@@ -960,7 +961,7 @@
           e.preventDefault(); toggleCard(card);
         }
       }
-    }, [qnum, headMain, sideActions, detailBtn]);
+    }, [qnum, headMain, sideActions]);
 
     // reveal button (practice mode)
     const reveal = el("button", {
@@ -979,6 +980,12 @@
 
     // body
     const inner = el("div", { class: "qa-body-inner" });
+
+    /* Deep Dive / Quick Recap toggle sits in its own right-aligned strip at the
+       very top of the body, so in Revise Mode the reader can flip to the full
+       answer and back without the chip ever overlapping the recap/answer text.
+       Shown only in Revise Mode on an open card (CSS); coding cards have no chip. */
+    if (detailBtn) inner.appendChild(el("div", { class: "qa-detail-bar" }, [detailBtn]));
 
     /* Coding questions (manifest `"mode": "coding"`) invert the card: the
        expanded body shows ONLY the problem, and everything that gives the
