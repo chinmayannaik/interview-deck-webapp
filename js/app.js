@@ -1617,7 +1617,13 @@
     function position() {
       const r = btn.getBoundingClientRect();
       menu.style.top = (r.bottom + 8) + "px";
-      menu.style.right = Math.max(8, window.innerWidth - r.right) + "px";
+      // Right-anchor to the button, but clamp so the menu can never overflow the
+      // viewport's left edge — its width (up to 300px) can exceed the button's
+      // distance from the left on a phone, which pushed it off-screen before.
+      const w = menu.offsetWidth;
+      const maxRight = window.innerWidth - w - 8; // right offset that keeps left >= 8px
+      const wanted = window.innerWidth - r.right;
+      menu.style.right = Math.max(8, Math.min(wanted, maxRight)) + "px";
     }
     function openMenu() {
       render(); menu.hidden = false; position();
