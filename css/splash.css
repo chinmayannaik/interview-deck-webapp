@@ -46,7 +46,12 @@
 .splash > * { position: relative; z-index: 1; }
 
 /* ---------- hide + teardown ---------- */
-.splash.is-hiding { opacity: 0; }
+/* As soon as it starts fading, the splash is invisible but still a fixed,
+   full-viewport layer at z-index 2000 — for the ~0.45s fade it would swallow
+   every click aimed at the app behind it (why the first tap after load "did
+   nothing" until a refresh). Drop pointer events the moment hiding begins so
+   the app is interactive throughout the fade, not only after teardown. */
+.splash.is-hiding { opacity: 0; pointer-events: none; }
 .splash[hidden] { display: none; }
 /* while the splash is up the app behind it must not scroll or be reachable */
 body.splash-open { overflow: hidden; }
