@@ -687,7 +687,9 @@
     const titleIc = catIcon(state.category);
     if (titleIc) titleEl.appendChild(titleIc);
     titleEl.appendChild(document.createTextNode(state.category === "all" ? "All Questions" : labelOf(state.category)));
-    titleEl.appendChild(el("small", { text: items.length + (items.length === 1 ? " question" : " questions") }));
+    // Leading space so the accessible name reads "Frontend 500 questions",
+    // not "Frontend500 questions" (the visual gap is the small's margin-left).
+    titleEl.appendChild(el("small", { text: " " + items.length + (items.length === 1 ? " question" : " questions") }));
 
     listEl.innerHTML = "";
     if (renderState.observer) { renderState.observer.disconnect(); renderState.observer = null; }
@@ -696,7 +698,17 @@
       listEl.appendChild(el("div", { class: "empty" }, [
         el("div", { class: "big", html: '<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--muted);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' }),
         el("h3", { text: "No questions found" }),
-        el("p", { text: "Try a different search term, category, or difficulty." })
+        el("p", { text: "Try a different search term, category, or difficulty." }),
+        el("button", {
+          class: "empty-reset", type: "button",
+          onclick: () => {
+            state.query = "";
+            document.querySelectorAll('input[type="search"]').forEach((s) => { s.value = ""; });
+            state.difficulty = "all";
+            clearFilters();   // resets the filter toggles and re-renders
+          },
+          text: "Clear filters"
+        })
       ]));
       return;
     }

@@ -76,6 +76,40 @@
   --cat-ngcoding: #F58BAE;
   --cat-testing: #E97ACE;
   --cat-behavioral: #9BB8CC;
+  /* remaining categories — the manifest inks are authored for white paper (some,
+     like kafka #231F20 and system-design #0F172A, are near-black), so without a
+     dark token here they fell back to those hexes and vanished on --surface.
+     These are lifted/desaturated to sit at >= 5.2:1 like the set above. */
+  --cat-react: #6FD6F0;
+  --cat-microfrontends: #F06B9A;
+  --cat-leetcode: #E86BAB;
+  --cat-python: #6FB0E0;
+  --cat-nodejs: #6FD07A;
+  --cat-c: #B8C6D8;
+  --cat-cpp: #5BA8E0;
+  --cat-quarkus: #7BB4F0;
+  --cat-kafka: #C6BFBD;
+  --cat-rabbitmq: #FF9A52;
+  --cat-redis: #F5796F;
+  --cat-graphql: #F062BE;
+  --cat-postgresql: #6FA3D0;
+  --cat-docker-kubernetes: #7AA0F0;
+  --cat-aws: #FFB84D;
+  --cat-flutter: #6FBFF7;
+  --cat-dart: #5BAEE8;
+  --cat-fluttercoding: #A98CFF;
+  --cat-swift: #FF9470;
+  --cat-testing-fundamentals: #4FB5AC;
+  --cat-manual-qa: #4FC0CB;
+  --cat-api-testing: #4FB3C8;
+  --cat-ui-automation: #E0964D;
+  --cat-sql-testing: #D6A83E;
+  --cat-cicd-testing: #EE8055;
+  --cat-angular-testing: #E97ACE;
+  --cat-llm: #B39BFA;
+  --cat-ai-assisted-dev: #B39BFA;
+  --cat-ml-fundamentals: #9598F5;
+  --cat-system-design: #9AA6BC;
 
   /* group (main field) colours — 6.8:1+ on --surface */
   --group-frontend: #FF6B80;

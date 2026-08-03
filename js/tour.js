@@ -123,6 +123,16 @@
     document.getElementById("tour-btn-back").onclick = prevStep;
     document.getElementById("tour-btn-next").onclick = nextStep;
 
+    // Clicking the backdrop (anywhere outside the tooltip) dismisses the tour.
+    // Without this, a first-time visitor who ignores the tooltip and tries to
+    // click the tabs/filters/difficulty controls is silently blocked by the
+    // z-index:1000 overlay and the app feels frozen — the clicks only "work"
+    // after a refresh (which skips the already-seen tour). Any click now ends
+    // the tour so interacting with the app is itself the escape hatch.
+    overlayEl.addEventListener("click", (e) => {
+      if (!tooltipEl.contains(e.target)) endTour();
+    });
+
     // Start with a small timeout to let app finish initial category loads
     setTimeout(startTour, 800);
   }

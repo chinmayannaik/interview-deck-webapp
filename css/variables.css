@@ -10,7 +10,9 @@
   --surface-3: #EFE8E7;
   --ink: #201A1C;
   --ink-2: #4A4145;
-  --muted: #756A6E;
+  /* muted was #756A6E (4.95:1 on --bg — passes AA but tight at <14px). Nudged
+     one step darker for comfortable small-text reading (~5.4:1). */
+  --muted: #6E6266;
   --border: #E9E1E0;
   --border-strong: #D8CECD;
 
@@ -91,6 +93,7 @@
   --shadow-lg: 0 12px 40px rgba(32, 26, 28, .12);
 
   /* layout */
+  --tap: 44px;            /* minimum touch-target size (coarse pointers) */
   --header-h: 60px;
   --tabs-h: 54px;
   --header-shell-h: calc(var(--header-h) + var(--tabs-h));

@@ -8,7 +8,7 @@
 
 .qa-speak {
   display: inline-flex; align-items: center; justify-content: center;
-  width: 26px; height: 26px; border-radius: var(--r-sm);
+  width: 34px; height: 34px; border-radius: var(--r-sm);
   color: var(--muted); background: none; transition: var(--trans);
 }
 .qa-speak:hover { color: var(--accent); background: var(--accent-soft); }

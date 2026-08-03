@@ -127,13 +127,16 @@ html { overflow-anchor: none; }
   height: 36px; padding: 0 16px;
   border-radius: var(--r-pill);
   border: none;
-  background: #2563eb; color: #fff;
+  /* Neutral ink pill (was hardcoded Google-blue #2563eb, off the crimson token
+     system). Ink base matches the app's "active" language (.mode-opt.is-active,
+     .chip-filter.active); brand crimson on hover ties it to the accent. */
+  background: var(--ink); color: var(--bg);
   font-size: var(--step--1); font-weight: 700;
   cursor: pointer; transition: background var(--trans), box-shadow var(--trans), transform var(--trans);
-  box-shadow: 0 1px 4px rgba(37,99,235,.35);
+  box-shadow: var(--shadow-sm);
 }
-.auth-btn:hover { background: #1d4ed8; box-shadow: 0 3px 10px rgba(37,99,235,.45); transform: translateY(-1px); }
-.auth-btn:active { transform: translateY(0); box-shadow: 0 1px 3px rgba(37,99,235,.3); }
+.auth-btn:hover { background: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.auth-btn:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
 
 /* signed-out: show label, hide avatar */
 .auth-btn .auth-btn-label { display: inline-flex; align-items: center; gap: 6px; }
@@ -1025,7 +1028,11 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
 /* Card meta badges are just a faint label line — keep them small so they don't
    compete with the question. (Scoped to the card header; filter chips elsewhere
    keep their size.) */
-.qa-top .badge { font-size: 8.5px; padding: 1.5px 6px; border-radius: 5px; letter-spacing: .02em; }
+/* Card meta badges inherit the base .badge size (10.5px) for a consistent chip
+   scale across the app; only the padding is trimmed so they stay subordinate to
+   the 15–18px question title. (Was 8.5px — below the legibility floor and, with
+   the raw category colour, under 4.5:1 on its tint.) */
+.qa-top .badge { padding: 2px 7px; border-radius: 5px; letter-spacing: .02em; }
 .badge {
   font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .03em;
   text-transform: uppercase; padding: 3px 8px; border-radius: 6px; white-space: nowrap;
@@ -1036,11 +1043,14 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
      them (and the number) out of selection keeps drags anchored in the text. */
   user-select: none; -webkit-user-select: none;
 }
-.badge.cat { background: color-mix(in srgb, var(--cat) 14%, var(--surface)); color: var(--cat); }
-.badge.diff-beginner { background: var(--beginner-soft); color: var(--beginner); }
-.badge.diff-intermediate { background: var(--intermediate-soft); color: var(--intermediate); }
-.badge.diff-advanced { background: var(--advanced-soft); color: var(--advanced); }
-.qa-star { margin-left: auto; font-size: 17px; line-height: 1; color: var(--muted); transition: var(--trans); background: none; }
+/* Badge text is darkened toward --ink (light theme) / lightened toward --ink
+   (dark theme, where --ink flips) so the label clears 4.5:1 on its own tint in
+   both themes, while staying recognisably the category/difficulty hue. */
+.badge.cat { background: color-mix(in srgb, var(--cat) 14%, var(--surface)); color: color-mix(in srgb, var(--cat) 66%, var(--ink)); }
+.badge.diff-beginner { background: var(--beginner-soft); color: color-mix(in srgb, var(--beginner) 64%, var(--ink)); }
+.badge.diff-intermediate { background: var(--intermediate-soft); color: color-mix(in srgb, var(--intermediate) 64%, var(--ink)); }
+.badge.diff-advanced { background: var(--advanced-soft); color: color-mix(in srgb, var(--advanced) 64%, var(--ink)); }
+.qa-star { margin-left: auto; display: inline-grid; place-items: center; width: 34px; height: 34px; font-size: 17px; line-height: 1; color: var(--muted); transition: var(--trans); background: none; }
 .qa-star:hover { color: var(--intermediate); transform: scale(1.12); }
 .qa-star.on { color: var(--intermediate); }
 
@@ -1048,7 +1058,7 @@ body.pg-dragging { user-select: none; -webkit-user-select: none; cursor: col-res
    when done. Shares the card's `progress` state with the footer done button. */
 .qa-done {
   flex: none; display: inline-grid; place-items: center;
-  width: 30px; height: 30px; border-radius: 50%;
+  width: 34px; height: 34px; border-radius: 50%;
   border: 2px solid var(--border); background: transparent;
   color: transparent; cursor: pointer; transition: var(--trans);
   -webkit-tap-highlight-color: transparent;
@@ -1620,6 +1630,15 @@ body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .qa-body-actions { d
 }
 .empty .big { font-size: 40px; margin-bottom: 10px; }
 .empty h3 { color: var(--ink); margin-bottom: 6px; }
+.empty-reset {
+  margin-top: 16px;
+  display: inline-flex; align-items: center; min-height: 36px; padding: 0 16px;
+  border: 1px solid var(--border-strong); border-radius: var(--r-sm);
+  background: var(--surface); color: var(--ink);
+  font-size: var(--step--1); font-weight: 600; cursor: pointer;
+  transition: var(--trans);
+}
+.empty-reset:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
 
 /* progress bar in sidebar */
 .progress-box { margin: 4px 12px 14px; }
@@ -1978,7 +1997,9 @@ body.revise-mode .qa-card:not(.detail-open):has(.qa-revise) .qa-body-actions { d
 @media (max-width: 560px) {
   .hero-stats { gap: 18px; }
   /* .content-tools now goes full-width and scrolls from 900px down */
-  .qa-question { font-size: var(--step-0); }
+  /* Keep the title one step above the 15px answer body so the hierarchy holds
+     on phones (was --step-0 = 15px, identical in size to the body). */
+  .qa-question { font-size: 1rem; }
   /* The card's action row doesn't fit a phone: three labelled buttons wanted
      ~336px of a 313px row and spilled onto a second line. Shorten the labels
      ("Mark as done"→"Done", "Copy link"→"Copy", "Report Issue"→"Report") and
@@ -2459,4 +2480,44 @@ body.rp-open { overflow: hidden; }
   .qa-body { display: block !important; }
   .qa-card { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; margin-bottom: 8px; }
   body { background: #fff; }
+}
+
+/* ============================================================
+   Design-system consistency layer (polish pass)
+   Cross-cutting rules so every control shares the same focus ring
+   and meets the touch-target floor, without touching per-component
+   markup or the existing visual language.
+   ============================================================ */
+
+/* 1) Unified keyboard-focus ring. Written with :where() so it carries ZERO
+   specificity — any control that already defines its own :focus-visible wins,
+   and every control that previously fell back to the inconsistent UA outline
+   now gets the same accent ring. Applies only to keyboard focus. */
+:where(a[href], button, [role="button"], [role="tab"], [role="option"],
+       input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+/* 2) Forced-colors / Windows High Contrast: box-shadow rings are dropped in
+   that mode, so restore a real outline for the same set of controls. */
+@media (forced-colors: active) {
+  :where(a[href], button, [role="button"], [role="tab"], [role="option"],
+         input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: 2px;
+  }
+}
+
+/* 3) Touch-target floor. On coarse pointers (touch/pen) every interactive
+   control gets a >=44px hit area. Desktop mouse density is untouched. */
+@media (pointer: coarse) {
+  .icon-btn, .auth-btn { min-width: var(--tap); min-height: var(--tap); }
+  .mode-opt, .qa-act, .reveal-btn, .deep-btn, .sel-btn,
+  .chip-filter, .subchip, .diff-seg-opt, .side-link { min-height: var(--tap); }
+
+  /* Card-head action cluster: real 44px targets, gap tightened so four fit a
+     narrow phone row without wrapping. */
+  .qa-side-actions { gap: 4px; }
+  .qa-side-actions > button { min-width: var(--tap); min-height: var(--tap); }
 }
