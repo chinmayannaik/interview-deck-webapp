@@ -473,7 +473,8 @@
        notebook at all (the tab it used to live in sits in the desktop-only
        strip). */
     if (window.IQB.playground) mCatEl.appendChild(el("option", { value: PLAYGROUND, text: "Playground JS" }));
-    if (window.IQB.notebookUI) mCatEl.appendChild(el("option", { value: NOTEBOOK, text: "My Notes" }));
+    // My Notes is an account feature — only offer it in the dropdown when signed in.
+    if (window.IQB.notebookUI && window.IQB.cloud && IQB.cloud.isSignedIn()) mCatEl.appendChild(el("option", { value: NOTEBOOK, text: "My Notes" }));
   }
 
   function buildMobileControls() {
@@ -1133,7 +1134,10 @@
 
     // optional personal-note section (js/notes.js) — reuses the generic
     // per-question user-state layer (IQB.cloud). Loads lazily on card open.
-    if (window.IQB.notes) {
+    // Notes are an account feature: only render the section when signed in.
+    // The auth-change listener (see init) re-renders the list so it appears on
+    // sign-in and disappears on sign-out.
+    if (window.IQB.notes && window.IQB.cloud && IQB.cloud.isSignedIn()) {
       if (coding) inner.appendChild(IQB.notes.build(q.id));
       else ensureExplore().appendChild(IQB.notes.build(q.id));
     }
@@ -1744,14 +1748,8 @@
   }
 
   /* ========================================================
-     ACTIONS: random, expand/collapse, copy, export/import
+     ACTIONS: expand/collapse, copy, export/import
      ======================================================== */
-  function randomQuestion() {
-    const pool = filtered();
-    if (!pool.length) { toast("No questions to pick from"); return; }
-    const q = pool[Math.floor(Math.random() * pool.length)];
-    openQuestion(q.id, true);
-  }
   function openQuestion(id, scroll) {
     const item = ALL.find((x) => x.id === id);
     if (!item) return;
@@ -1870,7 +1868,6 @@
       return;
     }
     if (typing) return;
-    if (e.key.toLowerCase() === "r") { randomQuestion(); }
   }
   function focusSearch() {
     const visible = searchEls.find((s) => s.offsetParent !== null) || searchEls[0];
@@ -1930,7 +1927,6 @@
     on("#theme-toggle-m", "click", toggleTheme);
     on("#expand-all", "click", expandAll);
     on("#collapse-all", "click", collapseAll);
-    on("#random-btn", "click", randomQuestion);
     on("#print-btn", "click", () => window.print());
     on("#export-btn", "click", exportData);
     on("#bookmark-filter", "click", (e) => {
@@ -2067,6 +2063,23 @@
         });
       } else nbBtn.hidden = true;
     }
+
+    /* Personal Note + My Notes are account features. Hide the My Notes header
+       button when signed out, keep a signed-out user from being stranded inside
+       the notebook, and re-render on any auth change so the per-card note
+       sections (gated in the card renderer) and the mobile "My Notes" dropdown
+       option appear on sign-in and disappear on sign-out. */
+    function syncAccountFeatures() {
+      const signedIn = !!(window.IQB.cloud && IQB.cloud.isSignedIn());
+      const nb = qs("#mynotes-btn");
+      if (nb && window.IQB.notebookUI) nb.hidden = !signedIn;
+      if (!signedIn && state.category === NOTEBOOK) setCategory(lastQuestionsCategory, true);
+    }
+    syncAccountFeatures();
+    if (window.IQB.cloud && IQB.cloud.onChange) {
+      IQB.cloud.onChange(() => { syncAccountFeatures(); renderMobileSections(); render(); });
+    }
+
     initFocusMenu();
     if (window.IQB.tour && typeof window.IQB.tour.init === "function") {
       window.IQB.tour.init();
@@ -2195,10 +2208,10 @@
     on("#tools-clear", "click", clearFilters);
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && open) setOpen(false); });
 
-    /* Random and the expand/collapse pair act on the list behind the sheet —
-       staying open would just hide their result. The filters deliberately do
-       not close it: picking several in a row is the whole point. */
-    ["#random-btn", "#expand-all", "#collapse-all"].forEach((sel) =>
+    /* The expand/collapse pair act on the list behind the sheet — staying open
+       would just hide their result. The filters deliberately do not close it:
+       picking several in a row is the whole point. */
+    ["#expand-all", "#collapse-all"].forEach((sel) =>
       on(sel, "click", () => { if (open) setOpen(false); }));
 
     /* Tidy-up only, deliberately not load-bearing: body.tools-open is itself

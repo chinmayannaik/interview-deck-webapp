@@ -93,6 +93,17 @@
 
     const listPane = el("div", { class: "nb-pane nb-pane-list" }, [
       el("div", { class: "nb-pane-head" }, [
+        /* Mobile-only exit — same dead-end as the playground: #mynotes-btn is
+           display:none on phones and body.nb-mode hides the Section dropdown, so
+           without this My Notes can't be left on mobile. Reuses that toggle. */
+        el("button", {
+          class: "tool pg-back nb-back", type: "button", title: "Back to questions",
+          "aria-label": "Back to questions",
+          onclick: () => { const b = document.getElementById("mynotes-btn"); if (b) b.click(); }
+        }, [
+          el("span", { class: "pg-back-ic", html: '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>' }),
+          document.createTextNode("Back")
+        ]),
         el("h2", { class: "nb-title", text: "My Notes" }),
         newBtn
       ]),

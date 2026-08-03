@@ -194,6 +194,18 @@
 
     root = el("section", { class: "playground", id: "playground", hidden: "" }, [
       el("div", { class: "pg-bar" }, [
+        /* Mobile-only exit. The header #playground-btn (which toggles back to the
+           last questions category) is display:none on phones and the Section
+           dropdown is hidden by body.pg-mode, so without this the playground is a
+           dead-end on mobile. Reuses that button's existing toggle logic. */
+        el("button", {
+          class: "tool pg-back", type: "button", title: "Back to questions",
+          "aria-label": "Back to questions",
+          onclick: () => { const b = document.getElementById("playground-btn"); if (b) b.click(); }
+        }, [
+          el("span", { class: "pg-back-ic", html: '<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>' }),
+          document.createTextNode("Back")
+        ]),
         el("h2", { class: "pg-title" }, [
           el("span", { class: "pg-lang", text: "JS" }),
           document.createTextNode("Playground")
