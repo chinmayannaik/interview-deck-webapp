@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Accessibility Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 Accessibility interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/accessibility" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Accessibility Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 Accessibility interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/accessibility" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Accessibility Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why does accessibility matter, and what is POUR?","acceptedAnswer":{"@type":"Answer","text":"Around 15% of people live with a disability, and accessibility also covers temporary and situational impairments — a broken arm, bright sunlight, holding a baby, a noisy train. Most accessibility work improves the product for everyone. There's also a legal dimension (ADA in the US, the European Accessibility Act, Section 508 for US public sector, and equivalents elsewhere), and enterprise procurement frequently requires a VPAT before they'll buy. WCAG is organised around four principles — POUR: Perceivable — users can perceive the content (text alternatives, contrast, captions). Operable — users can operate the interface (keyboard access, enough time, no seizure triggers). Understandable — predictable behaviour, clear language, helpful errors. Robust — works with assistive technology now and as it evolves (valid markup, correct roles and names)."}},{"@type":"Question","name":"What are WCAG conformance levels, and which do you target?","acceptedAnswer":{"@type":"Answer","text":"Each WCAG success criterion is graded A , AA or AAA : A — the minimum; failing these blocks people outright (no keyboard access, images with no alternative). AA — the standard target and what essentially all legislation references: 4.5:1 contrast for body text, resize to 200%, visible focus, consistent navigation. AAA — stricter (7:1 contrast, sign language for video). Not expected across a whole site; WCAG itself says AAA conformance for all content isn't generally achievable. Versions: 2.0 (2008) → 2.1 (2018, added mobile, touch and low-vision criteria) → 2.2 (2023, added focus appearance, dragging alternatives, target size, and accessible authentication). Each is backwards compatible. The practical answer to \"what do we target\": WCAG 2.2 level AA ."}},{"@type":"Question","name":"Why is native HTML better than ARIA?","acceptedAnswer":{"@type":"Answer","text":"Because a native element gives you the role, the name, the state, keyboard behaviour, focus management and platform conventions for free and correctly — and it keeps working as browsers and assistive technology evolve. A &lt;button&gt; is focusable, announces as \"button\", activates on Enter and Space, fires click on both, participates in forms, and inherits OS high-contrast styling. A &lt;div role=\"button\"&gt; gives you the announcement only — you must add tabindex=\"0\" , key handlers for Enter and Space, disabled semantics, and focus styles, and you will get one of them wrong. This is the first rule of ARIA : if a native element with the semantics you need exists, use it instead of repurposing something else with ARIA. ARIA is for the gap — genuinely custom widgets (comboboxes, tab panels, tree views), live regions, and describing relationships HTML can't express."}},{"@type":"Question","name":"How do ARIA roles, states and properties work?","acceptedAnswer":{"@type":"Answer","text":"ARIA changes what's exposed in the accessibility tree — it never changes behaviour, appearance or keyboard support. Adding role=\"button\" makes something announce as a button; it doesn't make it focusable or clickable. Roles — what a thing is: role=\"tab\" , role=\"dialog\" , role=\"alert\" . States — dynamic, change over time: aria-expanded , aria-checked , aria-selected , aria-disabled , aria-current . Properties — largely static relationships: aria-label , aria-labelledby , aria-describedby , aria-controls , aria-haspopup . Naming precedence (highest first): aria-labelledby → aria-label → native label ( &lt;label&gt; , alt , element content) → title . Prefer aria-labelledby pointing at visible text, because a visible label helps everyone and can't drift out of sync. The rule that catches people out: you must keep states in sync in JavaScript . A stale aria-expanded=\"false\" on an open menu is worse than no attribute at all."}},{"@type":"Question","name":"What makes an interface keyboard accessible?","acceptedAnswer":{"@type":"Answer","text":"Everything interactive is reachable with Tab and operable with Enter/Space (and arrow keys inside composite widgets like menus, tabs and grids). Focus order follows visual order — it comes from DOM order, so CSS that visually reorders content ( order , row-reverse , absolute positioning) creates a confusing tab sequence. Focus is always visible. Never outline: none without a replacement; :focus-visible gives keyboard users a ring without showing it on mouse click. No keyboard traps — you can always Tab out of anything (except intentionally, inside a modal). Skip link — a \"Skip to main content\" link as the first focusable element, so keyboard users don't tab through 40 nav items on every page. Escape closes overlays, menus and dialogs. Don't use positive tabindex — tabindex=\"1\" jumps ahead of everything and wrecks the order. Only 0 (focusable in order) and -1 (focusable by script only) are useful."}},{"@type":"Question","name":"How do you manage focus in a single-page app?","acceptedAnswer":{"@type":"Answer","text":"SPAs break the browser's built-in focus behaviour, so you have to recreate it. Route changes — a full page load resets focus to the top and the screen reader announces the new page. A client-side route change does neither: focus stays on the clicked link and nothing is announced. Fix by moving focus to the new page's &lt;h1&gt; (with tabindex=\"-1\" ) or the main landmark after navigation, and announcing the new title in a live region. Opening a dialog — move focus into the dialog, trap it there while open, and set aria-modal / inert on the background. Closing anything — return focus to the element that opened it. Losing focus to &lt;body&gt; dumps keyboard users back at the top of the page. Deleting the focused element — move focus somewhere sensible first (the next row, or the list container), or focus is lost. Async content — don't steal focus when content loads in; announce it in a live region instead. The native &lt;dialog&gt; element handles trapping, background inerting and Escape for you — prefer it over a hand-rolled modal."}},{"@type":"Question","name":"How do you build an accessible form?","acceptedAnswer":{"@type":"Answer","text":"Every input has a real label — &lt;label for=\"id\"&gt; or wrapping. Placeholder text is not a label: it disappears on typing, fails contrast, and isn't reliably announced. Group related controls — &lt;fieldset&gt; + &lt;legend&gt; for radio groups and checkbox sets, so the group's question is announced with each option. Errors must be programmatically associated — aria-describedby pointing at the message, aria-invalid=\"true\" on the field, and the message next to the field, not only in a summary. On submit failure , move focus to an error summary at the top (or the first invalid field) and announce the count. Never signal state by colour alone — add an icon and text. Required fields — mark visibly and with required / aria-required ; explain the convention if you use an asterisk. autocomplete tokens — a WCAG 2.1 criterion, and a genuine usability win."}},{"@type":"Question","name":"How do you announce dynamic changes to screen readers?","acceptedAnswer":{"@type":"Answer","text":"A screen reader only reads what has focus, so silent DOM updates — \"3 results found\", \"Saved\", \"Added to cart\" — go unnoticed. Live regions tell it to announce a region when its content changes. aria-live=\"polite\" — announced when the user is idle. The default choice for status updates and search results. aria-live=\"assertive\" — interrupts immediately. Reserve for genuine errors and urgent warnings; overuse makes the app unusable. role=\"status\" ≈ polite, role=\"alert\" ≈ assertive — often simpler than the raw attributes. The rules that make them actually work: The live region must be in the DOM before the content changes. Inserting a role=\"alert\" element and its text at once is unreliable. Change only the text inside it. Keep it small and single-purpose; don't wrap a whole results table. Don't announce the same string twice in a row — it won't re-fire unless the text actually changes."}},{"@type":"Question","name":"How do you write good alt text?","acceptedAnswer":{"@type":"Answer","text":"Alt text conveys the image's function in context , not a description of its pixels. Informative image — describe the information it carries: alt=\"Sales rose 40% from Q1 to Q4\" , not alt=\"chart\" . Functional image (an icon inside a link or button) — describe the action : alt=\"Search\" , not alt=\"magnifying glass\" . Decorative image — use alt=\"\" (empty, but present) so screen readers skip it entirely. Omitting the attribute makes some readers announce the filename instead. Image of text — the alt is the text. Complex image (chart, diagram, map) — short alt plus a longer description nearby or via aria-describedby ; ideally provide the underlying data as a table. Don't start with \"Image of…\" (the role is already announced), stuff keywords, or duplicate adjacent caption text."}},{"@type":"Question","name":"What are the colour requirements in WCAG?","acceptedAnswer":{"@type":"Answer","text":"Contrast ratios (AA): 4.5:1 for normal text. 3:1 for large text (18.66px bold, or 24px regular and above). 3:1 for meaningful non-text: icons, form field borders, chart lines, focus indicators. AAA raises these to 7:1 and 4.5:1. Never use colour alone to convey meaning (WCAG 1.4.1) — a red border on an invalid field must be paired with an icon and message; a chart's series need labels or patterns, not just hue. Roughly 8% of men have some colour vision deficiency. Other criteria that catch teams out: text must reflow and stay readable at 200% zoom (and at 400% in a 320px viewport); users must be able to override colours (high-contrast modes) without content disappearing; and disabled controls are exempt from contrast but are frequently made illegible anyway."}},{"@type":"Question","name":"Why do headings and landmarks matter so much?","acceptedAnswer":{"@type":"Answer","text":"Screen reader users rarely read a page top to bottom — they navigate by structure . Surveys consistently show headings are the primary way people find content on a page. Headings: one &lt;h1&gt; describing the page, then h2 – h6 nested without skipping levels. Heading level is document structure, not font size — style with CSS. A page of visually-bold &lt;div&gt; s has no structure at all to navigate. Landmarks: &lt;header&gt; , &lt;nav&gt; , &lt;main&gt; (exactly one), &lt;aside&gt; , &lt;footer&gt; , &lt;search&gt; let users jump straight to a region. Label repeated landmarks so they're distinguishable: &lt;nav aria-label=\"Breadcrumb\"&gt; versus &lt;nav aria-label=\"Main\"&gt; . Both are essentially free — they're the markup you should be writing anyway — and they're among the highest-impact accessibility wins available."}},{"@type":"Question","name":"What does an accessible modal dialog require?","acceptedAnswer":{"@type":"Answer","text":"Six things, and hand-rolled modals usually miss two or three: Correct semantics — role=\"dialog\" with aria-modal=\"true\" , plus aria-labelledby pointing at the title. Focus moves in on open — to the dialog, its heading, or the first control (not the close button, if there's a more useful target). Focus is trapped while open — Tab from the last element wraps to the first. Background is inert — the rest of the page is unreachable by keyboard and hidden from screen readers. The inert attribute does both. Escape closes it , as does the close button and (usually) a backdrop click. Focus returns to the element that opened it. The native &lt;dialog&gt; element with showModal() provides trapping, inerting, Escape and the top-layer backdrop for free — use it unless you have a hard reason not to."}},{"@type":"Question","name":"How do you make a custom widget (tabs, combobox, tree) accessible?","acceptedAnswer":{"@type":"Answer","text":"Follow the ARIA Authoring Practices Guide (APG) pattern for that widget rather than inventing semantics — it defines the required roles, states and the exact keyboard behaviour users expect. Three things every composite widget needs: The role structure — e.g. tabs need role=\"tablist\" → role=\"tab\" (with aria-selected and aria-controls ) → role=\"tabpanel\" (with aria-labelledby ). The keyboard model — arrow keys move between items, Home/End jump to the ends, Enter/Space activate. Note that arrow keys, not Tab, move within a widget. Roving tabindex — exactly one item in the group has tabindex=\"0\" and the rest -1 , so the whole widget is a single tab stop. (The alternative is aria-activedescendant , used for comboboxes where focus stays in the input.) Better answer in most real situations: use a maintained headless library (Radix, React Aria, Headless UI, CDK) that has already implemented and tested these patterns. Getting a combobox right by hand is a genuinely hard, many-week job."}},{"@type":"Question","name":"How does a screen reader actually work?","acceptedAnswer":{"@type":"Answer","text":"The browser builds an accessibility tree from the DOM — a parallel structure where each node has a role (what it is), a name (its label), a value , and states . The screen reader reads that tree, not your CSS. Users move through it in two modes: browse mode (arrow keys traverse all content; shortcut keys jump by heading, link, landmark, form field) and focus/forms mode (keystrokes go to the control). This is why headings and landmarks matter so much — they're the navigation system. The major combinations to know: NVDA + Firefox (free, Windows, most common for testing), JAWS + Chrome (enterprise Windows), VoiceOver + Safari (macOS/iOS, built in), TalkBack + Chrome (Android). Consequences for developers: display: none and visibility: hidden remove content from the tree; visual order doesn't affect reading order (DOM order does); and anything conveyed purely by styling — a red border, a bold price — isn't conveyed at all."}},{"@type":"Question","name":"How do you test accessibility?","acceptedAnswer":{"@type":"Answer","text":"Layer it, because automated tools catch only around 30–40% of issues — they can verify a contrast ratio or a missing alt attribute, but not whether the alt text is meaningful or the focus order makes sense. Automated, in CI — axe-core via jest-axe, Playwright or Cypress; Lighthouse's accessibility audit. Catches missing labels, contrast, invalid ARIA, duplicate ids. Linting — eslint-plugin-jsx-a11y / Angular template checks: fastest possible feedback, at authoring time. Keyboard pass — tab through every flow. Cheap, manual, and finds the highest-severity issues. Screen reader pass — at least NVDA or VoiceOver on critical journeys. Zoom and reflow — 200% zoom and a 320px viewport. Real users — usability testing with people who use assistive tech is the only way to find what's technically conformant but miserable to use."}},{"@type":"Question","name":"How do you handle animation accessibly?","acceptedAnswer":{"@type":"Answer","text":"Motion can cause real harm — vestibular disorders trigger nausea and dizziness from large parallax, zoom and slide effects, and flashing content can trigger seizures. The requirements: Respect prefers-reduced-motion — an OS-level setting. Reduce or remove non-essential motion; usually you keep opacity fades (which don't trigger vestibular responses) and drop movement, parallax and scale. Nothing flashes more than three times per second (WCAG 2.3.1) — a hard seizure-safety rule. Anything auto-playing, moving or scrolling for more than five seconds needs a pause control (2.2.2) — carousels, marquees, animated backgrounds. No animation triggered by scroll position that the user can't stop, if it's large-scale. \"Reduced\" doesn't mean \"none\" — instant state changes can be disorienting too. A quick crossfade is usually the right reduced alternative."}},{"@type":"Question","name":"What accessibility issues are specific to mobile?","acceptedAnswer":{"@type":"Answer","text":"Target size — WCAG 2.2 requires 24×24 CSS px minimum (2.5.8); platform guidelines say 44×44 (iOS) / 48×48 (Android), which is the better target. Small icon buttons crammed into a toolbar are the usual failure. Don't block zoom — user-scalable=no or maximum-scale=1 in the viewport meta is a direct WCAG failure and a genuine barrier for low-vision users. Support both orientations (1.3.4) — a device may be mounted in a fixed position. Dragging alternatives (2.5.7) — any drag-and-drop needs a single-pointer alternative (buttons, a menu), for motor impairments and switch users. Gesture alternatives — multi-finger or path-based gestures need a simple-tap equivalent. Touch targets need spacing , not just size — adjacent 44px buttons with no gap still cause mis-taps. Test with TalkBack and VoiceOver — mobile screen reader gestures differ enough that desktop testing doesn't cover them."}},{"@type":"Question","name":"How do you make a data table accessible?","acceptedAnswer":{"@type":"Answer","text":"Use a real &lt;table&gt; — a grid of divs has no row/column relationships, so a screen reader reads a stream of disconnected values. &lt;th&gt; with scope=\"col\" / scope=\"row\" — this is what lets a reader announce \"Revenue, Q3: £4.2m\" when the user moves to a cell instead of just \"£4.2m\". &lt;caption&gt; — the table's accessible name, and useful for everyone. &lt;thead&gt; / &lt;tbody&gt; for structure; headers / id for complex tables with split or nested headers. Sortable columns — the header contains a &lt;button&gt; , and the &lt;th&gt; carries aria-sort=\"ascending|descending|none\" . Announce the result in a live region. Responsive tables — if you reflow to cards on mobile, keep the header–value association visible in each card; a CSS-only transformation often destroys it. Don't use tables for layout ; if you must, role=\"presentation\" ."}},{"@type":"Question","name":"What are the most common accessibility mistakes you see?","acceptedAnswer":{"@type":"Answer","text":"&lt;div onclick&gt; instead of &lt;button&gt; — not focusable, no keyboard activation, no role. The single most common failure. outline: none with no replacement — invisible focus makes keyboard use impossible. Placeholder as label — vanishes on input, low contrast, unreliable announcement. Icon-only buttons with no accessible name — announced as \"button\", nothing more. Positive tabindex — destroys focus order. aria-hidden=\"true\" on something focusable — creates a \"ghost\" control: reachable by Tab but invisible to the screen reader. Use inert instead. Wrong or stale ARIA — aria-expanded never updated, role=\"button\" on a link, aria-labelledby pointing at a missing id. Colour-only status — red/green with no icon or text. Auto-playing carousels with no pause. Skipped heading levels chosen for font size."}},{"@type":"Question","name":"How do you build accessibility into a team's process?","acceptedAnswer":{"@type":"Answer","text":"Retrofitting is far more expensive than building it in, and audits that land as a 300-item backlog get ignored — so the goal is prevention. Design phase — annotate mockups with heading levels, focus order, alt text and error copy; check contrast in the design tool. Most accessibility bugs are decided before any code is written. Design system — the highest-leverage investment by far. Accessible button, input, modal and menu components mean product teams get it right by default without becoming experts. Definition of Done — keyboard-operable, labelled, contrast-checked. A short checklist, not a WCAG audit. CI — axe and lint rules to catch regressions automatically. Ownership — an accessibility champion per team beats a central gatekeeper that becomes a bottleneck. Prioritise by impact — a blocked checkout for keyboard users outranks a decorative contrast issue on a marketing page."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Accessibility interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Accessibility Interview Questions and Answers</h1>
+      <p>20 hand-picked Accessibility interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Why does accessibility matter, and what is POUR?</h2>
+          <div class="seo-a"><p>Around 15% of people live with a disability, and accessibility also covers temporary and situational impairments — a broken arm, bright sunlight, holding a baby, a noisy train. Most accessibility work improves the product for everyone.</p><p>There's also a legal dimension (ADA in the US, the European Accessibility Act, Section 508 for US public sector, and equivalents elsewhere), and enterprise procurement frequently requires a VPAT before they'll buy.</p><p><strong>WCAG is organised around four principles — POUR:</strong></p><ul><li><strong>Perceivable</strong> — users can perceive the content (text alternatives, contrast, captions).</li><li><strong>Operable</strong> — users can operate the interface (keyboard access, enough time, no seizure triggers).</li><li><strong>Understandable</strong> — predictable behaviour, clear language, helpful errors.</li><li><strong>Robust</strong> — works with assistive technology now and as it evolves (valid markup, correct roles and names).</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are WCAG conformance levels, and which do you target?</h2>
+          <div class="seo-a"><p>Each WCAG success criterion is graded <strong>A</strong>, <strong>AA</strong> or <strong>AAA</strong>:</p><ul><li><strong>A</strong> — the minimum; failing these blocks people outright (no keyboard access, images with no alternative).</li><li><strong>AA</strong> — the standard target and what essentially all legislation references: 4.5:1 contrast for body text, resize to 200%, visible focus, consistent navigation.</li><li><strong>AAA</strong> — stricter (7:1 contrast, sign language for video). Not expected across a whole site; WCAG itself says AAA conformance for all content isn't generally achievable.</li></ul><p><strong>Versions:</strong> 2.0 (2008) → 2.1 (2018, added mobile, touch and low-vision criteria) → 2.2 (2023, added focus appearance, dragging alternatives, target size, and accessible authentication). Each is backwards compatible.</p><p>The practical answer to "what do we target": <strong>WCAG 2.2 level AA</strong>.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why is native HTML better than ARIA?</h2>
+          <div class="seo-a"><p>Because a native element gives you the role, the name, the state, keyboard behaviour, focus management and platform conventions <strong>for free and correctly</strong> — and it keeps working as browsers and assistive technology evolve.</p><p>A <code>&lt;button&gt;</code> is focusable, announces as "button", activates on Enter <em>and</em> Space, fires click on both, participates in forms, and inherits OS high-contrast styling. A <code>&lt;div role="button"&gt;</code> gives you the announcement only — you must add <code>tabindex="0"</code>, key handlers for Enter and Space, disabled semantics, and focus styles, and you will get one of them wrong.</p><p>This is <strong>the first rule of ARIA</strong>: if a native element with the semantics you need exists, use it instead of repurposing something else with ARIA.</p><p>ARIA is for the gap — genuinely custom widgets (comboboxes, tab panels, tree views), live regions, and describing relationships HTML can't express.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do ARIA roles, states and properties work?</h2>
+          <div class="seo-a"><p>ARIA changes what's exposed in the <strong>accessibility tree</strong> — it never changes behaviour, appearance or keyboard support. Adding <code>role="button"</code> makes something <em>announce</em> as a button; it doesn't make it focusable or clickable.</p><ul><li><strong>Roles</strong> — what a thing is: <code>role="tab"</code>, <code>role="dialog"</code>, <code>role="alert"</code>.</li><li><strong>States</strong> — dynamic, change over time: <code>aria-expanded</code>, <code>aria-checked</code>, <code>aria-selected</code>, <code>aria-disabled</code>, <code>aria-current</code>.</li><li><strong>Properties</strong> — largely static relationships: <code>aria-label</code>, <code>aria-labelledby</code>, <code>aria-describedby</code>, <code>aria-controls</code>, <code>aria-haspopup</code>.</li></ul><p><strong>Naming precedence</strong> (highest first): <code>aria-labelledby</code> → <code>aria-label</code> → native label (<code>&lt;label&gt;</code>, <code>alt</code>, element content) → <code>title</code>. Prefer <code>aria-labelledby</code> pointing at visible text, because a visible label helps everyone and can't drift out of sync.</p><p>The rule that catches people out: <strong>you must keep states in sync in JavaScript</strong>. A stale <code>aria-expanded="false"</code> on an open menu is worse than no attribute at all.</p></div>
+          <pre><code>&lt;button aria-expanded=&quot;false&quot; aria-controls=&quot;menu-1&quot; id=&quot;menu-btn&quot;&gt;Filters&lt;/button&gt;
+&lt;ul id=&quot;menu-1&quot; hidden aria-labelledby=&quot;menu-btn&quot;&gt;…&lt;/ul&gt;
+
+&lt;script&gt;
+  btn.addEventListener('click', () =&gt; {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));  // keep state in sync!
+    menu.hidden = open;
+  });
+&lt;/script&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What makes an interface keyboard accessible?</h2>
+          <div class="seo-a"><ul><li><strong>Everything interactive is reachable with Tab</strong> and operable with Enter/Space (and arrow keys inside composite widgets like menus, tabs and grids).</li><li><strong>Focus order follows visual order</strong> — it comes from DOM order, so CSS that visually reorders content (<code>order</code>, <code>row-reverse</code>, absolute positioning) creates a confusing tab sequence.</li><li><strong>Focus is always visible.</strong> Never <code>outline: none</code> without a replacement; <code>:focus-visible</code> gives keyboard users a ring without showing it on mouse click.</li><li><strong>No keyboard traps</strong> — you can always Tab out of anything (except intentionally, inside a modal).</li><li><strong>Skip link</strong> — a "Skip to main content" link as the first focusable element, so keyboard users don't tab through 40 nav items on every page.</li><li><strong>Escape closes</strong> overlays, menus and dialogs.</li><li><strong>Don't use positive <code>tabindex</code></strong> — <code>tabindex="1"</code> jumps ahead of everything and wrecks the order. Only <code>0</code> (focusable in order) and <code>-1</code> (focusable by script only) are useful.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you manage focus in a single-page app?</h2>
+          <div class="seo-a"><p>SPAs break the browser's built-in focus behaviour, so you have to recreate it.</p><ul><li><strong>Route changes</strong> — a full page load resets focus to the top and the screen reader announces the new page. A client-side route change does neither: focus stays on the clicked link and nothing is announced. Fix by moving focus to the new page's <code>&lt;h1&gt;</code> (with <code>tabindex="-1"</code>) or the main landmark after navigation, and announcing the new title in a live region.</li><li><strong>Opening a dialog</strong> — move focus into the dialog, trap it there while open, and set <code>aria-modal</code>/<code>inert</code> on the background.</li><li><strong>Closing anything</strong> — return focus to the element that opened it. Losing focus to <code>&lt;body&gt;</code> dumps keyboard users back at the top of the page.</li><li><strong>Deleting the focused element</strong> — move focus somewhere sensible first (the next row, or the list container), or focus is lost.</li><li><strong>Async content</strong> — don't steal focus when content loads in; announce it in a live region instead.</li></ul><p>The native <code>&lt;dialog&gt;</code> element handles trapping, background inerting and Escape for you — prefer it over a hand-rolled modal.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you build an accessible form?</h2>
+          <div class="seo-a"><ul><li><strong>Every input has a real label</strong> — <code>&lt;label for="id"&gt;</code> or wrapping. Placeholder text is not a label: it disappears on typing, fails contrast, and isn't reliably announced.</li><li><strong>Group related controls</strong> — <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> for radio groups and checkbox sets, so the group's question is announced with each option.</li><li><strong>Errors must be programmatically associated</strong> — <code>aria-describedby</code> pointing at the message, <code>aria-invalid="true"</code> on the field, and the message next to the field, not only in a summary.</li><li><strong>On submit failure</strong>, move focus to an error summary at the top (or the first invalid field) and announce the count.</li><li><strong>Never signal state by colour alone</strong> — add an icon and text.</li><li><strong>Required fields</strong> — mark visibly and with <code>required</code>/<code>aria-required</code>; explain the convention if you use an asterisk.</li><li><strong><code>autocomplete</code> tokens</strong> — a WCAG 2.1 criterion, and a genuine usability win.</li></ul></div>
+          <pre><code>&lt;div&gt;
+  &lt;label for=&quot;email&quot;&gt;Email address&lt;/label&gt;
+  &lt;input id=&quot;email&quot; type=&quot;email&quot; autocomplete=&quot;email&quot;
+         aria-describedby=&quot;email-hint email-err&quot; aria-invalid=&quot;true&quot; required&gt;
+  &lt;p id=&quot;email-hint&quot;&gt;We'll only use this to contact you.&lt;/p&gt;
+  &lt;p id=&quot;email-err&quot; role=&quot;alert&quot;&gt;Enter an email address like name@example.com&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you announce dynamic changes to screen readers?</h2>
+          <div class="seo-a"><p>A screen reader only reads what has focus, so silent DOM updates — "3 results found", "Saved", "Added to cart" — go unnoticed. <strong>Live regions</strong> tell it to announce a region when its content changes.</p><ul><li><strong><code>aria-live="polite"</code></strong> — announced when the user is idle. The default choice for status updates and search results.</li><li><strong><code>aria-live="assertive"</code></strong> — interrupts immediately. Reserve for genuine errors and urgent warnings; overuse makes the app unusable.</li><li><strong><code>role="status"</code></strong> ≈ polite, <strong><code>role="alert"</code></strong> ≈ assertive — often simpler than the raw attributes.</li></ul><p><strong>The rules that make them actually work:</strong></p><ol><li>The live region must be <strong>in the DOM before</strong> the content changes. Inserting a <code>role="alert"</code> element and its text at once is unreliable.</li><li>Change only the <strong>text inside</strong> it.</li><li>Keep it small and single-purpose; don't wrap a whole results table.</li><li>Don't announce the same string twice in a row — it won't re-fire unless the text actually changes.</li></ol></div>
+          <pre><code>&lt;!-- present in the DOM from the start, empty --&gt;
+&lt;div id=&quot;status&quot; role=&quot;status&quot; aria-live=&quot;polite&quot; class=&quot;visually-hidden&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  // later: only the text changes -&gt; announced
+  document.getElementById('status').textContent = `${n} results found`;
+&lt;/script&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you write good alt text?</h2>
+          <div class="seo-a"><p>Alt text conveys the image's <strong>function in context</strong>, not a description of its pixels.</p><ul><li><strong>Informative image</strong> — describe the information it carries: <code>alt="Sales rose 40% from Q1 to Q4"</code>, not <code>alt="chart"</code>.</li><li><strong>Functional image</strong> (an icon inside a link or button) — describe the <em>action</em>: <code>alt="Search"</code>, not <code>alt="magnifying glass"</code>.</li><li><strong>Decorative image</strong> — use <code>alt=""</code> (empty, but present) so screen readers skip it entirely. Omitting the attribute makes some readers announce the filename instead.</li><li><strong>Image of text</strong> — the alt is the text.</li><li><strong>Complex image</strong> (chart, diagram, map) — short alt plus a longer description nearby or via <code>aria-describedby</code>; ideally provide the underlying data as a table.</li></ul><p><strong>Don't</strong> start with "Image of…" (the role is already announced), stuff keywords, or duplicate adjacent caption text.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the colour requirements in WCAG?</h2>
+          <div class="seo-a"><p><strong>Contrast ratios (AA):</strong></p><ul><li><strong>4.5:1</strong> for normal text.</li><li><strong>3:1</strong> for large text (18.66px bold, or 24px regular and above).</li><li><strong>3:1</strong> for meaningful non-text: icons, form field borders, chart lines, focus indicators.</li><li>AAA raises these to 7:1 and 4.5:1.</li></ul><p><strong>Never use colour alone</strong> to convey meaning (WCAG 1.4.1) — a red border on an invalid field must be paired with an icon and message; a chart's series need labels or patterns, not just hue. Roughly 8% of men have some colour vision deficiency.</p><p><strong>Other criteria that catch teams out:</strong> text must reflow and stay readable at 200% zoom (and at 400% in a 320px viewport); users must be able to override colours (high-contrast modes) without content disappearing; and disabled controls are exempt from contrast but are frequently made illegible anyway.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why do headings and landmarks matter so much?</h2>
+          <div class="seo-a"><p>Screen reader users rarely read a page top to bottom — they <strong>navigate by structure</strong>. Surveys consistently show headings are the primary way people find content on a page.</p><p><strong>Headings:</strong> one <code>&lt;h1&gt;</code> describing the page, then <code>h2</code>–<code>h6</code> nested without skipping levels. Heading level is document structure, not font size — style with CSS. A page of visually-bold <code>&lt;div&gt;</code>s has no structure at all to navigate.</p><p><strong>Landmarks:</strong> <code>&lt;header&gt;</code>, <code>&lt;nav&gt;</code>, <code>&lt;main&gt;</code> (exactly one), <code>&lt;aside&gt;</code>, <code>&lt;footer&gt;</code>, <code>&lt;search&gt;</code> let users jump straight to a region. Label repeated landmarks so they're distinguishable: <code>&lt;nav aria-label="Breadcrumb"&gt;</code> versus <code>&lt;nav aria-label="Main"&gt;</code>.</p><p>Both are essentially free — they're the markup you should be writing anyway — and they're among the highest-impact accessibility wins available.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does an accessible modal dialog require?</h2>
+          <div class="seo-a"><p>Six things, and hand-rolled modals usually miss two or three:</p><ol><li><strong>Correct semantics</strong> — <code>role="dialog"</code> with <code>aria-modal="true"</code>, plus <code>aria-labelledby</code> pointing at the title.</li><li><strong>Focus moves in</strong> on open — to the dialog, its heading, or the first control (not the close button, if there's a more useful target).</li><li><strong>Focus is trapped</strong> while open — Tab from the last element wraps to the first.</li><li><strong>Background is inert</strong> — the rest of the page is unreachable by keyboard <em>and</em> hidden from screen readers. The <code>inert</code> attribute does both.</li><li><strong>Escape closes it</strong>, as does the close button and (usually) a backdrop click.</li><li><strong>Focus returns</strong> to the element that opened it.</li></ol><p>The native <code>&lt;dialog&gt;</code> element with <code>showModal()</code> provides trapping, inerting, Escape and the top-layer backdrop for free — use it unless you have a hard reason not to.</p></div>
+          <pre><code>&lt;dialog id=&quot;confirm&quot; aria-labelledby=&quot;confirm-title&quot;&gt;
+  &lt;h2 id=&quot;confirm-title&quot;&gt;Delete project?&lt;/h2&gt;
+  &lt;p&gt;This cannot be undone.&lt;/p&gt;
+  &lt;button value=&quot;cancel&quot;&gt;Cancel&lt;/button&gt;
+  &lt;button value=&quot;delete&quot;&gt;Delete&lt;/button&gt;
+&lt;/dialog&gt;
+
+&lt;script&gt;
+  const dlg = document.getElementById('confirm');
+  openBtn.addEventListener('click', () =&gt; dlg.showModal());  // trap + inert + Esc free
+  dlg.addEventListener('close', () =&gt; openBtn.focus());       // restore focus
+&lt;/script&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you make a custom widget (tabs, combobox, tree) accessible?</h2>
+          <div class="seo-a"><p>Follow the <strong>ARIA Authoring Practices Guide (APG)</strong> pattern for that widget rather than inventing semantics — it defines the required roles, states and the exact keyboard behaviour users expect.</p><p>Three things every composite widget needs:</p><ol><li><strong>The role structure</strong> — e.g. tabs need <code>role="tablist"</code> → <code>role="tab"</code> (with <code>aria-selected</code> and <code>aria-controls</code>) → <code>role="tabpanel"</code> (with <code>aria-labelledby</code>).</li><li><strong>The keyboard model</strong> — arrow keys move between items, Home/End jump to the ends, Enter/Space activate. Note that arrow keys, not Tab, move <em>within</em> a widget.</li><li><strong>Roving tabindex</strong> — exactly one item in the group has <code>tabindex="0"</code> and the rest <code>-1</code>, so the whole widget is a single tab stop. (The alternative is <code>aria-activedescendant</code>, used for comboboxes where focus stays in the input.)</li></ol><p><strong>Better answer in most real situations:</strong> use a maintained headless library (Radix, React Aria, Headless UI, CDK) that has already implemented and tested these patterns. Getting a combobox right by hand is a genuinely hard, many-week job.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does a screen reader actually work?</h2>
+          <div class="seo-a"><p>The browser builds an <strong>accessibility tree</strong> from the DOM — a parallel structure where each node has a <strong>role</strong> (what it is), a <strong>name</strong> (its label), a <strong>value</strong>, and <strong>states</strong>. The screen reader reads that tree, not your CSS.</p><p>Users move through it in two modes: <strong>browse mode</strong> (arrow keys traverse all content; shortcut keys jump by heading, link, landmark, form field) and <strong>focus/forms mode</strong> (keystrokes go to the control). This is why headings and landmarks matter so much — they're the navigation system.</p><p><strong>The major combinations to know:</strong> NVDA + Firefox (free, Windows, most common for testing), JAWS + Chrome (enterprise Windows), VoiceOver + Safari (macOS/iOS, built in), TalkBack + Chrome (Android).</p><p><strong>Consequences for developers:</strong> <code>display: none</code> and <code>visibility: hidden</code> remove content from the tree; visual order doesn't affect reading order (DOM order does); and anything conveyed purely by styling — a red border, a bold price — isn't conveyed at all.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you test accessibility?</h2>
+          <div class="seo-a"><p>Layer it, because <strong>automated tools catch only around 30–40% of issues</strong> — they can verify a contrast ratio or a missing alt attribute, but not whether the alt text is meaningful or the focus order makes sense.</p><ol><li><strong>Automated, in CI</strong> — <code>axe-core</code> via jest-axe, Playwright or Cypress; Lighthouse's accessibility audit. Catches missing labels, contrast, invalid ARIA, duplicate ids.</li><li><strong>Linting</strong> — <code>eslint-plugin-jsx-a11y</code> / Angular template checks: fastest possible feedback, at authoring time.</li><li><strong>Keyboard pass</strong> — tab through every flow. Cheap, manual, and finds the highest-severity issues.</li><li><strong>Screen reader pass</strong> — at least NVDA or VoiceOver on critical journeys.</li><li><strong>Zoom and reflow</strong> — 200% zoom and a 320px viewport.</li><li><strong>Real users</strong> — usability testing with people who use assistive tech is the only way to find what's technically conformant but miserable to use.</li></ol></div>
+          <pre><code>import { render } from '@testing-library/react';
+import { axe, toHaveNoViolations } from 'jest-axe';
+expect.extend(toHaveNoViolations);
+
+it('has no detectable a11y violations', async () =&gt; {
+  const { container } = render(&lt;CheckoutForm /&gt;);
+  expect(await axe(container)).toHaveNoViolations();
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle animation accessibly?</h2>
+          <div class="seo-a"><p>Motion can cause real harm — vestibular disorders trigger nausea and dizziness from large parallax, zoom and slide effects, and flashing content can trigger seizures.</p><p><strong>The requirements:</strong></p><ul><li><strong>Respect <code>prefers-reduced-motion</code></strong> — an OS-level setting. Reduce or remove non-essential motion; usually you keep opacity fades (which don't trigger vestibular responses) and drop movement, parallax and scale.</li><li><strong>Nothing flashes more than three times per second</strong> (WCAG 2.3.1) — a hard seizure-safety rule.</li><li><strong>Anything auto-playing, moving or scrolling for more than five seconds needs a pause control</strong> (2.2.2) — carousels, marquees, animated backgrounds.</li><li><strong>No animation triggered by scroll position</strong> that the user can't stop, if it's large-scale.</li></ul><p>"Reduced" doesn't mean "none" — instant state changes can be disorienting too. A quick crossfade is usually the right reduced alternative.</p></div>
+          <pre><code>@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What accessibility issues are specific to mobile?</h2>
+          <div class="seo-a"><ul><li><strong>Target size</strong> — WCAG 2.2 requires 24×24 CSS px minimum (2.5.8); platform guidelines say 44×44 (iOS) / 48×48 (Android), which is the better target. Small icon buttons crammed into a toolbar are the usual failure.</li><li><strong>Don't block zoom</strong> — <code>user-scalable=no</code> or <code>maximum-scale=1</code> in the viewport meta is a direct WCAG failure and a genuine barrier for low-vision users.</li><li><strong>Support both orientations</strong> (1.3.4) — a device may be mounted in a fixed position.</li><li><strong>Dragging alternatives</strong> (2.5.7) — any drag-and-drop needs a single-pointer alternative (buttons, a menu), for motor impairments and switch users.</li><li><strong>Gesture alternatives</strong> — multi-finger or path-based gestures need a simple-tap equivalent.</li><li><strong>Touch targets need spacing</strong>, not just size — adjacent 44px buttons with no gap still cause mis-taps.</li><li><strong>Test with TalkBack and VoiceOver</strong> — mobile screen reader gestures differ enough that desktop testing doesn't cover them.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you make a data table accessible?</h2>
+          <div class="seo-a"><p>Use a real <code>&lt;table&gt;</code> — a grid of divs has no row/column relationships, so a screen reader reads a stream of disconnected values.</p><ul><li><strong><code>&lt;th&gt;</code> with <code>scope="col"</code> / <code>scope="row"</code></strong> — this is what lets a reader announce "Revenue, Q3: £4.2m" when the user moves to a cell instead of just "£4.2m".</li><li><strong><code>&lt;caption&gt;</code></strong> — the table's accessible name, and useful for everyone.</li><li><strong><code>&lt;thead&gt;</code>/<code>&lt;tbody&gt;</code></strong> for structure; <code>headers</code>/<code>id</code> for complex tables with split or nested headers.</li><li><strong>Sortable columns</strong> — the header contains a <code>&lt;button&gt;</code>, and the <code>&lt;th&gt;</code> carries <code>aria-sort="ascending|descending|none"</code>. Announce the result in a live region.</li><li><strong>Responsive tables</strong> — if you reflow to cards on mobile, keep the header–value association visible in each card; a CSS-only transformation often destroys it.</li><li><strong>Don't use tables for layout</strong>; if you must, <code>role="presentation"</code>.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the most common accessibility mistakes you see?</h2>
+          <div class="seo-a"><ul><li><strong><code>&lt;div onclick&gt;</code> instead of <code>&lt;button&gt;</code></strong> — not focusable, no keyboard activation, no role. The single most common failure.</li><li><strong><code>outline: none</code></strong> with no replacement — invisible focus makes keyboard use impossible.</li><li><strong>Placeholder as label</strong> — vanishes on input, low contrast, unreliable announcement.</li><li><strong>Icon-only buttons with no accessible name</strong> — announced as "button", nothing more.</li><li><strong>Positive <code>tabindex</code></strong> — destroys focus order.</li><li><strong><code>aria-hidden="true"</code> on something focusable</strong> — creates a "ghost" control: reachable by Tab but invisible to the screen reader. Use <code>inert</code> instead.</li><li><strong>Wrong or stale ARIA</strong> — <code>aria-expanded</code> never updated, <code>role="button"</code> on a link, <code>aria-labelledby</code> pointing at a missing id.</li><li><strong>Colour-only status</strong> — red/green with no icon or text.</li><li><strong>Auto-playing carousels</strong> with no pause.</li><li><strong>Skipped heading levels</strong> chosen for font size.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you build accessibility into a team's process?</h2>
+          <div class="seo-a"><p>Retrofitting is far more expensive than building it in, and audits that land as a 300-item backlog get ignored — so the goal is prevention.</p><ul><li><strong>Design phase</strong> — annotate mockups with heading levels, focus order, alt text and error copy; check contrast in the design tool. Most accessibility bugs are decided before any code is written.</li><li><strong>Design system</strong> — the highest-leverage investment by far. Accessible button, input, modal and menu components mean product teams get it right by default without becoming experts.</li><li><strong>Definition of Done</strong> — keyboard-operable, labelled, contrast-checked. A short checklist, not a WCAG audit.</li><li><strong>CI</strong> — axe and lint rules to catch regressions automatically.</li><li><strong>Ownership</strong> — an accessibility champion per team beats a central gatekeeper that becomes a bottleneck.</li><li><strong>Prioritise by impact</strong> — a blocked checkout for keyboard users outranks a decorative contrast issue on a marketing page.</li></ul></div>
+          
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="accessibility";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

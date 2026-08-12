@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>AWS Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="32 AWS interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/aws" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="AWS Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="32 AWS interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/aws" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AWS Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is cloud computing, and what's the difference between IaaS, PaaS, and SaaS?","acceptedAnswer":{"@type":"Answer","text":"Cloud computing = on-demand delivery of compute, storage, databases and other IT resources over the internet, billed pay-as-you-go, with no hardware to own or manage. IaaS (Infrastructure) — you rent raw building blocks and manage the OS upward (e.g. EC2, VPC). PaaS (Platform) — you just deploy code; the provider runs the platform (e.g. Elastic Beanstalk, RDS). SaaS (Software) — ready-to-use applications (e.g. Gmail, Salesforce). AWS spans mostly IaaS and PaaS. Benefits: elasticity, no upfront capex, global reach, pay for what you use."}},{"@type":"Question","name":"What is AWS, and what are its main service categories?","acceptedAnswer":{"@type":"Answer","text":"AWS (Amazon Web Services) is Amazon's cloud platform — 200+ services delivered on a global, pay-as-you-go basis. The categories you'll actually name in an interview: Compute — EC2, Lambda, ECS/EKS, Elastic Beanstalk. Storage — S3, EBS, EFS. Database — RDS, Aurora, DynamoDB. Networking &amp; Content Delivery — VPC, Route 53, CloudFront, ELB. Security &amp; Identity — IAM, KMS. Management &amp; Monitoring — CloudWatch, CloudTrail, CloudFormation."}},{"@type":"Question","name":"What are Regions, Availability Zones, and Edge Locations?","acceptedAnswer":{"@type":"Answer","text":"Region — a geographic area (e.g. ap-south-1 = Mumbai) containing multiple isolated Availability Zones. You pick a region for latency, cost, and data-residency/compliance. Availability Zone (AZ) — one or more physically separate data centers within a region, with independent power/network. Spreading resources across AZs gives high availability — one AZ can fail and your app stays up. Edge Location — a CloudFront CDN point-of-presence, far more numerous than regions, used to cache content close to users for low latency."}},{"@type":"Question","name":"Explain the AWS Shared Responsibility Model.","acceptedAnswer":{"@type":"Answer","text":"Security is split between AWS and you: AWS — security OF the cloud : physical data centers, hardware, the global network, and the software of managed services. You — security IN the cloud : your data, IAM users/permissions, OS patching on EC2, security-group rules, and encryption configuration. The line shifts with the service: on EC2 you patch the OS; on managed/serverless services like S3, RDS, Lambda AWS handles more, but data and access control are always yours."}},{"@type":"Question","name":"What is IAM (users, groups, roles, policies)?","acceptedAnswer":{"@type":"Answer","text":"IAM (Identity and Access Management) controls who can do what in your account. Users — identities for people or apps (long-term credentials). Groups — a collection of users that share the same policies. Roles — identities that are assumed temporarily and hand out short-lived credentials (no stored keys) — used by EC2/Lambda and for cross-account access. Policies — JSON documents that allow/deny specific actions on specific resources. Best practices: least privilege , don't use the root account for daily work, enable MFA ."}},{"@type":"Question","name":"IAM role vs user — and why do EC2/Lambda use roles instead of keys?","acceptedAnswer":{"@type":"Answer","text":"A user is a permanent identity with long-lived access keys . Embedding those keys in application code or on an instance is a security risk (leaks, rotation pain). A role is an assumable identity that vends temporary, auto-rotated credentials . You attach a role to an EC2 instance or Lambda function, and the service automatically receives credentials (via the instance metadata endpoint / execution role) — no hardcoded keys anywhere . Roles are also how you grant cross-account and federated access."}},{"@type":"Question","name":"What is EC2, and what do you need to launch an instance?","acceptedAnswer":{"@type":"Answer","text":"EC2 (Elastic Compute Cloud) gives you resizable virtual servers in the cloud. To launch one you choose: AMI — the machine image (OS + preinstalled software). Instance type — family + size (e.g. t3.micro ) balancing CPU / memory / network. Storage — EBS volumes (virtual disks). Security group — the instance firewall. Key pair — for SSH/RDP access. A user-data script can run at first boot to install/configure software. You pay per second/hour the instance runs."}},{"@type":"Question","name":"What are the EC2 pricing models?","acceptedAnswer":{"@type":"Answer","text":"On-Demand — pay per use, no commitment. Best for short/spiky/unpredictable workloads and dev. Reserved Instances / Savings Plans — commit to 1 or 3 years for a big discount (up to ~72%). Best for steady, always-on workloads. Spot Instances — AWS spare capacity at up to ~90% off, but can be reclaimed with 2 minutes' notice. Best for fault-tolerant, interruptible batch/CI work. Dedicated Hosts — physical servers for licensing/compliance needs."}},{"@type":"Question","name":"What is Amazon S3?","acceptedAnswer":{"@type":"Answer","text":"S3 (Simple Storage Service) is object storage : you store files (— \"objects\") inside \"buckets\", each identified by a key. It's virtually unlimited, highly available, and offers 11 nines (99.999999999%) durability by replicating across devices/AZs. Access is over an HTTP API/URL — it is not a mountable filesystem; the key namespace is flat (folders are just key prefixes). Common uses: static assets, backups, data lakes, log storage, and static website hosting."}},{"@type":"Question","name":"What are the S3 storage classes?","acceptedAnswer":{"@type":"Answer","text":"S3 Standard — hot, frequently accessed data. Intelligent-Tiering — auto-moves objects between tiers based on access; best when the pattern is unknown. Standard-IA / One Zone-IA — infrequent access, cheaper storage but a retrieval fee (One Zone = single AZ, less durable). Glacier Instant / Flexible Retrieval / Deep Archive — archival, cheapest storage, with retrieval times from ms to hours. Lifecycle policies transition objects automatically (e.g. Standard → IA → Glacier) as they age."}},{"@type":"Question","name":"EBS vs EFS vs S3 (block vs file vs object)?","acceptedAnswer":{"@type":"Answer","text":"EBS (block) — a virtual hard disk attached to a single EC2 instance (in one AZ). Use for OS disks and databases. EFS (file) — a managed NFS filesystem that many Linux EC2s can mount at once; elastic, POSIX. Use for shared file access. S3 (object) — unlimited storage accessed over HTTP; not mounted as a normal disk. Use for assets, backups, data lakes."}},{"@type":"Question","name":"What is a VPC, and its core building blocks?","acceptedAnswer":{"@type":"Answer","text":"A VPC (Virtual Private Cloud) is your own isolated virtual network in AWS. Building blocks: Subnets — IP ranges within an AZ; public (route to the internet) or private (no direct inbound). Route tables — decide where traffic goes. Internet Gateway (IGW) — gives public subnets internet access. NAT Gateway — lets private-subnet resources reach the internet outbound without being reachable inbound. Security Groups &amp; NACLs — instance- and subnet-level firewalls."}},{"@type":"Question","name":"Security Group vs Network ACL (NACL)?","acceptedAnswer":{"@type":"Answer","text":"Security Group NACL Level Instance / ENI Subnet State Stateful (return traffic auto-allowed) Stateless (must allow return explicitly) Rules Allow only Allow and Deny Evaluation All rules In order by rule number Security Groups are your primary, everyday control; NACLs are a coarse subnet-level backstop (e.g. block a bad IP range)."}},{"@type":"Question","name":"What is Amazon RDS?","acceptedAnswer":{"@type":"Answer","text":"RDS (Relational Database Service) is managed SQL databases — MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, and Aurora (AWS's high-performance MySQL/Postgres-compatible engine). AWS handles the undifferentiated heavy lifting: provisioning, patching, automated backups, replication, and failover. You choose the engine and instance size and connect your app — you don't SSH into the box or manage the OS. Contrast with running a database yourself on EC2, where all of that is your job."}},{"@type":"Question","name":"RDS Multi-AZ vs Read Replica?","acceptedAnswer":{"@type":"Answer","text":"Multi-AZ = a synchronous standby copy in another AZ purely for high availability . On failure, RDS automatically fails over to the standby. It is not used to serve reads. Read Replica = an asynchronous copy used to offload read traffic (read scaling); can be in another region. It lags slightly and isn't an automatic failover target (though it can be promoted). They solve different problems and are often combined: Multi-AZ for resilience, Read Replicas for read throughput."}},{"@type":"Question","name":"What is DynamoDB, and when do you use it?","acceptedAnswer":{"@type":"Answer","text":"DynamoDB is a fully managed, serverless NoSQL key-value / document database with single-digit-millisecond latency at any scale. Data lives in tables of items ; a partition key (optionally plus a sort key) determines where each item is stored. Use it for high-throughput, predictable-access-pattern workloads: sessions, shopping carts, user profiles, IoT, leaderboards. It has no joins or ad-hoc queries — you design the table around your access patterns . For rich relational querying, use RDS instead."}},{"@type":"Question","name":"What are the Elastic Load Balancer types?","acceptedAnswer":{"@type":"Answer","text":"ALB (Application, Layer 7) — HTTP/HTTPS, path- and host-based routing, ideal for microservices and containers. NLB (Network, Layer 4) — TCP/UDP, ultra-low latency, static IP, handles millions of requests/sec. GWLB (Gateway) — fronts third-party virtual appliances (firewalls/IDS). CLB (Classic) — legacy, avoid for new work. An ELB spreads incoming traffic across healthy targets in multiple AZs, doing health checks and enabling zero-downtime scaling."}},{"@type":"Question","name":"What is an Auto Scaling Group (ASG)?","acceptedAnswer":{"@type":"Answer","text":"An Auto Scaling Group automatically adds or removes EC2 instances to match demand. You define min / desired / max capacity and scaling triggers — a target metric (e.g. CPU 60%), a schedule, or health checks. Benefits: elasticity (scale out on load, in when idle → cost savings) and self-healing (an unhealthy instance is terminated and replaced). Paired with an ELB, the group keeps healthy capacity matched to traffic automatically."}},{"@type":"Question","name":"What is AWS Lambda / serverless?","acceptedAnswer":{"@type":"Answer","text":"Lambda runs your code without provisioning servers . You upload a function; it executes in response to events (API Gateway request, S3 upload, SQS message, schedule), scales automatically with load, and you pay only per invocation and execution time. Traits to mention: stateless , short-lived (max 15 min), possible cold starts . Ideal for event-driven glue, lightweight APIs, and scheduled jobs. \"Serverless\" means no servers for you to manage — not literally no servers."}},{"@type":"Question","name":"What is API Gateway?","acceptedAnswer":{"@type":"Answer","text":"Amazon API Gateway is a managed service to create, publish, secure, and monitor REST, HTTP, and WebSocket APIs. It acts as the front door to your backend (commonly Lambda , but also EC2/HTTP services), handling routing, throttling / rate limiting , authentication (IAM, Cognito, JWT/authorizers), request/response mapping, and caching. The classic serverless pattern is API Gateway → Lambda → DynamoDB : no servers, scales automatically."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="AWS interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>AWS Interview Questions and Answers</h1>
+      <p>32 hand-picked AWS interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is cloud computing, and what's the difference between IaaS, PaaS, and SaaS?</h2>
+          <div class="seo-a"><p><strong>Cloud computing</strong> = on-demand delivery of compute, storage, databases and other IT resources over the internet, billed pay-as-you-go, with no hardware to own or manage.</p><ul><li><strong>IaaS</strong> (Infrastructure) — you rent raw building blocks and manage the OS upward (e.g. EC2, VPC).</li><li><strong>PaaS</strong> (Platform) — you just deploy code; the provider runs the platform (e.g. Elastic Beanstalk, RDS).</li><li><strong>SaaS</strong> (Software) — ready-to-use applications (e.g. Gmail, Salesforce).</li></ul><p>AWS spans mostly IaaS and PaaS. Benefits: elasticity, no upfront capex, global reach, pay for what you use.</p></div>
+          <pre><code>IaaS: EC2, VPC        (you manage OS, runtime, app)
+PaaS: Beanstalk, RDS  (you manage app + data)
+SaaS: Gmail, Slack    (you just use it)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is AWS, and what are its main service categories?</h2>
+          <div class="seo-a"><p><strong>AWS (Amazon Web Services)</strong> is Amazon's cloud platform — 200+ services delivered on a global, pay-as-you-go basis. The categories you'll actually name in an interview:</p><ul><li><strong>Compute</strong> — EC2, Lambda, ECS/EKS, Elastic Beanstalk.</li><li><strong>Storage</strong> — S3, EBS, EFS.</li><li><strong>Database</strong> — RDS, Aurora, DynamoDB.</li><li><strong>Networking &amp; Content Delivery</strong> — VPC, Route 53, CloudFront, ELB.</li><li><strong>Security &amp; Identity</strong> — IAM, KMS.</li><li><strong>Management &amp; Monitoring</strong> — CloudWatch, CloudTrail, CloudFormation.</li></ul></div>
+          <pre><code>Compute : EC2, Lambda, ECS/EKS
+Storage : S3, EBS, EFS
+Database: RDS, DynamoDB
+Network : VPC, Route 53, CloudFront, ELB
+Security: IAM, KMS
+Ops     : CloudWatch, CloudFormation</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Regions, Availability Zones, and Edge Locations?</h2>
+          <div class="seo-a"><p><strong>Region</strong> — a geographic area (e.g. <code class="inline">ap-south-1</code> = Mumbai) containing multiple isolated Availability Zones. You pick a region for latency, cost, and data-residency/compliance.</p><p><strong>Availability Zone (AZ)</strong> — one or more physically separate data centers within a region, with independent power/network. Spreading resources across AZs gives <strong>high availability</strong> — one AZ can fail and your app stays up.</p><p><strong>Edge Location</strong> — a CloudFront CDN point-of-presence, far more numerous than regions, used to cache content close to users for low latency.</p></div>
+          <pre><code>Region (Mumbai ap-south-1)
+  |- AZ ap-south-1a  (data center)
+  |- AZ ap-south-1b
+  '- AZ ap-south-1c
+Edge locations = 100s of CDN PoPs worldwide</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain the AWS Shared Responsibility Model.</h2>
+          <div class="seo-a"><p>Security is split between AWS and you:</p><ul><li><strong>AWS — security OF the cloud</strong>: physical data centers, hardware, the global network, and the software of managed services.</li><li><strong>You — security IN the cloud</strong>: your data, IAM users/permissions, OS patching on EC2, security-group rules, and encryption configuration.</li></ul><p>The line shifts with the service: on <strong>EC2</strong> you patch the OS; on managed/serverless services like <strong>S3, RDS, Lambda</strong> AWS handles more, but data and access control are always yours.</p></div>
+          <pre><code>AWS  : hardware, facilities, managed-service software
+YOU  : data, IAM, OS patching (EC2), SG rules, encryption
+Managed (S3/Lambda) -&gt; AWS owns more; data/access still yours</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is IAM (users, groups, roles, policies)?</h2>
+          <div class="seo-a"><p><strong>IAM (Identity and Access Management)</strong> controls <em>who</em> can do <em>what</em> in your account.</p><ul><li><strong>Users</strong> — identities for people or apps (long-term credentials).</li><li><strong>Groups</strong> — a collection of users that share the same policies.</li><li><strong>Roles</strong> — identities that are <em>assumed</em> temporarily and hand out short-lived credentials (no stored keys) — used by EC2/Lambda and for cross-account access.</li><li><strong>Policies</strong> — JSON documents that allow/deny specific actions on specific resources.</li></ul><p>Best practices: <strong>least privilege</strong>, don't use the root account for daily work, enable <strong>MFA</strong>.</p></div>
+          <pre><code>{
+  &quot;Effect&quot;: &quot;Allow&quot;,
+  &quot;Action&quot;: [&quot;s3:GetObject&quot;],
+  &quot;Resource&quot;: &quot;arn:aws:s3:::my-bucket/*&quot;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>IAM role vs user — and why do EC2/Lambda use roles instead of keys?</h2>
+          <div class="seo-a"><p>A <strong>user</strong> is a permanent identity with long-lived <strong>access keys</strong>. Embedding those keys in application code or on an instance is a security risk (leaks, rotation pain).</p><p>A <strong>role</strong> is an assumable identity that vends <strong>temporary, auto-rotated credentials</strong>. You attach a role to an EC2 instance or Lambda function, and the service automatically receives credentials (via the instance metadata endpoint / execution role) — <strong>no hardcoded keys anywhere</strong>. Roles are also how you grant cross-account and federated access.</p></div>
+          <pre><code># BAD: access keys in code / on the box
+# GOOD: attach an IAM role to EC2/Lambda
+#   -&gt; SDK picks up temp creds automatically, no keys stored</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is EC2, and what do you need to launch an instance?</h2>
+          <div class="seo-a"><p><strong>EC2 (Elastic Compute Cloud)</strong> gives you resizable virtual servers in the cloud. To launch one you choose:</p><ul><li><strong>AMI</strong> — the machine image (OS + preinstalled software).</li><li><strong>Instance type</strong> — family + size (e.g. <code class="inline">t3.micro</code>) balancing CPU / memory / network.</li><li><strong>Storage</strong> — EBS volumes (virtual disks).</li><li><strong>Security group</strong> — the instance firewall.</li><li><strong>Key pair</strong> — for SSH/RDP access.</li></ul><p>A <strong>user-data</strong> script can run at first boot to install/configure software. You pay per second/hour the instance runs.</p></div>
+          <pre><code>aws ec2 run-instances \
+  --image-id ami-xxxx --instance-type t3.micro \
+  --key-name my-key --security-group-ids sg-xxxx</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the EC2 pricing models?</h2>
+          <div class="seo-a"><ul><li><strong>On-Demand</strong> — pay per use, no commitment. Best for short/spiky/unpredictable workloads and dev.</li><li><strong>Reserved Instances / Savings Plans</strong> — commit to 1 or 3 years for a big discount (up to ~72%). Best for steady, always-on workloads.</li><li><strong>Spot Instances</strong> — AWS spare capacity at up to ~90% off, but can be reclaimed with 2 minutes' notice. Best for fault-tolerant, interruptible batch/CI work.</li><li><strong>Dedicated Hosts</strong> — physical servers for licensing/compliance needs.</li></ul></div>
+          <pre><code>On-Demand   : no commit, spiky/dev
+Reserved/SP : 1-3yr commit, steady, big discount
+Spot        : ~90% off, reclaimable, batch/CI
+Dedicated   : compliance/licensing</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Amazon S3?</h2>
+          <div class="seo-a"><p><strong>S3 (Simple Storage Service)</strong> is <strong>object storage</strong>: you store files (— "objects") inside "buckets", each identified by a key. It's virtually unlimited, highly available, and offers <strong>11 nines (99.999999999%) durability</strong> by replicating across devices/AZs.</p><p>Access is over an HTTP API/URL — it is <em>not</em> a mountable filesystem; the key namespace is flat (folders are just key prefixes). Common uses: static assets, backups, data lakes, log storage, and static website hosting.</p></div>
+          <pre><code>aws s3 cp report.pdf s3://my-bucket/reports/report.pdf
+aws s3 ls s3://my-bucket/reports/</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the S3 storage classes?</h2>
+          <div class="seo-a"><ul><li><strong>S3 Standard</strong> — hot, frequently accessed data.</li><li><strong>Intelligent-Tiering</strong> — auto-moves objects between tiers based on access; best when the pattern is unknown.</li><li><strong>Standard-IA / One Zone-IA</strong> — infrequent access, cheaper storage but a retrieval fee (One Zone = single AZ, less durable).</li><li><strong>Glacier Instant / Flexible Retrieval / Deep Archive</strong> — archival, cheapest storage, with retrieval times from ms to hours.</li></ul><p><strong>Lifecycle policies</strong> transition objects automatically (e.g. Standard → IA → Glacier) as they age.</p></div>
+          <pre><code>Standard          -&gt; frequent
+Intelligent-Tier  -&gt; unknown pattern (auto)
+Standard-IA       -&gt; infrequent (retrieval fee)
+Glacier/Deep Arch -&gt; archive (cheapest, slow retrieval)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>EBS vs EFS vs S3 (block vs file vs object)?</h2>
+          <div class="seo-a"><ul><li><strong>EBS (block)</strong> — a virtual hard disk attached to a <strong>single</strong> EC2 instance (in one AZ). Use for OS disks and databases.</li><li><strong>EFS (file)</strong> — a managed <strong>NFS</strong> filesystem that <strong>many</strong> Linux EC2s can mount at once; elastic, POSIX. Use for shared file access.</li><li><strong>S3 (object)</strong> — unlimited storage accessed over HTTP; <strong>not</strong> mounted as a normal disk. Use for assets, backups, data lakes.</li></ul></div>
+          <pre><code>EBS -&gt; disk for ONE EC2 (OS, DB)
+EFS -&gt; shared NFS for MANY EC2 (Linux)
+S3  -&gt; object storage over HTTP (assets, backups)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a VPC, and its core building blocks?</h2>
+          <div class="seo-a"><p>A <strong>VPC (Virtual Private Cloud)</strong> is your own isolated virtual network in AWS. Building blocks:</p><ul><li><strong>Subnets</strong> — IP ranges within an AZ; <strong>public</strong> (route to the internet) or <strong>private</strong> (no direct inbound).</li><li><strong>Route tables</strong> — decide where traffic goes.</li><li><strong>Internet Gateway (IGW)</strong> — gives public subnets internet access.</li><li><strong>NAT Gateway</strong> — lets private-subnet resources reach the internet <em>outbound</em> without being reachable inbound.</li><li><strong>Security Groups &amp; NACLs</strong> — instance- and subnet-level firewalls.</li></ul></div>
+          <pre><code>VPC
+ |- Public subnet  -&gt; Internet Gateway (web tier)
+ '- Private subnet -&gt; NAT Gateway (app/DB tier, outbound only)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Security Group vs Network ACL (NACL)?</h2>
+          <div class="seo-a"><table><thead><tr><th></th><th>Security Group</th><th>NACL</th></tr></thead><tbody><tr><td>Level</td><td>Instance / ENI</td><td>Subnet</td></tr><tr><td>State</td><td><strong>Stateful</strong> (return traffic auto-allowed)</td><td><strong>Stateless</strong> (must allow return explicitly)</td></tr><tr><td>Rules</td><td>Allow only</td><td>Allow <em>and</em> Deny</td></tr><tr><td>Evaluation</td><td>All rules</td><td>In order by rule number</td></tr></tbody></table><p>Security Groups are your primary, everyday control; NACLs are a coarse subnet-level backstop (e.g. block a bad IP range).</p></div>
+          <pre><code>SG   : instance, stateful, ALLOW only
+NACL : subnet,  stateless, ALLOW + DENY (numbered)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Amazon RDS?</h2>
+          <div class="seo-a"><p><strong>RDS (Relational Database Service)</strong> is managed SQL databases — MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, and <strong>Aurora</strong> (AWS's high-performance MySQL/Postgres-compatible engine). AWS handles the undifferentiated heavy lifting: provisioning, patching, automated backups, replication, and failover.</p><p>You choose the engine and instance size and connect your app — you don't SSH into the box or manage the OS. Contrast with running a database yourself on EC2, where all of that is your job.</p></div>
+          <pre><code>Engines: MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, Aurora
+AWS manages: patching, backups, replication, failover</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>RDS Multi-AZ vs Read Replica?</h2>
+          <div class="seo-a"><p><strong>Multi-AZ</strong> = a <strong>synchronous</strong> standby copy in another AZ purely for <strong>high availability</strong>. On failure, RDS automatically fails over to the standby. It is <em>not</em> used to serve reads.</p><p><strong>Read Replica</strong> = an <strong>asynchronous</strong> copy used to <strong>offload read traffic</strong> (read scaling); can be in another region. It lags slightly and isn't an automatic failover target (though it can be promoted).</p><p>They solve different problems and are often combined: Multi-AZ for resilience, Read Replicas for read throughput.</p></div>
+          <pre><code>Multi-AZ     : sync standby, auto-failover  -&gt; AVAILABILITY
+Read Replica : async copy, serves reads     -&gt; READ SCALING</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is DynamoDB, and when do you use it?</h2>
+          <div class="seo-a"><p><strong>DynamoDB</strong> is a fully managed, <strong>serverless NoSQL</strong> key-value / document database with single-digit-millisecond latency at any scale. Data lives in <strong>tables</strong> of <strong>items</strong>; a <strong>partition key</strong> (optionally plus a sort key) determines where each item is stored.</p><p>Use it for high-throughput, predictable-access-pattern workloads: sessions, shopping carts, user profiles, IoT, leaderboards. It has no joins or ad-hoc queries — you <strong>design the table around your access patterns</strong>. For rich relational querying, use RDS instead.</p></div>
+          <pre><code>Table: Orders
+  PartitionKey = userId   (where the item lives)
+  SortKey      = orderId   (ordering within a user)
+-&gt; query 'all orders for user X' is fast &amp; cheap</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the Elastic Load Balancer types?</h2>
+          <div class="seo-a"><ul><li><strong>ALB (Application, Layer 7)</strong> — HTTP/HTTPS, path- and host-based routing, ideal for microservices and containers.</li><li><strong>NLB (Network, Layer 4)</strong> — TCP/UDP, ultra-low latency, static IP, handles millions of requests/sec.</li><li><strong>GWLB (Gateway)</strong> — fronts third-party virtual appliances (firewalls/IDS).</li><li><strong>CLB (Classic)</strong> — legacy, avoid for new work.</li></ul><p>An ELB spreads incoming traffic across <strong>healthy</strong> targets in multiple AZs, doing health checks and enabling zero-downtime scaling.</p></div>
+          <pre><code>ALB  -&gt; Layer 7 HTTP/HTTPS, path/host routing (microservices)
+NLB  -&gt; Layer 4 TCP/UDP, ultra-low latency, static IP
+GWLB -&gt; appliances;  CLB -&gt; legacy</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is an Auto Scaling Group (ASG)?</h2>
+          <div class="seo-a"><p>An <strong>Auto Scaling Group</strong> automatically adds or removes EC2 instances to match demand. You define <strong>min / desired / max</strong> capacity and scaling triggers — a target metric (e.g. CPU 60%), a schedule, or health checks.</p><p>Benefits: <strong>elasticity</strong> (scale out on load, in when idle → cost savings) and <strong>self-healing</strong> (an unhealthy instance is terminated and replaced). Paired with an ELB, the group keeps healthy capacity matched to traffic automatically.</p></div>
+          <pre><code>ASG: min=2, desired=2, max=10
+  CPU &gt; 60% for 5m -&gt; add instances
+  CPU &lt; 30%        -&gt; remove
+  unhealthy        -&gt; terminate + replace</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is AWS Lambda / serverless?</h2>
+          <div class="seo-a"><p><strong>Lambda</strong> runs your code <strong>without provisioning servers</strong>. You upload a function; it executes in response to <strong>events</strong> (API Gateway request, S3 upload, SQS message, schedule), scales automatically with load, and you pay only per invocation and execution time.</p><p>Traits to mention: <strong>stateless</strong>, short-lived (max 15 min), possible <strong>cold starts</strong>. Ideal for event-driven glue, lightweight APIs, and scheduled jobs. "Serverless" means no servers <em>for you to manage</em> — not literally no servers.</p></div>
+          <pre><code>S3 upload / API call / SQS msg / cron
+        |
+        v  (event triggers)
+   Lambda function  -&gt; scales automatically, pay per run</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is API Gateway?</h2>
+          <div class="seo-a"><p><strong>Amazon API Gateway</strong> is a managed service to create, publish, secure, and monitor <strong>REST, HTTP, and WebSocket</strong> APIs. It acts as the front door to your backend (commonly <strong>Lambda</strong>, but also EC2/HTTP services), handling routing, <strong>throttling / rate limiting</strong>, authentication (IAM, Cognito, JWT/authorizers), request/response mapping, and caching.</p><p>The classic serverless pattern is <strong>API Gateway → Lambda → DynamoDB</strong>: no servers, scales automatically.</p></div>
+          <pre><code>Client -&gt; API Gateway (auth, throttle, route)
+              -&gt; Lambda -&gt; DynamoDB</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>SQS vs SNS?</h2>
+          <div class="seo-a"><p><strong>SQS (Simple Queue Service)</strong> is a <strong>queue</strong>: point-to-point, pull-based. Producers put messages on the queue; consumers poll and process them. It decouples components and buffers load so a spike doesn't overwhelm downstream.</p><p><strong>SNS (Simple Notification Service)</strong> is <strong>pub/sub</strong>: push-based fan-out. One published message is delivered to <em>many</em> subscribers (Lambda, SQS, email, HTTP).</p><p>A common pattern is <strong>SNS → multiple SQS queues</strong> (fan-out): one event, several independent consumers.</p></div>
+          <pre><code>SQS: Producer -&gt; [queue] -&gt; Consumer (pull, buffer)
+SNS: Publisher -&gt; [topic] -&gt; many subscribers (push, fan-out)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is CloudFront?</h2>
+          <div class="seo-a"><p><strong>CloudFront</strong> is AWS's <strong>Content Delivery Network (CDN)</strong>. It caches content at <strong>edge locations</strong> close to users for low latency, offloads your origin (S3, ALB, or EC2), and terminates HTTPS. It integrates with <strong>Shield/WAF</strong> for DDoS and application-layer protection, supports signed URLs for private content, and can run lightweight logic at the edge (CloudFront Functions / Lambda@Edge).</p></div>
+          <pre><code>User -&gt; nearest Edge Location (cached?)
+           hit  -&gt; serve instantly
+           miss -&gt; fetch from Origin (S3/ALB) + cache</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Route 53?</h2>
+          <div class="seo-a"><p><strong>Route 53</strong> is AWS's managed <strong>DNS</strong> and domain-registration service (named after DNS port 53). It resolves domain names to your resources and supports <strong>routing policies</strong> — simple, weighted, latency-based, failover, and geolocation — combined with <strong>health checks</strong>.</p><p>That makes it the tool for domain routing, blue/green and weighted rollouts, and multi-region <strong>failover</strong> / disaster recovery.</p></div>
+          <pre><code>Policies: simple | weighted | latency | failover | geolocation
++ health checks -&gt; route away from unhealthy endpoints</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>CloudWatch vs CloudTrail?</h2>
+          <div class="seo-a"><p><strong>CloudWatch</strong> = monitoring/observability: metrics, logs, alarms, and dashboards. It answers "<em>is my system healthy / performing?</em>" — CPU, latency, error rates, custom metrics, and alarms that trigger actions.</p><p><strong>CloudTrail</strong> = auditing: it records <strong>API calls</strong> — who did what, when, from where — for governance, compliance, and security forensics. It answers "<em>who did this?</em>"</p></div>
+          <pre><code>CloudWatch: metrics, logs, alarms  -&gt; 'is it healthy?'
+CloudTrail: API call history        -&gt; 'who did this?'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>EC2 vs Elastic Beanstalk vs ECS/EKS vs Lambda — how do you choose?</h2>
+          <div class="seo-a"><p>A spectrum from most control/most ops to least:</p><ul><li><strong>EC2</strong> — raw virtual machines; full control, you manage everything.</li><li><strong>Elastic Beanstalk</strong> — PaaS; you push code, AWS provisions and scales the EC2 under it.</li><li><strong>ECS / EKS</strong> — run <strong>containers</strong>; ECS is AWS-native orchestration, EKS is managed Kubernetes (often on Fargate = serverless containers).</li><li><strong>Lambda</strong> — serverless functions; no servers, event-driven, auto-scaling.</li></ul><p>Rule of thumb: the less infrastructure you want to manage, the further right you go.</p></div>
+          <pre><code>EC2       : full control, manage all
+Beanstalk : push code, AWS runs EC2
+ECS/EKS   : containers (ECS native / EKS k8s, Fargate=serverless)
+Lambda    : functions, no servers</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is CloudFormation / Infrastructure as Code?</h2>
+          <div class="seo-a"><p><strong>Infrastructure as Code (IaC)</strong> means defining your AWS resources declaratively in a template instead of clicking in the console. <strong>CloudFormation</strong> reads a YAML/JSON template and provisions and manages those resources together as a <strong>stack</strong> — repeatably and version-controlled.</p><p>Benefits: reproducible environments (dev/stage/prod identical), easy teardown, change tracking, and drift detection. Alternatives: <strong>Terraform</strong> (multi-cloud) and <strong>AWS CDK</strong> (define infra in a real programming language).</p></div>
+          <pre><code>template.yaml (YAML/JSON)
+  -&gt; CloudFormation -&gt; Stack (all resources, managed together)
+Benefits: reproducible, versioned, easy teardown, drift detection</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>A voting site expects millions of hits right after a show. How do you architect it to absorb the write spike?</h2>
+          <div class="seo-a"><p><strong>Decouple the write spike with a queue.</strong> Front the site with <strong>CloudFront + an Elastic Load Balancer</strong> over an <strong>auto-scaled</strong> fleet of web servers. Instead of writing each vote straight to the database, the web servers drop votes onto an <strong>SQS queue</strong> (using IAM roles on the EC2 instances). A separate pool of application servers drains the queue at a steady rate and writes into <strong>DynamoDB</strong>.</p><p>Why the queue: it buffers a massive, bursty write load so the datastore isn't overwhelmed, and it smooths spikes into a sustainable throughput. Writing votes directly to an RDS/DynamoDB instance under a flash crowd risks throttling and lost votes.</p></div>
+          <pre><code>Users -&gt; CloudFront -&gt; ELB -&gt; Auto-Scaled Web Servers
+                                   | (enqueue vote, IAM role)
+                                   v
+                                 SQS queue
+                                   | (drain steadily)
+                                   v
+                          App Servers -&gt; DynamoDB</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>A Lambda + API Gateway API has intermittent failures. What's the first thing to improve reliability?</h2>
+          <div class="seo-a"><p><strong>Enable detailed logging and monitoring with CloudWatch</strong> (logs, metrics, alarms) — and ideally X-Ray tracing. You can't fix intermittent failures you can't see; observability tells you whether it's Lambda timeouts, cold starts, throttling, downstream errors, or 5xx from the integration.</p><p>The distractors treat symptoms without diagnosis: client-side retries can mask (or amplify) the issue, ElastiCache addresses latency not reliability, and Step Functions is orchestration, not a fix for an unknown fault. Observe first, then target the real cause (add retries/DLQ, raise timeout/memory, fix the downstream).</p></div>
+          <pre><code># Enable Lambda tracing + structured logs, alarm on errors
+aws lambda update-function-configuration \
+  --function-name api --tracing-config Mode=Active
+# CloudWatch alarm on Errors metric, DLQ for async failures</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>A DynamoDB table with fixed capacity throttles during peak load. How do you fix it?</h2>
+          <div class="seo-a"><p><strong>Enable Auto Scaling on the DynamoDB table</strong> (or switch it to <strong>on-demand</strong> capacity). Auto Scaling raises provisioned read/write capacity units as traffic climbs and lowers them when it falls, so bursts stop hitting the throttling ceiling.</p><p>The wrong options misunderstand DynamoDB: you don't put an <strong>ELB</strong> in front of it (it's a managed API, not EC2), it can't join an EC2 <strong>Auto Scaling Group</strong>, and dropping an <strong>SQS</strong> queue in front only defers writes without raising table throughput. Scaling the table's capacity is the direct fix.</p></div>
+          <pre><code># Auto Scaling on write capacity, or just use on-demand:
+aws dynamodb update-table --table-name votes \
+  --billing-mode PAY_PER_REQUEST   # on-demand, no capacity planning</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How should you structure CloudFormation templates when requirements come from many teams (networking, security, app)?</h2>
+          <div class="seo-a"><p><strong>Create separate logical templates per concern</strong> — networking, security, application, etc. — and compose them as <strong>nested stacks</strong> (a parent stack referencing child templates), or share values via cross-stack <code class="inline">Exports</code>/<code class="inline">ImportValue</code>.</p><p>This lets each team own and iterate on its template independently, keeps stacks under CloudFormation's resource limits, and maximises reuse. One giant monolithic template becomes unmaintainable and couples unrelated changes; Elastic Beanstalk / OpsWorks are different provisioning tools, not the way to organise CloudFormation.</p></div>
+          <pre><code># parent.yaml
+Resources:
+  NetworkStack:
+    Type: AWS::CloudFormation::Stack
+    Properties: { TemplateURL: https://s3/.../network.yaml }
+  SecurityStack:
+    Type: AWS::CloudFormation::Stack
+    Properties: { TemplateURL: https://s3/.../security.yaml }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Windows EC2 instances joined to AWS Managed Active Directory need shared storage controlled by that AD. Which service?</h2>
+          <div class="seo-a"><p><strong>Amazon FSx for Windows File Server.</strong> It provides fully managed <strong>SMB</strong> file shares with native Windows/NTFS semantics and integrates directly with <strong>AWS Managed Microsoft AD</strong>, so you control access with AD users/groups and ACLs.</p><p>Why not the others: <strong>FSx for Lustre</strong> targets high-performance computing, not Windows file shares; <strong>EFS</strong> is NFS for Linux; <strong>S3</strong> is object storage (not a mounted file share, and 'AD Connector' doesn't turn it into one). For AD-controlled Windows shared storage, FSx for Windows File Server is the fit.</p></div>
+          <pre><code># FSx for Windows File Server: managed SMB, joined to AWS Managed Microsoft AD
+# -&gt; AD users/groups + NTFS ACLs control access to the shares</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>On-prem storage is full; you want a quick AWS extension with LOW latency for frequently accessed data. What do you use?</h2>
+          <div class="seo-a"><p><strong>AWS Storage Gateway — Cached Volumes.</strong> Your <strong>primary data lives in S3</strong>, while the gateway keeps a <strong>local cache of frequently accessed data</strong> on-prem, giving low-latency reads for hot data while effectively extending capacity to the cloud.</p><p>Contrast <strong>Stored Volumes</strong> (the common wrong pick): those keep <em>all</em> data on-premises with async backups to S3 — that doesn't extend capacity, it just backs up. <strong>Glacier / DEEP_ARCHIVE</strong> are cold archival tiers with retrieval delays — the opposite of low-latency frequent access.</p></div>
+          <pre><code># Cached Volumes: primary dataset in S3, hot subset cached on-prem
+#   -&gt; low-latency reads for frequently accessed data + capacity extension
+# Stored Volumes: all data local, async snapshot to S3 (backup, not extension)</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="aws";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

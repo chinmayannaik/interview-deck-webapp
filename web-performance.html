@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Web Performance Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="24 Web Performance interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/web-performance" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Web Performance Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="24 Web Performance interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/web-performance" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Web Performance Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What are Core Web Vitals and what are the thresholds?","acceptedAnswer":{"@type":"Answer","text":"Google's three user-centric metrics, each with a \"good\" threshold measured at the 75th percentile of real users: LCP — Largest Contentful Paint (loading): time until the largest text block or image in the viewport renders. Good ≤ 2.5 s . INP — Interaction to Next Paint (responsiveness): the worst-case delay between a user interaction and the next visual update, across the whole visit. Good ≤ 200 ms . It replaced FID in March 2024. CLS — Cumulative Layout Shift (visual stability): sum of unexpected layout shift scores. Good ≤ 0.1 . Supporting diagnostics that aren't Core Vitals themselves: TTFB (server response) and FCP (first content painted). They matter beyond ranking: they're the closest proxy the industry has to \"does this site feel fast\", and every one of them maps to a specific engineering fix."}},{"@type":"Question","name":"How do you improve LCP?","acceptedAnswer":{"@type":"Answer","text":"First identify the LCP element (DevTools and Lighthouse both name it) — it's usually a hero image, a heading, or a background image. LCP breaks into four phases, and each has a different fix: TTFB — slow server or no CDN. Cache at the edge, reduce server work, use SSG/ISR where possible. Resource load delay — the browser found out about the image late. &lt;link rel=\"preload\"&gt; or fetchpriority=\"high\" on the hero image; never lazy-load the LCP image. Resource load time — the image is too big. Modern formats (AVIF/WebP), correct srcset / sizes , compression, CDN resizing. Element render delay — render-blocking CSS/JS, or content waiting on a client-side fetch. Inline critical CSS, defer non-critical JS, and render the hero server-side."}},{"@type":"Question","name":"What is INP and how do you fix a bad one?","acceptedAnswer":{"@type":"Answer","text":"Interaction to Next Paint measures the full latency of an interaction — from the click/tap/keypress until the browser paints the visual response — and reports roughly the worst interaction of the visit. Unlike FID, it includes processing time and rendering , not just input delay. Three parts to attack: Input delay — the main thread was busy when the user clicked. Break up long tasks, defer third-party scripts, avoid heavy work on load. Processing time — your handler does too much. Do the minimum needed to update the UI, and move the rest to a later task or a Web Worker. Presentation delay — rendering the update is expensive: large DOM, expensive layout, huge re-render. The key technique is yielding : paint the visible response first, then continue the work."}},{"@type":"Question","name":"What causes layout shift (CLS) and how do you prevent it?","acceptedAnswer":{"@type":"Answer","text":"CLS scores unexpected movement of visible content: impact fraction × distance fraction , summed over the session's worst shift windows. Shifts within 500 ms of a user interaction are excluded, since those are expected. Usual causes and fixes: Images without dimensions — always set width / height (or aspect-ratio ) so the browser reserves the box before the file arrives. Ads, embeds and iframes — reserve a min-height container; never let them size themselves after load. Web fonts — a fallback with different metrics reflows text on swap. Use size-adjust / font-display: optional , or a metric-matched fallback. Content injected above existing content — cookie banners, alerts. Overlay them or reserve space. Animating layout properties — animate transform / opacity , never top / height / margin ."}},{"@type":"Question","name":"What makes up TTFB and how do you reduce it?","acceptedAnswer":{"@type":"Answer","text":"Time To First Byte covers everything before your HTML starts arriving: redirects, DNS lookup, TCP connect, TLS handshake, request travel time, server processing, and response travel time. Reductions, in the order they usually pay off: Eliminate redirect chains — each one is a full round trip, and http→https→www is three. Serve from a CDN edge — physical distance is often the biggest single term. Cache the HTML where you can (SSG/ISR, edge cache with stale-while-revalidate). Cut server work — the N+1 query and the uncached upstream call are the usual suspects. Connection setup — HTTP/2 or /3, TLS 1.3, and preconnect for critical third-party origins. TTFB isn't a Core Web Vital, but it's a hard floor: LCP can never be faster than TTFB."}},{"@type":"Question","name":"Lab data vs field data — why do Lighthouse and real users disagree?","acceptedAnswer":{"@type":"Answer","text":"Lab (synthetic) — Lighthouse/WebPageTest run one load on a simulated device and network. Reproducible, great for debugging and CI, but it's a single sample under assumptions you chose. Field (RUM) — CrUX or your own web-vitals beacons, aggregated over real users, real devices, real networks. This is what Google ranks on and what users actually experience. Why they disagree: your users have slower phones and worse networks than your test config; real sessions have cached visits, logged-in states and personalisation; Lighthouse can't measure INP properly because there's no real interaction; and field data spans a 28-day rolling window, so a fix takes weeks to show. Use both: field data tells you whether there's a problem and for whom; lab data tells you why , reproducibly, and guards regressions in CI."}},{"@type":"Question","name":"What are render-blocking resources and how do you deal with them?","acceptedAnswer":{"@type":"Answer","text":"The browser can't paint until it has built the CSSOM, so every stylesheet in &lt;head&gt; blocks first paint . Synchronous &lt;script&gt; tags block HTML parsing entirely. CSS: inline the small amount of CSS needed for above-the-fold content, and load the rest asynchronously ( media=\"print\" onload=\"this.media='all'\" is the classic trick). Split stylesheets by media so a print or wide-viewport sheet doesn't block. JavaScript: defer for scripts that need the DOM and must run in order; async for independent third-party scripts; type=\"module\" is deferred by default. Move anything not needed for first paint out of the critical path. Fonts: preload the one or two fonts used above the fold, and use font-display: swap so text is visible immediately."}},{"@type":"Question","name":"How do you code-split an application effectively?","acceptedAnswer":{"@type":"Answer","text":"Ship only what the current view needs, and load the rest on demand via dynamic import() . Where to split, by payoff: Route level — the default and biggest win. Every framework router supports it. Heavy components below the fold or behind interaction — charts, editors, maps, modals, date pickers. Large one-off dependencies — a PDF renderer used on one screen shouldn't be in the main bundle. Vendor/common chunks — stable dependencies in their own long-cached chunk. Don't over-split: dozens of tiny chunks add request overhead and waterfall risk, and a chunk loaded during a click is a spinner the user sees. Prefetch likely-next chunks during idle time (on link hover, or via the router's prefetch) so the split is invisible."}},{"@type":"Question","name":"Your bundle is 2 MB. How do you find and fix the bloat?","acceptedAnswer":{"@type":"Answer","text":"Measure first with a visualiser — rollup-plugin-visualizer , webpack-bundle-analyzer , source-map-explorer , or vite-bundle-visualizer . Treemaps make the culprit obvious in seconds. The usual offenders: A whole library imported for one function — import _ from 'lodash' instead of lodash-es with named imports. Moment.js locales , or moment at all (use date-fns , dayjs , or Intl ). Icon libraries imported wholesale rather than per-icon. Duplicate dependencies — two versions of the same package pulled by different deps. Polyfills for browsers you don't support — check browserslist . Source maps or dev builds accidentally shipped to production. Then set a size budget in CI so it doesn't creep back."}},{"@type":"Question","name":"What is tree shaking and why does it often fail?","acceptedAnswer":{"@type":"Answer","text":"Dead-code elimination at bundle time: the bundler statically analyses ES module imports/exports and drops anything never imported. It requires ESM. CommonJS require() is dynamic and can't be analysed statically, so a CJS-only dependency is included whole. Why it silently fails: Side effects — if a module might do something on import (register a polyfill, mutate a global), the bundler must keep it. Declare \"sideEffects\": false (or a file list) in package.json . Namespace imports — import * as utils then dynamic property access defeats analysis. Barrel files — a big index.ts re-exporting everything can drag in modules with side effects. Transpiling ESM to CJS before bundling — a Babel config targeting CommonJS undoes the whole thing. Class methods and property mangling — unused class members generally aren't removed."}},{"@type":"Question","name":"How do you optimise images for the web?","acceptedAnswer":{"@type":"Answer","text":"Images are usually the largest share of page weight, and the fixes are mechanical: Format — AVIF (smallest) → WebP (universal today) → JPEG/PNG fallback via &lt;picture&gt; . SVG for icons and line art. Right size — srcset + sizes so a phone doesn't download a 2000 px file. Serving a desktop image to mobile is the most common waste. Lazy-load below the fold — loading=\"lazy\" ; never on the LCP image. Always set width and height (or aspect-ratio ) to prevent CLS. Compress — quality 75–85 is visually indistinguishable for photos at a fraction of the size. Use an image CDN for automatic format negotiation, resizing and caching. Decoding — decoding=\"async\" keeps decode off the critical path."}},{"@type":"Question","name":"How do you load web fonts without hurting performance?","acceptedAnswer":{"@type":"Answer","text":"Fonts are discovered late (CSS → @font-face → download) and cause two visible problems: FOIT (invisible text while loading) and FOUT (text reflows when the real font swaps in). The playbook: Self-host — third-party font CDNs add a DNS + TLS + request round trip, and cross-site font caching no longer exists. WOFF2 only — every browser that matters supports it. Preload the critical font so it isn't discovered after CSS parses. font-display: swap — show fallback text immediately. Use optional if you'd rather never reflow. Subset — Latin-only subsets are a fraction of the full file; drop unused weights entirely. Match fallback metrics with size-adjust , ascent-override etc. so the swap doesn't shift layout — this is what turns FOUT from a CLS problem into a non-event."}},{"@type":"Question","name":"How do you design a caching strategy for a web app's assets?","acceptedAnswer":{"@type":"Answer","text":"Split assets into two classes and cache them oppositely: Fingerprinted static assets ( app.8f3d2a.js , images, fonts) — the URL changes whenever content changes, so cache them forever: Cache-Control: public, max-age=31536000, immutable . immutable also stops revalidation on reload. The HTML entry point — must never be stale, because it references the hashed assets: no-cache (revalidate every time) or a short max-age with stale-while-revalidate at the CDN. Validators: ETag / Last-Modified let a revalidation return 304 Not Modified — cheap, but still a round trip, which is why hashed assets skip it entirely. Service worker adds an application-controlled layer: precache the shell, stale-while-revalidate for data, offline fallbacks. Powerful, and the classic footgun — a bad SW can pin users to an old build, so always ship an update path."}},{"@type":"Question","name":"What did HTTP/2 and HTTP/3 change for frontend performance?","acceptedAnswer":{"@type":"Answer","text":"HTTP/1.1 allowed ~6 connections per origin and suffered head-of-line blocking, which is why we used to concatenate files, inline sprites and shard across domains. HTTP/2 introduced multiplexing — many streams over one connection — plus header compression (HPACK) and stream priorities. Those old workarounds became counterproductive: domain sharding costs extra connections, and mega-bundles hurt caching granularity. Server push was specified and has since been abandoned; use 103 Early Hints instead. HTTP/3 moves to QUIC over UDP, removing TCP-level head-of-line blocking (a lost packet no longer stalls unrelated streams), with 0-RTT connection resumption. The gains are largest on lossy mobile networks. Practically: stop sharding, split bundles for caching rather than concatenating everything, and check your CDN actually serves h2/h3 — it usually just works."}},{"@type":"Question","name":"preload, prefetch, preconnect, fetchpriority — when do you use each?","acceptedAnswer":{"@type":"Answer","text":"preconnect — do the DNS + TCP + TLS handshake to a third-party origin early, before you know the exact URL. Use for 2–3 critical origins only; each one costs a connection. dns-prefetch — DNS only. Cheap fallback for less critical origins. preload — fetch a resource needed for this page at high priority, earlier than the parser would find it. Classic uses: the LCP image, a critical font, a CSS-referenced asset. Must be used within seconds or the browser warns. prefetch — fetch something for a future navigation at lowest priority, during idle time. fetchpriority=\"high|low\" — nudge the priority of a resource the browser already found. High for the hero image, low for below-the-fold or non-critical iframes. All of them are budget reallocation, not free speed: prioritising everything prioritises nothing."}},{"@type":"Question","name":"What is a long task and how do you break one up?","acceptedAnswer":{"@type":"Answer","text":"Any main-thread task over 50 ms . While it runs, the browser can't respond to input, run animations, or paint — so long tasks are the direct cause of bad INP and janky scrolling. Techniques: Yield — split the work into chunks and hand control back between them: scheduler.yield() where available, otherwise setTimeout(…, 0) or await new Promise(queueMicrotask) -style batching. Prioritise with scheduler.postTask() — background priority for work that can wait. Web Workers — move genuinely heavy, self-contained computation (parsing, diffing, crypto, image processing) off the main thread entirely. Cost is structured-clone overhead at the boundary. requestIdleCallback — for non-urgent work like analytics flushes and cache warming. Do less — the real fix is often that you're processing 10,000 rows the user can't see. Find them in the DevTools Performance panel: long tasks are flagged with a red triangle."}},{"@type":"Question","name":"How do you render a list of 50,000 rows?","acceptedAnswer":{"@type":"Answer","text":"You don't render them. Virtualise : render only the rows in (or near) the viewport, absolutely position them inside a spacer element sized to the full list height, and swap the rendered window as the user scrolls. Every DOM node costs memory, style recalculation, layout and paint — a 50k-row table will freeze the tab regardless of framework. Typical libraries: TanStack Virtual, react-window, CDK Virtual Scroll (Angular). What makes it tricky: variable row heights (need measurement and caching), scroll-anchoring so content doesn't jump, accessibility (screen readers and Ctrl+F only see rendered rows — expose a \"show all\"/export path), and keeping keyboard navigation working across the virtual boundary. Alternatives: pagination (simplest, often the right product answer), infinite scroll with windowing, or content-visibility: auto for long static documents — a one-line CSS win that lets the browser skip rendering off-screen sections."}},{"@type":"Question","name":"How do you find and fix a memory leak in an SPA?","acceptedAnswer":{"@type":"Answer","text":"SPAs leak because the page never reloads, so anything you forget to clean up accumulates across navigations. Common causes: event listeners on window / document never removed; setInterval never cleared; unsubscribed observables or subscriptions; observers ( IntersectionObserver , ResizeObserver , MutationObserver ) never disconnected; closures capturing large objects; detached DOM nodes still referenced by a JS variable or a cache; and unbounded in-memory caches or logs. How to find it: DevTools → Memory → take a heap snapshot. Perform the suspect action several times (navigate away and back ×5). Take another snapshot and compare with Comparison view; sort by delta. Filter by Detached to find DOM nodes still held alive, and follow the retainer chain to the reference that's keeping them. The Performance panel's memory track is the quick smoke test: a sawtooth that never returns to baseline is a leak."}},{"@type":"Question","name":"Why are transform and opacity the only 'cheap' properties to animate?","acceptedAnswer":{"@type":"Answer","text":"The rendering pipeline is style → layout → paint → composite . Which properties you animate decides how much of it re-runs every frame: Animating width , height , top , margin , font-size triggers layout — then paint, then composite. Most expensive, and it can invalidate layout for large parts of the tree. Animating background-color , box-shadow , border-radius skips layout but triggers paint . Animating transform and opacity can be handled entirely by the compositor , often on the GPU and off the main thread — so they stay smooth even when JavaScript is busy. Tools: promote a layer with will-change: transform just before animating and remove it after — leaving it on permanently wastes GPU memory. The Web Animations API and CSS animations both run on the compositor when the properties allow."}},{"@type":"Question","name":"How do you manage the performance cost of third-party scripts?","acceptedAnswer":{"@type":"Answer","text":"Third-party scripts (tag managers, analytics, chat widgets, ads, A/B tools) are usually the largest performance cost you don't control — and they often inject more scripts at runtime, so their real weight is invisible in your bundle. Tactics: Inventory and justify — measure each one's cost and get an owner to defend it. Many are forgotten from campaigns years ago. Load late — async / defer , or after first interaction/idle. Almost nothing needs to run before first paint. Facades — render a lightweight placeholder (a chat button image, a video thumbnail) and load the real widget on click. Huge win for embeds. Self-host stable scripts where the licence allows, to cut a connection and control caching. Isolate — Partytown can move some third-party scripts into a Web Worker; sandboxed iframes limit blast radius. Monitor — alert on third-party script size and long tasks; they change without telling you."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Web Performance interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Web Performance Interview Questions and Answers</h1>
+      <p>24 hand-picked Web Performance interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What are Core Web Vitals and what are the thresholds?</h2>
+          <div class="seo-a"><p>Google's three user-centric metrics, each with a "good" threshold measured at the <strong>75th percentile</strong> of real users:</p><ul><li><strong>LCP — Largest Contentful Paint</strong> (loading): time until the largest text block or image in the viewport renders. Good ≤ <strong>2.5 s</strong>.</li><li><strong>INP — Interaction to Next Paint</strong> (responsiveness): the worst-case delay between a user interaction and the next visual update, across the whole visit. Good ≤ <strong>200 ms</strong>. It replaced FID in March 2024.</li><li><strong>CLS — Cumulative Layout Shift</strong> (visual stability): sum of unexpected layout shift scores. Good ≤ <strong>0.1</strong>.</li></ul><p>Supporting diagnostics that aren't Core Vitals themselves: <strong>TTFB</strong> (server response) and <strong>FCP</strong> (first content painted).</p><p>They matter beyond ranking: they're the closest proxy the industry has to "does this site feel fast", and every one of them maps to a specific engineering fix.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you improve LCP?</h2>
+          <div class="seo-a"><p>First identify the LCP element (DevTools and Lighthouse both name it) — it's usually a hero image, a heading, or a background image.</p><p>LCP breaks into four phases, and each has a different fix:</p><ol><li><strong>TTFB</strong> — slow server or no CDN. Cache at the edge, reduce server work, use SSG/ISR where possible.</li><li><strong>Resource load delay</strong> — the browser found out about the image late. <code>&lt;link rel="preload"&gt;</code> or <code>fetchpriority="high"</code> on the hero image; never lazy-load the LCP image.</li><li><strong>Resource load time</strong> — the image is too big. Modern formats (AVIF/WebP), correct <code>srcset</code>/<code>sizes</code>, compression, CDN resizing.</li><li><strong>Element render delay</strong> — render-blocking CSS/JS, or content waiting on a client-side fetch. Inline critical CSS, defer non-critical JS, and render the hero server-side.</li></ol></div>
+          <pre><code>&lt;!-- hero image: discovered early, fetched first, never lazy --&gt;
+&lt;link rel=&quot;preload&quot; as=&quot;image&quot; href=&quot;/hero.avif&quot; fetchpriority=&quot;high&quot;&gt;
+
+&lt;img src=&quot;/hero.avif&quot;
+     srcset=&quot;/hero-800.avif 800w, /hero-1600.avif 1600w&quot;
+     sizes=&quot;100vw&quot;
+     width=&quot;1600&quot; height=&quot;900&quot;
+     fetchpriority=&quot;high&quot;
+     alt=&quot;...&quot;&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is INP and how do you fix a bad one?</h2>
+          <div class="seo-a"><p>Interaction to Next Paint measures the full latency of an interaction — from the click/tap/keypress until the browser paints the visual response — and reports roughly the worst interaction of the visit. Unlike FID, it includes <strong>processing time and rendering</strong>, not just input delay.</p><p>Three parts to attack:</p><ul><li><strong>Input delay</strong> — the main thread was busy when the user clicked. Break up long tasks, defer third-party scripts, avoid heavy work on load.</li><li><strong>Processing time</strong> — your handler does too much. Do the minimum needed to update the UI, and move the rest to a later task or a Web Worker.</li><li><strong>Presentation delay</strong> — rendering the update is expensive: large DOM, expensive layout, huge re-render.</li></ul><p>The key technique is <strong>yielding</strong>: paint the visible response first, then continue the work.</p></div>
+          <pre><code>async function onSearch(query) {
+  showSpinner();                 // 1. cheap visual feedback
+  await yieldToMain();           // 2. let the browser paint
+  const results = expensiveFilter(query);   // 3. heavy work after paint
+  render(results);
+}
+
+function yieldToMain() {
+  if (window.scheduler?.yield) return scheduler.yield();
+  return new Promise(r =&gt; setTimeout(r, 0));
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What causes layout shift (CLS) and how do you prevent it?</h2>
+          <div class="seo-a"><p>CLS scores unexpected movement of visible content: <em>impact fraction × distance fraction</em>, summed over the session's worst shift windows. Shifts within 500 ms of a user interaction are excluded, since those are expected.</p><p><strong>Usual causes and fixes:</strong></p><ul><li><strong>Images without dimensions</strong> — always set <code>width</code>/<code>height</code> (or <code>aspect-ratio</code>) so the browser reserves the box before the file arrives.</li><li><strong>Ads, embeds and iframes</strong> — reserve a min-height container; never let them size themselves after load.</li><li><strong>Web fonts</strong> — a fallback with different metrics reflows text on swap. Use <code>size-adjust</code>/<code>font-display: optional</code>, or a metric-matched fallback.</li><li><strong>Content injected above existing content</strong> — cookie banners, alerts. Overlay them or reserve space.</li><li><strong>Animating layout properties</strong> — animate <code>transform</code>/<code>opacity</code>, never <code>top</code>/<code>height</code>/<code>margin</code>.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What makes up TTFB and how do you reduce it?</h2>
+          <div class="seo-a"><p>Time To First Byte covers everything before your HTML starts arriving: redirects, DNS lookup, TCP connect, TLS handshake, request travel time, server processing, and response travel time.</p><p><strong>Reductions, in the order they usually pay off:</strong></p><ul><li><strong>Eliminate redirect chains</strong> — each one is a full round trip, and <code>http→https→www</code> is three.</li><li><strong>Serve from a CDN edge</strong> — physical distance is often the biggest single term.</li><li><strong>Cache the HTML</strong> where you can (SSG/ISR, edge cache with stale-while-revalidate).</li><li><strong>Cut server work</strong> — the N+1 query and the uncached upstream call are the usual suspects.</li><li><strong>Connection setup</strong> — HTTP/2 or /3, TLS 1.3, and <code>preconnect</code> for critical third-party origins.</li></ul><p>TTFB isn't a Core Web Vital, but it's a hard floor: LCP can never be faster than TTFB.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Lab data vs field data — why do Lighthouse and real users disagree?</h2>
+          <div class="seo-a"><p><strong>Lab (synthetic)</strong> — Lighthouse/WebPageTest run one load on a simulated device and network. Reproducible, great for debugging and CI, but it's a single sample under assumptions you chose.</p><p><strong>Field (RUM)</strong> — CrUX or your own <code>web-vitals</code> beacons, aggregated over real users, real devices, real networks. This is what Google ranks on and what users actually experience.</p><p><strong>Why they disagree:</strong> your users have slower phones and worse networks than your test config; real sessions have cached visits, logged-in states and personalisation; Lighthouse can't measure INP properly because there's no real interaction; and field data spans a 28-day rolling window, so a fix takes weeks to show.</p><p><strong>Use both:</strong> field data tells you <em>whether</em> there's a problem and for whom; lab data tells you <em>why</em>, reproducibly, and guards regressions in CI.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are render-blocking resources and how do you deal with them?</h2>
+          <div class="seo-a"><p>The browser can't paint until it has built the CSSOM, so <strong>every stylesheet in <code>&lt;head&gt;</code> blocks first paint</strong>. Synchronous <code>&lt;script&gt;</code> tags block HTML parsing entirely.</p><p><strong>CSS:</strong> inline the small amount of CSS needed for above-the-fold content, and load the rest asynchronously (<code>media="print" onload="this.media='all'"</code> is the classic trick). Split stylesheets by media so a print or wide-viewport sheet doesn't block.</p><p><strong>JavaScript:</strong> <code>defer</code> for scripts that need the DOM and must run in order; <code>async</code> for independent third-party scripts; <code>type="module"</code> is deferred by default. Move anything not needed for first paint out of the critical path.</p><p><strong>Fonts:</strong> preload the one or two fonts used above the fold, and use <code>font-display: swap</code> so text is visible immediately.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you code-split an application effectively?</h2>
+          <div class="seo-a"><p>Ship only what the current view needs, and load the rest on demand via dynamic <code>import()</code>.</p><p><strong>Where to split, by payoff:</strong></p><ul><li><strong>Route level</strong> — the default and biggest win. Every framework router supports it.</li><li><strong>Heavy components below the fold or behind interaction</strong> — charts, editors, maps, modals, date pickers.</li><li><strong>Large one-off dependencies</strong> — a PDF renderer used on one screen shouldn't be in the main bundle.</li><li><strong>Vendor/common chunks</strong> — stable dependencies in their own long-cached chunk.</li></ul><p><strong>Don't over-split:</strong> dozens of tiny chunks add request overhead and waterfall risk, and a chunk loaded during a click is a spinner the user sees. <strong>Prefetch</strong> likely-next chunks during idle time (on link hover, or via the router's prefetch) so the split is invisible.</p></div>
+          <pre><code>// route-level split
+const Reports = lazy(() =&gt; import('./pages/Reports'));
+
+// interaction-level split, prefetched on hover
+function openEditor() { return import('./editor'); }
+button.addEventListener('mouseenter', () =&gt; import('./editor'), { once: true });</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Your bundle is 2 MB. How do you find and fix the bloat?</h2>
+          <div class="seo-a"><p><strong>Measure first</strong> with a visualiser — <code>rollup-plugin-visualizer</code>, <code>webpack-bundle-analyzer</code>, <code>source-map-explorer</code>, or <code>vite-bundle-visualizer</code>. Treemaps make the culprit obvious in seconds.</p><p><strong>The usual offenders:</strong></p><ul><li><strong>A whole library imported for one function</strong> — <code>import _ from 'lodash'</code> instead of <code>lodash-es</code> with named imports.</li><li><strong>Moment.js locales</strong>, or moment at all (use <code>date-fns</code>, <code>dayjs</code>, or <code>Intl</code>).</li><li><strong>Icon libraries</strong> imported wholesale rather than per-icon.</li><li><strong>Duplicate dependencies</strong> — two versions of the same package pulled by different deps.</li><li><strong>Polyfills for browsers you don't support</strong> — check <code>browserslist</code>.</li><li><strong>Source maps or dev builds</strong> accidentally shipped to production.</li></ul><p>Then set a <strong>size budget in CI</strong> so it doesn't creep back.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is tree shaking and why does it often fail?</h2>
+          <div class="seo-a"><p>Dead-code elimination at bundle time: the bundler statically analyses ES module imports/exports and drops anything never imported.</p><p><strong>It requires ESM.</strong> CommonJS <code>require()</code> is dynamic and can't be analysed statically, so a CJS-only dependency is included whole.</p><p><strong>Why it silently fails:</strong></p><ul><li><strong>Side effects</strong> — if a module might do something on import (register a polyfill, mutate a global), the bundler must keep it. Declare <code>"sideEffects": false</code> (or a file list) in <code>package.json</code>.</li><li><strong>Namespace imports</strong> — <code>import * as utils</code> then dynamic property access defeats analysis.</li><li><strong>Barrel files</strong> — a big <code>index.ts</code> re-exporting everything can drag in modules with side effects.</li><li><strong>Transpiling ESM to CJS before bundling</strong> — a Babel config targeting CommonJS undoes the whole thing.</li><li><strong>Class methods and property mangling</strong> — unused class members generally aren't removed.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you optimise images for the web?</h2>
+          <div class="seo-a"><p>Images are usually the largest share of page weight, and the fixes are mechanical:</p><ul><li><strong>Format</strong> — AVIF (smallest) → WebP (universal today) → JPEG/PNG fallback via <code>&lt;picture&gt;</code>. SVG for icons and line art.</li><li><strong>Right size</strong> — <code>srcset</code> + <code>sizes</code> so a phone doesn't download a 2000 px file. Serving a desktop image to mobile is the most common waste.</li><li><strong>Lazy-load below the fold</strong> — <code>loading="lazy"</code>; never on the LCP image.</li><li><strong>Always set width and height</strong> (or <code>aspect-ratio</code>) to prevent CLS.</li><li><strong>Compress</strong> — quality 75–85 is visually indistinguishable for photos at a fraction of the size.</li><li><strong>Use an image CDN</strong> for automatic format negotiation, resizing and caching.</li><li><strong>Decoding</strong> — <code>decoding="async"</code> keeps decode off the critical path.</li></ul></div>
+          <pre><code>&lt;picture&gt;
+  &lt;source type=&quot;image/avif&quot; srcset=&quot;/p-400.avif 400w, /p-800.avif 800w&quot; sizes=&quot;(max-width:600px) 100vw, 50vw&quot;&gt;
+  &lt;source type=&quot;image/webp&quot; srcset=&quot;/p-400.webp 400w, /p-800.webp 800w&quot; sizes=&quot;(max-width:600px) 100vw, 50vw&quot;&gt;
+  &lt;img src=&quot;/p-800.jpg&quot; width=&quot;800&quot; height=&quot;600&quot; loading=&quot;lazy&quot; decoding=&quot;async&quot; alt=&quot;Product&quot;&gt;
+&lt;/picture&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you load web fonts without hurting performance?</h2>
+          <div class="seo-a"><p>Fonts are discovered late (CSS → @font-face → download) and cause two visible problems: <strong>FOIT</strong> (invisible text while loading) and <strong>FOUT</strong> (text reflows when the real font swaps in).</p><p><strong>The playbook:</strong></p><ul><li><strong>Self-host</strong> — third-party font CDNs add a DNS + TLS + request round trip, and cross-site font caching no longer exists.</li><li><strong>WOFF2 only</strong> — every browser that matters supports it.</li><li><strong>Preload the critical font</strong> so it isn't discovered after CSS parses.</li><li><strong><code>font-display: swap</code></strong> — show fallback text immediately. Use <code>optional</code> if you'd rather never reflow.</li><li><strong>Subset</strong> — Latin-only subsets are a fraction of the full file; drop unused weights entirely.</li><li><strong>Match fallback metrics</strong> with <code>size-adjust</code>, <code>ascent-override</code> etc. so the swap doesn't shift layout — this is what turns FOUT from a CLS problem into a non-event.</li></ul></div>
+          <pre><code>@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-var.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 100 900;          /* variable font: one file, all weights */
+}
+@font-face {                      /* metric-matched fallback -&gt; no shift on swap */
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107%;
+  ascent-override: 90%;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you design a caching strategy for a web app's assets?</h2>
+          <div class="seo-a"><p>Split assets into two classes and cache them oppositely:</p><ul><li><strong>Fingerprinted static assets</strong> (<code>app.8f3d2a.js</code>, images, fonts) — the URL changes whenever content changes, so cache them forever: <code>Cache-Control: public, max-age=31536000, immutable</code>. <code>immutable</code> also stops revalidation on reload.</li><li><strong>The HTML entry point</strong> — must never be stale, because it references the hashed assets: <code>no-cache</code> (revalidate every time) or a short max-age with <code>stale-while-revalidate</code> at the CDN.</li></ul><p><strong>Validators:</strong> <code>ETag</code>/<code>Last-Modified</code> let a revalidation return <code>304 Not Modified</code> — cheap, but still a round trip, which is why hashed assets skip it entirely.</p><p><strong>Service worker</strong> adds an application-controlled layer: precache the shell, stale-while-revalidate for data, offline fallbacks. Powerful, and the classic footgun — a bad SW can pin users to an old build, so always ship an update path.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What did HTTP/2 and HTTP/3 change for frontend performance?</h2>
+          <div class="seo-a"><p><strong>HTTP/1.1</strong> allowed ~6 connections per origin and suffered head-of-line blocking, which is why we used to concatenate files, inline sprites and shard across domains.</p><p><strong>HTTP/2</strong> introduced <strong>multiplexing</strong> — many streams over one connection — plus header compression (HPACK) and stream priorities. Those old workarounds became counterproductive: domain sharding costs extra connections, and mega-bundles hurt caching granularity. Server push was specified and has since been abandoned; use <code>103 Early Hints</code> instead.</p><p><strong>HTTP/3</strong> moves to QUIC over UDP, removing TCP-level head-of-line blocking (a lost packet no longer stalls unrelated streams), with 0-RTT connection resumption. The gains are largest on lossy mobile networks.</p><p><strong>Practically:</strong> stop sharding, split bundles for caching rather than concatenating everything, and check your CDN actually serves h2/h3 — it usually just works.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>preload, prefetch, preconnect, fetchpriority — when do you use each?</h2>
+          <div class="seo-a"><ul><li><strong><code>preconnect</code></strong> — do the DNS + TCP + TLS handshake to a third-party origin early, before you know the exact URL. Use for 2–3 critical origins only; each one costs a connection.</li><li><strong><code>dns-prefetch</code></strong> — DNS only. Cheap fallback for less critical origins.</li><li><strong><code>preload</code></strong> — fetch a resource <em>needed for this page</em> at high priority, earlier than the parser would find it. Classic uses: the LCP image, a critical font, a CSS-referenced asset. Must be used within seconds or the browser warns.</li><li><strong><code>prefetch</code></strong> — fetch something for a <em>future</em> navigation at lowest priority, during idle time.</li><li><strong><code>fetchpriority="high|low"</code></strong> — nudge the priority of a resource the browser already found. High for the hero image, low for below-the-fold or non-critical iframes.</li></ul><p>All of them are budget reallocation, not free speed: prioritising everything prioritises nothing.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is a long task and how do you break one up?</h2>
+          <div class="seo-a"><p>Any main-thread task over <strong>50 ms</strong>. While it runs, the browser can't respond to input, run animations, or paint — so long tasks are the direct cause of bad INP and janky scrolling.</p><p><strong>Techniques:</strong></p><ul><li><strong>Yield</strong> — split the work into chunks and hand control back between them: <code>scheduler.yield()</code> where available, otherwise <code>setTimeout(…, 0)</code> or <code>await new Promise(queueMicrotask)</code>-style batching.</li><li><strong>Prioritise with <code>scheduler.postTask()</code></strong> — background priority for work that can wait.</li><li><strong>Web Workers</strong> — move genuinely heavy, self-contained computation (parsing, diffing, crypto, image processing) off the main thread entirely. Cost is structured-clone overhead at the boundary.</li><li><strong><code>requestIdleCallback</code></strong> — for non-urgent work like analytics flushes and cache warming.</li><li><strong>Do less</strong> — the real fix is often that you're processing 10,000 rows the user can't see.</li></ul><p>Find them in the DevTools Performance panel: long tasks are flagged with a red triangle.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you render a list of 50,000 rows?</h2>
+          <div class="seo-a"><p>You don't render them. <strong>Virtualise</strong>: render only the rows in (or near) the viewport, absolutely position them inside a spacer element sized to the full list height, and swap the rendered window as the user scrolls.</p><p>Every DOM node costs memory, style recalculation, layout and paint — a 50k-row table will freeze the tab regardless of framework. Typical libraries: TanStack Virtual, react-window, CDK Virtual Scroll (Angular).</p><p><strong>What makes it tricky:</strong> variable row heights (need measurement and caching), scroll-anchoring so content doesn't jump, accessibility (screen readers and Ctrl+F only see rendered rows — expose a "show all"/export path), and keeping keyboard navigation working across the virtual boundary.</p><p><strong>Alternatives:</strong> pagination (simplest, often the right product answer), infinite scroll with windowing, or <code>content-visibility: auto</code> for long static documents — a one-line CSS win that lets the browser skip rendering off-screen sections.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you find and fix a memory leak in an SPA?</h2>
+          <div class="seo-a"><p>SPAs leak because the page never reloads, so anything you forget to clean up accumulates across navigations.</p><p><strong>Common causes:</strong> event listeners on <code>window</code>/<code>document</code> never removed; <code>setInterval</code> never cleared; unsubscribed observables or subscriptions; observers (<code>IntersectionObserver</code>, <code>ResizeObserver</code>, <code>MutationObserver</code>) never disconnected; closures capturing large objects; detached DOM nodes still referenced by a JS variable or a cache; and unbounded in-memory caches or logs.</p><p><strong>How to find it:</strong></p><ol><li>DevTools → Memory → take a heap snapshot.</li><li>Perform the suspect action several times (navigate away and back ×5).</li><li>Take another snapshot and compare with <strong>Comparison</strong> view; sort by delta.</li><li>Filter by <strong>Detached</strong> to find DOM nodes still held alive, and follow the retainer chain to the reference that's keeping them.</li></ol><p>The Performance panel's memory track is the quick smoke test: a sawtooth that never returns to baseline is a leak.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why are transform and opacity the only 'cheap' properties to animate?</h2>
+          <div class="seo-a"><p>The rendering pipeline is <strong>style → layout → paint → composite</strong>. Which properties you animate decides how much of it re-runs every frame:</p><ul><li>Animating <code>width</code>, <code>height</code>, <code>top</code>, <code>margin</code>, <code>font-size</code> triggers <strong>layout</strong> — then paint, then composite. Most expensive, and it can invalidate layout for large parts of the tree.</li><li>Animating <code>background-color</code>, <code>box-shadow</code>, <code>border-radius</code> skips layout but triggers <strong>paint</strong>.</li><li>Animating <code>transform</code> and <code>opacity</code> can be handled entirely by the <strong>compositor</strong>, often on the GPU and off the main thread — so they stay smooth even when JavaScript is busy.</li></ul><p><strong>Tools:</strong> promote a layer with <code>will-change: transform</code> just before animating and remove it after — leaving it on permanently wastes GPU memory. The <strong>Web Animations API</strong> and CSS animations both run on the compositor when the properties allow.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you manage the performance cost of third-party scripts?</h2>
+          <div class="seo-a"><p>Third-party scripts (tag managers, analytics, chat widgets, ads, A/B tools) are usually the largest performance cost you don't control — and they often inject <em>more</em> scripts at runtime, so their real weight is invisible in your bundle.</p><p><strong>Tactics:</strong></p><ul><li><strong>Inventory and justify</strong> — measure each one's cost and get an owner to defend it. Many are forgotten from campaigns years ago.</li><li><strong>Load late</strong> — <code>async</code>/<code>defer</code>, or after first interaction/idle. Almost nothing needs to run before first paint.</li><li><strong>Facades</strong> — render a lightweight placeholder (a chat button image, a video thumbnail) and load the real widget on click. Huge win for embeds.</li><li><strong>Self-host</strong> stable scripts where the licence allows, to cut a connection and control caching.</li><li><strong>Isolate</strong> — Partytown can move some third-party scripts into a Web Worker; sandboxed iframes limit blast radius.</li><li><strong>Monitor</strong> — alert on third-party script size and long tasks; they change without telling you.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is a performance budget and how do you enforce it?</h2>
+          <div class="seo-a"><p>A hard limit agreed up front, so performance is a build failure rather than a quarterly cleanup.</p><p><strong>Three kinds:</strong> <em>quantity</em> (JS ≤ 170 KB compressed, ≤ 1 MB images per page), <em>timing</em> (LCP ≤ 2.5 s on a mid-tier phone, TBT ≤ 200 ms), and <em>score</em> (Lighthouse ≥ 90) — quantity budgets are the most actionable because a developer can act on them immediately.</p><p><strong>Enforcement:</strong> <code>bundlesize</code>/<code>size-limit</code> on bundle output, Lighthouse CI on preview deployments with assertions, and a bot comment on the PR showing the delta versus main.</p><p><strong>What makes it stick:</strong> fail the build (a warning is ignored within a sprint), report the <em>diff</em> rather than the absolute number so the responsible PR is obvious, and allow explicit, reviewed exceptions rather than pretending they'll never be needed.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you profile a slow page in DevTools?</h2>
+          <div class="seo-a"><p><strong>Set up realistically first:</strong> CPU throttling 4–6×, network throttling to Slow 4G, and an incognito window (extensions distort everything). Testing on an unthrottled desktop is why "it's fast on my machine".</p><p><strong>Panels and what each answers:</strong></p><ul><li><strong>Performance</strong> — record a load or interaction. The flame chart shows what ran; long tasks are flagged red; the Main track shows scripting vs rendering vs painting. This is where you find <em>why</em> it's slow.</li><li><strong>Network</strong> — waterfall, request priority, sizes, and blocking chains. Look for serial dependencies (a fetch that only starts after another finishes).</li><li><strong>Coverage</strong> — unused CSS/JS bytes on load.</li><li><strong>Lighthouse</strong> — an opinionated summary and a starting checklist, not a diagnosis.</li><li><strong>Memory</strong> — heap snapshots for leaks.</li><li><strong>Framework profilers</strong> (React DevTools Profiler, Angular DevTools) — component-level render costs, which the browser can't attribute for you.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is hydration and why is it a performance problem?</h2>
+          <div class="seo-a"><p>Server-rendered HTML paints fast, but it's inert. <strong>Hydration</strong> is the client re-running the component tree to attach event listeners and rebuild state so the markup becomes interactive.</p><p>The cost is the <strong>uncanny valley</strong>: content is visible but nothing responds — clicks are dropped and INP suffers — and you effectively pay for the UI twice (rendered on the server, re-executed on the client, with the component code shipped anyway).</p><p><strong>Mitigations, in increasing order of ambition:</strong></p><ul><li><strong>Streaming SSR + progressive hydration</strong> — hydrate above-the-fold and interactive parts first.</li><li><strong>Islands architecture</strong> (Astro) — ship JS only for genuinely interactive components; the rest stays static HTML.</li><li><strong>React Server Components</strong> — components that never ship to the client at all.</li><li><strong>Resumability</strong> (Qwik) — serialise listener state into the HTML so no re-execution is needed.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you make navigation between pages feel instant?</h2>
+          <div class="seo-a"><ul><li><strong>Prefetch on intent</strong> — fetch the next route's code and data on link hover or touchstart. By the time the click lands, it's cached. Most frameworks' routers do this for links in the viewport.</li><li><strong>Speculation Rules API</strong> — declaratively tell the browser to <em>prefetch</em> or even <em>prerender</em> likely next pages, including for MPAs.</li><li><strong>bfcache</strong> — back/forward navigation restores the whole page instantly from memory. You break it with <code>unload</code> handlers, <code>Cache-Control: no-store</code>, or open IndexedDB transactions; DevTools' Back/forward cache panel tells you why it failed.</li><li><strong>Optimistic UI</strong> — render the new view's shell and skeletons immediately rather than blocking on data.</li><li><strong>Keep data cached</strong> — a client cache (TanStack Query, RTK Query) makes revisiting a page instant with a background refresh.</li><li><strong>View Transitions API</strong> — smooth cross-document/DOM transitions that hide the remaining latency.</li></ul></div>
+          
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="web-performance";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

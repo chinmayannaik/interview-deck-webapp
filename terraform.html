@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Terraform (IaC) Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 Terraform (IaC) interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/terraform" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Terraform (IaC) Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 Terraform (IaC) interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/terraform" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Terraform (IaC) Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Infrastructure as Code, and why Terraform over ClickOps?","acceptedAnswer":{"@type":"Answer","text":"Infrastructure as Code means your servers, networks, databases, and permissions are defined in version-controlled files and provisioned by a tool — never clicked together in a console. What you gain: Reproducibility — the same code builds dev, stage, and prod identically. No \"it works in stage\" mystery. Version control — infrastructure changes get PRs, review, blame, and revert. Auditability — git log answers \"who opened this security group and when\". Disaster recovery — rebuild a region from code. Scale — 50 identical environments is a loop, not 50 days of clicking. Declarative vs imperative is the key distinction: you declare the desired end state and Terraform computes the diff to reach it. A script (imperative) describes steps and breaks when re-run; Terraform is idempotent — applying twice changes nothing the second time."}},{"@type":"Question","name":"Explain the Terraform workflow: init, plan, apply, destroy.","acceptedAnswer":{"@type":"Answer","text":"terraform init — downloads providers and modules, configures the backend, creates .terraform.lock.hcl . Run it after cloning or whenever providers/modules change. terraform validate — syntax and internal consistency only; no cloud calls. terraform plan — the heart of Terraform. It refreshes real state, compares config vs state vs reality , and prints exactly what will be created ( + ), changed ( ~ ), destroyed ( - ), or replaced ( -/+ ). Nothing changes yet. terraform apply — executes the plan, building resources in dependency order (parallel where possible), then writes the new state. terraform destroy — tears everything in the state down. Fine for ephemeral environments, never casually in prod. In CI the professional pattern is to save the plan to a file and apply that exact file — otherwise the world could change between plan and apply and you'd approve one thing and execute another."}},{"@type":"Question","name":"What is Terraform state and why does it matter?","acceptedAnswer":{"@type":"Answer","text":"terraform.tfstate is a JSON file mapping your configuration to real-world resource IDs . Without it, Terraform has no idea that aws_instance.web in your code is instance i-0abc123 in AWS. It exists for four reasons: Mapping — config resource ↔ real resource ID. Metadata — dependency order, which is how Terraform knows what to destroy first. Performance — cached attributes so plans don't need to query everything. Diffing — the baseline for \"what changed\". Critical warnings: State contains secrets in plaintext — RDS passwords, generated keys. It must be encrypted at rest and access-controlled like a credential store. Never commit it to Git. Never hand-edit state. Use terraform state subcommands. Losing state is worse than losing code — Terraform will try to recreate everything it thinks doesn't exist. Enable versioning on the state bucket."}},{"@type":"Question","name":"How do you manage Terraform state for a team? Explain remote backends and locking.","acceptedAnswer":{"@type":"Answer","text":"Local state breaks the moment a second person or a CI runner is involved: no sharing, no locking, and the file lives on one laptop. The fix is a remote backend — S3 + DynamoDB, Azure Storage, GCS, Terraform Cloud, or Consul. What a good backend gives you: Shared state — everyone and CI read the same source of truth. State locking — two simultaneous applies would race and corrupt state; the lock makes the second one wait. (S3 backend uses a DynamoDB table for this; newer versions support native S3 lockfiles.) Encryption at rest + versioning for recovery. Access control — prod state readable only by the prod pipeline role. Isolate state per environment. One giant state file for dev+stage+prod means a bad plan can destroy prod, and every apply locks everyone. Use separate state keys/buckets per environment and per component (network / data / apps), and read across them with terraform_remote_state data sources."}},{"@type":"Question","name":"What are Terraform modules? How do you structure and version them?","acceptedAnswer":{"@type":"Answer","text":"A module is any directory of .tf files — a reusable component with inputs ( variables ), resources, and outputs. Your top level is the \"root module\"; anything it calls is a child module. Standard layout: modules/vpc/ main.tf # resources variables.tf # inputs, with types + descriptions + validation outputs.tf # what consumers need versions.tf # required_providers README.md Versioning is not optional. Source modules from a Git tag or registry version, never an unpinned branch — otherwise someone merging to main changes every consumer's infrastructure on their next apply. Design rules that matter: Don't over-abstract. A module wrapping a single resource with 30 pass-through variables adds indirection and no value. No hardcoded environment values inside a module — pass them in. Don't set providers inside modules ; inherit them from the root. Output everything a consumer might reasonably need; adding outputs later is a breaking-ish change."}},{"@type":"Question","name":"Variables, locals, outputs, and tfvars — how do they differ and what's the precedence?","acceptedAnswer":{"@type":"Answer","text":"variable — an input to the module. Give it a type , description , optional default , validation , and sensitive = true where relevant. locals — computed values used inside the module. Not settable from outside. Perfect for naming conventions and common tags (DRY). output — values exposed to the caller or to other stacks. .tfvars — files that supply variable values per environment. Precedence, lowest to highest (later wins): Variable default TF_VAR_name environment variables terraform.tfvars , then *.auto.tfvars (alphabetical) -var-file=... and -var=... on the command line (last one wins)"}},{"@type":"Question","name":"count vs for_each — which should you use and why?","acceptedAnswer":{"@type":"Answer","text":"Both create multiple instances of a resource, but they index differently and that difference causes real outages. count — creates a list indexed by position : aws_instance.web[0] , [1] , [2] . for_each — creates a map indexed by key : aws_instance.web[\"api\"] , [\"worker\"] . The problem with count : remove the middle element from the list and every subsequent resource shifts index. Terraform sees [1] changing identity and [2] disappearing — so it destroys and recreates resources that should not have been touched . On stateful resources that's data loss. With for_each , removing the \"worker\" key destroys only [\"worker\"] . Everything else is untouched. Rule of thumb: use for_each for anything with a natural identity (named services, users, buckets, subnets per AZ). Use count only for N identical, interchangeable copies — or as a conditional toggle ( count = var.enabled ? 1 : 0 )."}},{"@type":"Question","name":"How does Terraform determine resource creation order? When do you need depends_on?","acceptedAnswer":{"@type":"Answer","text":"Terraform builds a dependency graph and creates resources in order, running independent branches in parallel (default 10 concurrent operations). Implicit dependencies are created automatically whenever one resource references another's attribute. If your instance uses aws_subnet.main.id , Terraform knows the subnet must exist first. This covers ~95% of cases and is always preferred, because the dependency is self-documenting and precise. depends_on is the explicit escape hatch for dependencies Terraform cannot see — where the relationship exists in the cloud provider's behaviour but not in the config. Classic examples: An IAM policy attachment must exist before a Lambda that assumes the role actually runs. A resource needs the NAT gateway/route to exist before it can reach the internet during creation, without referencing it. Ordering around null_resource /provisioners. Overusing depends_on is an anti-pattern: it serialises the graph, slows applies, and often hides the fact that you should have referenced the attribute instead."}},{"@type":"Question","name":"Someone changed infrastructure manually in the console. What happens on the next terraform apply?","acceptedAnswer":{"@type":"Answer","text":"That's configuration drift — reality no longer matches state/config. On the next plan , Terraform refreshes state from the real API, sees the difference, and proposes to revert the manual change back to what the code says. Terraform's job is to enforce the declared state, so it treats a console edit as something to undo. Your options, in order of preference: Let Terraform revert it — the correct default. If the manual change was a mistake, this fixes it. Codify it — if the change was legitimate (a genuine hotfix), update the Terraform config to match so the next plan is clean and the change is now version-controlled. terraform import — if entirely new resources were created by hand, import them into state rather than letting Terraform create duplicates. ignore_changes — for attributes deliberately managed elsewhere (e.g. autoscaling adjusting desired_count , or tags applied by a separate policy tool). Preventing drift is the real answer: remove human write access to prod consoles (read-only + break-glass role), run terraform plan on a schedule and alert on any non-empty diff, and use CloudTrail to catch manual changes."}},{"@type":"Question","name":"Terraform workspaces vs directory-per-environment — how do you separate dev/stage/prod?","acceptedAnswer":{"@type":"Answer","text":"Workspaces give you multiple named state files from one configuration ( terraform workspace new prod ), branching on terraform.workspace . They're convenient but a poor fit for dev/stage/prod in most teams: All environments share one backend and one set of credentials — prod state sits next to dev state. It's far too easy to forget workspace select and apply dev changes to prod. There's no visual separation in the code. Environments inevitably diverge (prod has Multi-AZ, WAF, bigger instances) and you end up with conditionals like count = terraform.workspace == \"prod\" ? 3 : 1 scattered everywhere. Preferred: directory (or repo) per environment — separate root configs each with their own backend key, credentials, and tfvars , all calling the same shared modules. Explicit, safe, independently reviewable, and prod can have a different pipeline with approvals. Workspaces are genuinely good for short-lived, identical environments — per-PR preview stacks, per-developer sandboxes."}},{"@type":"Question","name":"Explain the lifecycle meta-arguments: prevent_destroy, create_before_destroy, ignore_changes.","acceptedAnswer":{"@type":"Answer","text":"prevent_destroy = true — Terraform errors out rather than destroying this resource. A safety net for databases, state buckets, and production data stores. Note it blocks terraform destroy entirely for that resource, so removing it requires a deliberate code change (which is exactly the point — it forces a reviewed PR). create_before_destroy = true — when a change forces replacement, build the new resource first , then delete the old one. This is how you avoid downtime on things like launch templates and ASGs. Requires unique names (use name_prefix instead of name , or the create will collide with the existing resource). ignore_changes = [...] — stop Terraform fighting over attributes that another system legitimately owns: autoscaling changing desired_count , a deployment pipeline updating an image tag, tags applied by an org policy. Use all sparingly. replace_triggered_by — force replacement when another resource changes."}},{"@type":"Question","name":"How do you handle secrets in Terraform, given that state stores them in plaintext?","acceptedAnswer":{"@type":"Answer","text":"Start by accepting the constraint: anything Terraform manages ends up in state, in plaintext. Marking a variable sensitive only hides it from CLI output. So the strategy is to minimise what secrets Terraform ever touches. In order of preference: Don't put the secret in Terraform at all. Have Terraform create an empty secret container (AWS Secrets Manager entry, Vault path) and let the application or a separate process populate the value at runtime. Terraform manages the infrastructure , not the credential. Reference, don't define. Use a data source to read an existing secret at apply time — though note the value still lands in state. Generate and store — let Terraform generate a random password, write it straight to Secrets Manager, and never output it. Protect the state itself — this is mandatory regardless: encryption at rest (KMS), bucket policies restricting read access to the pipeline role only, versioning, and access logging. Treat the state bucket as a credential store. Never: hardcode secrets in .tf , commit .tfvars containing secrets, or output a secret unnecessarily."}},{"@type":"Question","name":"How do you run Terraform in a CI/CD pipeline safely?","acceptedAnswer":{"@type":"Answer","text":"The standard, safe pattern: On PR — fmt -check , validate , security scan (Checkov/tfsec), then plan -out=tfplan . Post the plan as a PR comment so a human reviews exactly what will change. On merge to main — apply tfplan using the saved plan file. Never re-plan at apply time: the world could have changed, and you'd be executing something nobody approved. Production — a manual approval gate (protected environment) before apply. Controls that make it safe: OIDC/workload identity for cloud credentials — no long-lived keys in the CI system. Separate roles per environment ; the dev pipeline physically cannot touch prod. State locking plus concurrency limits so two pipelines never apply at once. Never -auto-approve on prod without an approved saved plan. Scheduled plan -detailed-exitcode for drift alerting. Managed options — Terraform Cloud, Spacelift, Atlantis, env0 — give you plan-in-PR, policy-as-code (OPA/Sentinel), and RBAC out of the box."}},{"@type":"Question","name":"What are Terraform providers? How do you pin versions and use multiple regions?","acceptedAnswer":{"@type":"Answer","text":"A provider is the plugin that translates Terraform's resource model into a specific API — AWS, Azure, Google, Kubernetes, Helm, GitHub, Datadog. Terraform core knows nothing about AWS; the provider does all of it. Version pinning uses two mechanisms: required_providers with a constraint — ~&gt; 5.0 means \"&gt;= 5.0, &lt; 6.0\" (allow minor/patch, block breaking major). .terraform.lock.hcl — records the exact resolved versions and checksums. Commit this file. It's what guarantees your laptop and CI use identical provider versions. Multiple regions/accounts use provider alias : declare a second provider block with an alias and pass it explicitly to resources or modules. Common for a replica in another region, or an ACM certificate that must live in us-east-1 for CloudFront. Also pin required_version for Terraform itself — a state file written by a newer version can't be read by an older one."}},{"@type":"Question","name":"What is a data source? How is it different from a resource?","acceptedAnswer":{"@type":"Answer","text":"A resource is something Terraform creates and manages — it's in state and Terraform will modify or destroy it. A data source only reads existing infrastructure; Terraform never creates, changes, or deletes it. Use data sources to: Look up values dynamically instead of hardcoding — the latest AMI ID, the current account ID, available AZs in this region. Reference infrastructure owned by another team or stack — an existing VPC, a shared security group, a manually created hosted zone. Read outputs from another Terraform state ( terraform_remote_state ). Data sources are resolved during plan , so their values are available to compute the diff — which is why a data source that depends on a not-yet-created resource can force a two-stage apply."}},{"@type":"Question","name":"What are provisioners, and why does HashiCorp call them a last resort?","acceptedAnswer":{"@type":"Answer","text":"Provisioners run scripts as part of resource creation — remote-exec (SSH into the machine), local-exec (run on the Terraform host), file (copy a file up). Why they're discouraged: They break the declarative model. Terraform can't see what a script did, so it isn't in state and drift is invisible. Not idempotent — the script only runs at creation, so changing it does nothing to existing resources. Fragile — they need SSH/WinRM connectivity, credentials, and correct security groups at create time. A failed provisioner marks the resource tainted , so the next apply destroys and recreates it. They turn infrastructure provisioning into configuration management, which is a different job. Do this instead: bake configuration into the image with Packer (immutable infrastructure), use user_data /cloud-init for boot-time setup, or hand off to a proper config-management tool (Ansible) after Terraform provisions. For containers, the Dockerfile is the image build."}},{"@type":"Question","name":"What HCL expressions and functions do you use most — for, dynamic blocks, try, templatefile?","acceptedAnswer":{"@type":"Answer","text":"HCL is declarative but has real expression power: for expressions — transform lists/maps: [for s in var.subnets : s.id] or build a map with { for k, v in ... : k =&gt; v } . dynamic blocks — generate repeated nested blocks (ingress rules, tags) from a variable. Use sparingly; they hurt readability fast. Conditionals — var.env == \"prod\" ? 3 : 1 . templatefile() — render an external file with variables (user-data scripts, config files, policy JSON). Much cleaner than heredocs inline. try() / coalesce() / lookup() — safe fallbacks for values that may not exist. Collection functions — merge , concat , flatten , toset , zipmap , cidrsubnet (the last one is essential for VPC design)."}},{"@type":"Question","name":"terraform apply failed halfway through. What's the state of your infrastructure and how do you recover?","acceptedAnswer":{"@type":"Answer","text":"Terraform applies resources incrementally and writes state as it goes , so a mid-apply failure leaves you partially applied : everything created before the failure exists and is in state; everything after it doesn't exist. Recovery steps: Don't panic-destroy. State is usually fine — Terraform is designed for this. Read the actual error — most are mundane: insufficient IAM permissions, a name collision, a quota limit, a dependency that wasn't ready, an invalid value the API rejected. Run terraform plan again. It will show only the remaining work. Fix the underlying cause and re-apply — Terraform is idempotent and will continue from where it stopped. If a resource was created but not recorded (rare — an API timeout after creation succeeded), the next apply fails with \"already exists\". Fix by terraform import -ing it into state. If state is locked because the process died, force-unlock &lt;ID&gt; — after verifying nothing is actually running. If state is genuinely corrupted , restore the previous version from the versioned S3 bucket (this is why versioning is mandatory)."}},{"@type":"Question","name":"Terraform vs Ansible vs CloudFormation vs Pulumi — when do you use each?","acceptedAnswer":{"@type":"Answer","text":"Tool Type Best at Terraform Declarative provisioning, multi-cloud Creating infrastructure — VPCs, clusters, databases, DNS, SaaS resources. State-tracked, huge provider ecosystem. Ansible Procedural config management, agentless Configuring inside machines — packages, files, services, app deployment, orchestrated ops runbooks. CloudFormation Declarative, AWS-native Pure-AWS shops wanting no state file to manage and native drift detection/rollback. Locked to AWS. Pulumi / CDK Declarative via real languages Teams who want TypeScript/Python with loops, types, and unit tests instead of HCL. The honest answer is that Terraform and Ansible are complements, not competitors : Terraform creates the servers, Ansible configures them. Many teams use both, plus Packer for baking images."}},{"@type":"Question","name":"What are your Terraform best practices for a production codebase?","acceptedAnswer":{"@type":"Answer","text":"Structure Reusable versioned modules + one root config per environment; separate state per environment and per component (network / data / apps) to limit blast radius. Consistent naming and mandatory tags via default_tags and locals — untagged resources are how cloud bills become unattributable. Safety Remote encrypted state with locking and bucket versioning; prevent_destroy on data stores. Pin provider and module versions; commit .terraform.lock.hcl . Plan in PR, apply the saved plan, manual approval for prod. Quality fmt + validate + tflint + checkov / tfsec in CI; policy-as-code (OPA/Sentinel) for org rules like \"no public S3 buckets\". Document module inputs/outputs ( terraform-docs ). Variable validation blocks to fail fast on bad input. Discipline No manual console changes in prod — enforce with read-only access + scheduled drift detection. Never commit .tfstate or secret-bearing .tfvars . Avoid -target except in emergencies; it produces state that doesn't match a full apply."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Terraform (IaC) interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Terraform (IaC) Interview Questions and Answers</h1>
+      <p>20 hand-picked Terraform (IaC) interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is Infrastructure as Code, and why Terraform over ClickOps?</h2>
+          <div class="seo-a"><p><strong>Infrastructure as Code</strong> means your servers, networks, databases, and permissions are defined in version-controlled files and provisioned by a tool — never clicked together in a console.</p><p>What you gain:</p><ul><li><strong>Reproducibility</strong> — the same code builds dev, stage, and prod identically. No "it works in stage" mystery.</li><li><strong>Version control</strong> — infrastructure changes get PRs, review, blame, and revert.</li><li><strong>Auditability</strong> — <code class="inline">git log</code> answers "who opened this security group and when".</li><li><strong>Disaster recovery</strong> — rebuild a region from code.</li><li><strong>Scale</strong> — 50 identical environments is a loop, not 50 days of clicking.</li></ul><p><strong>Declarative vs imperative</strong> is the key distinction: you declare the <em>desired end state</em> and Terraform computes the diff to reach it. A script (imperative) describes <em>steps</em> and breaks when re-run; Terraform is idempotent — applying twice changes nothing the second time.</p></div>
+          <pre><code>resource &quot;aws_instance&quot; &quot;web&quot; {
+  ami           = data.aws_ami.al2023.id
+  instance_type = var.instance_type
+  subnet_id     = aws_subnet.private[0].id
+
+  tags = {
+    Name        = &quot;${var.project}-web&quot;
+    Environment = var.environment
+    ManagedBy   = &quot;terraform&quot;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain the Terraform workflow: init, plan, apply, destroy.</h2>
+          <div class="seo-a"><ul><li><strong><code class="inline">terraform init</code></strong> — downloads providers and modules, configures the backend, creates <code class="inline">.terraform.lock.hcl</code>. Run it after cloning or whenever providers/modules change.</li><li><strong><code class="inline">terraform validate</code></strong> — syntax and internal consistency only; no cloud calls.</li><li><strong><code class="inline">terraform plan</code></strong> — the heart of Terraform. It refreshes real state, compares <em>config</em> vs <em>state</em> vs <em>reality</em>, and prints exactly what will be created (<code class="inline">+</code>), changed (<code class="inline">~</code>), destroyed (<code class="inline">-</code>), or replaced (<code class="inline">-/+</code>). Nothing changes yet.</li><li><strong><code class="inline">terraform apply</code></strong> — executes the plan, building resources in dependency order (parallel where possible), then writes the new state.</li><li><strong><code class="inline">terraform destroy</code></strong> — tears everything in the state down. Fine for ephemeral environments, never casually in prod.</li></ul><p>In CI the professional pattern is to <strong>save the plan to a file</strong> and apply <em>that exact file</em> — otherwise the world could change between plan and apply and you'd approve one thing and execute another.</p></div>
+          <pre><code>terraform init -backend-config=env/prod.hcl
+terraform fmt -recursive
+terraform validate
+
+# CI pattern: plan to a file, apply that exact file
+terraform plan -out=tfplan -var-file=env/prod.tfvars
+terraform show -no-color tfplan &gt; plan.txt      # attach to the PR
+terraform apply tfplan
+
+# scoped operations
+terraform plan -target=module.database          # emergency use only
+terraform apply -replace=aws_instance.web       # force recreate (old 'taint')
+terraform destroy -var-file=env/dev.tfvars</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Terraform state and why does it matter?</h2>
+          <div class="seo-a"><p><code class="inline">terraform.tfstate</code> is a JSON file mapping your <em>configuration</em> to <em>real-world resource IDs</em>. Without it, Terraform has no idea that <code class="inline">aws_instance.web</code> in your code is instance <code class="inline">i-0abc123</code> in AWS.</p><p>It exists for four reasons:</p><ul><li><strong>Mapping</strong> — config resource ↔ real resource ID.</li><li><strong>Metadata</strong> — dependency order, which is how Terraform knows what to destroy first.</li><li><strong>Performance</strong> — cached attributes so plans don't need to query everything.</li><li><strong>Diffing</strong> — the baseline for "what changed".</li></ul><p><strong>Critical warnings:</strong></p><ol><li><strong>State contains secrets in plaintext</strong> — RDS passwords, generated keys. It must be encrypted at rest and access-controlled like a credential store. Never commit it to Git.</li><li><strong>Never hand-edit state.</strong> Use <code class="inline">terraform state</code> subcommands.</li><li><strong>Losing state is worse than losing code</strong> — Terraform will try to recreate everything it thinks doesn't exist. Enable versioning on the state bucket.</li></ol></div>
+          <pre><code>terraform state list                       # everything Terraform manages
+terraform state show aws_instance.web      # attributes of one resource
+terraform state mv aws_instance.web module.compute.aws_instance.web   # after refactor
+terraform state rm aws_s3_bucket.legacy    # forget it (does NOT delete the real bucket)
+terraform import aws_instance.web i-0abc123def456   # adopt an existing resource
+
+terraform state pull &gt; backup.tfstate       # back up before anything risky</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you manage Terraform state for a team? Explain remote backends and locking.</h2>
+          <div class="seo-a"><p>Local state breaks the moment a second person or a CI runner is involved: no sharing, no locking, and the file lives on one laptop. The fix is a <strong>remote backend</strong> — S3 + DynamoDB, Azure Storage, GCS, Terraform Cloud, or Consul.</p><p>What a good backend gives you:</p><ul><li><strong>Shared state</strong> — everyone and CI read the same source of truth.</li><li><strong>State locking</strong> — two simultaneous applies would race and corrupt state; the lock makes the second one wait. (S3 backend uses a DynamoDB table for this; newer versions support native S3 lockfiles.)</li><li><strong>Encryption at rest</strong> + versioning for recovery.</li><li><strong>Access control</strong> — prod state readable only by the prod pipeline role.</li></ul><p><strong>Isolate state per environment.</strong> One giant state file for dev+stage+prod means a bad plan can destroy prod, and every apply locks everyone. Use separate state keys/buckets per environment and per component (network / data / apps), and read across them with <code class="inline">terraform_remote_state</code> data sources.</p></div>
+          <pre><code>terraform {
+  required_version = &quot;~&gt; 1.9&quot;
+  backend &quot;s3&quot; {
+    bucket         = &quot;acme-tfstate-prod&quot;
+    key            = &quot;platform/network/terraform.tfstate&quot;
+    region         = &quot;ap-south-1&quot;
+    encrypt        = true
+    kms_key_id     = &quot;arn:aws:kms:ap-south-1:123456789012:key/abc&quot;
+    dynamodb_table = &quot;terraform-locks&quot;      # state locking
+  }
+}
+
+# read another stack's outputs
+data &quot;terraform_remote_state&quot; &quot;network&quot; {
+  backend = &quot;s3&quot;
+  config = {
+    bucket = &quot;acme-tfstate-prod&quot;
+    key    = &quot;platform/network/terraform.tfstate&quot;
+    region = &quot;ap-south-1&quot;
+  }
+}
+
+resource &quot;aws_instance&quot; &quot;app&quot; {
+  subnet_id = data.terraform_remote_state.network.outputs.private_subnet_ids[0]
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Terraform modules? How do you structure and version them?</h2>
+          <div class="seo-a"><p>A <strong>module</strong> is any directory of <code class="inline">.tf</code> files — a reusable component with inputs (<code class="inline">variables</code>), resources, and outputs. Your top level is the "root module"; anything it calls is a child module.</p><p>Standard layout:</p><pre><code>modules/vpc/
+  main.tf        # resources
+  variables.tf   # inputs, with types + descriptions + validation
+  outputs.tf     # what consumers need
+  versions.tf    # required_providers
+  README.md</code></pre><p><strong>Versioning is not optional.</strong> Source modules from a Git tag or registry version, never an unpinned branch — otherwise someone merging to main changes every consumer's infrastructure on their next apply.</p><p>Design rules that matter:</p><ul><li><strong>Don't over-abstract.</strong> A module wrapping a single resource with 30 pass-through variables adds indirection and no value.</li><li><strong>No hardcoded environment values</strong> inside a module — pass them in.</li><li><strong>Don't set providers inside modules</strong>; inherit them from the root.</li><li>Output everything a consumer might reasonably need; adding outputs later is a breaking-ish change.</li></ul></div>
+          <pre><code>module &quot;vpc&quot; {
+  source  = &quot;git::https://github.com/acme/tf-modules.git//vpc?ref=v2.3.1&quot;  # PINNED
+  # or: source = &quot;terraform-aws-modules/vpc/aws&quot;
+  #     version = &quot;~&gt; 5.0&quot;
+
+  name               = &quot;${var.project}-${var.environment}&quot;
+  cidr               = var.vpc_cidr
+  availability_zones = var.azs
+  enable_nat_gateway = var.environment == &quot;prod&quot;   # cost control in dev
+  tags               = local.common_tags
+}
+
+# modules/vpc/variables.tf — validated inputs
+variable &quot;vpc_cidr&quot; {
+  description = &quot;CIDR block for the VPC&quot;
+  type        = string
+  validation {
+    condition     = can(cidrhost(var.vpc_cidr, 0))
+    error_message = &quot;vpc_cidr must be a valid CIDR block.&quot;
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Variables, locals, outputs, and tfvars — how do they differ and what's the precedence?</h2>
+          <div class="seo-a"><ul><li><strong><code class="inline">variable</code></strong> — an <em>input</em> to the module. Give it a <code class="inline">type</code>, <code class="inline">description</code>, optional <code class="inline">default</code>, <code class="inline">validation</code>, and <code class="inline">sensitive = true</code> where relevant.</li><li><strong><code class="inline">locals</code></strong> — computed values used <em>inside</em> the module. Not settable from outside. Perfect for naming conventions and common tags (DRY).</li><li><strong><code class="inline">output</code></strong> — values exposed to the caller or to other stacks.</li><li><strong><code class="inline">.tfvars</code></strong> — files that supply variable values per environment.</li></ul><p><strong>Precedence, lowest to highest</strong> (later wins):</p><ol><li>Variable <code class="inline">default</code></li><li><code class="inline">TF_VAR_name</code> environment variables</li><li><code class="inline">terraform.tfvars</code>, then <code class="inline">*.auto.tfvars</code> (alphabetical)</li><li><code class="inline">-var-file=...</code> and <code class="inline">-var=...</code> on the command line (last one wins)</li></ol></div>
+          <pre><code>variable &quot;environment&quot; {
+  description = &quot;Deployment environment&quot;
+  type        = string
+  validation {
+    condition     = contains([&quot;dev&quot;, &quot;stage&quot;, &quot;prod&quot;], var.environment)
+    error_message = &quot;environment must be dev, stage, or prod.&quot;
+  }
+}
+
+variable &quot;db_password&quot; {
+  type      = string
+  sensitive = true          # hidden in output, STILL plaintext in state
+}
+
+locals {
+  name_prefix = &quot;${var.project}-${var.environment}&quot;
+  common_tags = {
+    Project     = var.project
+    Environment = var.environment
+    ManagedBy   = &quot;terraform&quot;
+    Owner       = var.team
+  }
+  is_prod = var.environment == &quot;prod&quot;
+}
+
+output &quot;alb_dns_name&quot; {
+  description = &quot;Public DNS of the load balancer&quot;
+  value       = aws_lb.main.dns_name
+}
+
+# env/prod.tfvars
+# environment   = &quot;prod&quot;
+# instance_type = &quot;m6i.xlarge&quot;
+# min_capacity  = 3</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>count vs for_each — which should you use and why?</h2>
+          <div class="seo-a"><p>Both create multiple instances of a resource, but they index differently and that difference causes real outages.</p><ul><li><strong><code class="inline">count</code></strong> — creates a list indexed by <em>position</em>: <code class="inline">aws_instance.web[0]</code>, <code class="inline">[1]</code>, <code class="inline">[2]</code>.</li><li><strong><code class="inline">for_each</code></strong> — creates a map indexed by <em>key</em>: <code class="inline">aws_instance.web["api"]</code>, <code class="inline">["worker"]</code>.</li></ul><p><strong>The problem with <code class="inline">count</code></strong>: remove the middle element from the list and every subsequent resource shifts index. Terraform sees <code class="inline">[1]</code> changing identity and <code class="inline">[2]</code> disappearing — so it <strong>destroys and recreates resources that should not have been touched</strong>. On stateful resources that's data loss.</p><p>With <code class="inline">for_each</code>, removing the <code class="inline">"worker"</code> key destroys only <code class="inline">["worker"]</code>. Everything else is untouched.</p><p><strong>Rule of thumb:</strong> use <code class="inline">for_each</code> for anything with a natural identity (named services, users, buckets, subnets per AZ). Use <code class="inline">count</code> only for N identical, interchangeable copies — or as a conditional toggle (<code class="inline">count = var.enabled ? 1 : 0</code>).</p></div>
+          <pre><code># ❌ risky: removing &quot;stage&quot; recreates &quot;prod&quot;
+variable &quot;envs&quot; { default = [&quot;dev&quot;, &quot;stage&quot;, &quot;prod&quot;] }
+resource &quot;aws_s3_bucket&quot; &quot;logs&quot; {
+  count  = length(var.envs)
+  bucket = &quot;logs-${var.envs[count.index]}&quot;
+}
+
+# ✅ safe: keys are stable identities
+resource &quot;aws_s3_bucket&quot; &quot;logs&quot; {
+  for_each = toset([&quot;dev&quot;, &quot;stage&quot;, &quot;prod&quot;])
+  bucket   = &quot;logs-${each.key}&quot;
+}
+
+# for_each over a map of objects — the powerful form
+variable &quot;services&quot; {
+  type = map(object({ cpu = number, memory = number }))
+  default = {
+    api    = { cpu = 512,  memory = 1024 }
+    worker = { cpu = 1024, memory = 2048 }
+  }
+}
+resource &quot;aws_ecs_task_definition&quot; &quot;svc&quot; {
+  for_each = var.services
+  family   = each.key
+  cpu      = each.value.cpu
+  memory   = each.value.memory
+}
+
+# count as a conditional toggle — legitimate use
+resource &quot;aws_nat_gateway&quot; &quot;main&quot; {
+  count = var.enable_nat ? 1 : 0
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Terraform determine resource creation order? When do you need depends_on?</h2>
+          <div class="seo-a"><p>Terraform builds a <strong>dependency graph</strong> and creates resources in order, running independent branches in parallel (default 10 concurrent operations).</p><p><strong>Implicit dependencies</strong> are created automatically whenever one resource <em>references</em> another's attribute. If your instance uses <code class="inline">aws_subnet.main.id</code>, Terraform knows the subnet must exist first. This covers ~95% of cases and is always preferred, because the dependency is self-documenting and precise.</p><p><strong><code class="inline">depends_on</code></strong> is the explicit escape hatch for dependencies Terraform <em>cannot see</em> — where the relationship exists in the cloud provider's behaviour but not in the config. Classic examples:</p><ul><li>An IAM policy attachment must exist before a Lambda that assumes the role actually runs.</li><li>A resource needs the NAT gateway/route to exist before it can reach the internet during creation, without referencing it.</li><li>Ordering around <code class="inline">null_resource</code>/provisioners.</li></ul><p>Overusing <code class="inline">depends_on</code> is an anti-pattern: it serialises the graph, slows applies, and often hides the fact that you should have referenced the attribute instead.</p></div>
+          <pre><code># implicit — preferred. The reference IS the dependency.
+resource &quot;aws_instance&quot; &quot;app&quot; {
+  subnet_id              = aws_subnet.private.id
+  vpc_security_group_ids = [aws_security_group.app.id]
+}
+
+# explicit — for invisible relationships
+resource &quot;aws_lambda_function&quot; &quot;processor&quot; {
+  function_name = &quot;processor&quot;
+  role          = aws_iam_role.lambda.arn
+
+  depends_on = [
+    aws_iam_role_policy_attachment.lambda_logs,   # must exist before first invoke
+    aws_cloudwatch_log_group.lambda
+  ]
+}
+
+terraform graph | dot -Tsvg &gt; graph.svg   # visualise the dependency graph
+terraform apply -parallelism=20</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Someone changed infrastructure manually in the console. What happens on the next terraform apply?</h2>
+          <div class="seo-a"><p>That's <strong>configuration drift</strong> — reality no longer matches state/config.</p><p>On the next <code class="inline">plan</code>, Terraform refreshes state from the real API, sees the difference, and proposes to <strong>revert the manual change</strong> back to what the code says. Terraform's job is to enforce the declared state, so it treats a console edit as something to undo.</p><p>Your options, in order of preference:</p><ol><li><strong>Let Terraform revert it</strong> — the correct default. If the manual change was a mistake, this fixes it.</li><li><strong>Codify it</strong> — if the change was legitimate (a genuine hotfix), update the Terraform config to match so the next plan is clean and the change is now version-controlled.</li><li><strong><code class="inline">terraform import</code></strong> — if entirely new resources were created by hand, import them into state rather than letting Terraform create duplicates.</li><li><strong><code class="inline">ignore_changes</code></strong> — for attributes deliberately managed elsewhere (e.g. autoscaling adjusting <code class="inline">desired_count</code>, or tags applied by a separate policy tool).</li></ol><p><strong>Preventing drift</strong> is the real answer: remove human write access to prod consoles (read-only + break-glass role), run <code class="inline">terraform plan</code> on a schedule and alert on any non-empty diff, and use CloudTrail to catch manual changes.</p></div>
+          <pre><code>terraform plan -detailed-exitcode
+#   0 = no changes, 1 = error, 2 = drift detected  ← perfect for a cron/CI check
+
+terraform apply -refresh-only     # accept reality into state without changing infra
+terraform import aws_security_group.manual sg-0abc123
+
+resource &quot;aws_ecs_service&quot; &quot;api&quot; {
+  desired_count = 2
+  lifecycle {
+    ignore_changes = [desired_count]   # autoscaling owns this attribute
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Terraform workspaces vs directory-per-environment — how do you separate dev/stage/prod?</h2>
+          <div class="seo-a"><p><strong>Workspaces</strong> give you multiple named state files from one configuration (<code class="inline">terraform workspace new prod</code>), branching on <code class="inline">terraform.workspace</code>.</p><p>They're convenient but a <strong>poor fit for dev/stage/prod</strong> in most teams:</p><ul><li>All environments share <strong>one backend and one set of credentials</strong> — prod state sits next to dev state.</li><li>It's <em>far too easy</em> to forget <code class="inline">workspace select</code> and apply dev changes to prod. There's no visual separation in the code.</li><li>Environments inevitably diverge (prod has Multi-AZ, WAF, bigger instances) and you end up with conditionals like <code class="inline">count = terraform.workspace == "prod" ? 3 : 1</code> scattered everywhere.</li></ul><p><strong>Preferred: directory (or repo) per environment</strong> — separate root configs each with their own backend key, credentials, and <code class="inline">tfvars</code>, all calling the same shared modules. Explicit, safe, independently reviewable, and prod can have a different pipeline with approvals.</p><p>Workspaces are genuinely good for <strong>short-lived, identical</strong> environments — per-PR preview stacks, per-developer sandboxes.</p></div>
+          <pre><code># preferred layout
+├── modules/
+│   ├── vpc/
+│   ├── eks/
+│   └── rds/
+└── environments/
+    ├── dev/    { main.tf  backend.tf  dev.tfvars }
+    ├── stage/  { main.tf  backend.tf  stage.tfvars }
+    └── prod/   { main.tf  backend.tf  prod.tfvars }
+
+# each environment: its own state key + credentials
+cd environments/prod
+terraform init &amp;&amp; terraform plan -var-file=prod.tfvars
+
+# workspaces — good for ephemeral PR previews
+terraform workspace new pr-482
+terraform apply -var=&quot;name_suffix=pr-482&quot;
+terraform workspace delete pr-482</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain the lifecycle meta-arguments: prevent_destroy, create_before_destroy, ignore_changes.</h2>
+          <div class="seo-a"><ul><li><strong><code class="inline">prevent_destroy = true</code></strong> — Terraform errors out rather than destroying this resource. A safety net for databases, state buckets, and production data stores. Note it blocks <code class="inline">terraform destroy</code> entirely for that resource, so removing it requires a deliberate code change (which is exactly the point — it forces a reviewed PR).</li><li><strong><code class="inline">create_before_destroy = true</code></strong> — when a change forces replacement, build the new resource <em>first</em>, then delete the old one. This is how you avoid downtime on things like launch templates and ASGs. Requires unique names (use <code class="inline">name_prefix</code> instead of <code class="inline">name</code>, or the create will collide with the existing resource).</li><li><strong><code class="inline">ignore_changes = [...]</code></strong> — stop Terraform fighting over attributes that another system legitimately owns: autoscaling changing <code class="inline">desired_count</code>, a deployment pipeline updating an image tag, tags applied by an org policy. Use <code class="inline">all</code> sparingly.</li><li><strong><code class="inline">replace_triggered_by</code></strong> — force replacement when another resource changes.</li></ul></div>
+          <pre><code>resource &quot;aws_db_instance&quot; &quot;main&quot; {
+  identifier = &quot;prod-postgres&quot;
+
+  lifecycle {
+    prevent_destroy = true                    # refuse to delete prod data
+    ignore_changes  = [password, engine_version]
+  }
+}
+
+resource &quot;aws_launch_template&quot; &quot;app&quot; {
+  name_prefix = &quot;app-&quot;                        # NOT name — avoids collision
+  image_id    = var.ami_id
+
+  lifecycle {
+    create_before_destroy = true              # zero-downtime replacement
+  }
+}
+
+resource &quot;aws_ecs_service&quot; &quot;api&quot; {
+  desired_count = 2
+  lifecycle {
+    ignore_changes = [desired_count, task_definition]   # autoscaling + CD own these
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle secrets in Terraform, given that state stores them in plaintext?</h2>
+          <div class="seo-a"><p>Start by accepting the constraint: <strong>anything Terraform manages ends up in state, in plaintext.</strong> Marking a variable <code class="inline">sensitive</code> only hides it from CLI output. So the strategy is to minimise what secrets Terraform ever touches.</p><p>In order of preference:</p><ol><li><strong>Don't put the secret in Terraform at all.</strong> Have Terraform create an <em>empty</em> secret container (AWS Secrets Manager entry, Vault path) and let the application or a separate process populate the value at runtime. Terraform manages the <em>infrastructure</em>, not the credential.</li><li><strong>Reference, don't define.</strong> Use a <code class="inline">data</code> source to read an existing secret at apply time — though note the value still lands in state.</li><li><strong>Generate and store</strong> — let Terraform generate a random password, write it straight to Secrets Manager, and never output it.</li><li><strong>Protect the state itself</strong> — this is mandatory regardless: encryption at rest (KMS), bucket policies restricting read access to the pipeline role only, versioning, and access logging. Treat the state bucket as a credential store.</li></ol><p>Never: hardcode secrets in <code class="inline">.tf</code>, commit <code class="inline">.tfvars</code> containing secrets, or output a secret unnecessarily.</p></div>
+          <pre><code># 1. Terraform creates the CONTAINER; something else sets the value
+resource &quot;aws_secretsmanager_secret&quot; &quot;db&quot; {
+  name       = &quot;${var.environment}/db/credentials&quot;
+  kms_key_id = aws_kms_key.secrets.id
+}
+
+# 2. Or generate + store, never output
+resource &quot;random_password&quot; &quot;db&quot; {
+  length  = 32
+  special = true
+}
+resource &quot;aws_secretsmanager_secret_version&quot; &quot;db&quot; {
+  secret_id     = aws_secretsmanager_secret.db.id
+  secret_string = jsonencode({ username = &quot;app&quot;, password = random_password.db.result })
+}
+
+# 3. Read an existing secret rather than defining it
+data &quot;aws_secretsmanager_secret_version&quot; &quot;api_key&quot; {
+  secret_id = &quot;prod/external/api-key&quot;
+}
+
+# 4. Lock down state — mandatory
+# backend &quot;s3&quot; { encrypt = true, kms_key_id = &quot;...&quot; } + restrictive bucket policy
+
+# .gitignore
+# *.tfvars
+# *.tfstate*
+# .terraform/</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you run Terraform in a CI/CD pipeline safely?</h2>
+          <div class="seo-a"><p>The standard, safe pattern:</p><ol><li><strong>On PR</strong> — <code class="inline">fmt -check</code>, <code class="inline">validate</code>, security scan (Checkov/tfsec), then <code class="inline">plan -out=tfplan</code>. Post the plan as a PR comment so a human reviews <em>exactly</em> what will change.</li><li><strong>On merge to main</strong> — <code class="inline">apply tfplan</code> using the <em>saved</em> plan file. Never re-plan at apply time: the world could have changed, and you'd be executing something nobody approved.</li><li><strong>Production</strong> — a manual approval gate (protected environment) before apply.</li></ol><p>Controls that make it safe:</p><ul><li><strong>OIDC/workload identity</strong> for cloud credentials — no long-lived keys in the CI system.</li><li><strong>Separate roles per environment</strong>; the dev pipeline physically cannot touch prod.</li><li><strong>State locking</strong> plus <code class="inline">concurrency</code> limits so two pipelines never apply at once.</li><li><strong>Never <code class="inline">-auto-approve</code> on prod</strong> without an approved saved plan.</li><li>Scheduled <code class="inline">plan -detailed-exitcode</code> for drift alerting.</li></ul><p>Managed options — Terraform Cloud, Spacelift, Atlantis, env0 — give you plan-in-PR, policy-as-code (OPA/Sentinel), and RBAC out of the box.</p></div>
+          <pre><code>jobs:
+  plan:
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read, pull-requests: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::111122223333:role/tf-plan   # OIDC, read-mostly
+          aws-region: ap-south-1
+      - run: terraform init
+      - run: terraform fmt -check -recursive
+      - run: terraform validate
+      - uses: bridgecrewio/checkov-action@master
+      - run: terraform plan -out=tfplan -var-file=env/prod.tfvars
+      - uses: actions/upload-artifact@v4
+        with: { name: tfplan, path: tfplan }
+
+  apply:
+    needs: plan
+    if: github.ref == 'refs/heads/main'
+    environment: production          # manual approval gate
+    concurrency: terraform-prod      # never two applies at once
+    steps:
+      - uses: actions/download-artifact@v4
+        with: { name: tfplan }
+      - run: terraform apply tfplan   # the APPROVED plan, not a new one</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are Terraform providers? How do you pin versions and use multiple regions?</h2>
+          <div class="seo-a"><p>A <strong>provider</strong> is the plugin that translates Terraform's resource model into a specific API — AWS, Azure, Google, Kubernetes, Helm, GitHub, Datadog. Terraform core knows nothing about AWS; the provider does all of it.</p><p><strong>Version pinning</strong> uses two mechanisms:</p><ul><li><code class="inline">required_providers</code> with a constraint — <code class="inline">~&gt; 5.0</code> means "&gt;= 5.0, &lt; 6.0" (allow minor/patch, block breaking major).</li><li><code class="inline">.terraform.lock.hcl</code> — records the <em>exact</em> resolved versions and checksums. <strong>Commit this file.</strong> It's what guarantees your laptop and CI use identical provider versions.</li></ul><p><strong>Multiple regions/accounts</strong> use provider <code class="inline">alias</code>: declare a second provider block with an alias and pass it explicitly to resources or modules. Common for a replica in another region, or an ACM certificate that must live in <code class="inline">us-east-1</code> for CloudFront.</p><p>Also pin <code class="inline">required_version</code> for Terraform itself — a state file written by a newer version can't be read by an older one.</p></div>
+          <pre><code>terraform {
+  required_version = &quot;~&gt; 1.9&quot;
+  required_providers {
+    aws        = { source = &quot;hashicorp/aws&quot;,        version = &quot;~&gt; 5.60&quot; }
+    kubernetes = { source = &quot;hashicorp/kubernetes&quot;, version = &quot;~&gt; 2.31&quot; }
+  }
+}
+
+provider &quot;aws&quot; {
+  region = &quot;ap-south-1&quot;
+  default_tags { tags = local.common_tags }   # tag everything, automatically
+}
+
+provider &quot;aws&quot; {
+  alias  = &quot;us_east&quot;                          # CloudFront certs must be here
+  region = &quot;us-east-1&quot;
+}
+
+resource &quot;aws_acm_certificate&quot; &quot;cdn&quot; {
+  provider          = aws.us_east
+  domain_name       = var.domain
+  validation_method = &quot;DNS&quot;
+}
+
+module &quot;dr&quot; {
+  source    = &quot;./modules/app&quot;
+  providers = { aws = aws.us_east }
+}
+
+# terraform providers lock -platform=linux_amd64 -platform=darwin_arm64</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a data source? How is it different from a resource?</h2>
+          <div class="seo-a"><p>A <strong>resource</strong> is something Terraform <em>creates and manages</em> — it's in state and Terraform will modify or destroy it. A <strong>data source</strong> only <em>reads</em> existing infrastructure; Terraform never creates, changes, or deletes it.</p><p>Use data sources to:</p><ul><li><strong>Look up values dynamically</strong> instead of hardcoding — the latest AMI ID, the current account ID, available AZs in this region.</li><li><strong>Reference infrastructure owned by another team or stack</strong> — an existing VPC, a shared security group, a manually created hosted zone.</li><li><strong>Read outputs from another Terraform state</strong> (<code class="inline">terraform_remote_state</code>).</li></ul><p>Data sources are resolved during <code class="inline">plan</code>, so their values are available to compute the diff — which is why a data source that depends on a not-yet-created resource can force a two-stage apply.</p></div>
+          <pre><code>data &quot;aws_ami&quot; &quot;al2023&quot; {
+  most_recent = true
+  owners      = [&quot;amazon&quot;]
+  filter {
+    name   = &quot;name&quot;
+    values = [&quot;al2023-ami-*-x86_64&quot;]
+  }
+}
+
+data &quot;aws_availability_zones&quot; &quot;available&quot; {
+  state = &quot;available&quot;
+}
+
+data &quot;aws_caller_identity&quot; &quot;current&quot; {}
+data &quot;aws_region&quot; &quot;current&quot; {}
+
+# reference a VPC another team owns
+data &quot;aws_vpc&quot; &quot;shared&quot; {
+  tags = { Name = &quot;shared-services&quot; }
+}
+
+resource &quot;aws_instance&quot; &quot;app&quot; {
+  ami               = data.aws_ami.al2023.id
+  availability_zone = data.aws_availability_zones.available.names[0]
+  tags = { Account = data.aws_caller_identity.current.account_id }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are provisioners, and why does HashiCorp call them a last resort?</h2>
+          <div class="seo-a"><p>Provisioners run scripts as part of resource creation — <code class="inline">remote-exec</code> (SSH into the machine), <code class="inline">local-exec</code> (run on the Terraform host), <code class="inline">file</code> (copy a file up).</p><p>Why they're discouraged:</p><ul><li><strong>They break the declarative model.</strong> Terraform can't see what a script did, so it isn't in state and drift is invisible.</li><li><strong>Not idempotent</strong> — the script only runs at creation, so changing it does nothing to existing resources.</li><li><strong>Fragile</strong> — they need SSH/WinRM connectivity, credentials, and correct security groups at create time. A failed provisioner marks the resource <strong>tainted</strong>, so the next apply destroys and recreates it.</li><li>They turn infrastructure provisioning into configuration management, which is a different job.</li></ul><p><strong>Do this instead:</strong> bake configuration into the image with <strong>Packer</strong> (immutable infrastructure), use <strong><code class="inline">user_data</code>/cloud-init</strong> for boot-time setup, or hand off to a proper config-management tool (Ansible) after Terraform provisions. For containers, the Dockerfile is the image build.</p></div>
+          <pre><code># ❌ avoid — fragile, invisible to state, only runs at create
+resource &quot;aws_instance&quot; &quot;web&quot; {
+  provisioner &quot;remote-exec&quot; {
+    inline = [&quot;sudo apt-get update&quot;, &quot;sudo apt-get install -y nginx&quot;]
+    connection { type = &quot;ssh&quot;, host = self.public_ip, private_key = file(var.key) }
+  }
+}
+
+# ✅ preferred — cloud-init at boot, or a pre-baked AMI
+resource &quot;aws_instance&quot; &quot;web&quot; {
+  ami       = data.aws_ami.baked.id      # built by Packer, nginx already inside
+  user_data = templatefile(&quot;${path.module}/init.sh.tftpl&quot;, {
+    app_env = var.environment
+  })
+  user_data_replace_on_change = true
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What HCL expressions and functions do you use most — for, dynamic blocks, try, templatefile?</h2>
+          <div class="seo-a"><p>HCL is declarative but has real expression power:</p><ul><li><strong><code class="inline">for</code> expressions</strong> — transform lists/maps: <code class="inline">[for s in var.subnets : s.id]</code> or build a map with <code class="inline">{ for k, v in ... : k =&gt; v }</code>.</li><li><strong><code class="inline">dynamic</code> blocks</strong> — generate repeated <em>nested</em> blocks (ingress rules, tags) from a variable. Use sparingly; they hurt readability fast.</li><li><strong>Conditionals</strong> — <code class="inline">var.env == "prod" ? 3 : 1</code>.</li><li><strong><code class="inline">templatefile()</code></strong> — render an external file with variables (user-data scripts, config files, policy JSON). Much cleaner than heredocs inline.</li><li><strong><code class="inline">try()</code> / <code class="inline">coalesce()</code> / <code class="inline">lookup()</code></strong> — safe fallbacks for values that may not exist.</li><li><strong>Collection functions</strong> — <code class="inline">merge</code>, <code class="inline">concat</code>, <code class="inline">flatten</code>, <code class="inline">toset</code>, <code class="inline">zipmap</code>, <code class="inline">cidrsubnet</code> (the last one is essential for VPC design).</li></ul></div>
+          <pre><code>locals {
+  # for expression → list
+  subnet_ids = [for s in aws_subnet.private : s.id]
+
+  # for expression → map, with a filter
+  prod_services = { for k, v in var.services : k =&gt; v if v.enabled }
+
+  # auto-calculate /24 subnets from the VPC CIDR
+  subnet_cidrs = [for i, az in var.azs : cidrsubnet(var.vpc_cidr, 8, i)]
+
+  common_tags = merge(var.extra_tags, { ManagedBy = &quot;terraform&quot; })
+}
+
+# dynamic block — repeated nested blocks from data
+resource &quot;aws_security_group&quot; &quot;app&quot; {
+  dynamic &quot;ingress&quot; {
+    for_each = var.allowed_ports
+    content {
+      from_port   = ingress.value.port
+      to_port     = ingress.value.port
+      protocol    = &quot;tcp&quot;
+      cidr_blocks = ingress.value.cidrs
+    }
+  }
+}
+
+# external template instead of an inline heredoc
+user_data = templatefile(&quot;${path.module}/init.sh.tftpl&quot;, {
+  cluster_name = var.cluster_name
+  region       = data.aws_region.current.name
+})
+
+# safe fallback
+image_tag = try(var.overrides[&quot;image_tag&quot;], &quot;latest&quot;)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>terraform apply failed halfway through. What's the state of your infrastructure and how do you recover?</h2>
+          <div class="seo-a"><p>Terraform applies resources incrementally and <strong>writes state as it goes</strong>, so a mid-apply failure leaves you <em>partially applied</em>: everything created before the failure exists and is in state; everything after it doesn't exist.</p><p>Recovery steps:</p><ol><li><strong>Don't panic-destroy.</strong> State is usually fine — Terraform is designed for this.</li><li><strong>Read the actual error</strong> — most are mundane: insufficient IAM permissions, a name collision, a quota limit, a dependency that wasn't ready, an invalid value the API rejected.</li><li><strong>Run <code class="inline">terraform plan</code> again.</strong> It will show only the remaining work. Fix the underlying cause and re-apply — Terraform is idempotent and will continue from where it stopped.</li><li><strong>If a resource was created but not recorded</strong> (rare — an API timeout after creation succeeded), the next apply fails with "already exists". Fix by <code class="inline">terraform import</code>-ing it into state.</li><li><strong>If state is locked</strong> because the process died, <code class="inline">force-unlock &lt;ID&gt;</code> — after verifying nothing is actually running.</li><li><strong>If state is genuinely corrupted</strong>, restore the previous version from the versioned S3 bucket (this is why versioning is mandatory).</li></ol></div>
+          <pre><code>terraform plan                       # what's actually left to do?
+terraform state list                 # what got created before the failure
+
+TF_LOG=DEBUG terraform apply 2&gt; tf-debug.log   # full API traffic
+
+# resource exists in cloud but not in state
+terraform import aws_s3_bucket.logs my-logs-bucket
+
+# stuck lock after a killed CI job
+terraform force-unlock 8f3a1b2c-...
+
+# restore a previous state version (S3 versioning)
+aws s3api list-object-versions --bucket acme-tfstate --prefix platform/terraform.tfstate
+aws s3api get-object --bucket acme-tfstate --key platform/terraform.tfstate \
+  --version-id &lt;ID&gt; restored.tfstate
+terraform state push restored.tfstate</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Terraform vs Ansible vs CloudFormation vs Pulumi — when do you use each?</h2>
+          <div class="seo-a"><table><thead><tr><th>Tool</th><th>Type</th><th>Best at</th></tr></thead><tbody><tr><td><strong>Terraform</strong></td><td>Declarative provisioning, multi-cloud</td><td>Creating infrastructure — VPCs, clusters, databases, DNS, SaaS resources. State-tracked, huge provider ecosystem.</td></tr><tr><td><strong>Ansible</strong></td><td>Procedural config management, agentless</td><td>Configuring <em>inside</em> machines — packages, files, services, app deployment, orchestrated ops runbooks.</td></tr><tr><td><strong>CloudFormation</strong></td><td>Declarative, AWS-native</td><td>Pure-AWS shops wanting no state file to manage and native drift detection/rollback. Locked to AWS.</td></tr><tr><td><strong>Pulumi / CDK</strong></td><td>Declarative via real languages</td><td>Teams who want TypeScript/Python with loops, types, and unit tests instead of HCL.</td></tr></tbody></table><p>The honest answer is that Terraform and Ansible are <strong>complements, not competitors</strong>: Terraform creates the servers, Ansible configures them. Many teams use both, plus Packer for baking images.</p></div>
+          <pre><code># Terraform provisions the instance
+resource &quot;aws_instance&quot; &quot;web&quot; { ami = data.aws_ami.base.id }
+
+output &quot;web_ip&quot; { value = aws_instance.web.private_ip }
+
+# Ansible then configures it (dynamic inventory reads from AWS tags)
+# ansible-playbook -i aws_ec2.yml site.yml
+# - hosts: tag_Role_web
+#   tasks:
+#     - name: install nginx
+#       ansible.builtin.package: { name: nginx, state: present }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are your Terraform best practices for a production codebase?</h2>
+          <div class="seo-a"><p><strong>Structure</strong></p><ul><li>Reusable versioned modules + one root config per environment; separate state per environment <em>and</em> per component (network / data / apps) to limit blast radius.</li><li>Consistent naming and mandatory tags via <code class="inline">default_tags</code> and <code class="inline">locals</code> — untagged resources are how cloud bills become unattributable.</li></ul><p><strong>Safety</strong></p><ul><li>Remote encrypted state with locking and bucket versioning; <code class="inline">prevent_destroy</code> on data stores.</li><li>Pin provider and module versions; commit <code class="inline">.terraform.lock.hcl</code>.</li><li>Plan in PR, apply the saved plan, manual approval for prod.</li></ul><p><strong>Quality</strong></p><ul><li><code class="inline">fmt</code> + <code class="inline">validate</code> + <code class="inline">tflint</code> + <code class="inline">checkov</code>/<code class="inline">tfsec</code> in CI; policy-as-code (OPA/Sentinel) for org rules like "no public S3 buckets".</li><li>Document module inputs/outputs (<code class="inline">terraform-docs</code>).</li><li>Variable <code class="inline">validation</code> blocks to fail fast on bad input.</li></ul><p><strong>Discipline</strong></p><ul><li>No manual console changes in prod — enforce with read-only access + scheduled drift detection.</li><li>Never commit <code class="inline">.tfstate</code> or secret-bearing <code class="inline">.tfvars</code>.</li><li>Avoid <code class="inline">-target</code> except in emergencies; it produces state that doesn't match a full apply.</li></ul></div>
+          <pre><code># CI quality gate
+terraform fmt -check -recursive
+terraform validate
+tflint --recursive
+checkov -d . --framework terraform --soft-fail-on LOW
+terraform-docs markdown table --output-file README.md modules/vpc
+
+# tag everything, automatically
+provider &quot;aws&quot; {
+  default_tags {
+    tags = {
+      Project     = var.project
+      Environment = var.environment
+      ManagedBy   = &quot;terraform&quot;
+      CostCenter  = var.cost_center
+    }
+  }
+}</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="terraform";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Python Coding Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="24 Python Coding interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/pycoding" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Python Coding Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="24 Python Coding interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/pycoding" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Python Coding Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Reverse a string and check whether it is a palindrome.","acceptedAnswer":{"@type":"Answer","text":"Reversing : the Pythonic way is the slice s[::-1] — a negative step walks the sequence backwards. Interviewers often also want the manual two-pointer version to check you understand the mechanics. Palindrome : compare characters from both ends moving inward. s == s[::-1] is the one-liner, but the two-pointer loop is O(1) space and can exit early on the first mismatch, while the slice builds a whole new string. The usual follow-up is to ignore case, spaces, and punctuation — normalise first with a generator expression rather than a regex."}},{"@type":"Question","name":"Check whether two strings are anagrams.","acceptedAnswer":{"@type":"Answer","text":"Two strings are anagrams if they contain the same characters with the same counts. Two approaches: Sort both and compare — sorted(a) == sorted(b) . One line, but O(n log n) . Count characters — Counter(a) == Counter(b) . O(n) and the better answer. Always check lengths first — an early len(a) != len(b) return is free and rules out most non-anagrams immediately."}},{"@type":"Question","name":"Count the frequency of characters (or words) in a string.","acceptedAnswer":{"@type":"Answer","text":"collections.Counter is purpose-built for this and gives you most_common(n) for free. It's the answer an experienced Python developer gives. Interviewers often ask for the manual version too. Two idiomatic options without Counter : dict.get(key, 0) + 1 — no import, works everywhere. defaultdict(int) — cleaner when you're building up counts across a loop. For word frequency, normalise first: lowercase and strip punctuation, otherwise \"The\" and \"the,\" count as different words."}},{"@type":"Question","name":"Find the first non-repeating character in a string.","acceptedAnswer":{"@type":"Answer","text":"The naive approach counts occurrences of each character by rescanning the string — O(n²) . The efficient solution is two passes, O(n): Build a frequency count of every character. Walk the original string again and return the first character whose count is 1. The second pass must iterate the string , not the dict — you need the original order . (Dicts do preserve insertion order since 3.7, so iterating the Counter also works here, but iterating the string makes the intent explicit and is safer to reason about.)"}},{"@type":"Question","name":"Remove duplicates from a list while preserving order.","acceptedAnswer":{"@type":"Answer","text":"list(set(items)) removes duplicates but destroys the order — sets are unordered. That's the trap in this question. Correct approaches: dict.fromkeys(items) — the cleanest one-liner. Dicts preserve insertion order (3.7+) and keys are unique, so this dedupes and keeps order in O(n). Seen-set loop — explicit and works when you need custom key logic (dedupe objects by id , say) or the items aren't hashable as-is. Note both require hashable elements. For unhashable items (dicts, lists), dedupe on a derived key such as a tuple of fields or a JSON string."}},{"@type":"Question","name":"Group a list of words into anagram groups.","acceptedAnswer":{"@type":"Answer","text":"The core idea: find a canonical key that all anagrams share. Comparing every word against every other is O(n²·k); hashing by a shared key is O(n·k log k). Two key choices: Sorted letters — \"\".join(sorted(word)) . \"eat\", \"tea\", \"ate\" all become \"aet\". Simple, O(k log k) per word. Character count tuple — a 26-length tuple of counts. O(k) per word, so asymptotically better for long words, but more code. Then defaultdict(list) collects words under their key — no if key not in groups boilerplate."}},{"@type":"Question","name":"Find two numbers in a list that add up to a target.","acceptedAnswer":{"@type":"Answer","text":"The brute force is two nested loops — O(n²) . The hash-map solution is O(n) in a single pass. For each number, compute its complement ( target - num ) and check whether you've already seen it. Store each number's index as you go, so the lookup is O(1). The elegance is that you check and insert in the same pass — you never need to look ahead, because any valid pair will be completed by the later of its two elements. If the list is already sorted , a two-pointer approach solves it in O(n) time with O(1) space : move the left pointer right to increase the sum, the right pointer left to decrease it."}},{"@type":"Question","name":"Find the length of the longest substring without repeating characters.","acceptedAnswer":{"@type":"Answer","text":"This is the canonical sliding window problem. Maintain a window [left, right] that always contains only unique characters. The algorithm: Expand the window by moving right forward one character at a time. If the new character is already in the window, jump left to just past its previous occurrence — not one step at a time. Record the maximum window size seen. Storing each character's last index in a dict is what makes the jump O(1). The naive version moves left forward one position at a time, which is still correct but slower. Critical detail: only move left forward — max(left, last[ch] + 1) . A stale index from before the current window would otherwise drag left backwards and break the invariant."}},{"@type":"Question","name":"Flatten an arbitrarily nested list.","acceptedAnswer":{"@type":"Answer","text":"One level deep is easy — itertools.chain.from_iterable or a double comprehension. Arbitrary depth needs recursion : walk each element; if it's itself iterable, recurse into it, otherwise yield it. Write it as a generator — yield from makes the recursion read cleanly and keeps memory constant, since nothing intermediate is materialised. Two details that matter: Strings are iterable , so a naive check recurses into \"abc\" forever-ish, yielding individual characters. Explicitly exclude str and bytes . Deep nesting can hit Python's recursion limit (~1000). An explicit stack version avoids it."}},{"@type":"Question","name":"Split a list into chunks of size n (batching).","acceptedAnswer":{"@type":"Answer","text":"Very common in real work — batching database inserts, API calls, or file writes so you don't send 100,000 rows in one request. For a list : a range-with-step slice is the clean solution — items[i:i+n] for i in range(0, len(items), n) . Slicing past the end is safe in Python, so the final short chunk needs no special handling. For an arbitrary iterable (a generator, a database cursor, a file) you can't slice or take len() — use itertools.islice in a loop, which pulls lazily and works on infinite sources. Python 3.12 added itertools.batched , which does exactly this."}},{"@type":"Question","name":"Find the second largest number in a list without sorting.","acceptedAnswer":{"@type":"Answer","text":"Sorting is O(n log n) and does more work than needed. A single pass tracking two values is O(n) and O(1) space. Track largest and second . For each number: If it beats largest , the old largest becomes second , and it becomes the new largest. Else if it's between second and largest , it becomes second . The edge cases are the real test : duplicates of the maximum ( [5, 5, 3] — is the answer 5 or 3?), fewer than two elements, and all-equal lists. Clarify whether \"second largest\" means the second distinct value — usually it does."}},{"@type":"Question","name":"Merge two sorted lists into one sorted list.","acceptedAnswer":{"@type":"Answer","text":"Concatenating and re-sorting is O((n+m) log(n+m)) — it throws away the fact that both inputs are already sorted. The two-pointer merge is O(n+m) : compare the current head of each list, append the smaller, advance that pointer. When one list is exhausted, extend with the remainder of the other. This is exactly the merge step of merge sort. For k lists , a min-heap generalises it to O(N log k) — and heapq.merge already does this in the stdlib, returning a lazy iterator so it works on huge or streaming inputs."}},{"@type":"Question","name":"Rotate a list by k positions.","acceptedAnswer":{"@type":"Answer","text":"Slicing is the Pythonic solution : rotating right by k means the last k elements move to the front — items[-k:] + items[:-k] . O(n) time and O(n) space. Two details that catch people out: k can exceed the list length , so always take k %= len(items) first. Rotating a 5-element list by 7 is the same as by 2. k = 0 breaks the slice — items[-0:] is items[0:] , the whole list, so you get the list duplicated. Guard against it, which the modulo also handles if you check after. collections.deque has a built-in rotate() that's O(k) and mutates in place — the right choice if you rotate repeatedly. For an in-place O(1)-space rotation, use the three-reversal trick : reverse the whole list, then reverse each of the two parts."}},{"@type":"Question","name":"Group a list of dictionaries by a key (a SQL-style GROUP BY).","acceptedAnswer":{"@type":"Answer","text":"This is everyday backend work — turning a flat list of rows into a grouped structure. defaultdict(list) is the clean solution : it creates the empty list on first access, so there's no if key not in groups boilerplate. One pass, O(n). itertools.groupby is the trap. Unlike SQL's GROUP BY , it only groups consecutive equal keys — so you must sort by the same key first , or one logical group comes back as several fragments. Forgetting this produces silently wrong results, not an error. Since sorting costs O(n log n), defaultdict is usually the better choice anyway. For aggregation rather than collection, use defaultdict(int) or defaultdict(Decimal) and accumulate."}},{"@type":"Question","name":"Sort a list of dictionaries by multiple fields, in mixed directions.","acceptedAnswer":{"@type":"Answer","text":"Single field : sorted(rows, key=itemgetter(\"age\")) . operator.itemgetter is faster than an equivalent lambda because it's implemented in C. Multiple fields, same direction : return a tuple from the key function — tuples compare element by element, so itemgetter(\"dept\", \"name\") sorts by dept then name. Mixed directions is the interesting case, and there are two techniques: Negate the numeric field — key=lambda r: (-r[\"score\"], r[\"name\"]) gives score descending, name ascending. Only works for numbers. Two stable passes — sort by the least significant field first, then the most significant. Python's sort is stable , so ties from the second sort retain the first sort's order. This works for any type, including strings you can't negate. Handle missing keys with r.get(\"field\", default) — itemgetter raises KeyError , and a None in the mix raises TypeError on comparison."}},{"@type":"Question","name":"Merge two dictionaries, including a deep/recursive merge of nested dicts.","acceptedAnswer":{"@type":"Answer","text":"Shallow merge : a | b (3.9+) or {**a, **b} . Later values win. Perfect for flat config overrides. The problem : a shallow merge replaces nested dicts entirely rather than merging into them. If a has {\"db\": {\"host\": \"x\", \"port\": 5432}} and b has {\"db\": {\"port\": 6000}} , a shallow merge loses host completely. This is the classic config-loading bug. Deep merge recurses: when the same key holds a dict in both inputs, merge those dicts too; otherwise the override wins. Important : return a new dict rather than mutating the input. Mutating a shared defaults dict means the second call sees the first call's overrides — a genuinely nasty bug to track down."}},{"@type":"Question","name":"Find the top K most frequent elements in a list.","acceptedAnswer":{"@type":"Answer","text":"Two steps: count , then select the top K . Counter(items).most_common(k) does both in one line and is the answer to give first. The complexity discussion is the real question. Sorting all distinct elements to take K of them is O(n log n) — wasteful when K is small. A min-heap of size K gives O(n log k) : push each element, and pop the smallest whenever the heap exceeds K, so it always holds the K largest seen so far. heapq.nlargest(k, ...) implements exactly that and is the practical choice. (Internally most_common(k) also uses nlargest when k is given — worth knowing.) For genuinely huge or streaming data where you can't hold all counts, this becomes the Count-Min Sketch problem — approximate counts in sub-linear space."}},{"@type":"Question","name":"Write a decorator that takes arguments (e.g. a retry decorator).","acceptedAnswer":{"@type":"Answer","text":"A plain decorator is a function taking a function. A decorator with arguments needs three levels , because @retry(times=3) is called first and must return a decorator: Outer — takes the decorator's arguments, returns the decorator. Middle — takes the function, returns the wrapper. Inner (wrapper) — takes *args, **kwargs and does the work. @functools.wraps is mandatory. Without it the wrapper replaces the original function's __name__ , __doc__ , and signature — which breaks introspection, debugging, and any framework that inspects handlers (Flask route names collide, pytest fixtures misbehave, Sphinx docs go blank). For a retry specifically: use exponential backoff with jitter , catch only specific exceptions, and re-raise after the final attempt rather than swallowing the error."}},{"@type":"Question","name":"Write a memoization decorator from scratch.","acceptedAnswer":{"@type":"Answer","text":"Memoisation caches a function's return value per argument set, so repeated calls with the same inputs are O(1) lookups. The classic demonstration is naive recursive Fibonacci, which goes from O(2ⁿ) to O(n) . Building it: a dict keyed by the arguments, wrapped in a closure. The key must be hashable , so use a tuple of args plus a frozen form of kwargs — a plain dict can't be a key. In production use functools.lru_cache (or functools.cache in 3.9+, which is unbounded). It's C-implemented, thread-safe, has a bounded size so it can't leak, and exposes cache_info() . Two real caveats : the cache holds strong references to arguments and results, so an unbounded cache on a long-lived object is a memory leak; and memoisation is only valid for pure functions — caching something that reads a database or the clock returns stale data forever."}},{"@type":"Question","name":"Write a custom context manager (both the class and the decorator form).","acceptedAnswer":{"@type":"Answer","text":"Two ways to write one: Class-based — implement __enter__ (returns the value bound by as ) and __exit__(exc_type, exc_val, tb) . Best when the manager holds state or is reused. @contextlib.contextmanager — write a generator: everything before yield is setup, everything after is teardown. Much less code for simple cases. The critical detail: use try/finally in the generator form. If the body raises, the exception propagates out of the yield , and without finally your teardown never runs — which defeats the entire purpose. __exit__ 's return value matters : returning True suppresses the exception. Return None / False (the default) to let it propagate. Accidentally returning a truthy value silently swallows every error in the block."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Python Coding interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Python Coding Interview Questions and Answers</h1>
+      <p>24 hand-picked Python Coding interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Reverse a string and check whether it is a palindrome.</h2>
+          <div class="seo-a"><p><strong>Reversing</strong>: the Pythonic way is the slice <code class="inline">s[::-1]</code> — a negative step walks the sequence backwards. Interviewers often also want the manual two-pointer version to check you understand the mechanics.</p><p><strong>Palindrome</strong>: compare characters from both ends moving inward. <code class="inline">s == s[::-1]</code> is the one-liner, but the two-pointer loop is <strong>O(1) space</strong> and can exit early on the first mismatch, while the slice builds a whole new string.</p><p>The usual follow-up is to ignore case, spaces, and punctuation — normalise first with a generator expression rather than a regex.</p></div>
+          <pre><code># reverse
+s[::-1]                                  # Pythonic
+&quot;&quot;.join(reversed(s))                     # equivalent
+
+# palindrome — one-liner
+def is_palindrome(s: str) -&gt; bool:
+    return s == s[::-1]
+
+# palindrome — two pointers, O(1) space, early exit
+def is_palindrome(s: str) -&gt; bool:
+    left, right = 0, len(s) - 1
+    while left &lt; right:
+        if s[left] != s[right]:
+            return False
+        left += 1
+        right -= 1
+    return True
+
+# follow-up: ignore case / spaces / punctuation
+def is_palindrome_clean(s: str) -&gt; bool:
+    cleaned = [c.lower() for c in s if c.isalnum()]
+    return cleaned == cleaned[::-1]
+
+is_palindrome_clean(&quot;A man, a plan, a canal: Panama&quot;)   # True</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Check whether two strings are anagrams.</h2>
+          <div class="seo-a"><p>Two strings are anagrams if they contain the same characters with the same counts.</p><p><strong>Two approaches:</strong></p><ul><li><strong>Sort both</strong> and compare — <code class="inline">sorted(a) == sorted(b)</code>. One line, but <strong>O(n log n)</strong>.</li><li><strong>Count characters</strong> — <code class="inline">Counter(a) == Counter(b)</code>. <strong>O(n)</strong> and the better answer.</li></ul><p>Always check lengths first — an early <code class="inline">len(a) != len(b)</code> return is free and rules out most non-anagrams immediately.</p></div>
+          <pre><code>from collections import Counter
+
+# ✅ O(n)
+def is_anagram(a: str, b: str) -&gt; bool:
+    return len(a) == len(b) and Counter(a) == Counter(b)
+
+# O(n log n) — acceptable but weaker
+def is_anagram_sorted(a: str, b: str) -&gt; bool:
+    return sorted(a) == sorted(b)
+
+# manual, no stdlib — increment then decrement
+def is_anagram_manual(a: str, b: str) -&gt; bool:
+    if len(a) != len(b):
+        return False
+    counts = {}
+    for ch in a:
+        counts[ch] = counts.get(ch, 0) + 1
+    for ch in b:
+        if ch not in counts:
+            return False
+        counts[ch] -= 1
+        if counts[ch] == 0:
+            del counts[ch]
+    return not counts
+
+is_anagram(&quot;listen&quot;, &quot;silent&quot;)     # True</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Count the frequency of characters (or words) in a string.</h2>
+          <div class="seo-a"><p><code class="inline">collections.Counter</code> is purpose-built for this and gives you <code class="inline">most_common(n)</code> for free. It's the answer an experienced Python developer gives.</p><p>Interviewers often ask for the manual version too. Two idiomatic options without <code class="inline">Counter</code>:</p><ul><li><code class="inline">dict.get(key, 0) + 1</code> — no import, works everywhere.</li><li><code class="inline">defaultdict(int)</code> — cleaner when you're building up counts across a loop.</li></ul><p>For word frequency, normalise first: lowercase and strip punctuation, otherwise <code class="inline">"The"</code> and <code class="inline">"the,"</code> count as different words.</p></div>
+          <pre><code>from collections import Counter, defaultdict
+
+# ✅ the Pythonic answer
+Counter(&quot;mississippi&quot;)                  # {'i': 4, 's': 4, 'p': 2, 'm': 1}
+Counter(&quot;mississippi&quot;).most_common(2)   # [('i', 4), ('s', 4)]
+
+# manual — dict.get
+def char_count(s: str) -&gt; dict:
+    counts = {}
+    for ch in s:
+        counts[ch] = counts.get(ch, 0) + 1
+    return counts
+
+# manual — defaultdict
+def char_count_dd(s: str) -&gt; dict:
+    counts = defaultdict(int)
+    for ch in s:
+        counts[ch] += 1
+    return dict(counts)
+
+# word frequency — normalise first!
+import re
+def word_count(text: str) -&gt; Counter:
+    words = re.findall(r&quot;[a-z']+&quot;, text.lower())
+    return Counter(words)
+
+word_count(&quot;The cat. The CAT!&quot;).most_common()   # [('the', 2), ('cat', 2)]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find the first non-repeating character in a string.</h2>
+          <div class="seo-a"><p>The naive approach counts occurrences of each character by rescanning the string — <strong>O(n²)</strong>.</p><p><strong>The efficient solution is two passes, O(n):</strong></p><ol><li>Build a frequency count of every character.</li><li>Walk the <em>original string</em> again and return the first character whose count is 1.</li></ol><p>The second pass must iterate the <strong>string</strong>, not the dict — you need the original <em>order</em>. (Dicts do preserve insertion order since 3.7, so iterating the Counter also works here, but iterating the string makes the intent explicit and is safer to reason about.)</p></div>
+          <pre><code>from collections import Counter
+
+def first_unique(s: str) -&gt; str | None:
+    counts = Counter(s)                # pass 1 — O(n)
+    for ch in s:                       # pass 2 — original ORDER matters
+        if counts[ch] == 1:
+            return ch
+    return None
+
+first_unique(&quot;swiss&quot;)        # 'w'
+first_unique(&quot;aabbcc&quot;)       # None
+
+# variant: return the INDEX
+def first_unique_index(s: str) -&gt; int:
+    counts = Counter(s)
+    for i, ch in enumerate(s):
+        if counts[ch] == 1:
+            return i
+    return -1
+
+# ❌ O(n²) — rescans the string for every character
+def first_unique_slow(s):
+    for ch in s:
+        if s.count(ch) == 1:      # count() is O(n) EACH time
+            return ch</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Remove duplicates from a list while preserving order.</h2>
+          <div class="seo-a"><p><code class="inline">list(set(items))</code> removes duplicates but <strong>destroys the order</strong> — sets are unordered. That's the trap in this question.</p><p><strong>Correct approaches:</strong></p><ul><li><strong><code class="inline">dict.fromkeys(items)</code></strong> — the cleanest one-liner. Dicts preserve insertion order (3.7+) and keys are unique, so this dedupes <em>and</em> keeps order in O(n).</li><li><strong>Seen-set loop</strong> — explicit and works when you need custom key logic (dedupe objects by <code class="inline">id</code>, say) or the items aren't hashable as-is.</li></ul><p>Note both require hashable elements. For unhashable items (dicts, lists), dedupe on a derived key such as a tuple of fields or a JSON string.</p></div>
+          <pre><code>items = [3, 1, 3, 2, 1, 5]
+
+# ❌ loses order
+list(set(items))                    # [1, 2, 3, 5] — arbitrary order
+
+# ✅ one-liner, order preserved, O(n)
+list(dict.fromkeys(items))          # [3, 1, 2, 5]
+
+# ✅ explicit seen-set — needed for custom keys
+def dedupe(items, key=lambda x: x):
+    seen = set()
+    out = []
+    for item in items:
+        k = key(item)
+        if k not in seen:
+            seen.add(k)
+            out.append(item)
+    return out
+
+# dedupe objects by a field
+dedupe(users, key=lambda u: u.email)
+
+# unhashable items — dedupe on a derived key
+rows = [{&quot;id&quot;: 1}, {&quot;id&quot;: 2}, {&quot;id&quot;: 1}]
+dedupe(rows, key=lambda r: r[&quot;id&quot;])       # [{'id': 1}, {'id': 2}]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Group a list of words into anagram groups.</h2>
+          <div class="seo-a"><p><strong>The core idea: find a canonical key that all anagrams share.</strong> Comparing every word against every other is O(n²·k); hashing by a shared key is O(n·k log k).</p><p><strong>Two key choices:</strong></p><ul><li><strong>Sorted letters</strong> — <code class="inline">"".join(sorted(word))</code>. "eat", "tea", "ate" all become "aet". Simple, O(k log k) per word.</li><li><strong>Character count tuple</strong> — a 26-length tuple of counts. O(k) per word, so asymptotically better for long words, but more code.</li></ul><p>Then <code class="inline">defaultdict(list)</code> collects words under their key — no <code class="inline">if key not in groups</code> boilerplate.</p></div>
+          <pre><code>from collections import defaultdict
+
+def group_anagrams(words: list[str]) -&gt; list[list[str]]:
+    groups = defaultdict(list)
+    for word in words:
+        key = &quot;&quot;.join(sorted(word))        # canonical form
+        groups[key].append(word)
+    return list(groups.values())
+
+group_anagrams([&quot;eat&quot;, &quot;tea&quot;, &quot;tan&quot;, &quot;ate&quot;, &quot;nat&quot;, &quot;bat&quot;])
+# [['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]
+
+# O(k) key instead of O(k log k) — count tuple
+def group_anagrams_counts(words):
+    groups = defaultdict(list)
+    for word in words:
+        counts = [0] * 26
+        for ch in word:
+            counts[ord(ch) - ord(&quot;a&quot;)] += 1
+        groups[tuple(counts)].append(word)   # tuple is hashable, list is not
+    return list(groups.values())</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find two numbers in a list that add up to a target.</h2>
+          <div class="seo-a"><p>The brute force is two nested loops — <strong>O(n²)</strong>.</p><p><strong>The hash-map solution is O(n) in a single pass.</strong> For each number, compute its <em>complement</em> (<code class="inline">target - num</code>) and check whether you've already seen it. Store each number's index as you go, so the lookup is O(1).</p><p>The elegance is that you check and insert in the same pass — you never need to look ahead, because any valid pair will be completed by the later of its two elements.</p><p>If the list is <strong>already sorted</strong>, a two-pointer approach solves it in O(n) time with <strong>O(1) space</strong>: move the left pointer right to increase the sum, the right pointer left to decrease it.</p></div>
+          <pre><code># ✅ O(n) time, O(n) space — one pass
+def two_sum(nums: list[int], target: int) -&gt; tuple[int, int] | None:
+    seen = {}                              # value -&gt; index
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:             # O(1) lookup
+            return (seen[complement], i)
+        seen[num] = i
+    return None
+
+two_sum([2, 7, 11, 15], 9)      # (0, 1)
+
+# sorted input → two pointers, O(1) space
+def two_sum_sorted(nums, target):
+    left, right = 0, len(nums) - 1
+    while left &lt; right:
+        total = nums[left] + nums[right]
+        if total == target:
+            return (left, right)
+        if total &lt; target:
+            left += 1                      # need a bigger sum
+        else:
+            right -= 1                     # need a smaller sum
+    return None
+
+# ❌ O(n²)
+for i in range(len(nums)):
+    for j in range(i + 1, len(nums)):
+        if nums[i] + nums[j] == target: ...</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find the length of the longest substring without repeating characters.</h2>
+          <div class="seo-a"><p>This is the canonical <strong>sliding window</strong> problem. Maintain a window <code class="inline">[left, right]</code> that always contains only unique characters.</p><p><strong>The algorithm:</strong></p><ol><li>Expand the window by moving <code class="inline">right</code> forward one character at a time.</li><li>If the new character is already in the window, <strong>jump <code class="inline">left</code> to just past its previous occurrence</strong> — not one step at a time.</li><li>Record the maximum window size seen.</li></ol><p>Storing each character's <strong>last index</strong> in a dict is what makes the jump O(1). The naive version moves <code class="inline">left</code> forward one position at a time, which is still correct but slower.</p><p>Critical detail: only move <code class="inline">left</code> <strong>forward</strong> — <code class="inline">max(left, last[ch] + 1)</code>. A stale index from before the current window would otherwise drag <code class="inline">left</code> backwards and break the invariant.</p></div>
+          <pre><code>def longest_unique(s: str) -&gt; int:
+    last = {}                # char -&gt; last index seen
+    left = 0
+    best = 0
+
+    for right, ch in enumerate(s):
+        if ch in last and last[ch] &gt;= left:
+            left = last[ch] + 1        # jump past the duplicate
+        last[ch] = right
+        best = max(best, right - left + 1)
+
+    return best
+
+longest_unique(&quot;abcabcbb&quot;)     # 3  ('abc')
+longest_unique(&quot;bbbbb&quot;)        # 1  ('b')
+longest_unique(&quot;pwwkew&quot;)       # 3  ('wke')
+longest_unique(&quot;abba&quot;)         # 2  ← the case that breaks a naive version
+
+# return the substring itself
+def longest_unique_str(s: str) -&gt; str:
+    last, left, best, start = {}, 0, 0, 0
+    for right, ch in enumerate(s):
+        if ch in last and last[ch] &gt;= left:
+            left = last[ch] + 1
+        last[ch] = right
+        if right - left + 1 &gt; best:
+            best, start = right - left + 1, left
+    return s[start:start + best]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Flatten an arbitrarily nested list.</h2>
+          <div class="seo-a"><p><strong>One level deep</strong> is easy — <code class="inline">itertools.chain.from_iterable</code> or a double comprehension.</p><p><strong>Arbitrary depth needs recursion</strong>: walk each element; if it's itself iterable, recurse into it, otherwise yield it.</p><p><strong>Write it as a generator</strong> — <code class="inline">yield from</code> makes the recursion read cleanly and keeps memory constant, since nothing intermediate is materialised.</p><p><strong>Two details that matter:</strong></p><ul><li><strong>Strings are iterable</strong>, so a naive check recurses into <code class="inline">"abc"</code> forever-ish, yielding individual characters. Explicitly exclude <code class="inline">str</code> and <code class="inline">bytes</code>.</li><li>Deep nesting can hit Python's <strong>recursion limit</strong> (~1000). An explicit stack version avoids it.</li></ul></div>
+          <pre><code>from typing import Iterable
+
+# ✅ recursive generator — arbitrary depth, constant memory
+def flatten(nested):
+    for item in nested:
+        if isinstance(item, Iterable) and not isinstance(item, (str, bytes)):
+            yield from flatten(item)         # ← strings excluded!
+        else:
+            yield item
+
+list(flatten([1, [2, [3, [4, 5]], 6], 7]))     # [1, 2, 3, 4, 5, 6, 7]
+list(flatten([1, [&quot;ab&quot;, [2]]]))                # [1, 'ab', 2]  ← not 'a','b'
+
+# one level only
+from itertools import chain
+list(chain.from_iterable([[1, 2], [3, 4]]))    # [1, 2, 3, 4]
+[x for sub in nested for x in sub]             # same, comprehension
+
+# iterative — avoids the recursion limit on very deep input
+def flatten_iter(nested):
+    stack = [iter(nested)]
+    while stack:
+        try:
+            item = next(stack[-1])
+        except StopIteration:
+            stack.pop()
+            continue
+        if isinstance(item, (list, tuple)):
+            stack.append(iter(item))
+        else:
+            yield item</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Split a list into chunks of size n (batching).</h2>
+          <div class="seo-a"><p>Very common in real work — batching database inserts, API calls, or file writes so you don't send 100,000 rows in one request.</p><p><strong>For a list</strong>: a range-with-step slice is the clean solution — <code class="inline">items[i:i+n]</code> for <code class="inline">i</code> in <code class="inline">range(0, len(items), n)</code>. Slicing past the end is safe in Python, so the final short chunk needs no special handling.</p><p><strong>For an arbitrary iterable</strong> (a generator, a database cursor, a file) you can't slice or take <code class="inline">len()</code> — use <code class="inline">itertools.islice</code> in a loop, which pulls lazily and works on infinite sources.</p><p>Python 3.12 added <code class="inline">itertools.batched</code>, which does exactly this.</p></div>
+          <pre><code># list — slicing past the end is safe, so no special last-chunk case
+def chunks(items: list, n: int):
+    for i in range(0, len(items), n):
+        yield items[i:i + n]
+
+list(chunks([1, 2, 3, 4, 5], 2))       # [[1, 2], [3, 4], [5]]
+
+# ✅ any iterable — generators, cursors, files (no len(), no slicing)
+from itertools import islice
+
+def batched(iterable, n):
+    it = iter(iterable)
+    while batch := list(islice(it, n)):     # walrus: stops on empty
+        yield batch
+
+for batch in batched(db_cursor, 500):
+    bulk_insert(batch)                       # 500 rows per round trip
+
+# Python 3.12+ — in the stdlib
+from itertools import batched
+list(batched(range(7), 3))                   # [(0,1,2), (3,4,5), (6,)]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find the second largest number in a list without sorting.</h2>
+          <div class="seo-a"><p>Sorting is <strong>O(n log n)</strong> and does more work than needed. A <strong>single pass tracking two values</strong> is O(n) and O(1) space.</p><p>Track <code class="inline">largest</code> and <code class="inline">second</code>. For each number:</p><ul><li>If it beats <code class="inline">largest</code>, the old largest becomes <code class="inline">second</code>, and it becomes the new largest.</li><li>Else if it's between <code class="inline">second</code> and <code class="inline">largest</code>, it becomes <code class="inline">second</code>.</li></ul><p><strong>The edge cases are the real test</strong>: duplicates of the maximum (<code class="inline">[5, 5, 3]</code> — is the answer 5 or 3?), fewer than two elements, and all-equal lists. Clarify whether "second largest" means the second <em>distinct</em> value — usually it does.</p></div>
+          <pre><code>def second_largest(nums: list[int]) -&gt; int | None:
+    largest = second = float(&quot;-inf&quot;)
+    for n in nums:
+        if n &gt; largest:
+            second, largest = largest, n     # demote the old max
+        elif largest &gt; n &gt; second:           # strict → skips duplicates
+            second = n
+    return second if second != float(&quot;-inf&quot;) else None
+
+second_largest([3, 1, 4, 1, 5, 9, 2])   # 5
+second_largest([5, 5, 3])               # 3  (second DISTINCT)
+second_largest([7])                     # None
+second_largest([4, 4, 4])               # None
+
+# if duplicates should count: use &gt;= in the elif
+
+# stdlib shortcuts (fine to mention)
+sorted(set(nums))[-2]                   # O(n log n)
+import heapq
+heapq.nlargest(2, set(nums))[-1]        # O(n log k) — better for top-k</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Merge two sorted lists into one sorted list.</h2>
+          <div class="seo-a"><p>Concatenating and re-sorting is <strong>O((n+m) log(n+m))</strong> — it throws away the fact that both inputs are already sorted.</p><p><strong>The two-pointer merge is O(n+m)</strong>: compare the current head of each list, append the smaller, advance that pointer. When one list is exhausted, extend with the remainder of the other. This is exactly the merge step of merge sort.</p><p>For <strong>k lists</strong>, a min-heap generalises it to O(N log k) — and <code class="inline">heapq.merge</code> already does this in the stdlib, returning a lazy iterator so it works on huge or streaming inputs.</p></div>
+          <pre><code># ✅ two pointers — O(n + m)
+def merge(a: list[int], b: list[int]) -&gt; list[int]:
+    out = []
+    i = j = 0
+    while i &lt; len(a) and j &lt; len(b):
+        if a[i] &lt;= b[j]:          # &lt;= keeps it STABLE
+            out.append(a[i]); i += 1
+        else:
+            out.append(b[j]); j += 1
+    out.extend(a[i:])             # one of these is empty
+    out.extend(b[j:])
+    return out
+
+merge([1, 3, 5], [2, 3, 6])       # [1, 2, 3, 3, 5, 6]
+
+# ❌ discards the existing order — O((n+m) log(n+m))
+sorted(a + b)
+
+# k sorted iterables, lazily — the stdlib answer
+import heapq
+list(heapq.merge([1, 4], [2, 5], [3, 6]))    # [1, 2, 3, 4, 5, 6]
+
+# works on huge/streaming sources without loading them
+with open(&quot;a.txt&quot;) as fa, open(&quot;b.txt&quot;) as fb:
+    for line in heapq.merge(fa, fb):
+        out.write(line)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Rotate a list by k positions.</h2>
+          <div class="seo-a"><p><strong>Slicing is the Pythonic solution</strong>: rotating right by k means the last k elements move to the front — <code class="inline">items[-k:] + items[:-k]</code>. O(n) time and O(n) space.</p><p><strong>Two details that catch people out:</strong></p><ul><li><strong><code class="inline">k</code> can exceed the list length</strong>, so always take <code class="inline">k %= len(items)</code> first. Rotating a 5-element list by 7 is the same as by 2.</li><li><strong><code class="inline">k = 0</code> breaks the slice</strong> — <code class="inline">items[-0:]</code> is <code class="inline">items[0:]</code>, the whole list, so you get the list duplicated. Guard against it, which the modulo also handles if you check after.</li></ul><p><code class="inline">collections.deque</code> has a built-in <code class="inline">rotate()</code> that's O(k) and mutates in place — the right choice if you rotate repeatedly.</p><p>For an in-place O(1)-space rotation, use the <strong>three-reversal trick</strong>: reverse the whole list, then reverse each of the two parts.</p></div>
+          <pre><code>def rotate_right(items: list, k: int) -&gt; list:
+    if not items:
+        return items
+    k %= len(items)                  # handles k &gt; len AND negative k
+    if k == 0:
+        return items[:]              # ⚠️ items[-0:] would duplicate the list
+    return items[-k:] + items[:-k]
+
+rotate_right([1, 2, 3, 4, 5], 2)     # [4, 5, 1, 2, 3]
+rotate_right([1, 2, 3, 4, 5], 7)     # same as k=2
+rotate_right([1, 2, 3, 4, 5], 0)     # [1, 2, 3, 4, 5]
+
+# rotate LEFT
+items[k:] + items[:k]
+
+# deque — O(k), in place, best for repeated rotation
+from collections import deque
+d = deque([1, 2, 3, 4, 5])
+d.rotate(2)                          # deque([4, 5, 1, 2, 3])
+
+# in-place, O(1) space — three reversals
+def rotate_in_place(a, k):
+    n = len(a); k %= n
+    a.reverse()
+    a[:k] = reversed(a[:k])
+    a[k:] = reversed(a[k:])</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Group a list of dictionaries by a key (a SQL-style GROUP BY).</h2>
+          <div class="seo-a"><p>This is everyday backend work — turning a flat list of rows into a grouped structure.</p><p><strong><code class="inline">defaultdict(list)</code> is the clean solution</strong>: it creates the empty list on first access, so there's no <code class="inline">if key not in groups</code> boilerplate. One pass, O(n).</p><p><strong><code class="inline">itertools.groupby</code> is the trap.</strong> Unlike SQL's <code class="inline">GROUP BY</code>, it only groups <em>consecutive</em> equal keys — so you <strong>must sort by the same key first</strong>, or one logical group comes back as several fragments. Forgetting this produces silently wrong results, not an error. Since sorting costs O(n log n), <code class="inline">defaultdict</code> is usually the better choice anyway.</p><p>For aggregation rather than collection, use <code class="inline">defaultdict(int)</code> or <code class="inline">defaultdict(Decimal)</code> and accumulate.</p></div>
+          <pre><code>from collections import defaultdict
+from operator import itemgetter
+
+orders = [
+    {&quot;id&quot;: 1, &quot;customer&quot;: &quot;ana&quot;, &quot;total&quot;: 250},
+    {&quot;id&quot;: 2, &quot;customer&quot;: &quot;bob&quot;, &quot;total&quot;: 100},
+    {&quot;id&quot;: 3, &quot;customer&quot;: &quot;ana&quot;, &quot;total&quot;:  75},
+]
+
+# ✅ O(n), no sort needed
+groups = defaultdict(list)
+for o in orders:
+    groups[o[&quot;customer&quot;]].append(o)
+# {'ana': [{...}, {...}], 'bob': [{...}]}
+
+# aggregate instead of collect
+totals = defaultdict(int)
+for o in orders:
+    totals[o[&quot;customer&quot;]] += o[&quot;total&quot;]
+# {'ana': 325, 'bob': 100}
+
+# ⚠️ groupby groups CONSECUTIVE keys only — MUST sort first
+from itertools import groupby
+orders.sort(key=itemgetter(&quot;customer&quot;))            # required!
+for customer, group in groupby(orders, key=itemgetter(&quot;customer&quot;)):
+    print(customer, [o[&quot;id&quot;] for o in group])
+
+# generic helper
+def group_by(rows, key):
+    out = defaultdict(list)
+    for r in rows:
+        out[key(r)].append(r)
+    return dict(out)
+
+group_by(orders, key=lambda o: o[&quot;customer&quot;])</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Sort a list of dictionaries by multiple fields, in mixed directions.</h2>
+          <div class="seo-a"><p><strong>Single field</strong>: <code class="inline">sorted(rows, key=itemgetter("age"))</code>. <code class="inline">operator.itemgetter</code> is faster than an equivalent lambda because it's implemented in C.</p><p><strong>Multiple fields, same direction</strong>: return a <strong>tuple</strong> from the key function — tuples compare element by element, so <code class="inline">itemgetter("dept", "name")</code> sorts by dept then name.</p><p><strong>Mixed directions</strong> is the interesting case, and there are two techniques:</p><ul><li><strong>Negate the numeric field</strong> — <code class="inline">key=lambda r: (-r["score"], r["name"])</code> gives score descending, name ascending. Only works for numbers.</li><li><strong>Two stable passes</strong> — sort by the <em>least</em> significant field first, then the most significant. Python's sort is <strong>stable</strong>, so ties from the second sort retain the first sort's order. This works for any type, including strings you can't negate.</li></ul><p>Handle missing keys with <code class="inline">r.get("field", default)</code> — <code class="inline">itemgetter</code> raises <code class="inline">KeyError</code>, and a <code class="inline">None</code> in the mix raises <code class="inline">TypeError</code> on comparison.</p></div>
+          <pre><code>from operator import itemgetter
+
+employees = [
+    {&quot;name&quot;: &quot;ana&quot;, &quot;dept&quot;: &quot;eng&quot;, &quot;score&quot;: 90},
+    {&quot;name&quot;: &quot;bob&quot;, &quot;dept&quot;: &quot;eng&quot;, &quot;score&quot;: 95},
+    {&quot;name&quot;: &quot;cat&quot;, &quot;dept&quot;: &quot;ops&quot;, &quot;score&quot;: 90},
+]
+
+# single field
+sorted(employees, key=itemgetter(&quot;score&quot;), reverse=True)
+
+# multiple fields, same direction — tuple key
+sorted(employees, key=itemgetter(&quot;dept&quot;, &quot;name&quot;))
+
+# mixed: score DESC, name ASC — negate the number
+sorted(employees, key=lambda r: (-r[&quot;score&quot;], r[&quot;name&quot;]))
+
+# mixed with a STRING descending — negation impossible, use two stable passes
+rows = sorted(employees, key=itemgetter(&quot;score&quot;))                 # least significant
+rows = sorted(rows,      key=itemgetter(&quot;dept&quot;), reverse=True)    # most significant
+
+# missing keys / None values
+sorted(rows, key=lambda r: r.get(&quot;score&quot;, 0))                     # default
+sorted(rows, key=lambda r: (r.get(&quot;score&quot;) is None, r.get(&quot;score&quot;, 0)))  # Nones last</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Merge two dictionaries, including a deep/recursive merge of nested dicts.</h2>
+          <div class="seo-a"><p><strong>Shallow merge</strong>: <code class="inline">a | b</code> (3.9+) or <code class="inline">{**a, **b}</code>. Later values win. Perfect for flat config overrides.</p><p><strong>The problem</strong>: a shallow merge <em>replaces</em> nested dicts entirely rather than merging into them. If <code class="inline">a</code> has <code class="inline">{"db": {"host": "x", "port": 5432}}</code> and <code class="inline">b</code> has <code class="inline">{"db": {"port": 6000}}</code>, a shallow merge loses <code class="inline">host</code> completely. This is the classic config-loading bug.</p><p><strong>Deep merge</strong> recurses: when the same key holds a dict in <em>both</em> inputs, merge those dicts too; otherwise the override wins.</p><p><strong>Important</strong>: return a <em>new</em> dict rather than mutating the input. Mutating a shared defaults dict means the second call sees the first call's overrides — a genuinely nasty bug to track down.</p></div>
+          <pre><code># shallow — later wins
+merged = defaults | overrides            # 3.9+
+merged = {**defaults, **overrides}       # any version
+
+# ⚠️ shallow merge REPLACES nested dicts
+a = {&quot;db&quot;: {&quot;host&quot;: &quot;localhost&quot;, &quot;port&quot;: 5432}, &quot;debug&quot;: False}
+b = {&quot;db&quot;: {&quot;port&quot;: 6000}}
+a | b        # {'db': {'port': 6000}, ...}  ← host is GONE
+
+# ✅ deep merge — returns a NEW dict, never mutates the inputs
+def deep_merge(base: dict, override: dict) -&gt; dict:
+    out = dict(base)                     # copy, don't mutate
+    for key, value in override.items():
+        if (key in out
+                and isinstance(out[key], dict)
+                and isinstance(value, dict)):
+            out[key] = deep_merge(out[key], value)   # recurse
+        else:
+            out[key] = value
+    return out
+
+deep_merge(a, b)
+# {'db': {'host': 'localhost', 'port': 6000}, 'debug': False}   ✅ host kept
+
+# layered config without merging at all
+from collections import ChainMap
+config = ChainMap(env_vars, config_file, defaults)   # first match wins</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Find the top K most frequent elements in a list.</h2>
+          <div class="seo-a"><p>Two steps: <strong>count</strong>, then <strong>select the top K</strong>.</p><p><code class="inline">Counter(items).most_common(k)</code> does both in one line and is the answer to give first.</p><p><strong>The complexity discussion is the real question.</strong> Sorting all distinct elements to take K of them is <strong>O(n log n)</strong> — wasteful when K is small. A <strong>min-heap of size K</strong> gives <strong>O(n log k)</strong>: push each element, and pop the smallest whenever the heap exceeds K, so it always holds the K largest seen so far.</p><p><code class="inline">heapq.nlargest(k, ...)</code> implements exactly that and is the practical choice. (Internally <code class="inline">most_common(k)</code> also uses <code class="inline">nlargest</code> when k is given — worth knowing.)</p><p>For genuinely huge or streaming data where you can't hold all counts, this becomes the <strong>Count-Min Sketch</strong> problem — approximate counts in sub-linear space.</p></div>
+          <pre><code>from collections import Counter
+import heapq
+
+words = [&quot;a&quot;, &quot;b&quot;, &quot;a&quot;, &quot;c&quot;, &quot;b&quot;, &quot;a&quot;]
+
+# ✅ the one-liner — uses nlargest internally when k is given
+Counter(words).most_common(2)          # [('a', 3), ('b', 2)]
+
+# explicit heap — O(n log k)
+counts = Counter(words)
+heapq.nlargest(2, counts.items(), key=lambda kv: kv[1])
+
+# top-k objects by a field
+heapq.nlargest(10, employees, key=lambda e: e.salary)
+
+# ⚠️ most_common() with NO k sorts EVERYTHING — O(n log n)
+Counter(words).most_common()           # full sort
+
+# manual min-heap of size k — the underlying idea
+def top_k(nums, k):
+    heap = []
+    for n in nums:
+        heapq.heappush(heap, n)
+        if len(heap) &gt; k:
+            heapq.heappop(heap)        # drop the smallest → keeps k largest
+    return sorted(heap, reverse=True)
+
+top_k([5, 1, 9, 3, 7], 3)              # [9, 7, 5]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a decorator that takes arguments (e.g. a retry decorator).</h2>
+          <div class="seo-a"><p>A plain decorator is a function taking a function. A <strong>decorator with arguments needs three levels</strong>, because <code class="inline">@retry(times=3)</code> is <em>called</em> first and must <em>return</em> a decorator:</p><ol><li><strong>Outer</strong> — takes the decorator's arguments, returns the decorator.</li><li><strong>Middle</strong> — takes the function, returns the wrapper.</li><li><strong>Inner (wrapper)</strong> — takes <code class="inline">*args, **kwargs</code> and does the work.</li></ol><p><strong><code class="inline">@functools.wraps</code> is mandatory.</strong> Without it the wrapper replaces the original function's <code class="inline">__name__</code>, <code class="inline">__doc__</code>, and signature — which breaks introspection, debugging, and any framework that inspects handlers (Flask route names collide, pytest fixtures misbehave, Sphinx docs go blank).</p><p>For a retry specifically: use <strong>exponential backoff with jitter</strong>, catch only specific exceptions, and re-raise after the final attempt rather than swallowing the error.</p></div>
+          <pre><code>import functools, time, random
+
+def retry(times=3, delay=1.0, exceptions=(Exception,)):
+    def decorator(func):                          # ← takes the function
+        @functools.wraps(func)                    # ← MANDATORY
+        def wrapper(*args, **kwargs):             # ← does the work
+            last = None
+            for attempt in range(times):
+                try:
+                    return func(*args, **kwargs)
+                except exceptions as e:
+                    last = e
+                    if attempt == times - 1:
+                        raise                     # don't swallow the final failure
+                    backoff = delay * (2 ** attempt)
+                    time.sleep(backoff + random.uniform(0, backoff * 0.1))  # jitter
+            raise last
+        return wrapper
+    return decorator
+
+@retry(times=3, delay=0.5, exceptions=(ConnectionError, TimeoutError))
+def fetch(url):
+    return requests.get(url, timeout=5)
+
+# without @wraps:
+# fetch.__name__  →  'wrapper'   ❌ breaks frameworks and debugging
+# with @wraps:
+# fetch.__name__  →  'fetch'     ✅
+
+# simple timing decorator (no arguments — two levels only)
+def timed(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        try:
+            return func(*args, **kwargs)
+        finally:
+            print(f&quot;{func.__name__} took {time.perf_counter() - start:.3f}s&quot;)
+    return wrapper</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a memoization decorator from scratch.</h2>
+          <div class="seo-a"><p>Memoisation caches a function's return value per argument set, so repeated calls with the same inputs are O(1) lookups. The classic demonstration is naive recursive Fibonacci, which goes from <strong>O(2ⁿ) to O(n)</strong>.</p><p><strong>Building it:</strong> a dict keyed by the arguments, wrapped in a closure. The key must be <strong>hashable</strong>, so use a tuple of <code class="inline">args</code> plus a frozen form of <code class="inline">kwargs</code> — a plain dict can't be a key.</p><p><strong>In production use <code class="inline">functools.lru_cache</code></strong> (or <code class="inline">functools.cache</code> in 3.9+, which is unbounded). It's C-implemented, thread-safe, has a bounded size so it can't leak, and exposes <code class="inline">cache_info()</code>.</p><p><strong>Two real caveats</strong>: the cache holds strong references to arguments and results, so an unbounded cache on a long-lived object <em>is</em> a memory leak; and memoisation is only valid for <strong>pure functions</strong> — caching something that reads a database or the clock returns stale data forever.</p></div>
+          <pre><code>import functools
+
+# from scratch
+def memoize(func):
+    cache = {}                                  # closure state
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        key = (args, tuple(sorted(kwargs.items())))   # must be HASHABLE
+        if key not in cache:
+            cache[key] = func(*args, **kwargs)
+        return cache[key]
+    wrapper.cache = cache                       # expose for tests/clearing
+    return wrapper
+
+@memoize
+def fib(n):
+    return n if n &lt; 2 else fib(n - 1) + fib(n - 2)
+
+fib(100)        # instant — without memoisation this is O(2^n)
+
+# ✅ production: C-implemented, thread-safe, BOUNDED
+@functools.lru_cache(maxsize=1024)
+def parse_rule(text: str) -&gt; Rule: ...
+
+parse_rule.cache_info()      # CacheInfo(hits=42, misses=8, maxsize=1024, currsize=8)
+parse_rule.cache_clear()
+
+@functools.cache             # 3.9+, unbounded — careful with memory
+def fib2(n): ...
+
+# ❌ never memoize impure functions
+@functools.cache
+def get_user(user_id):
+    return db.query(user_id)     # returns stale data forever after the first call</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write a custom context manager (both the class and the decorator form).</h2>
+          <div class="seo-a"><p>Two ways to write one:</p><ul><li><strong>Class-based</strong> — implement <code class="inline">__enter__</code> (returns the value bound by <code class="inline">as</code>) and <code class="inline">__exit__(exc_type, exc_val, tb)</code>. Best when the manager holds state or is reused.</li><li><strong><code class="inline">@contextlib.contextmanager</code></strong> — write a generator: everything before <code class="inline">yield</code> is setup, everything after is teardown. Much less code for simple cases.</li></ul><p><strong>The critical detail: use <code class="inline">try/finally</code> in the generator form.</strong> If the body raises, the exception propagates out of the <code class="inline">yield</code>, and without <code class="inline">finally</code> your teardown never runs — which defeats the entire purpose.</p><p><strong><code class="inline">__exit__</code>'s return value matters</strong>: returning <code class="inline">True</code> <em>suppresses</em> the exception. Return <code class="inline">None</code>/<code class="inline">False</code> (the default) to let it propagate. Accidentally returning a truthy value silently swallows every error in the block.</p></div>
+          <pre><code>from contextlib import contextmanager
+import time
+
+# ✅ generator form — try/finally is ESSENTIAL
+@contextmanager
+def timer(label: str):
+    start = time.perf_counter()
+    try:
+        yield                                # body runs here
+    finally:
+        print(f&quot;{label}: {time.perf_counter() - start:.3f}s&quot;)   # always runs
+
+with timer(&quot;query&quot;):
+    run_report()          # timing printed even if this raises
+
+# yield a value to bind with `as`
+@contextmanager
+def transaction(conn):
+    txn = conn.begin()
+    try:
+        yield conn                           # bound by `as`
+    except Exception:
+        txn.rollback()
+        raise                                # don't swallow it
+    else:
+        txn.commit()
+
+with transaction(conn) as c:
+    c.execute(sql)
+
+# class form — for reusable/stateful managers
+class Timer:
+    def __enter__(self):
+        self.start = time.perf_counter()
+        return self                          # what `as` binds
+    def __exit__(self, exc_type, exc_val, tb):
+        self.elapsed = time.perf_counter() - self.start
+        return False        # ⚠️ True would SUPPRESS the exception
+
+with Timer() as t:
+    work()
+print(t.elapsed)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Process a file too large to fit in memory using generators.</h2>
+          <div class="seo-a"><p><code class="inline">f.read()</code> or <code class="inline">f.readlines()</code> loads the whole file — fine for 10 MB, fatal for 10 GB.</p><p><strong>Iterating the file object yields one line at a time</strong> in constant memory, because file objects are already lazy iterators.</p><p><strong>The powerful pattern is a generator pipeline</strong>: chain small generators together, each transforming the stream. Nothing is materialised — data flows through one item at a time, and memory stays flat regardless of file size. It reads like a Unix pipe, and each stage is independently testable.</p><p>For fixed-size binary reads, loop on <code class="inline">f.read(chunk_size)</code> with the walrus operator until it returns empty.</p></div>
+          <pre><code># ❌ loads everything
+lines = open(&quot;huge.log&quot;).readlines()
+
+# ✅ constant memory — file objects are lazy iterators
+with open(&quot;huge.log&quot;, encoding=&quot;utf-8&quot;) as f:
+    for line in f:
+        process(line)
+
+# ✅ generator pipeline — each stage lazy, memory flat
+def read_lines(path):
+    with open(path, encoding=&quot;utf-8&quot;) as f:
+        for line in f:
+            yield line.rstrip(&quot;\n&quot;)
+
+def parse(lines):
+    for line in lines:
+        parts = line.split(&quot;\t&quot;)
+        if len(parts) == 3:
+            yield {&quot;ts&quot;: parts[0], &quot;level&quot;: parts[1], &quot;msg&quot;: parts[2]}
+
+def only_errors(records):
+    for r in records:
+        if r[&quot;level&quot;] == &quot;ERROR&quot;:
+            yield r
+
+# compose — nothing runs until iterated, nothing held in memory
+pipeline = only_errors(parse(read_lines(&quot;huge.log&quot;)))
+for record in pipeline:
+    alert(record)
+
+# count without materialising
+error_count = sum(1 for _ in only_errors(parse(read_lines(path))))
+
+# fixed-size binary chunks
+with open(&quot;video.mp4&quot;, &quot;rb&quot;) as f:
+    while chunk := f.read(8192):
+        upload(chunk)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement an LRU cache with O(1) get and put.</h2>
+          <div class="seo-a"><p>The requirement is <strong>O(1) for both operations</strong>, which rules out scanning for the least-recently-used item.</p><p><strong>The classic solution combines two structures:</strong></p><ul><li>A <strong>hash map</strong> for O(1) lookup by key.</li><li>A <strong>doubly linked list</strong> for O(1) reordering — most recent at one end, least recent at the other. Doubly linked (not singly) because you must unlink a node in O(1) given only that node, which needs the previous pointer.</li></ul><p><strong>In Python, <code class="inline">OrderedDict</code> already is that structure</strong> — it's a dict plus a doubly linked list internally. <code class="inline">move_to_end()</code> and <code class="inline">popitem(last=False)</code> are both O(1), which makes the implementation about ten lines.</p><p>Even a plain <code class="inline">dict</code> works since 3.7 (insertion order is guaranteed): delete and reinsert to mark as recently used, and <code class="inline">next(iter(d))</code> gives the oldest key.</p><p>Interviewers often want the manual linked-list version — say the <code class="inline">OrderedDict</code> answer first, then offer to write it from scratch.</p></div>
+          <pre><code>from collections import OrderedDict
+
+# ✅ OrderedDict IS a dict + doubly linked list
+class LRUCache:
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.data = OrderedDict()
+
+    def get(self, key):
+        if key not in self.data:
+            return -1
+        self.data.move_to_end(key)              # O(1) → most recent
+        return self.data[key]
+
+    def put(self, key, value):
+        if key in self.data:
+            self.data.move_to_end(key)
+        self.data[key] = value
+        if len(self.data) &gt; self.cap:
+            self.data.popitem(last=False)       # O(1) → evict oldest
+
+cache = LRUCache(2)
+cache.put(1, &quot;a&quot;); cache.put(2, &quot;b&quot;)
+cache.get(1)                 # 'a'  → 1 is now most recent
+cache.put(3, &quot;c&quot;)            # evicts key 2, not key 1
+cache.get(2)                 # -1
+
+# plain dict also works (3.7+ preserves insertion order)
+class LRUDict:
+    def __init__(self, cap): self.cap, self.d = cap, {}
+    def get(self, k):
+        if k not in self.d: return -1
+        v = self.d.pop(k); self.d[k] = v        # delete + reinsert = most recent
+        return v
+    def put(self, k, v):
+        if k in self.d: del self.d[k]
+        elif len(self.d) &gt;= self.cap:
+            del self.d[next(iter(self.d))]      # oldest key
+        self.d[k] = v</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Implement Fibonacci — recursive, memoised, iterative, and as a generator.</h2>
+          <div class="seo-a"><p>A staple because it exposes four different approaches and their complexities:</p><ul><li><strong>Naive recursion</strong> — <strong>O(2ⁿ)</strong> time. It recomputes the same subproblems exponentially: <code class="inline">fib(30)</code> makes over a million calls. Never ship this.</li><li><strong>Memoised recursion</strong> — <strong>O(n)</strong> time, O(n) space. One <code class="inline">@cache</code> line turns the exponential version linear, which is the cleanest demonstration of dynamic programming there is.</li><li><strong>Iterative</strong> — <strong>O(n) time, O(1) space</strong>. Just two rolling variables. This is the best single answer.</li><li><strong>Generator</strong> — infinite lazy sequence, O(1) space, and you take as many terms as you want.</li></ul><p>Note that recursion also risks <code class="inline">RecursionError</code> — Python's default limit is around 1000 frames, so <code class="inline">fib(2000)</code> fails even with memoisation.</p></div>
+          <pre><code>import functools
+
+# ❌ O(2^n) — recomputes everything
+def fib_naive(n):
+    return n if n &lt; 2 else fib_naive(n - 1) + fib_naive(n - 2)
+
+# ✅ memoised — O(n), one decorator turns exponential into linear
+@functools.cache
+def fib_memo(n):
+    return n if n &lt; 2 else fib_memo(n - 1) + fib_memo(n - 2)
+
+# ✅ best: O(n) time, O(1) space
+def fib(n: int) -&gt; int:
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b        # tuple swap — no temp variable
+    return a
+
+# ✅ generator — infinite, lazy, O(1) space
+def fib_gen():
+    a, b = 0, 1
+    while True:
+        yield a
+        a, b = b, a + b
+
+from itertools import islice
+list(islice(fib_gen(), 10))    # [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+
+# ⚠️ recursion limit (~1000 frames) — this raises RecursionError
+# fib_memo(2000)
+fib(2000)                      # ✅ iterative handles it fine (Python ints are arbitrary precision)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Transpose a matrix and rotate it 90 degrees.</h2>
+          <div class="seo-a"><p><strong>Transpose</strong> (swap rows and columns) is a one-liner with <code class="inline">zip(*matrix)</code>. The <code class="inline">*</code> unpacks the rows as separate arguments, and <code class="inline">zip</code> then pairs the first element of each row, the second of each, and so on — which is exactly the transpose.</p><p><strong>Rotate 90° clockwise</strong> = <strong>transpose, then reverse each row</strong>. Rotating counter-clockwise = transpose, then reverse the row <em>order</em>. Deriving rotation from transpose is the insight worth showing — it means you only have to remember one operation.</p><p><code class="inline">zip</code> returns tuples, so wrap in <code class="inline">list()</code> if you need mutable rows.</p><p>For an <strong>in-place</strong> rotation on a square matrix (O(1) space), transpose by swapping across the diagonal, then reverse each row.</p></div>
+          <pre><code>matrix = [[1, 2, 3],
+          [4, 5, 6],
+          [7, 8, 9]]
+
+# transpose — * unpacks rows, zip pairs them column-wise
+list(zip(*matrix))                 # [(1,4,7), (2,5,8), (3,6,9)]
+[list(row) for row in zip(*matrix)]   # as lists
+
+# rotate 90° CLOCKWISE = transpose + reverse each row
+[list(row)[::-1] for row in zip(*matrix)]
+# [[7,4,1], [8,5,2], [9,6,3]]
+
+# equivalently: reverse rows first, then transpose
+[list(row) for row in zip(*matrix[::-1])]
+
+# rotate 90° COUNTER-CLOCKWISE = transpose + reverse row ORDER
+[list(row) for row in zip(*matrix)][::-1]
+
+# in-place, square matrix, O(1) space
+def rotate_in_place(m):
+    n = len(m)
+    for i in range(n):                       # transpose across the diagonal
+        for j in range(i + 1, n):
+            m[i][j], m[j][i] = m[j][i], m[i][j]
+    for row in m:                            # reverse each row
+        row.reverse()
+
+# flatten / build
+[x for row in matrix for x in row]           # [1,2,...,9]
+[[0] * 3 for _ in range(3)]                  # ✅ 3 independent rows
+# [[0] * 3] * 3  ❌ three references to the SAME row!</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="pycoding";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

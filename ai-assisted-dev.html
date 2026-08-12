@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>AI-Assisted Dev Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="30 AI-Assisted Dev interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/ai-assisted-dev" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="AI-Assisted Dev Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="30 AI-Assisted Dev interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/ai-assisted-dev" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="AI-Assisted Dev Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is AI-assisted software engineering, and where does it help across the SDLC?","acceptedAnswer":{"@type":"Answer","text":"Using LLM-based tools (GitHub Copilot, Cursor, ChatGPT/Claude) to accelerate everyday dev work: scaffolding and boilerplate, inline code completion, generating unit tests, writing docs, explaining or refactoring unfamiliar code, drafting debugging hypotheses, and assisting code review. It augments the developer — you remain responsible for design, correctness, security, and maintainability. It helps most on well-understood, repetitive, or boilerplate tasks and on onboarding to a new codebase; least on novel architecture and domain-critical business logic."}},{"@type":"Question","name":"How does an AI coding assistant (Copilot / Cursor) actually work under the hood?","acceptedAnswer":{"@type":"Answer","text":"It assembles a prompt from context — your current file, cursor position, open tabs, and (for repo-aware tools) snippets retrieved from your codebase via embeddings/RAG — and sends it to a code-tuned LLM that predicts the completion . Copilot gives inline completions plus a chat panel. Cursor is an AI-first editor that indexes your whole repo for codebase-aware chat and multi-file/agentic edits. The output is a probabilistic suggestion , not verified-correct code — it doesn't compile or test it for you."}},{"@type":"Question","name":"GitHub Copilot vs Cursor vs chat assistants (ChatGPT/Claude) — how do they differ?","acceptedAnswer":{"@type":"Answer","text":"GitHub Copilot — inline autocomplete + chat embedded in your existing IDE; lightweight, stays in your flow. Cursor — an AI-first editor with deep codebase indexing , multi-file and agentic edits, and repo-aware chat. Chat assistants (ChatGPT / Claude) — general reasoning, explanations, and design discussion; not wired into your repo. Rule of thumb: inline completion for flow, Cursor for repo-wide changes, a chat assistant for design/learning."}},{"@type":"Question","name":"What are the benefits of AI-assisted coding, and where does it help most?","acceptedAnswer":{"@type":"Answer","text":"Faster boilerplate and scaffolding, unit-test generation, documentation, regex/SQL, translating between languages or frameworks, explaining unfamiliar code, and quick debugging hypotheses. It removes the blank-page problem and cuts context-switching to look things up. The biggest wins are on repetitive, well-specified tasks and when onboarding to a new codebase — freeing your time for design and the genuinely hard problems."}},{"@type":"Question","name":"What are the risks and limitations of AI-generated code?","acceptedAnswer":{"@type":"Answer","text":"Hallucinated APIs — plausible calls to methods/libraries that don't exist. Subtly wrong logic that looks correct and passes a happy-path glance. Security vulnerabilities — injection, weak crypto, missing validation. Outdated patterns from stale training data. License / IP contamination from memorised code. Over-reliance that erodes your own understanding. It has no true grasp of your domain or architecture and can't guarantee correctness — treat every suggestion as a draft to verify."}},{"@type":"Question","name":"How do you ensure the quality and security of AI-generated code?","acceptedAnswer":{"@type":"Answer","text":"Never merge it blindly. Treat it like a junior developer's PR: Review every line and make sure you understand it. Test — run and extend unit/integration tests; don't trust AI-written tests that only assert the happy path. Static analysis / SAST + linters and dependency/secret scanning. Verify APIs exist and are used correctly; check for secrets, PII, and license issues. Keep a human accountable in code review. AI accelerates writing the code, not the responsibility for its correctness."}},{"@type":"Question","name":"How do you write effective prompts for code generation?","acceptedAnswer":{"@type":"Answer","text":"Give the model what it needs to match your intent and conventions: Context — language, framework + version, and the surrounding code/types. A precise goal and constraints (performance, style, libraries allowed). Examples of the desired output/style and the edge cases and error handling to cover. Ask for tests alongside the code. Iterate: feed back the compiler error or wrong output to refine. Small, well-scoped asks beat a vague \"build me X\"."}},{"@type":"Question","name":"How do you use AI assistants for debugging, and what are the pitfalls?","acceptedAnswer":{"@type":"Answer","text":"Paste the error, stack trace, and the relevant code and ask for likely causes and fixes; ask it to explain unfamiliar code or suggest where to add logging. It's great at pattern-matching common errors quickly. Pitfalls : it can invent a plausible-sounding cause, \"fix\" a symptom rather than the root cause, or hallucinate an API. Always verify its hypothesis against the actual code, reproduce the bug, and never apply a fix you don't understand."}},{"@type":"Question","name":"How do you use AI for documentation and test generation effectively?","acceptedAnswer":{"@type":"Answer","text":"It's excellent for drafting docstrings, READMEs, and API docs, and for generating unit-test skeletons plus edge cases from a function signature — removing the blank-page problem. But curate the output : docs can drift from what the code actually does, and generated tests may just assert that the code runs rather than that it's correct . Make tests assert meaningful behaviour, add the cases the AI missed, and re-read docs against the real implementation."}},{"@type":"Question","name":"When should you NOT rely on an AI coding assistant?","acceptedAnswer":{"@type":"Answer","text":"Novel or complex architecture and domain-critical business logic. Security-sensitive code (crypto, authentication) without expert review. Anything where you can't verify correctness . When it would send proprietary code or secrets to a non-approved service. While learning fundamentals — over-reliance stunts skill. Blindly accepting large multi-file edits you haven't read."}},{"@type":"Question","name":"How do you integrate a pre-built AI service/API (OpenAI, Bedrock, Azure OpenAI) into an enterprise app?","acceptedAnswer":{"@type":"Answer","text":"Call it server-side via the SDK/REST — never expose API keys to the browser. Then treat it like any external dependency: Secrets in a vault / env, not in code. Resilience : timeouts, retries with backoff, rate-limit handling, and a fallback path. UX : stream responses (SSE) for perceived speed. Cost control : token budgeting, caching, and right-sizing the model. Safety : validate/guardrail inputs and outputs; log and monitor usage."}},{"@type":"Question","name":"How would you implement a RAG-based feature in an enterprise app?","acceptedAnswer":{"@type":"Answer","text":"Ground the LLM in your own data so answers are current and cite sources instead of hallucinating: Ingest your documents and chunk them. Embed the chunks and store vectors in a vector DB (pgvector, Pinecone, OpenSearch). At query time, embed the question , retrieve the top-k relevant chunks, and inject them into the prompt. The LLM answers grounded in that context; return citations . Add access control on the corpus, and re-ranking/eval to improve quality. RAG keeps answers fresh without fine-tuning."}},{"@type":"Question","name":"What data-privacy and security concerns apply when using AI tools at work?","acceptedAnswer":{"@type":"Answer","text":"Prompts and code you paste may leave your network and be logged or used for training. So: Never paste secrets, credentials, PII, or proprietary code into public/consumer tiers. Use enterprise / zero-retention offerings or self-hosted models; respect data-residency and compliance. Scan AI output for accidentally injected secrets. Follow your org's approved-tool policy . And when your app feeds untrusted content to an LLM, defend against prompt injection ."}},{"@type":"Question","name":"How do you measure the impact of AI-assisted development, and what are the caveats?","acceptedAnswer":{"@type":"Answer","text":"Track delivery outcomes — cycle time, PR throughput, DORA metrics (lead time, deploy frequency, change-fail rate) — plus suggestion acceptance rate and developer-experience surveys. Caveats : lines written or suggestions accepted is a vanity metric — more code isn't better. Watch quality signals (defect/escape rate, review load, rework) so raw speed doesn't quietly trade off maintainability. Measure outcomes, not keystrokes ."}},{"@type":"Question","name":"What are project context files (CLAUDE.md / AGENTS.md / .cursorrules) and what belongs in them?","acceptedAnswer":{"@type":"Answer","text":"A file at the repo root that the assistant loads automatically on every session, so you stop re-explaining the same things. Belongs in it: how to build/test/lint (exact commands), the architecture in a few lines, conventions the code does not make obvious (\"we never use barrel files\", \"errors go through AppError \"), directories that are generated and must not be hand-edited, and workflow rules (\"stage, don't commit\"). Does not belong: anything derivable from the code, giant API dumps, or aspirational rules the codebase itself violates — those cost tokens on every request and teach the model the wrong thing. Keep it short and factual. A 60-line file that is true beats a 600-line one that is half stale, and it should be reviewed in PRs like any other code."}},{"@type":"Question","name":"How is an agentic coding tool different from autocomplete, and how do you work with one?","acceptedAnswer":{"@type":"Answer","text":"Autocomplete predicts the next few lines in the file you are in. An agentic tool (Claude Code, Cursor agent mode, Copilot Workspace) runs a loop: read the repo, plan, edit multiple files, run tests and linters, read the failures, and iterate. The skill shifts from writing code to specifying and verifying it: Give it a feedback signal. An agent with a runnable test suite self-corrects; without one it produces plausible code and stops. Ask for a plan first on anything non-trivial, and correct the plan — it's far cheaper than correcting 400 lines of diff. Scope tightly. One coherent task per run. \"Refactor the app\" produces sprawl no one can review. Review the diff, not the transcript. The explanation is always convincing; the diff is the truth."}},{"@type":"Question","name":"What are hallucinated packages and APIs, and why are they a security problem?","acceptedAnswer":{"@type":"Answer","text":"Models confidently invent library names, functions and config options that don't exist — or that existed in an older major version. Most of the time you get an import error and move on. The security angle is slopsquatting : hallucinated package names are repeatable, so an attacker can publish a real package under a name models commonly invent. A developer installs it because the assistant suggested it, and now untrusted code runs in their build. Defences: verify a package exists and is maintained before installing (downloads, repo, last publish); prefer dependencies already in your lockfile; pin versions and use a lockfile; and lean on a private registry/allowlist in an enterprise. For APIs, check the actual docs for your installed version rather than trusting the signature."}},{"@type":"Question","name":"How do you use AI for code review without making review worse?","acceptedAnswer":{"@type":"Answer","text":"What it does well: the mechanical pass — null handling, missed error paths, obvious injection and secret leakage, inconsistent naming, missing tests for a new branch, and summarising a large diff so a human reviewer starts oriented. What it does badly: judging whether the change is the right change. It has no product context, no history of why the weird workaround exists, and no stake in the architecture. How to keep it useful: Post findings as suggestions, not blocking checks — an AI gate that fires on noise gets ignored within a week. Tune for precision over recall ; a reviewer who learns to skip the bot has lost all its value. Give it the diff plus the surrounding files — reviewing a diff in isolation produces confident nonsense. Keep human sign-off. The bot is a first pass, not an approver."}},{"@type":"Question","name":"How do you use AI on legacy code and large migrations?","acceptedAnswer":{"@type":"Answer","text":"This is where assistants pay off most — the work is mechanical, well-specified and tedious. Understanding first: have it explain a module, map call sites, and produce a dependency sketch before touching anything. The safe migration loop: Characterisation tests first — pin down existing behaviour, bugs included, before changing code. Without this you cannot tell a refactor from a rewrite. Migrate one slice , review it closely, and turn the accepted result into the reference example. Repeat with that example in the prompt — consistency across hundreds of files comes from the exemplar, not from the instructions. Verify mechanically — tests, type checks, and ideally a behavioural diff between old and new. Where it goes wrong: plausible-but-different semantics (null vs undefined, timezone handling, integer division), and silent drops of a rarely-hit branch."}},{"@type":"Question","name":"How does MCP change an AI coding assistant's usefulness at work?","acceptedAnswer":{"@type":"Answer","text":"MCP (Model Context Protocol) is a standard way to expose tools and data to an assistant, so one integration works across clients instead of being rebuilt per vendor. Practically it moves the assistant from \"knows my files\" to \"knows my system\": issue tracker, CI, logs and traces, database schema, design files, internal docs. That changes the questions you can ask — \"why did this build fail\", \"what changed in the schema since the last release\", \"summarise the errors this endpoint threw today\" — because the answer needs live systems, not the repo. Watch the security side: an MCP server runs with real credentials. Scope tokens to read-only where possible, prefer per-user auth over a shared service account, and remember that any tool returning external content (a ticket, a web page) is an injection vector into an agent that also holds write tools."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="AI-Assisted Dev interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>AI-Assisted Dev Interview Questions and Answers</h1>
+      <p>30 hand-picked AI-Assisted Dev interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is AI-assisted software engineering, and where does it help across the SDLC?</h2>
+          <div class="seo-a"><p>Using LLM-based tools (GitHub Copilot, Cursor, ChatGPT/Claude) to accelerate everyday dev work: scaffolding and boilerplate, inline code completion, generating unit tests, writing docs, explaining or refactoring unfamiliar code, drafting debugging hypotheses, and assisting code review.</p><p>It <strong>augments</strong> the developer — you remain responsible for design, correctness, security, and maintainability. It helps most on well-understood, repetitive, or boilerplate tasks and on onboarding to a new codebase; least on novel architecture and domain-critical business logic.</p></div>
+          <pre><code>Helps: boilerplate, tests, docs, refactors, explaining code, debug hints
+You own: architecture, correctness, security, review</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does an AI coding assistant (Copilot / Cursor) actually work under the hood?</h2>
+          <div class="seo-a"><p>It assembles a <strong>prompt from context</strong> — your current file, cursor position, open tabs, and (for repo-aware tools) snippets retrieved from your codebase via embeddings/RAG — and sends it to a code-tuned LLM that <strong>predicts the completion</strong>.</p><p><strong>Copilot</strong> gives inline completions plus a chat panel. <strong>Cursor</strong> is an AI-first editor that indexes your whole repo for codebase-aware chat and multi-file/agentic edits. The output is a <em>probabilistic suggestion</em>, not verified-correct code — it doesn't compile or test it for you.</p></div>
+          <pre><code>your file + cursor + open tabs + retrieved repo snippets (RAG)
+        -&gt; code LLM -&gt; predicted completion (unverified)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>GitHub Copilot vs Cursor vs chat assistants (ChatGPT/Claude) — how do they differ?</h2>
+          <div class="seo-a"><ul><li><strong>GitHub Copilot</strong> — inline autocomplete + chat embedded in your existing IDE; lightweight, stays in your flow.</li><li><strong>Cursor</strong> — an AI-first editor with deep <strong>codebase indexing</strong>, multi-file and agentic edits, and repo-aware chat.</li><li><strong>Chat assistants (ChatGPT / Claude)</strong> — general reasoning, explanations, and design discussion; not wired into your repo.</li></ul><p>Rule of thumb: inline completion for flow, Cursor for repo-wide changes, a chat assistant for design/learning.</p></div>
+          <pre><code>Copilot : inline completions + chat (your IDE)
+Cursor  : AI editor, repo index, multi-file/agentic edits
+ChatGPT/Claude : general reasoning, not repo-integrated</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the benefits of AI-assisted coding, and where does it help most?</h2>
+          <div class="seo-a"><p>Faster boilerplate and scaffolding, unit-test generation, documentation, regex/SQL, translating between languages or frameworks, explaining unfamiliar code, and quick debugging hypotheses. It removes the blank-page problem and cuts context-switching to look things up.</p><p>The biggest wins are on <strong>repetitive, well-specified tasks</strong> and when <strong>onboarding to a new codebase</strong> — freeing your time for design and the genuinely hard problems.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the risks and limitations of AI-generated code?</h2>
+          <div class="seo-a"><ul><li><strong>Hallucinated APIs</strong> — plausible calls to methods/libraries that don't exist.</li><li><strong>Subtly wrong logic</strong> that looks correct and passes a happy-path glance.</li><li><strong>Security vulnerabilities</strong> — injection, weak crypto, missing validation.</li><li><strong>Outdated patterns</strong> from stale training data.</li><li><strong>License / IP contamination</strong> from memorised code.</li><li><strong>Over-reliance</strong> that erodes your own understanding.</li></ul><p>It has no true grasp of your domain or architecture and can't guarantee correctness — treat every suggestion as a draft to verify.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you ensure the quality and security of AI-generated code?</h2>
+          <div class="seo-a"><p>Never merge it blindly. Treat it like a junior developer's PR:</p><ul><li><strong>Review</strong> every line and make sure you understand it.</li><li><strong>Test</strong> — run and extend unit/integration tests; don't trust AI-written tests that only assert the happy path.</li><li><strong>Static analysis / SAST + linters</strong> and dependency/secret scanning.</li><li><strong>Verify APIs exist</strong> and are used correctly; check for secrets, PII, and license issues.</li><li>Keep a <strong>human accountable</strong> in code review.</li></ul><p>AI accelerates <em>writing</em> the code, not the responsibility for its correctness.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you write effective prompts for code generation?</h2>
+          <div class="seo-a"><p>Give the model what it needs to match your intent and conventions:</p><ul><li><strong>Context</strong> — language, framework + version, and the surrounding code/types.</li><li><strong>A precise goal</strong> and constraints (performance, style, libraries allowed).</li><li><strong>Examples</strong> of the desired output/style and the <strong>edge cases</strong> and error handling to cover.</li><li>Ask for <strong>tests</strong> alongside the code.</li></ul><p>Iterate: feed back the compiler error or wrong output to refine. Small, well-scoped asks beat a vague "build me X".</p></div>
+          <pre><code>// Weak:  'write a user service'
+// Strong: 'Spring Boot 3 @Service for User CRUD over UserRepository,
+//          constructor injection, throw NotFoundException on miss,
+//          return DTOs, and include JUnit 5 tests for not-found.'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you use AI assistants for debugging, and what are the pitfalls?</h2>
+          <div class="seo-a"><p>Paste the <strong>error, stack trace, and the relevant code</strong> and ask for likely causes and fixes; ask it to explain unfamiliar code or suggest where to add logging. It's great at pattern-matching common errors quickly.</p><p><strong>Pitfalls</strong>: it can invent a plausible-sounding cause, "fix" a symptom rather than the root cause, or hallucinate an API. Always verify its hypothesis against the actual code, reproduce the bug, and never apply a fix you don't understand.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you use AI for documentation and test generation effectively?</h2>
+          <div class="seo-a"><p>It's excellent for drafting docstrings, READMEs, and API docs, and for generating unit-test skeletons plus edge cases from a function signature — removing the blank-page problem.</p><p>But <strong>curate the output</strong>: docs can drift from what the code actually does, and generated tests may just assert that the code runs rather than that it's <em>correct</em>. Make tests assert meaningful behaviour, add the cases the AI missed, and re-read docs against the real implementation.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>When should you NOT rely on an AI coding assistant?</h2>
+          <div class="seo-a"><ul><li>Novel or complex <strong>architecture</strong> and domain-critical business logic.</li><li><strong>Security-sensitive code</strong> (crypto, authentication) without expert review.</li><li>Anything where you <strong>can't verify correctness</strong>.</li><li>When it would send <strong>proprietary code or secrets</strong> to a non-approved service.</li><li>While <strong>learning fundamentals</strong> — over-reliance stunts skill.</li><li>Blindly accepting large multi-file edits you haven't read.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you integrate a pre-built AI service/API (OpenAI, Bedrock, Azure OpenAI) into an enterprise app?</h2>
+          <div class="seo-a"><p>Call it <strong>server-side</strong> via the SDK/REST — never expose API keys to the browser. Then treat it like any external dependency:</p><ul><li><strong>Secrets</strong> in a vault / env, not in code.</li><li><strong>Resilience</strong>: timeouts, retries with backoff, rate-limit handling, and a fallback path.</li><li><strong>UX</strong>: stream responses (SSE) for perceived speed.</li><li><strong>Cost control</strong>: token budgeting, caching, and right-sizing the model.</li><li><strong>Safety</strong>: validate/guardrail inputs and outputs; log and monitor usage.</li></ul></div>
+          <pre><code>// server-side
+const res = await client.chat.completions.create({ model, messages });
+// keys in vault, retry w/ backoff on 429, stream to client via SSE,
+// cache + token budget for cost, validate output before use</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How would you implement a RAG-based feature in an enterprise app?</h2>
+          <div class="seo-a"><p>Ground the LLM in your own data so answers are current and cite sources instead of hallucinating:</p><ol><li><strong>Ingest</strong> your documents and <strong>chunk</strong> them.</li><li><strong>Embed</strong> the chunks and store vectors in a vector DB (pgvector, Pinecone, OpenSearch).</li><li>At query time, <strong>embed the question</strong>, <strong>retrieve</strong> the top-k relevant chunks, and <strong>inject</strong> them into the prompt.</li><li>The LLM answers grounded in that context; return <strong>citations</strong>.</li></ol><p>Add access control on the corpus, and re-ranking/eval to improve quality. RAG keeps answers fresh <em>without</em> fine-tuning.</p></div>
+          <pre><code>query -&gt; embed -&gt; vector search (top-k chunks)
+      -&gt; prompt = system + retrieved context + question
+      -&gt; LLM answer (+ citations)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What data-privacy and security concerns apply when using AI tools at work?</h2>
+          <div class="seo-a"><p>Prompts and code you paste may <strong>leave your network</strong> and be logged or used for training. So:</p><ul><li>Never paste <strong>secrets, credentials, PII, or proprietary code</strong> into public/consumer tiers.</li><li>Use <strong>enterprise / zero-retention</strong> offerings or self-hosted models; respect data-residency and compliance.</li><li>Scan AI output for accidentally injected secrets.</li><li>Follow your org's <strong>approved-tool policy</strong>.</li></ul><p>And when <em>your app</em> feeds untrusted content to an LLM, defend against <strong>prompt injection</strong>.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you measure the impact of AI-assisted development, and what are the caveats?</h2>
+          <div class="seo-a"><p>Track <strong>delivery outcomes</strong> — cycle time, PR throughput, DORA metrics (lead time, deploy frequency, change-fail rate) — plus suggestion acceptance rate and developer-experience surveys.</p><p><strong>Caveats</strong>: lines written or suggestions accepted is a <em>vanity metric</em> — more code isn't better. Watch quality signals (defect/escape rate, review load, rework) so raw speed doesn't quietly trade off maintainability. Measure <strong>outcomes, not keystrokes</strong>.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are project context files (CLAUDE.md / AGENTS.md / .cursorrules) and what belongs in them?</h2>
+          <div class="seo-a"><p>A file at the repo root that the assistant loads automatically on every session, so you stop re-explaining the same things.</p><p><strong>Belongs in it:</strong> how to build/test/lint (exact commands), the architecture in a few lines, conventions the code does not make obvious ("we never use barrel files", "errors go through <code>AppError</code>"), directories that are generated and must not be hand-edited, and workflow rules ("stage, don't commit").</p><p><strong>Does not belong:</strong> anything derivable from the code, giant API dumps, or aspirational rules the codebase itself violates — those cost tokens on every request and teach the model the wrong thing.</p><p>Keep it short and factual. A 60-line file that is true beats a 600-line one that is half stale, and it should be reviewed in PRs like any other code.</p></div>
+          <pre><code># CLAUDE.md
+
+## Commands
+- Build: `npm run build`
+- Test a single file: `npm test -- path/to/file.spec.ts`
+
+## Conventions
+- State via NgRx signals store; no new BehaviorSubjects.
+- `shared-data/` is generated — edit `content/` and run `build-manifest.mjs`.
+
+## Workflow
+- Stage changes with `git add`; never commit or push.</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How is an agentic coding tool different from autocomplete, and how do you work with one?</h2>
+          <div class="seo-a"><p>Autocomplete predicts the next few lines in the file you are in. An <strong>agentic</strong> tool (Claude Code, Cursor agent mode, Copilot Workspace) runs a loop: read the repo, plan, edit multiple files, run tests and linters, read the failures, and iterate.</p><p>The skill shifts from writing code to <strong>specifying and verifying</strong> it:</p><ul><li><strong>Give it a feedback signal.</strong> An agent with a runnable test suite self-corrects; without one it produces plausible code and stops.</li><li><strong>Ask for a plan first</strong> on anything non-trivial, and correct the plan — it's far cheaper than correcting 400 lines of diff.</li><li><strong>Scope tightly.</strong> One coherent task per run. "Refactor the app" produces sprawl no one can review.</li><li><strong>Review the diff, not the transcript.</strong> The explanation is always convincing; the diff is the truth.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are hallucinated packages and APIs, and why are they a security problem?</h2>
+          <div class="seo-a"><p>Models confidently invent library names, functions and config options that don't exist — or that existed in an older major version. Most of the time you get an import error and move on.</p><p>The security angle is <strong>slopsquatting</strong>: hallucinated package names are repeatable, so an attacker can publish a real package under a name models commonly invent. A developer installs it because the assistant suggested it, and now untrusted code runs in their build.</p><p><strong>Defences:</strong> verify a package exists and is maintained before installing (downloads, repo, last publish); prefer dependencies already in your lockfile; pin versions and use a lockfile; and lean on a private registry/allowlist in an enterprise. For APIs, check the actual docs for your installed version rather than trusting the signature.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you use AI for code review without making review worse?</h2>
+          <div class="seo-a"><p><strong>What it does well:</strong> the mechanical pass — null handling, missed error paths, obvious injection and secret leakage, inconsistent naming, missing tests for a new branch, and summarising a large diff so a human reviewer starts oriented.</p><p><strong>What it does badly:</strong> judging whether the change is the <em>right</em> change. It has no product context, no history of why the weird workaround exists, and no stake in the architecture.</p><p><strong>How to keep it useful:</strong></p><ul><li>Post findings as <strong>suggestions, not blocking checks</strong> — an AI gate that fires on noise gets ignored within a week.</li><li>Tune for <strong>precision over recall</strong>; a reviewer who learns to skip the bot has lost all its value.</li><li>Give it the diff <em>plus</em> the surrounding files — reviewing a diff in isolation produces confident nonsense.</li><li>Keep human sign-off. The bot is a first pass, not an approver.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you use AI on legacy code and large migrations?</h2>
+          <div class="seo-a"><p>This is where assistants pay off most — the work is mechanical, well-specified and tedious.</p><p><strong>Understanding first:</strong> have it explain a module, map call sites, and produce a dependency sketch before touching anything.</p><p><strong>The safe migration loop:</strong></p><ol><li><strong>Characterisation tests first</strong> — pin down existing behaviour, bugs included, <em>before</em> changing code. Without this you cannot tell a refactor from a rewrite.</li><li><strong>Migrate one slice</strong>, review it closely, and turn the accepted result into the reference example.</li><li><strong>Repeat with that example in the prompt</strong> — consistency across hundreds of files comes from the exemplar, not from the instructions.</li><li><strong>Verify mechanically</strong> — tests, type checks, and ideally a behavioural diff between old and new.</li></ol><p><strong>Where it goes wrong:</strong> plausible-but-different semantics (null vs undefined, timezone handling, integer division), and silent drops of a rarely-hit branch.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does MCP change an AI coding assistant's usefulness at work?</h2>
+          <div class="seo-a"><p>MCP (Model Context Protocol) is a standard way to expose tools and data to an assistant, so one integration works across clients instead of being rebuilt per vendor.</p><p>Practically it moves the assistant from "knows my files" to "knows my system": issue tracker, CI, logs and traces, database schema, design files, internal docs.</p><p>That changes the questions you can ask — "why did this build fail", "what changed in the schema since the last release", "summarise the errors this endpoint threw today" — because the answer needs live systems, not the repo.</p><p><strong>Watch the security side:</strong> an MCP server runs with real credentials. Scope tokens to read-only where possible, prefer per-user auth over a shared service account, and remember that any tool returning external content (a ticket, a web page) is an injection vector into an agent that also holds write tools.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why does TDD work particularly well with AI assistants?</h2>
+          <div class="seo-a"><p>Because tests are an <strong>unambiguous, machine-checkable spec</strong> — exactly what the model is missing when it guesses.</p><p>The loop: you (or the assistant, reviewed by you) write failing tests that encode the requirement; the assistant implements until they pass; you review the diff. The model now has a hard success criterion instead of "looks right", and it can iterate without you in the loop for every step.</p><p><strong>The discipline that makes it safe:</strong></p><ul><li><strong>You own the tests.</strong> If the model writes both tests and implementation, it can satisfy its own misunderstanding perfectly.</li><li><strong>Confirm the test fails first</strong>, for the right reason. A test that passes against an empty implementation proves nothing.</li><li><strong>Re-read any test change</strong> in the final diff — a weakened assertion is the most common way "all tests pass" becomes a lie.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do assistants handle a codebase far larger than the context window?</h2>
+          <div class="seo-a"><p>They don't load the repo — they retrieve slices of it:</p><ul><li><strong>Embedding index</strong> — files chunked and embedded, semantically searched per request (Cursor's model).</li><li><strong>Agentic search</strong> — the model uses grep/glob/read tools to navigate like a developer would, following imports and symbols (Claude Code's model). Slower per step, but it sees real current code rather than a possibly-stale index.</li><li><strong>Structural signals</strong> — symbol/LSP data, call graphs, git history and recently-opened files to rank what's relevant.</li></ul><p>What follows for you: <strong>clear module boundaries, descriptive names and a sane directory layout are now machine-readable documentation</strong>. A codebase where behaviour is spread across ten indirection layers is as hard for the assistant as for a new hire — and it will confidently edit the wrong copy if a stale duplicate exists.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the IP and licensing concerns with AI-generated code?</h2>
+          <div class="seo-a"><p>Three distinct questions, often conflated:</p><ol><li><strong>Can it reproduce licensed code?</strong> Rarely, but memorised snippets from training data do surface. Vendors offer duplicate-detection filters and code-referencing features; enterprise tiers usually add IP indemnification.</li><li><strong>Who owns the output?</strong> Contractually the vendor generally assigns it to you — but purely machine-generated work may not be copyrightable in some jurisdictions, which matters if your product's value is the code itself.</li><li><strong>Does your input leak?</strong> Check the training clause. Consumer tiers may train on your data; enterprise tiers typically don't and offer zero retention.</li></ol><p>What teams actually do: enable duplicate filtering, use enterprise tiers with indemnification for proprietary work, keep an internal policy on which tools may see which repos, and run normal licence scanning in CI regardless of who wrote the code.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How would you roll out AI coding tools across a team?</h2>
+          <div class="seo-a"><ol><li><strong>Pick a scope, not a slogan.</strong> Start with a clear allowed/forbidden list: which repos, which data classes, which tools. Ambiguity produces shadow usage on personal accounts, which is the actual risk.</li><li><strong>Enterprise tier from day one</strong> — SSO, audit logs, no-training guarantees, admin controls.</li><li><strong>Pilot with a few volunteers</strong> across different areas (frontend, backend, QA), for 4–6 weeks, with a baseline captured beforehand.</li><li><strong>Codify what works</strong> — repo context files, prompt patterns and review norms shared as team conventions, not tribal knowledge.</li><li><strong>Keep the quality gates unchanged.</strong> Same review, same tests, same CI. If AI-assisted PRs need weaker gates, the tool isn't ready.</li><li><strong>Measure honestly</strong> — cycle time, change-failure rate, review load — and be willing to report a null result.</li></ol></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Which prompting patterns actually work for code?</h2>
+          <div class="seo-a"><ul><li><strong>Anchor on an existing file.</strong> "Write this the way <code>user.service.ts</code> does it" transfers conventions no instruction list can.</li><li><strong>Constrain the shape up front</strong> — signature, file placement, allowed dependencies, whether tests are expected.</li><li><strong>Ask for a plan before a large diff</strong>, and correct the plan.</li><li><strong>Give it the real error</strong> — full stack trace, versions, and the code path — instead of describing the symptom.</li><li><strong>Ask for the diff, not the whole file</strong>, on edits to large files: easier to review, less collateral rewriting.</li><li><strong>Say what not to do.</strong> "Don't change the public API", "don't add dependencies", "don't touch the tests" prevent most unwanted scope.</li><li><strong>Restart rather than argue.</strong> After two failed corrections the context is polluted; a fresh session with a better first prompt beats a third correction.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Where does AI belong in CI/CD, and where is it dangerous?</h2>
+          <div class="seo-a"><p><strong>Reasonable:</strong> PR summaries and changelogs, review comments as suggestions, triaging flaky-test failures, drafting a fix branch for a Dependabot bump, clustering and summarising production errors.</p><p><strong>Dangerous:</strong></p><ul><li><strong>Auto-merging</strong> AI-authored changes — no human ever reads it.</li><li><strong>Non-deterministic gates</strong> — a model deciding pass/fail makes CI flaky and unauditable.</li><li><strong>Untrusted input reaching a privileged job.</strong> A PR from a fork whose description or diff contains instructions, processed by a job holding write tokens, is prompt injection with your deploy credentials.</li></ul><p><strong>Rules that keep it safe:</strong> AI jobs run with least privilege and never on secrets-bearing triggers for untrusted PRs; output is advisory; every AI-authored change goes through a normal, human-approved PR.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you manage the cost of AI development tools?</h2>
+          <div class="seo-a"><p>Two different bills: <strong>per-seat subscriptions</strong> (predictable) and <strong>token/usage-based</strong> agentic tools (very much not).</p><p>Usage costs concentrate in a handful of behaviours: repeatedly re-reading a large repo, long agent loops on vague tasks, and frontier models used for trivial edits.</p><p><strong>Controls that work:</strong></p><ul><li><strong>Per-user and per-team budgets with alerts</strong>, not just a monthly invoice review.</li><li><strong>Model routing</strong> — cheap model for autocomplete and small edits, expensive model for hard reasoning.</li><li><strong>Prompt caching</strong> for stable repo context, which is often the single biggest saving.</li><li><strong>Scoping tasks</strong> — a well-specified task costs a fraction of an exploratory one.</li></ul><p>For ROI, compare against the fully-loaded cost of engineering time, and be honest that the gains show up in cycle time and toil reduction, not in headcount.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Does heavy AI use erode engineering skill, and how do you guard against it?</h2>
+          <div class="seo-a"><p>It can, and the mechanism is specific: accepting working code you could not have written removes the struggle that builds the mental model. The visible symptom is an engineer who ships steadily but cannot debug their own feature when it breaks at 2am.</p><p><strong>Habits that keep the skill:</strong></p><ul><li><strong>Never merge code you can't explain</strong> line by line. That single rule covers most of the risk.</li><li><strong>Predict before you read</strong> — decide how you'd solve it, then compare. The diff between your approach and the model's is the learning.</li><li><strong>Turn off assistance deliberately</strong> when learning something new, and use it in "explain" mode rather than "write" mode.</li><li><strong>Own debugging.</strong> Reading a stack trace and forming a hypothesis is the skill that doesn't transfer if you always delegate it.</li></ul><p>The counter-point is real too: used as a tutor — explaining unfamiliar code, comparing approaches, generating practice problems — it accelerates learning considerably.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How should you talk about AI tool usage in an interview?</h2>
+          <div class="seo-a"><p>Assume the interviewer wants to hear <strong>judgement</strong>, not either extreme. "I don't use AI" reads as out of touch in 2026; "AI writes everything" reads as unaccountable.</p><p>What lands well:</p><ul><li>A concrete example: what you delegated, what you kept, and why.</li><li>A failure you caught — a subtly wrong migration, a hallucinated API, a test that was weakened rather than fixed. This is the strongest signal you actually review output.</li><li>Awareness of the boundaries: data policy, licensing, and not pasting proprietary code into consumer tools.</li></ul><p>For live coding: <strong>ask what's allowed</strong> before you start. Many companies now permit AI and evaluate how well you direct and verify it; using it silently when it was disallowed is a hard fail, and asking never costs you anything.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>AI shifts work from writing to reviewing. What problems does that create?</h2>
+          <div class="seo-a"><p>Generation got ~10× cheaper; <strong>review did not</strong>. That asymmetry produces real failure modes:</p><ul><li><strong>Review becomes the bottleneck</strong> — bigger PRs, arriving faster, at unchanged human reading speed.</li><li><strong>Automation bias</strong> — fluent, well-formatted, confident code gets a lighter review than the same code from a junior. The polish is not evidence.</li><li><strong>No author intent.</strong> Normally you can ask "why did you do it this way?" With generated code, often nobody knows — the reasoning was never held by a person.</li><li><strong>Volume-driven rubber-stamping</strong> — the classic outcome when throughput rises and review capacity doesn't.</li></ul><p><strong>Mitigations:</strong> enforce small PRs regardless of how fast they were produced; require the author to explain the change in their own words; strengthen mechanical checks (types, tests, lint, static analysis) so humans spend attention on design and correctness rather than style.</p></div>
+          
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="ai-assisted-dev";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

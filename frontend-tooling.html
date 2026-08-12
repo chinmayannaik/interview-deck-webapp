@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Build Tools Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 Build Tools interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/frontend-tooling" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Build Tools Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 Build Tools interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/frontend-tooling" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Build Tools Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why do we bundle JavaScript at all?","acceptedAnswer":{"@type":"Answer","text":"Historically: browsers had no module system, so bundlers gave us import / export and resolved node_modules . Under HTTP/1.1, fewer requests also mattered enormously. Browsers now support ESM natively and HTTP/2 multiplexes, so \"reduce request count\" is much weaker. Bundlers stayed because of everything else they do: Dependency resolution — bare specifiers ( import x from 'lodash' ) still aren't resolvable by a browser without an import map. Transformation — TypeScript, JSX, Sass, and syntax down-levelling for target browsers. Optimisation — tree shaking, minification, code splitting, asset hashing. Non-JS assets — importing CSS, images and SVGs as modules. Waterfalls — unbundled deep import chains mean the browser discovers modules level by level, which is slow on a real network."}},{"@type":"Question","name":"Why is Vite's dev server so much faster than webpack's?","acceptedAnswer":{"@type":"Answer","text":"Different strategies for dev. webpack builds the entire dependency graph and bundles it before serving anything, so dev start-up scales with project size — minutes on a large app — and every change re-runs part of that pipeline. Vite serves native ESM in dev: the browser requests modules and Vite transforms each one on demand, so start-up is near-instant regardless of app size. Two supporting decisions make it work: Dependency pre-bundling with esbuild — node_modules are pre-bundled once (esbuild is Go-based and 10–100× faster than JS tooling), which also converts CJS deps to ESM and collapses packages with hundreds of internal modules into one request. HMR over ESM — only the changed module is invalidated, so hot updates stay fast as the app grows. For production , Vite bundles with Rollup — because unbundled ESM in production means request waterfalls and no shared chunking. So the answer is \"unbundled in dev, bundled in prod\"."}},{"@type":"Question","name":"Explain webpack's core concepts.","acceptedAnswer":{"@type":"Answer","text":"Entry — where the dependency graph starts. Multiple entries produce multiple bundles. Output — where files go and how they're named. [contenthash] in the filename is what enables long-term caching. Loaders — transform individual files as they're added to the graph: babel-loader , css-loader , ts-loader . They run right to left in an array, which surprises people. Plugins — hook into the whole build lifecycle for things loaders can't do: HtmlWebpackPlugin , MiniCssExtractPlugin , DefinePlugin . Mode — development vs production , which switches on minification, tree shaking and other defaults. optimization.splitChunks — how shared and vendor code is factored out into separate chunks. resolve — extensions and path aliases. The one-line mental model: loaders transform files, plugins transform the build."}},{"@type":"Question","name":"ESM vs CommonJS — why does this still cause problems?","acceptedAnswer":{"@type":"Answer","text":"CommonJS ESM Syntax require / module.exports import / export Resolution Runtime, dynamic Static, at parse time Loading Synchronous Asynchronous Tree shaking No Yes Top-level await No Yes Why it hurts: ESM can import CJS (usually), but CJS cannot synchronously require ESM — that's the source of the familiar \"require() of ES Module not supported\" error. Packages that ship both formats can end up loaded twice in one process (the dual package hazard ), so instanceof checks and module-level singletons break. What controls it: \"type\": \"module\" in package.json, .mjs / .cjs extensions, and the exports field's conditional entry points."}},{"@type":"Question","name":"Transpiling vs polyfilling, and how do you decide targets?","acceptedAnswer":{"@type":"Answer","text":"Transpiling rewrites syntax the target can't parse — arrow functions, optional chaining, class fields. Polyfilling adds missing APIs at runtime — Promise , Array.prototype.flat , fetch . Syntax can't be polyfilled and APIs can't be transpiled, which is why you need both. Targets come from browserslist — one config in package.json that Babel, SWC, Vite, esbuild, Autoprefixer and Lightning CSS all read, so your JS, CSS prefixes and polyfills stay consistent. The lever that matters: targeting older browsers produces larger, slower code. &gt; 0.5%, last 2 versions, not dead is a sane modern default; dropping IE11-era targets can cut bundle size dramatically. Check your analytics rather than guessing. Tooling: Babel is the most configurable; SWC (Rust) and esbuild (Go) are far faster and now the default in Next.js and Vite respectively. Use core-js with useBuiltIns: 'usage' so only the polyfills your code actually needs are included."}},{"@type":"Question","name":"How do source maps work, and should you ship them?","acceptedAnswer":{"@type":"Answer","text":"A source map is a JSON file mapping positions in the built output back to your original source, so DevTools and error trackers show real filenames, line numbers and code instead of minified soup. Types trade build speed against fidelity: eval-cheap-module-source-map is fast and good enough for dev; source-map is a separate, complete file for production. Production options: Don't generate — smallest, but production stack traces become unreadable. Generate and upload to your error tracker only (Sentry, Datadog) — the recommended default: readable traces for you, nothing exposed to users. Generate and serve publicly — fine for open source, but it publishes your original source, including comments and any accidentally-embedded logic you'd rather not explain. Note the map is only fetched when DevTools is open, so serving one doesn't slow real users down — the concern is disclosure, not performance."}},{"@type":"Question","name":"Which package.json fields control how a package is consumed?","acceptedAnswer":{"@type":"Answer","text":"main — legacy CJS entry point. module — unofficial but widely honoured ESM entry; bundlers prefer it so they can tree-shake. types — TypeScript declarations. exports — the modern replacement for all of the above. It defines conditional entry points (import vs require, node vs browser, types) and, importantly, it encapsulates the package : consumers can no longer deep-import pkg/dist/internal/thing unless you list it. Adding exports to an existing package is a breaking change for anyone doing that. sideEffects — false tells bundlers unused modules are safe to drop, which is what makes tree shaking effective. Use an array for files that do have side effects (CSS imports, polyfills). files — what actually gets published; without it you can ship your whole repo. engines , peerDependencies — supported runtimes, and deps the host must provide (React, Angular)."}},{"@type":"Question","name":"How do semver ranges and lockfiles interact?","acceptedAnswer":{"@type":"Answer","text":"Semver is MAJOR.MINOR.PATCH : major = breaking, minor = new features (backwards compatible), patch = fixes. Ranges in package.json : ^1.2.3 — any 1.x.x ≥ 1.2.3 (the npm default). ~1.2.3 — any 1.2.x ≥ 1.2.3. 1.2.3 — exact. The lockfile records what was actually installed , for the entire transitive tree, with integrity hashes. Without it, two developers running npm install a week apart get different dependency trees from identical package.json files — the classic \"works on my machine\". The rules: commit the lockfile (yes, for libraries too — it protects your CI); use npm ci in CI, which installs exactly the lockfile and fails if it's out of sync with package.json; and never hand-edit it — resolve conflicts by re-running install."}},{"@type":"Question","name":"npm vs yarn vs pnpm — what actually differs?","acceptedAnswer":{"@type":"Answer","text":"All three read package.json and install dependencies; the difference is how they lay out node_modules . npm / yarn classic — hoist dependencies to the top level to deduplicate. Side effect: phantom dependencies — your code can import a package you never declared, because it happens to be hoisted. It works locally and breaks when the hoisting changes. pnpm — a global content-addressable store with hard links into a strict, nested node_modules . Result: far less disk usage, faster installs, and only declared dependencies are importable — phantom deps are impossible by construction. yarn berry (PnP) — no node_modules at all; a resolution map plus zipped packages. Fastest and strictest, but some tools still don't cope. bun — very fast, npm-compatible, increasingly viable. Practical advice: pnpm for monorepos and strictness, npm for maximum compatibility and zero setup friction. Pin the manager with packageManager in package.json so the team doesn't mix lockfiles."}},{"@type":"Question","name":"When is a monorepo worth it, and what makes it work?","acceptedAnswer":{"@type":"Answer","text":"Worth it when multiple apps share code (a design system, API clients, types), you want atomic cross-project changes in one PR, and you'd rather not version and publish internal packages on every change. Not worth it when projects are genuinely independent with separate teams and release cadences — you'd be paying tooling complexity for nothing. What makes it tolerable at scale: Workspaces (npm/pnpm/yarn) — the packages link to each other locally, no publishing. A task graph — Nx or Turborepo understand which projects depend on which, so they build in the right order and in parallel. Affected/changed detection — only test and build what a change actually touches. Without this, CI time grows with the repo and everyone suffers. Remote caching — if CI already built this exact input, replay the output. Often the single biggest CI win. Ownership boundaries — CODEOWNERS and module boundary rules, so \"one repo\" doesn't mean \"anyone edits anything\"."}},{"@type":"Question","name":"ESLint vs Prettier — what does each do?","acceptedAnswer":{"@type":"Answer","text":"Prettier is a formatter: it reprints your code to a consistent style (line width, quotes, semicolons, indentation). It has deliberately few options, which is the point — it ends style debates by removing the choices. ESLint is a linter: it finds problems — unused variables, missing hook dependencies, unsafe patterns, accessibility issues in JSX, forbidden imports. Many rules are auto-fixable. They must not overlap. Historically ESLint had stylistic rules that fought Prettier; the fix is eslint-config-prettier , which turns those off. Modern setups keep the split clean: Prettier owns formatting, ESLint owns correctness. Where to run them: in the editor on save (fastest feedback), on staged files via lint-staged in a pre-commit hook, and in CI as the backstop. Running the full lint on every commit gets slow and then gets bypassed. Note ESLint 9's flat config ( eslint.config.js ) replaced .eslintrc , and Biome/oxlint are fast Rust alternatives combining both jobs."}},{"@type":"Question","name":"How does TypeScript fit into a modern build pipeline?","acceptedAnswer":{"@type":"Answer","text":"The key insight: type checking and transpiling are separate jobs , and modern setups split them. esbuild/SWC strip types per-file, extremely fast, and do no type checking at all. tsc --noEmit does the type checking, usually in a separate script and in CI. So your dev server is fast, and type errors surface in the editor and CI rather than blocking every rebuild. The trade-off is that a build can succeed with type errors — which is exactly why the CI check is mandatory. Config that matters: isolatedModules (required by per-file transpilers; it forbids constructs like const enum that need whole-program knowledge), verbatimModuleSyntax / import type so type-only imports are erased cleanly, strict: true , and project references plus incremental builds to keep large monorepos checkable. For libraries, generate .d.ts files with tsc or a bundler plugin — consumers need them."}},{"@type":"Question","name":"How does Hot Module Replacement work?","acceptedAnswer":{"@type":"Answer","text":"HMR swaps a changed module in the running application without reloading the page , so component state, scroll position and open modals survive an edit. Mechanism: the dev server watches files; on a change it rebuilds just that module and pushes a message over a WebSocket; a runtime in the page fetches the new module and applies it. It then walks up the import graph looking for a module that accepts the update — if none does, it falls back to a full reload. Why React/Vue components hot-update so reliably: Fast Refresh (React) and the Vue plugin know how to re-render a component while preserving its hooks state. That's framework-specific machinery, not something HMR gives you for free. When it falls back to a full reload: editing a file with side effects at module scope, changing a file that exports non-components alongside components, circular dependencies, or edits to config files."}},{"@type":"Question","name":"What does a modern CSS build pipeline do?","acceptedAnswer":{"@type":"Answer","text":"Stages, roughly in order: Preprocessing — Sass/Less if used, though native CSS nesting and custom properties have removed much of the need. PostCSS transforms — autoprefixer (vendor prefixes from browserslist), modern-syntax down-levelling, and any custom plugins. Lightning CSS (Rust) increasingly replaces this whole layer and is Vite's default path. Scoping — CSS Modules (hashed class names per file), CSS-in-JS, or utility classes (Tailwind). All solve the same problem: global class collisions. Purging — Tailwind's JIT scans your source and emits only the utilities you actually use, which is why a utility framework ships small. Extraction and minification — pull CSS out of JS into hashed .css files for parallel loading and caching; cssnano /Lightning minifies. Critical CSS — optionally inline above-the-fold styles to avoid render-blocking."}},{"@type":"Question","name":"How does content hashing enable long-term caching?","acceptedAnswer":{"@type":"Answer","text":"Name each output file after a hash of its contents — main.a3f9c2.js . Because the URL changes whenever the content does, you can safely serve it with Cache-Control: max-age=31536000, immutable : a returning user re-downloads only what actually changed, and never revalidates the rest. The HTML entry point references the hashed files and must itself be uncached, which is what makes the whole scheme work. The classic failure — cache busting cascades: if module IDs are sequential, adding one module renumbers the others and every chunk hash changes, so users re-download the entire app after a one-line fix. Modern bundlers use deterministic module IDs to prevent this, but it's worth verifying: build twice with a trivial change and check how many hashes moved. Chunk strategy: separate stable vendor code from frequently-changing app code, so a deploy doesn't invalidate React for everyone."}},{"@type":"Question","name":"Build-time vs runtime configuration — why does it matter?","acceptedAnswer":{"@type":"Answer","text":"Most frontend tooling inlines environment variables at build time — process.env.VITE_API_URL becomes a literal string in the bundle. That means the artifact is environment-specific: you cannot build once and promote the same bundle from staging to production, which is exactly what a good deployment pipeline wants to do. Options for runtime config: Fetch a config endpoint on boot — flexible, but adds a request before the app can start. Inject into the HTML at serve time (a window.__CONFIG__ script or meta tags) — no extra round trip, works with a server or edge function. A generated config.js written at container start-up from environment variables and loaded before the app — the common Docker/Kubernetes pattern. Either way: anything reaching the browser is public, so runtime config is for URLs, feature flags and public keys — never secrets."}},{"@type":"Question","name":"What belongs in a frontend CI pipeline?","acceptedAnswer":{"@type":"Answer","text":"Ordered fastest-failing first, so feedback is quick: Install — npm ci with the dependency cache restored. Lint and format check — seconds. Type check — tsc --noEmit . Unit and component tests — parallelised, with coverage thresholds if you use them. Build — proves the production pipeline works, not just the dev server. Bundle size check against the budget, reported as a delta on the PR. E2E tests against the built app (Playwright/Cypress), usually the slowest stage. Accessibility and Lighthouse on a preview deployment. Preview deploy with a URL commented on the PR — the highest-value thing for reviewers. What keeps it usable: cache node_modules and build caches aggressively; run independent jobs in parallel; use affected-only builds in a monorepo; and treat flaky E2E tests as bugs — a pipeline people re-run reflexively stops being a gate."}},{"@type":"Question","name":"How do you version and release a shared frontend library?","acceptedAnswer":{"@type":"Answer","text":"Follow semver strictly — for a component library, a breaking change includes removing or renaming a prop, changing default behaviour, and often changing DOM structure or class names that consumers style against. Automation options: Changesets — contributors add a small markdown file describing the change and its bump level; release automation aggregates them into a version bump and changelog. Works especially well in monorepos with several publishable packages. semantic-release — derives the version from Conventional Commit messages. Fully automatic, but only as accurate as commit discipline. Practices that make consumers happy: publish next / canary tags for early testing; deprecate before removing (a console warning for one minor version); ship codemods for large breaking changes; keep a real changelog with migration notes; and document the supported range of peer dependencies."}},{"@type":"Question","name":"How do you debug a build that works locally but fails in CI?","acceptedAnswer":{"@type":"Answer","text":"Work through the differences systematically — it's almost always one of these: Dependency drift — you ran npm install locally weeks ago; CI installs fresh. Delete node_modules , run npm ci locally and reproduce. Node or package manager version — pin with engines , .nvmrc and packageManager , and check what CI actually uses. Case-sensitive filesystem — the classic. macOS and Windows are case-insensitive, Linux isn't, so import './Button' resolving to button.tsx works locally and fails in CI. Environment variables — missing in CI, so a config value becomes undefined and something fails downstream. Memory — CI containers have less RAM; large builds hit heap limits. Raise --max-old-space-size or reduce parallelism. Stale cache — a poisoned CI cache. Always try a clean cache run before deeper debugging. Git-ignored files present locally but never committed."}},{"@type":"Question","name":"How would you migrate a large app from webpack to Vite?","acceptedAnswer":{"@type":"Answer","text":"Justify it first — the win is developer experience (start-up and HMR), not production output. If dev builds are already fast, the migration may not pay for itself. Approach: Inventory the webpack config — every loader, plugin, alias and define. Most have direct Vite equivalents; a few (custom loaders, Module Federation) need real work. Run Vite alongside — keep webpack as the working build and add a Vite dev script. The team can switch when it's ready, and you can back out at any point. Fix the predictable breakages: process.env → import.meta.env ; require() in app code → ESM; CJS-only dependencies need optimizeDeps.include ; require.context → import.meta.glob ; anything relying on webpack-specific magic comments. Match the production output — chunking strategy, asset paths, base URL, legacy browser support via @vitejs/plugin-legacy . Verify — compare bundle sizes, run the full E2E suite against the Vite build, and ship behind a canary before switching CI over."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Build Tools interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Build Tools Interview Questions and Answers</h1>
+      <p>20 hand-picked Build Tools interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Why do we bundle JavaScript at all?</h2>
+          <div class="seo-a"><p>Historically: browsers had no module system, so bundlers gave us <code>import</code>/<code>export</code> and resolved <code>node_modules</code>. Under HTTP/1.1, fewer requests also mattered enormously.</p><p>Browsers now support ESM natively and HTTP/2 multiplexes, so "reduce request count" is much weaker. Bundlers stayed because of everything <em>else</em> they do:</p><ul><li><strong>Dependency resolution</strong> — bare specifiers (<code>import x from 'lodash'</code>) still aren't resolvable by a browser without an import map.</li><li><strong>Transformation</strong> — TypeScript, JSX, Sass, and syntax down-levelling for target browsers.</li><li><strong>Optimisation</strong> — tree shaking, minification, code splitting, asset hashing.</li><li><strong>Non-JS assets</strong> — importing CSS, images and SVGs as modules.</li><li><strong>Waterfalls</strong> — unbundled deep import chains mean the browser discovers modules level by level, which is slow on a real network.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why is Vite's dev server so much faster than webpack's?</h2>
+          <div class="seo-a"><p>Different strategies for dev.</p><p><strong>webpack</strong> builds the entire dependency graph and bundles it <em>before</em> serving anything, so dev start-up scales with project size — minutes on a large app — and every change re-runs part of that pipeline.</p><p><strong>Vite</strong> serves <strong>native ESM</strong> in dev: the browser requests modules and Vite transforms each one on demand, so start-up is near-instant regardless of app size. Two supporting decisions make it work:</p><ul><li><strong>Dependency pre-bundling with esbuild</strong> — <code>node_modules</code> are pre-bundled once (esbuild is Go-based and 10–100× faster than JS tooling), which also converts CJS deps to ESM and collapses packages with hundreds of internal modules into one request.</li><li><strong>HMR over ESM</strong> — only the changed module is invalidated, so hot updates stay fast as the app grows.</li></ul><p><strong>For production</strong>, Vite bundles with Rollup — because unbundled ESM in production means request waterfalls and no shared chunking. So the answer is "unbundled in dev, bundled in prod".</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain webpack's core concepts.</h2>
+          <div class="seo-a"><ul><li><strong>Entry</strong> — where the dependency graph starts. Multiple entries produce multiple bundles.</li><li><strong>Output</strong> — where files go and how they're named. <code>[contenthash]</code> in the filename is what enables long-term caching.</li><li><strong>Loaders</strong> — transform individual files as they're added to the graph: <code>babel-loader</code>, <code>css-loader</code>, <code>ts-loader</code>. They run <strong>right to left</strong> in an array, which surprises people.</li><li><strong>Plugins</strong> — hook into the whole build lifecycle for things loaders can't do: <code>HtmlWebpackPlugin</code>, <code>MiniCssExtractPlugin</code>, <code>DefinePlugin</code>.</li><li><strong>Mode</strong> — <code>development</code> vs <code>production</code>, which switches on minification, tree shaking and other defaults.</li><li><strong>optimization.splitChunks</strong> — how shared and vendor code is factored out into separate chunks.</li><li><strong>resolve</strong> — extensions and path aliases.</li></ul><p>The one-line mental model: <strong>loaders transform files, plugins transform the build.</strong></p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>ESM vs CommonJS — why does this still cause problems?</h2>
+          <div class="seo-a"><table><tr><th></th><th>CommonJS</th><th>ESM</th></tr><tr><td>Syntax</td><td><code>require</code> / <code>module.exports</code></td><td><code>import</code> / <code>export</code></td></tr><tr><td>Resolution</td><td>Runtime, dynamic</td><td><strong>Static, at parse time</strong></td></tr><tr><td>Loading</td><td>Synchronous</td><td>Asynchronous</td></tr><tr><td>Tree shaking</td><td>No</td><td>Yes</td></tr><tr><td>Top-level await</td><td>No</td><td>Yes</td></tr></table><p><strong>Why it hurts:</strong> ESM can import CJS (usually), but CJS <strong>cannot synchronously <code>require</code> ESM</strong> — that's the source of the familiar <em>"require() of ES Module not supported"</em> error. Packages that ship both formats can end up loaded twice in one process (the <strong>dual package hazard</strong>), so <code>instanceof</code> checks and module-level singletons break.</p><p><strong>What controls it:</strong> <code>"type": "module"</code> in package.json, <code>.mjs</code>/<code>.cjs</code> extensions, and the <code>exports</code> field's conditional entry points.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Transpiling vs polyfilling, and how do you decide targets?</h2>
+          <div class="seo-a"><p><strong>Transpiling</strong> rewrites <em>syntax</em> the target can't parse — arrow functions, optional chaining, class fields. <strong>Polyfilling</strong> adds missing <em>APIs</em> at runtime — <code>Promise</code>, <code>Array.prototype.flat</code>, <code>fetch</code>. Syntax can't be polyfilled and APIs can't be transpiled, which is why you need both.</p><p><strong>Targets come from <code>browserslist</code></strong> — one config in package.json that Babel, SWC, Vite, esbuild, Autoprefixer and Lightning CSS all read, so your JS, CSS prefixes and polyfills stay consistent.</p><p><strong>The lever that matters:</strong> targeting older browsers produces larger, slower code. <code>&gt; 0.5%, last 2 versions, not dead</code> is a sane modern default; dropping IE11-era targets can cut bundle size dramatically. Check your analytics rather than guessing.</p><p><strong>Tooling:</strong> Babel is the most configurable; <strong>SWC</strong> (Rust) and <strong>esbuild</strong> (Go) are far faster and now the default in Next.js and Vite respectively. Use <code>core-js</code> with <code>useBuiltIns: 'usage'</code> so only the polyfills your code actually needs are included.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do source maps work, and should you ship them?</h2>
+          <div class="seo-a"><p>A source map is a JSON file mapping positions in the built output back to your original source, so DevTools and error trackers show real filenames, line numbers and code instead of minified soup.</p><p><strong>Types trade build speed against fidelity:</strong> <code>eval-cheap-module-source-map</code> is fast and good enough for dev; <code>source-map</code> is a separate, complete file for production.</p><p><strong>Production options:</strong></p><ul><li><strong>Don't generate</strong> — smallest, but production stack traces become unreadable.</li><li><strong>Generate and upload to your error tracker only</strong> (Sentry, Datadog) — the recommended default: readable traces for you, nothing exposed to users.</li><li><strong>Generate and serve publicly</strong> — fine for open source, but it publishes your original source, including comments and any accidentally-embedded logic you'd rather not explain.</li></ul><p>Note the map is only fetched when DevTools is open, so serving one doesn't slow real users down — the concern is disclosure, not performance.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Which package.json fields control how a package is consumed?</h2>
+          <div class="seo-a"><ul><li><strong><code>main</code></strong> — legacy CJS entry point.</li><li><strong><code>module</code></strong> — unofficial but widely honoured ESM entry; bundlers prefer it so they can tree-shake.</li><li><strong><code>types</code></strong> — TypeScript declarations.</li><li><strong><code>exports</code></strong> — the modern replacement for all of the above. It defines <em>conditional</em> entry points (import vs require, node vs browser, types) and, importantly, it <strong>encapsulates the package</strong>: consumers can no longer deep-import <code>pkg/dist/internal/thing</code> unless you list it. Adding <code>exports</code> to an existing package is a breaking change for anyone doing that.</li><li><strong><code>sideEffects</code></strong> — <code>false</code> tells bundlers unused modules are safe to drop, which is what makes tree shaking effective. Use an array for files that <em>do</em> have side effects (CSS imports, polyfills).</li><li><strong><code>files</code></strong> — what actually gets published; without it you can ship your whole repo.</li><li><strong><code>engines</code></strong>, <strong><code>peerDependencies</code></strong> — supported runtimes, and deps the host must provide (React, Angular).</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do semver ranges and lockfiles interact?</h2>
+          <div class="seo-a"><p><strong>Semver</strong> is <code>MAJOR.MINOR.PATCH</code>: major = breaking, minor = new features (backwards compatible), patch = fixes. Ranges in <code>package.json</code>:</p><ul><li><code>^1.2.3</code> — any 1.x.x ≥ 1.2.3 (the npm default).</li><li><code>~1.2.3</code> — any 1.2.x ≥ 1.2.3.</li><li><code>1.2.3</code> — exact.</li></ul><p><strong>The lockfile records what was <em>actually</em> installed</strong>, for the entire transitive tree, with integrity hashes. Without it, two developers running <code>npm install</code> a week apart get different dependency trees from identical <code>package.json</code> files — the classic "works on my machine".</p><p><strong>The rules:</strong> commit the lockfile (yes, for libraries too — it protects <em>your</em> CI); use <code>npm ci</code> in CI, which installs exactly the lockfile and fails if it's out of sync with package.json; and never hand-edit it — resolve conflicts by re-running install.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>npm vs yarn vs pnpm — what actually differs?</h2>
+          <div class="seo-a"><p>All three read package.json and install dependencies; the difference is <strong>how they lay out <code>node_modules</code></strong>.</p><ul><li><strong>npm / yarn classic</strong> — <em>hoist</em> dependencies to the top level to deduplicate. Side effect: <strong>phantom dependencies</strong> — your code can <code>import</code> a package you never declared, because it happens to be hoisted. It works locally and breaks when the hoisting changes.</li><li><strong>pnpm</strong> — a global content-addressable store with <strong>hard links</strong> into a strict, nested <code>node_modules</code>. Result: far less disk usage, faster installs, and only declared dependencies are importable — phantom deps are impossible by construction.</li><li><strong>yarn berry (PnP)</strong> — no <code>node_modules</code> at all; a resolution map plus zipped packages. Fastest and strictest, but some tools still don't cope.</li><li><strong>bun</strong> — very fast, npm-compatible, increasingly viable.</li></ul><p><strong>Practical advice:</strong> pnpm for monorepos and strictness, npm for maximum compatibility and zero setup friction. Pin the manager with <code>packageManager</code> in package.json so the team doesn't mix lockfiles.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>When is a monorepo worth it, and what makes it work?</h2>
+          <div class="seo-a"><p><strong>Worth it when</strong> multiple apps share code (a design system, API clients, types), you want atomic cross-project changes in one PR, and you'd rather not version and publish internal packages on every change.</p><p><strong>Not worth it when</strong> projects are genuinely independent with separate teams and release cadences — you'd be paying tooling complexity for nothing.</p><p><strong>What makes it tolerable at scale:</strong></p><ul><li><strong>Workspaces</strong> (npm/pnpm/yarn) — the packages link to each other locally, no publishing.</li><li><strong>A task graph</strong> — Nx or Turborepo understand which projects depend on which, so they build in the right order and in parallel.</li><li><strong>Affected/changed detection</strong> — only test and build what a change actually touches. Without this, CI time grows with the repo and everyone suffers.</li><li><strong>Remote caching</strong> — if CI already built this exact input, replay the output. Often the single biggest CI win.</li><li><strong>Ownership boundaries</strong> — CODEOWNERS and module boundary rules, so "one repo" doesn't mean "anyone edits anything".</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>ESLint vs Prettier — what does each do?</h2>
+          <div class="seo-a"><p><strong>Prettier</strong> is a formatter: it reprints your code to a consistent style (line width, quotes, semicolons, indentation). It has deliberately few options, which is the point — it ends style debates by removing the choices.</p><p><strong>ESLint</strong> is a linter: it finds <em>problems</em> — unused variables, missing hook dependencies, unsafe patterns, accessibility issues in JSX, forbidden imports. Many rules are auto-fixable.</p><p><strong>They must not overlap.</strong> Historically ESLint had stylistic rules that fought Prettier; the fix is <code>eslint-config-prettier</code>, which turns those off. Modern setups keep the split clean: <strong>Prettier owns formatting, ESLint owns correctness.</strong></p><p><strong>Where to run them:</strong> in the editor on save (fastest feedback), on staged files via lint-staged in a pre-commit hook, and in CI as the backstop. Running the full lint on every commit gets slow and then gets bypassed.</p><p>Note ESLint 9's <strong>flat config</strong> (<code>eslint.config.js</code>) replaced <code>.eslintrc</code>, and Biome/oxlint are fast Rust alternatives combining both jobs.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does TypeScript fit into a modern build pipeline?</h2>
+          <div class="seo-a"><p>The key insight: <strong>type checking and transpiling are separate jobs</strong>, and modern setups split them.</p><ul><li><strong>esbuild/SWC strip types</strong> per-file, extremely fast, and do <em>no</em> type checking at all.</li><li><strong><code>tsc --noEmit</code></strong> does the type checking, usually in a separate script and in CI.</li></ul><p>So your dev server is fast, and type errors surface in the editor and CI rather than blocking every rebuild. The trade-off is that a build can succeed with type errors — which is exactly why the CI check is mandatory.</p><p><strong>Config that matters:</strong> <code>isolatedModules</code> (required by per-file transpilers; it forbids constructs like <code>const enum</code> that need whole-program knowledge), <code>verbatimModuleSyntax</code>/<code>import type</code> so type-only imports are erased cleanly, <code>strict: true</code>, and <strong>project references</strong> plus incremental builds to keep large monorepos checkable.</p><p>For libraries, generate <code>.d.ts</code> files with <code>tsc</code> or a bundler plugin — consumers need them.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does Hot Module Replacement work?</h2>
+          <div class="seo-a"><p>HMR swaps a changed module in the running application <strong>without reloading the page</strong>, so component state, scroll position and open modals survive an edit.</p><p><strong>Mechanism:</strong> the dev server watches files; on a change it rebuilds just that module and pushes a message over a WebSocket; a runtime in the page fetches the new module and applies it. It then walks <em>up</em> the import graph looking for a module that accepts the update — if none does, it falls back to a full reload.</p><p><strong>Why React/Vue components hot-update so reliably:</strong> Fast Refresh (React) and the Vue plugin know how to re-render a component while preserving its hooks state. That's framework-specific machinery, not something HMR gives you for free.</p><p><strong>When it falls back to a full reload:</strong> editing a file with side effects at module scope, changing a file that exports non-components alongside components, circular dependencies, or edits to config files.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does a modern CSS build pipeline do?</h2>
+          <div class="seo-a"><p>Stages, roughly in order:</p><ol><li><strong>Preprocessing</strong> — Sass/Less if used, though native CSS nesting and custom properties have removed much of the need.</li><li><strong>PostCSS transforms</strong> — <code>autoprefixer</code> (vendor prefixes from browserslist), modern-syntax down-levelling, and any custom plugins. <strong>Lightning CSS</strong> (Rust) increasingly replaces this whole layer and is Vite's default path.</li><li><strong>Scoping</strong> — CSS Modules (hashed class names per file), CSS-in-JS, or utility classes (Tailwind). All solve the same problem: global class collisions.</li><li><strong>Purging</strong> — Tailwind's JIT scans your source and emits only the utilities you actually use, which is why a utility framework ships small.</li><li><strong>Extraction and minification</strong> — pull CSS out of JS into hashed <code>.css</code> files for parallel loading and caching; <code>cssnano</code>/Lightning minifies.</li><li><strong>Critical CSS</strong> — optionally inline above-the-fold styles to avoid render-blocking.</li></ol></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does content hashing enable long-term caching?</h2>
+          <div class="seo-a"><p>Name each output file after a hash of its <em>contents</em> — <code>main.a3f9c2.js</code>. Because the URL changes whenever the content does, you can safely serve it with <code>Cache-Control: max-age=31536000, immutable</code>: a returning user re-downloads only what actually changed, and never revalidates the rest.</p><p>The HTML entry point references the hashed files and must itself be uncached, which is what makes the whole scheme work.</p><p><strong>The classic failure — cache busting cascades:</strong> if module IDs are sequential, adding one module renumbers the others and <em>every</em> chunk hash changes, so users re-download the entire app after a one-line fix. Modern bundlers use deterministic module IDs to prevent this, but it's worth verifying: build twice with a trivial change and check how many hashes moved.</p><p><strong>Chunk strategy:</strong> separate stable vendor code from frequently-changing app code, so a deploy doesn't invalidate React for everyone.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Build-time vs runtime configuration — why does it matter?</h2>
+          <div class="seo-a"><p>Most frontend tooling <strong>inlines environment variables at build time</strong> — <code>process.env.VITE_API_URL</code> becomes a literal string in the bundle. That means the artifact is environment-specific: you cannot build once and promote the same bundle from staging to production, which is exactly what a good deployment pipeline wants to do.</p><p><strong>Options for runtime config:</strong></p><ul><li><strong>Fetch a config endpoint</strong> on boot — flexible, but adds a request before the app can start.</li><li><strong>Inject into the HTML</strong> at serve time (a <code>window.__CONFIG__</code> script or meta tags) — no extra round trip, works with a server or edge function.</li><li><strong>A generated <code>config.js</code></strong> written at container start-up from environment variables and loaded before the app — the common Docker/Kubernetes pattern.</li></ul><p><strong>Either way:</strong> anything reaching the browser is public, so runtime config is for URLs, feature flags and public keys — never secrets.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What belongs in a frontend CI pipeline?</h2>
+          <div class="seo-a"><p>Ordered fastest-failing first, so feedback is quick:</p><ol><li><strong>Install</strong> — <code>npm ci</code> with the dependency cache restored.</li><li><strong>Lint and format check</strong> — seconds.</li><li><strong>Type check</strong> — <code>tsc --noEmit</code>.</li><li><strong>Unit and component tests</strong> — parallelised, with coverage thresholds if you use them.</li><li><strong>Build</strong> — proves the production pipeline works, not just the dev server.</li><li><strong>Bundle size check</strong> against the budget, reported as a delta on the PR.</li><li><strong>E2E tests</strong> against the built app (Playwright/Cypress), usually the slowest stage.</li><li><strong>Accessibility and Lighthouse</strong> on a preview deployment.</li><li><strong>Preview deploy</strong> with a URL commented on the PR — the highest-value thing for reviewers.</li></ol><p><strong>What keeps it usable:</strong> cache <code>node_modules</code> and build caches aggressively; run independent jobs in parallel; use affected-only builds in a monorepo; and treat flaky E2E tests as bugs — a pipeline people re-run reflexively stops being a gate.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you version and release a shared frontend library?</h2>
+          <div class="seo-a"><p><strong>Follow semver strictly</strong> — for a component library, a breaking change includes removing or renaming a prop, changing default behaviour, and often changing DOM structure or class names that consumers style against.</p><p><strong>Automation options:</strong></p><ul><li><strong>Changesets</strong> — contributors add a small markdown file describing the change and its bump level; release automation aggregates them into a version bump and changelog. Works especially well in monorepos with several publishable packages.</li><li><strong>semantic-release</strong> — derives the version from Conventional Commit messages. Fully automatic, but only as accurate as commit discipline.</li></ul><p><strong>Practices that make consumers happy:</strong> publish <code>next</code>/<code>canary</code> tags for early testing; deprecate before removing (a console warning for one minor version); ship codemods for large breaking changes; keep a real changelog with migration notes; and document the supported range of peer dependencies.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you debug a build that works locally but fails in CI?</h2>
+          <div class="seo-a"><p>Work through the differences systematically — it's almost always one of these:</p><ol><li><strong>Dependency drift</strong> — you ran <code>npm install</code> locally weeks ago; CI installs fresh. Delete <code>node_modules</code>, run <code>npm ci</code> locally and reproduce.</li><li><strong>Node or package manager version</strong> — pin with <code>engines</code>, <code>.nvmrc</code> and <code>packageManager</code>, and check what CI actually uses.</li><li><strong>Case-sensitive filesystem</strong> — the classic. macOS and Windows are case-insensitive, Linux isn't, so <code>import './Button'</code> resolving to <code>button.tsx</code> works locally and fails in CI.</li><li><strong>Environment variables</strong> — missing in CI, so a config value becomes <code>undefined</code> and something fails downstream.</li><li><strong>Memory</strong> — CI containers have less RAM; large builds hit heap limits. Raise <code>--max-old-space-size</code> or reduce parallelism.</li><li><strong>Stale cache</strong> — a poisoned CI cache. Always try a clean cache run before deeper debugging.</li><li><strong>Git-ignored files</strong> present locally but never committed.</li></ol></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How would you migrate a large app from webpack to Vite?</h2>
+          <div class="seo-a"><p><strong>Justify it first</strong> — the win is developer experience (start-up and HMR), not production output. If dev builds are already fast, the migration may not pay for itself.</p><p><strong>Approach:</strong></p><ol><li><strong>Inventory the webpack config</strong> — every loader, plugin, alias and define. Most have direct Vite equivalents; a few (custom loaders, Module Federation) need real work.</li><li><strong>Run Vite alongside</strong> — keep webpack as the working build and add a Vite dev script. The team can switch when it's ready, and you can back out at any point.</li><li><strong>Fix the predictable breakages:</strong> <code>process.env</code> → <code>import.meta.env</code>; <code>require()</code> in app code → ESM; CJS-only dependencies need <code>optimizeDeps.include</code>; <code>require.context</code> → <code>import.meta.glob</code>; anything relying on webpack-specific magic comments.</li><li><strong>Match the production output</strong> — chunking strategy, asset paths, base URL, legacy browser support via <code>@vitejs/plugin-legacy</code>.</li><li><strong>Verify</strong> — compare bundle sizes, run the full E2E suite against the Vite build, and ship behind a canary before switching CI over.</li></ol></div>
+          
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="frontend-tooling";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

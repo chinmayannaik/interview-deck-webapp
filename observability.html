@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>Observability Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 Observability interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/observability" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="Observability Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 Observability interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/observability" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Observability Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Monitoring vs observability — what's the actual difference?","acceptedAnswer":{"@type":"Answer","text":"Monitoring watches for failure modes you already predicted : you define dashboards and alerts for known conditions (CPU &gt; 80%, disk full, error rate &gt; 1%). It answers \"is the system broken?\" Observability is a property of the system: whether you can understand its internal state from the data it emits — including for failures nobody anticipated. It answers \"why is it broken?\" without shipping new code to find out. The practical distinction is known-unknowns vs unknown-unknowns : Monitoring: \"alert me when the queue is longer than 1000.\" You knew to watch that. Observability: \"latency is up only for Android users in one region on the checkout endpoint since 14:20.\" You couldn't have pre-built that dashboard — you needed to slice rich, high-cardinality data at query time. Monitoring is a subset of observability, not a competitor. You need both: monitoring to page you, observability to debug."}},{"@type":"Question","name":"Explain the three pillars: metrics, logs, and traces. When do you use each?","acceptedAnswer":{"@type":"Answer","text":"Metrics — numeric time-series, aggregated and cheap to store forever. Best for trends, dashboards, and alerting : request rate, error rate, p99 latency, CPU. Low cardinality by design. Answers \"is something wrong, and since when?\" Logs — discrete timestamped events with context. Best for detailed forensics on a specific event : the exact stack trace, the exact payload that failed. Expensive at volume. Answers \"what exactly happened in this case?\" Traces — the path of a single request across services, as a tree of timed spans. Best for latency attribution in distributed systems : which of 12 microservices ate 800ms. Answers \"where is the time going?\" The workflow that ties them together: a metric alert fires → a trace shows which service and operation is slow → logs from that service and trace ID give the exact error. Linking them with a shared trace_id is what turns three data types into one investigation."}},{"@type":"Question","name":"What are the Four Golden Signals? How do RED and USE methods differ?","acceptedAnswer":{"@type":"Answer","text":"Four Golden Signals (Google SRE) — what to measure on any user-facing service: Latency — how long requests take. Measure successful and failed requests separately ; a fast 500 skews your average and hides the problem. Traffic — demand: requests/sec, transactions/sec. Errors — rate of failed requests (explicit 5xx, and implicit — wrong content, policy violations). Saturation — how full the system is (memory, connection pool, queue depth). The leading indicator: saturation rises before latency and errors do. RED (Rate, Errors, Duration) is the request-centric subset — the right frame for services and microservices. USE (Utilisation, Saturation, Errors) is resource-centric — the right frame for infrastructure : CPU, memory, disk, network interfaces. In practice: RED for every service, USE for every resource. They're complementary views, not alternatives."}},{"@type":"Question","name":"How does Prometheus work? Explain the pull model, exporters, and service discovery.","acceptedAnswer":{"@type":"Answer","text":"Prometheus scrapes (pulls) metrics over HTTP from targets exposing a /metrics endpoint in a simple text format, stores them in a local time-series database, and evaluates rules against them. Components: Prometheus server — scraper + TSDB + rule evaluator + PromQL engine. Exporters — translate something that doesn't speak Prometheus into /metrics : node_exporter (host), blackbox_exporter (probes), postgres_exporter , kube-state-metrics (K8s object state), cAdvisor (container resources). Service discovery — targets come from Kubernetes, EC2, Consul, or file SD rather than a static list, so autoscaled pods are scraped automatically. This is what makes pull viable at scale. Alertmanager — separate component handling routing, grouping, silencing, and delivery. Pushgateway — only for short-lived batch jobs that die before they can be scraped. It's an exception, not a general push path. Why pull beats push here: Prometheus knows the intended target list, so a target that disappears is detectable ( up == 0 ) rather than silent; you can scrape a target manually with curl to debug; and there's no risk of a misbehaving client flooding your ingestion."}},{"@type":"Question","name":"Counter vs Gauge vs Histogram vs Summary — which do you use when?","acceptedAnswer":{"@type":"Answer","text":"Counter — monotonically increasing, only resets to 0 on restart. For things you count: requests, errors, bytes sent. Never graph a counter raw — its absolute value is meaningless; always wrap it in rate() . Gauge — a value that goes up and down: memory in use, queue depth, active connections, temperature. Graph it directly; use avg / max / min . Histogram — samples observations into configurable buckets (plus _sum and _count ). Percentiles are calculated server-side with histogram_quantile() , which means you can aggregate across instances . This is what you want for latency. Summary — calculates quantiles client-side . Cheaper to query, but the quantiles cannot be aggregated across instances (you can't average p99s), so it's rarely the right choice in a distributed system. Default to histograms for latency and size distributions , counters for events, gauges for current state."}},{"@type":"Question","name":"Write the PromQL you'd actually use day to day. What's the difference between rate and irate?","acceptedAnswer":{"@type":"Answer","text":"PromQL operates on two things: instant vectors (one value per series, now) and range vectors (a window of values, e.g. [5m] ). Functions like rate() turn a range vector into an instant vector. rate() — average per-second rate over the window, using all data points and correcting for counter resets. Use this for alerting and dashboards — it's smooth and stable. irate() — instant rate from only the last two data points. Very responsive but spiky; good for zooming into a short volatile window, bad for alerts (it will flap). increase() — total increase over the window (essentially rate × seconds ). Rule of thumb : the range window should be at least 4× the scrape interval (so 15s scrape → [1m] minimum, and [5m] is the safe default). Too short and a single missed scrape produces gaps. Aggregation order matters : always rate() first, then sum() — sum before rate breaks counter-reset handling and gives wrong numbers."}},{"@type":"Question","name":"Explain SLI, SLO, SLA, and error budgets.","acceptedAnswer":{"@type":"Answer","text":"SLI (Indicator) — the measurement : \"proportion of HTTP requests served in under 300ms\" or \"successful requests ÷ total requests\". A number you can actually compute from metrics. SLO (Objective) — your internal target for that SLI: \"99.9% of requests succeed, measured over 30 days.\" This is what the team commits to and what should drive alerting. SLA (Agreement) — the contractual promise to customers, with financial penalties. Always set looser than your SLO, so you breach your internal target and react long before you breach the contract. Error budget = 100% − SLO . A 99.9% SLO over 30 days allows 43.2 minutes of failure. That budget is a currency: Budget remaining → ship features, take risks, deploy often. Budget exhausted → freeze risky releases and spend the sprint on reliability. This is the point of SLOs: they turn \"how much reliability is enough?\" from an argument into a number, and they explicitly acknowledge that 100% is the wrong target — it's infinitely expensive and prevents shipping."}},{"@type":"Question","name":"What makes a good alert? How do you fix alert fatigue?","acceptedAnswer":{"@type":"Answer","text":"A good alert is urgent, actionable, and symptom-based. Before creating one, ask: if this fires at 3am, is there something a human must do right now ? If not, it's a dashboard or a ticket, not a page. Alert on symptoms, not causes. \"Checkout error rate is 5%\" is worth waking someone; \"CPU is 85%\" is not — high CPU with healthy latency and no errors is just a well-utilised server. Cause-based alerts generate noise because they fire in situations where users are fine. Fixing alert fatigue — the failure mode where people ignore alerts because most are noise, and the one real page gets missed: Delete alerts nobody acts on. Audit which alerts fired in the last 90 days and what the responder did. \"Acknowledged and closed\" = delete it. Add for: durations so transient blips don't page. Group and inhibit — one node failing shouldn't send 40 pages; suppress downstream alerts when the upstream cause is already firing. Tier severity — page vs ticket vs dashboard-only. Every alert links a runbook that says what to check and what to do. Alert on burn rate/SLOs rather than arbitrary thresholds."}},{"@type":"Question","name":"What makes a good Grafana dashboard?","acceptedAnswer":{"@type":"Answer","text":"Grafana visualises data from many sources (Prometheus, Loki, Elasticsearch, CloudWatch, SQL) — it stores no metrics itself. Principles for dashboards people actually use: One dashboard, one question. \"Is the checkout service healthy?\" — not 60 panels of everything. Structure top-down — RED signals (rate, errors, duration) at the top; resource/infra detail below. The first screen should answer \"is this OK?\" in three seconds. Use template variables ( $environment , $service , $pod ) so one dashboard serves every service instead of 40 copies. Percentiles, not averages — show p50/p95/p99. An average latency of 200ms hides that 1% of users wait 8 seconds. Annotate deployments — overlaying deploy markers makes \"what changed?\" instantly visible. This is the single highest-value dashboard feature. Consistent units and thresholds ; add SLO lines so \"good\" is visible without interpretation. Dashboards as code — provision JSON via Terraform/ConfigMap so they're version-controlled and reproducible, not hand-built and lost."}},{"@type":"Question","name":"How do you build centralised logging? Compare ELK/EFK with Loki.","acceptedAnswer":{"@type":"Answer","text":"In a distributed system you can't SSH to a box and tail — pods are ephemeral and there are hundreds. You need a pipeline: collect → ship → parse → store → query . ELK / EFK stack Beats/Fluentd/Fluent Bit — agent on each node collecting container stdout. Logstash (optional) — parsing, enrichment, filtering. Elasticsearch — indexes the full text of every log. Powerful search, but storage- and RAM-hungry and operationally heavy. Kibana — query UI. Loki takes the opposite approach: it indexes only labels (service, namespace, level) and stores the log content compressed in object storage. Dramatically cheaper and simpler to run; queries filter by label first then grep the stream. Trade-off: full-text search across everything is slower than Elasticsearch. Choosing: Loki if you're already on Prometheus/Grafana, want low cost, and mostly query by service + time window (which is most DevOps use). Elasticsearch if you need rich full-text search, complex aggregations, or already run it for other purposes."}},{"@type":"Question","name":"What are logging best practices — structure, levels, correlation IDs, and what NOT to log?","acceptedAnswer":{"@type":"Answer","text":"Log structured JSON, not prose. \"User 8821 failed payment after 30s\" requires a regex to query; {\"user_id\":\"8821\",\"event\":\"payment_failed\",\"duration_ms\":30012} is filterable and aggregatable immediately. Levels, used consistently: ERROR — something failed and needs attention. If nobody would act on it, it isn't an error. WARN — unexpected but handled (retry succeeded, fallback used). INFO — significant business events (order placed, user registered). Default production level. DEBUG — detailed diagnostics, off in prod (or sampled / dynamically enableable). Correlation/trace IDs are non-negotiable in microservices. Generate an ID at the edge, propagate it through every downstream call and into every log line, so one query reconstructs the full journey of a request across ten services. Never log : passwords, tokens, API keys, full card numbers, personal data (GDPR/PCI), or entire request bodies. Redact at the logging library level, not by hoping developers remember. Also : write to stdout in containers (the platform handles shipping), never log inside a tight loop, and include enough context that the line is useful without the surrounding lines."}},{"@type":"Question","name":"What is distributed tracing? Explain spans, context propagation, and OpenTelemetry.","acceptedAnswer":{"@type":"Answer","text":"Distributed tracing follows one request as it crosses service boundaries, producing a timeline that shows exactly where time was spent. Trace — the whole request journey, identified by a trace_id . Span — one unit of work (an HTTP handler, a DB query, a cache lookup) with a start time, duration, parent span ID, and attributes. Spans nest into a tree. Context propagation — the mechanism that makes it work: the trace context travels in HTTP headers (the W3C traceparent header) or message metadata, so downstream services attach their spans to the same trace. If propagation breaks anywhere, the trace fragments — this is the most common tracing bug. OpenTelemetry (OTel) is the vendor-neutral standard: one set of SDKs and one Collector that exports to Jaeger, Tempo, Datadog, Honeycomb — so instrumentation isn't locked to a backend. It covers traces, metrics, and logs. Sampling is necessary at volume: head-based (decide at the start, e.g. keep 1%) is cheap but may miss the rare errors you care about; tail-based (decide after the trace completes) lets you keep 100% of slow or failed traces and 1% of the boring ones — far more useful, at the cost of buffering in the Collector."}},{"@type":"Question","name":"How do you monitor a Kubernetes cluster? What do you actually alert on?","acceptedAnswer":{"@type":"Answer","text":"Where the data comes from: node_exporter — host CPU, memory, disk, network per node. cAdvisor (built into kubelet) — per-container CPU/memory/network usage. kube-state-metrics — the desired vs actual state of Kubernetes objects: replicas wanted vs ready, pod phase, restart counts, job status, PVC state. This is the one people forget, and it's where most real alerts come from. API server / etcd / scheduler metrics — control-plane health. Usually deployed together as kube-prometheus-stack (Prometheus Operator + Grafana + Alertmanager + default rules). What's worth paging on (symptoms, at the workload level): Pods in CrashLoopBackOff , or restarting repeatedly. Deployment has fewer ready replicas than desired, sustained. Pods stuck Pending — unschedulable, usually resource pressure or a missing PVC. Containers being OOMKilled (exit 137) — the limit is wrong or there's a leak. CPU throttling — the silent killer: the app is slow but shows no errors, because it's hitting its CPU limit. Node NotReady , disk/memory pressure; PVC nearly full; certificates expiring."}},{"@type":"Question","name":"What is high cardinality and why does it break your metrics system?","acceptedAnswer":{"@type":"Answer","text":"Cardinality = the number of unique time series, which is the product of all label value combinations. Prometheus stores one series per unique label set, largely in memory — so cardinality is the dominant cost and stability factor. The killer: adding a label with unbounded values. http_requests_total{method, status, endpoint} = 5 × 8 × 20 = 800 series ✅ fine add user_id (1,000,000 users): = 800 × 1,000,000 = 800,000,000 💥 OOM Never use as metric labels : user IDs, email addresses, session IDs, request IDs, trace IDs, full URLs with path parameters, timestamps, or raw error messages. Use instead : templated routes ( /orders/{id} , not /orders/8821 ), bounded status classes, service/namespace/region. If you need per-user detail, that belongs in logs or traces — which are designed for high-cardinality data — not metrics. Symptoms of a cardinality problem: Prometheus memory climbing steadily, slow queries, OOM restarts, and a huge /metrics payload from one service."}},{"@type":"Question","name":"You get paged at 2am: \"checkout latency p99 above SLO\". Walk me through your response.","acceptedAnswer":{"@type":"Answer","text":"Mitigate first, root-cause second. The goal at 2am is restoring service, not understanding it. Acknowledge the page so others know it's being handled; open an incident channel. Assess impact — how many users, which regions, is it degrading or total? This sets severity and whether to escalate. Ask \"what changed?\" first. Most incidents follow a change: a deploy, a config/feature-flag toggle, an infrastructure change, or a traffic shift. Check the deploy timeline against the graph — annotations make this instant. Localise with the pillars — dashboard shows which service degraded; a trace shows which operation is slow; logs from that service explain why . Check dependencies — database CPU/connections/locks, cache hit rate, downstream third-party status, saturation on queues and connection pools. Mitigate — roll back the deploy, flip the feature flag off, scale out, shed load, or fail over. Rollback is usually fastest and safest. Verify recovery against the same SLI that alerted, then communicate. Blameless postmortem — timeline, contributing factors, and action items that include \"what would have detected this sooner\"."}},{"@type":"Question","name":"Health checks vs monitoring — and what's the difference between liveness, readiness, and synthetic monitoring?","acceptedAnswer":{"@type":"Answer","text":"Health checks are how the platform decides what to do with an instance right now. Monitoring is how humans understand trends and get alerted. Different consumers, different design. Liveness probe — \"is this process wedged?\" Failing it restarts the container . Keep it dumb and dependency-free: if you check the database here, a brief DB blip restarts every pod in your fleet and turns a small problem into an outage. Readiness probe — \"can this instance serve traffic right now?\" Failing it removes the pod from the Service endpoints without restarting it. This is where dependency checks belong — it lets a pod temporarily step out while a dependency recovers. Startup probe — for slow-booting apps; disables the other probes until the app has started, so a slow JVM boot isn't mistaken for a hang. Synthetic / blackbox monitoring runs scripted requests against your service from outside — a probe hitting the login flow every minute from three regions. It catches what internal metrics can't: DNS failures, expired TLS certificates, CDN/load-balancer misconfiguration, and regional network issues. It's the closest signal to \"can a real user actually use this?\""}},{"@type":"Question","name":"Your observability bill has tripled. How do you cut it without losing visibility?","acceptedAnswer":{"@type":"Answer","text":"Observability cost is driven by volume × retention × cardinality . Attack each, starting with the biggest line (almost always logs). Drop noise at the collector — health-check and readiness-probe logs, verbose framework startup output, successful access logs for static assets. Filtering at the agent is free; filtering after ingestion is not. Tier retention — 7–14 days hot and searchable, then compressed object storage (S3/Glacier) for the compliance tail. Most log queries look at the last 48 hours. Sample — keep 100% of errors and slow requests, sample successful DEBUG/INFO. Same for traces (tail-based sampling). Fix cardinality — one metric with an unbounded label can dominate a Prometheus bill; audit with topk(count by (__name__)) and labeldrop the offenders. Downsample old metrics — full resolution for 15 days, 5-minute rollups for a year (Thanos/Mimir do this natively). Delete unused dashboards and alerts — and the metrics only they consumed. Right-size log levels in prod — DEBUG left on in one busy service is a classic cause of a sudden bill jump."}},{"@type":"Question","name":"Push vs pull metrics collection — what are the trade-offs?","acceptedAnswer":{"@type":"Answer","text":"Pull (Prometheus): the server scrapes /metrics from a target list it maintains. ✅ The server knows what should exist, so a missing target is detectable ( up == 0 ) rather than silently absent. ✅ You can curl a target's /metrics to debug it — no pipeline involved. ✅ No client can overwhelm ingestion; the server controls the rate. ❌ Needs network reachability to every target and service discovery to track them. ❌ Poor fit for short-lived jobs that finish between scrapes. Push (StatsD, Datadog agent, OTLP): the application sends metrics to a collector. ✅ Works through NAT/firewalls and across network boundaries; good for serverless, batch jobs, and edge/IoT. ✅ Naturally handles ephemeral workloads. ❌ A silent client is indistinguishable from a healthy client with nothing to report — you lose \"is it alive?\" for free. ❌ A misbehaving client can flood the collector. Pushgateway exists only for short-lived batch jobs. Do not use it as a general push endpoint: it becomes a single point of failure, it doesn't expire stale metrics automatically, and it breaks target-health semantics."}},{"@type":"Question","name":"API p99 latency jumped from 200ms to 3s, but error rate and CPU look normal. How do you find the cause?","acceptedAnswer":{"@type":"Answer","text":"Normal errors and normal CPU narrows this a lot — the system is waiting , not failing or computing. Work through it systematically: Is it all traffic or a slice? Break the p99 down by endpoint, region, customer, and pod. If p50 is unchanged but p99 exploded, a subset of requests is slow — the most common shape. What changed at that timestamp? Deploy, feature flag, config, traffic volume, or a dependency's own deploy. Where does the time go? This is exactly what tracing is for — compare a slow trace to a fast one and find the span that grew. Saturation on something invisible to CPU: Connection pool exhaustion — requests queue waiting for a DB connection. Classic cause of \"slow but no errors\". CPU throttling — the container is at its cgroup limit; host CPU looks fine. Thread pool / event loop blocked, or GC pauses (check GC time metrics). Lock contention or a long-running transaction in the database. Dependencies — slow downstream service, cache hit rate collapsed (so everything falls through to the DB), a third-party API degraded, DNS resolution slow. Data-shaped causes — a table grew past an index's usefulness, a missing index on a new query, an N+1 that only hurts at scale, or one large customer's dataset."}},{"@type":"Question","name":"You're adding observability to a service that has none. What do you instrument first?","acceptedAnswer":{"@type":"Answer","text":"Start with the signals that answer \"is it working?\" and expand only when a real question demands it. RED metrics on every endpoint — request rate, error rate, and a latency histogram . This alone covers most incidents. Get it free via framework middleware or OpenTelemetry auto-instrumentation. Structured JSON logs with a trace ID on every line, written to stdout. Health endpoints — /healthz (process only) and /readyz (dependencies). Outbound dependency metrics — latency and error rate for every DB query, cache call, and downstream HTTP request. \"Which dependency is slow?\" is the most-asked question in an incident. Saturation gauges — connection pool in use vs max, queue depth, worker pool utilisation. These are your leading indicators. A few business metrics — orders placed, payments failed, signups. These detect problems that are invisible technically: everything returns 200 but orders dropped 40%. Then tracing — auto-instrument first, add manual spans only around meaningful custom operations. Finally, define an SLO from those metrics and alert on that , rather than on arbitrary thresholds."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="Observability interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>Observability Interview Questions and Answers</h1>
+      <p>20 hand-picked Observability interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Monitoring vs observability — what's the actual difference?</h2>
+          <div class="seo-a"><p><strong>Monitoring</strong> watches for failure modes you <em>already predicted</em>: you define dashboards and alerts for known conditions (CPU &gt; 80%, disk full, error rate &gt; 1%). It answers <strong>"is the system broken?"</strong></p><p><strong>Observability</strong> is a property of the system: whether you can understand its internal state from the data it emits — including for failures nobody anticipated. It answers <strong>"why is it broken?"</strong> without shipping new code to find out.</p><p>The practical distinction is <strong>known-unknowns vs unknown-unknowns</strong>:</p><ul><li>Monitoring: "alert me when the queue is longer than 1000." You knew to watch that.</li><li>Observability: "latency is up only for Android users in one region on the checkout endpoint since 14:20." You couldn't have pre-built that dashboard — you needed to slice rich, high-cardinality data at query time.</li></ul><p>Monitoring is a subset of observability, not a competitor. You need both: monitoring to page you, observability to debug.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain the three pillars: metrics, logs, and traces. When do you use each?</h2>
+          <div class="seo-a"><ul><li><strong>Metrics</strong> — numeric time-series, aggregated and cheap to store forever. Best for <em>trends, dashboards, and alerting</em>: request rate, error rate, p99 latency, CPU. Low cardinality by design. Answers <strong>"is something wrong, and since when?"</strong></li><li><strong>Logs</strong> — discrete timestamped events with context. Best for <em>detailed forensics on a specific event</em>: the exact stack trace, the exact payload that failed. Expensive at volume. Answers <strong>"what exactly happened in this case?"</strong></li><li><strong>Traces</strong> — the path of a single request across services, as a tree of timed spans. Best for <em>latency attribution in distributed systems</em>: which of 12 microservices ate 800ms. Answers <strong>"where is the time going?"</strong></li></ul><p>The workflow that ties them together: a <strong>metric</strong> alert fires → a <strong>trace</strong> shows which service and operation is slow → <strong>logs</strong> from that service and trace ID give the exact error. Linking them with a shared <code class="inline">trace_id</code> is what turns three data types into one investigation.</p></div>
+          <pre><code>// structured log carrying the trace context — this is the glue
+{
+  &quot;ts&quot;: &quot;2026-08-05T09:14:22.481Z&quot;,
+  &quot;level&quot;: &quot;error&quot;,
+  &quot;service&quot;: &quot;checkout-api&quot;,
+  &quot;trace_id&quot;: &quot;4bf92f3577b34da6a3ce929d0e0e4736&quot;,
+  &quot;span_id&quot;: &quot;00f067aa0ba902b7&quot;,
+  &quot;user_id&quot;: &quot;u_8821&quot;,
+  &quot;msg&quot;: &quot;payment gateway timeout&quot;,
+  &quot;duration_ms&quot;: 30012,
+  &quot;upstream&quot;: &quot;payments-svc&quot;
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the Four Golden Signals? How do RED and USE methods differ?</h2>
+          <div class="seo-a"><p><strong>Four Golden Signals (Google SRE)</strong> — what to measure on any user-facing service:</p><ol><li><strong>Latency</strong> — how long requests take. Measure successful and failed requests <em>separately</em>; a fast 500 skews your average and hides the problem.</li><li><strong>Traffic</strong> — demand: requests/sec, transactions/sec.</li><li><strong>Errors</strong> — rate of failed requests (explicit 5xx, and implicit — wrong content, policy violations).</li><li><strong>Saturation</strong> — how full the system is (memory, connection pool, queue depth). The leading indicator: saturation rises <em>before</em> latency and errors do.</li></ol><p><strong>RED</strong> (Rate, Errors, Duration) is the request-centric subset — the right frame for <em>services</em> and microservices.</p><p><strong>USE</strong> (Utilisation, Saturation, Errors) is resource-centric — the right frame for <em>infrastructure</em>: CPU, memory, disk, network interfaces.</p><p>In practice: <strong>RED for every service, USE for every resource.</strong> They're complementary views, not alternatives.</p></div>
+          <pre><code># RED for a service (PromQL)
+sum(rate(http_requests_total[5m])) by (service)                                    # Rate
+sum(rate(http_requests_total{status=~&quot;5..&quot;}[5m])) by (service)
+  / sum(rate(http_requests_total[5m])) by (service)                                # Errors (ratio)
+histogram_quantile(0.99,
+  sum(rate(http_request_duration_seconds_bucket[5m])) by (le, service))            # Duration p99
+
+# USE for a resource
+1 - avg(rate(node_cpu_seconds_total{mode=&quot;idle&quot;}[5m])) by (instance)               # Utilisation
+node_pressure_cpu_waiting_seconds_total                                            # Saturation
+rate(node_network_receive_errs_total[5m])                                          # Errors</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does Prometheus work? Explain the pull model, exporters, and service discovery.</h2>
+          <div class="seo-a"><p>Prometheus <strong>scrapes</strong> (pulls) metrics over HTTP from targets exposing a <code class="inline">/metrics</code> endpoint in a simple text format, stores them in a local time-series database, and evaluates rules against them.</p><p><strong>Components:</strong></p><ul><li><strong>Prometheus server</strong> — scraper + TSDB + rule evaluator + PromQL engine.</li><li><strong>Exporters</strong> — translate something that doesn't speak Prometheus into <code class="inline">/metrics</code>: <code class="inline">node_exporter</code> (host), <code class="inline">blackbox_exporter</code> (probes), <code class="inline">postgres_exporter</code>, <code class="inline">kube-state-metrics</code> (K8s object state), cAdvisor (container resources).</li><li><strong>Service discovery</strong> — targets come from Kubernetes, EC2, Consul, or file SD rather than a static list, so autoscaled pods are scraped automatically. This is what makes pull viable at scale.</li><li><strong>Alertmanager</strong> — separate component handling routing, grouping, silencing, and delivery.</li><li><strong>Pushgateway</strong> — only for short-lived batch jobs that die before they can be scraped. It's an exception, not a general push path.</li></ul><p><strong>Why pull beats push here:</strong> Prometheus knows the intended target list, so a target that disappears is <em>detectable</em> (<code class="inline">up == 0</code>) rather than silent; you can scrape a target manually with curl to debug; and there's no risk of a misbehaving client flooding your ingestion.</p></div>
+          <pre><code>scrape_configs:
+  - job_name: 'kubernetes-pods'
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      # only scrape pods that opt in with an annotation
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        target_label: __address__
+        regex: (.+)
+      - source_labels: [__meta_kubernetes_namespace]
+        target_label: namespace
+
+rule_files: [ '/etc/prometheus/rules/*.yml' ]
+alerting:
+  alertmanagers:
+    - static_configs: [{ targets: ['alertmanager:9093'] }]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Counter vs Gauge vs Histogram vs Summary — which do you use when?</h2>
+          <div class="seo-a"><ul><li><strong>Counter</strong> — monotonically increasing, only resets to 0 on restart. For things you count: requests, errors, bytes sent. <strong>Never graph a counter raw</strong> — its absolute value is meaningless; always wrap it in <code class="inline">rate()</code>.</li><li><strong>Gauge</strong> — a value that goes up and down: memory in use, queue depth, active connections, temperature. Graph it directly; use <code class="inline">avg</code>/<code class="inline">max</code>/<code class="inline">min</code>.</li><li><strong>Histogram</strong> — samples observations into configurable <strong>buckets</strong> (plus <code class="inline">_sum</code> and <code class="inline">_count</code>). Percentiles are calculated <em>server-side</em> with <code class="inline">histogram_quantile()</code>, which means you can <strong>aggregate across instances</strong>. This is what you want for latency.</li><li><strong>Summary</strong> — calculates quantiles <em>client-side</em>. Cheaper to query, but the quantiles <strong>cannot be aggregated</strong> across instances (you can't average p99s), so it's rarely the right choice in a distributed system.</li></ul><p><strong>Default to histograms for latency and size distributions</strong>, counters for events, gauges for current state.</p></div>
+          <pre><code># Counter — ALWAYS with rate()
+rate(http_requests_total[5m])
+sum(rate(http_requests_total{status=~&quot;5..&quot;}[5m])) / sum(rate(http_requests_total[5m]))
+
+# Gauge — use directly
+node_memory_MemAvailable_bytes
+max_over_time(queue_depth[1h])
+
+# Histogram — aggregate buckets FIRST, then compute the quantile
+histogram_quantile(0.99,
+  sum by (le, service) (rate(http_request_duration_seconds_bucket[5m]))
+)
+
+# average latency from a histogram
+rate(http_request_duration_seconds_sum[5m])
+  / rate(http_request_duration_seconds_count[5m])</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Write the PromQL you'd actually use day to day. What's the difference between rate and irate?</h2>
+          <div class="seo-a"><p>PromQL operates on two things: <strong>instant vectors</strong> (one value per series, now) and <strong>range vectors</strong> (a window of values, e.g. <code class="inline">[5m]</code>). Functions like <code class="inline">rate()</code> turn a range vector into an instant vector.</p><ul><li><strong><code class="inline">rate()</code></strong> — average per-second rate over the window, using all data points and correcting for counter resets. <strong>Use this for alerting and dashboards</strong> — it's smooth and stable.</li><li><strong><code class="inline">irate()</code></strong> — instant rate from only the <em>last two</em> data points. Very responsive but spiky; good for zooming into a short volatile window, bad for alerts (it will flap).</li><li><strong><code class="inline">increase()</code></strong> — total increase over the window (essentially <code class="inline">rate × seconds</code>).</li></ul><p><strong>Rule of thumb</strong>: the range window should be <strong>at least 4× the scrape interval</strong> (so 15s scrape → <code class="inline">[1m]</code> minimum, and <code class="inline">[5m]</code> is the safe default). Too short and a single missed scrape produces gaps.</p><p><strong>Aggregation order matters</strong>: always <code class="inline">rate()</code> first, then <code class="inline">sum()</code> — <code class="inline">sum</code> before <code class="inline">rate</code> breaks counter-reset handling and gives wrong numbers.</p></div>
+          <pre><code># error ratio per service
+sum by (service) (rate(http_requests_total{status=~&quot;5..&quot;}[5m]))
+  / sum by (service) (rate(http_requests_total[5m])) &gt; 0.01
+
+# p95 latency per endpoint
+histogram_quantile(0.95,
+  sum by (le, route) (rate(http_request_duration_seconds_bucket[5m])))
+
+# top 5 memory-hungry pods
+topk(5, sum by (pod) (container_memory_working_set_bytes{namespace=&quot;prod&quot;}))
+
+# will the disk fill in the next 4 hours?
+predict_linear(node_filesystem_avail_bytes{mountpoint=&quot;/&quot;}[6h], 4*3600) &lt; 0
+
+# pods restarting
+increase(kube_pod_container_status_restarts_total[1h]) &gt; 3
+
+# a target that stopped responding
+up{job=&quot;my-api&quot;} == 0
+
+# week-over-week comparison
+sum(rate(http_requests_total[5m])) 
+  / sum(rate(http_requests_total[5m] offset 7d))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain SLI, SLO, SLA, and error budgets.</h2>
+          <div class="seo-a"><ul><li><strong>SLI (Indicator)</strong> — the <em>measurement</em>: "proportion of HTTP requests served in under 300ms" or "successful requests ÷ total requests". A number you can actually compute from metrics.</li><li><strong>SLO (Objective)</strong> — your internal <em>target</em> for that SLI: "99.9% of requests succeed, measured over 30 days." This is what the team commits to and what should drive alerting.</li><li><strong>SLA (Agreement)</strong> — the <em>contractual</em> promise to customers, with financial penalties. Always set <strong>looser</strong> than your SLO, so you breach your internal target and react long before you breach the contract.</li></ul><p><strong>Error budget</strong> = <code class="inline">100% − SLO</code>. A 99.9% SLO over 30 days allows <strong>43.2 minutes</strong> of failure. That budget is a currency:</p><ul><li>Budget remaining → ship features, take risks, deploy often.</li><li>Budget exhausted → freeze risky releases and spend the sprint on reliability.</li></ul><p>This is the point of SLOs: they turn "how much reliability is enough?" from an argument into a number, and they explicitly acknowledge that <strong>100% is the wrong target</strong> — it's infinitely expensive and prevents shipping.</p></div>
+          <pre><code># SLI: availability (success ratio) over 30 days
+sum(rate(http_requests_total{status!~&quot;5..&quot;}[30d]))
+  / sum(rate(http_requests_total[30d]))
+
+# error budget consumed against a 99.9% SLO
+(1 - (
+  sum(rate(http_requests_total{status!~&quot;5..&quot;}[30d]))
+  / sum(rate(http_requests_total[30d]))
+)) / (1 - 0.999)
+
+# multi-window burn-rate alert (fast burn — page immediately)
+- alert: ErrorBudgetFastBurn
+  expr: |
+    (sum(rate(http_requests_total{status=~&quot;5..&quot;}[5m])) / sum(rate(http_requests_total[5m]))) &gt; (14.4 * 0.001)
+    and
+    (sum(rate(http_requests_total{status=~&quot;5..&quot;}[1h])) / sum(rate(http_requests_total[1h]))) &gt; (14.4 * 0.001)
+  labels: { severity: page }
+  annotations:
+    summary: &quot;Burning error budget 14x — 2% of 30d budget gone in 1h&quot;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What makes a good alert? How do you fix alert fatigue?</h2>
+          <div class="seo-a"><p><strong>A good alert is urgent, actionable, and symptom-based.</strong> Before creating one, ask: if this fires at 3am, is there something a human must do <em>right now</em>? If not, it's a dashboard or a ticket, not a page.</p><p><strong>Alert on symptoms, not causes.</strong> "Checkout error rate is 5%" is worth waking someone; "CPU is 85%" is not — high CPU with healthy latency and no errors is just a well-utilised server. Cause-based alerts generate noise because they fire in situations where users are fine.</p><p><strong>Fixing alert fatigue</strong> — the failure mode where people ignore alerts because most are noise, and the one real page gets missed:</p><ul><li><strong>Delete alerts nobody acts on.</strong> Audit which alerts fired in the last 90 days and what the responder did. "Acknowledged and closed" = delete it.</li><li><strong>Add <code class="inline">for:</code> durations</strong> so transient blips don't page.</li><li><strong>Group and inhibit</strong> — one node failing shouldn't send 40 pages; suppress downstream alerts when the upstream cause is already firing.</li><li><strong>Tier severity</strong> — page vs ticket vs dashboard-only.</li><li><strong>Every alert links a runbook</strong> that says what to check and what to do.</li><li><strong>Alert on burn rate/SLOs</strong> rather than arbitrary thresholds.</li></ul></div>
+          <pre><code>groups:
+- name: service-slos
+  rules:
+  - alert: HighErrorRate
+    expr: |
+      sum by (service) (rate(http_requests_total{status=~&quot;5..&quot;}[5m]))
+        / sum by (service) (rate(http_requests_total[5m])) &gt; 0.02
+    for: 10m                       # must persist — no blip pages
+    labels:
+      severity: page
+      team: payments
+    annotations:
+      summary: &quot;{{ $labels.service }} error rate {{ $value | humanizePercentage }}&quot;
+      runbook_url: &quot;https://wiki/runbooks/high-error-rate&quot;
+      dashboard: &quot;https://grafana/d/svc/{{ $labels.service }}&quot;
+
+# Alertmanager: group, throttle, and inhibit
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 30s               # collect related alerts before sending
+  group_interval: 5m
+  repeat_interval: 4h
+  routes:
+    - matchers: [ severity=&quot;page&quot; ]
+      receiver: pagerduty
+    - matchers: [ severity=&quot;ticket&quot; ]
+      receiver: jira
+
+inhibit_rules:
+  - source_matchers: [ severity=&quot;critical&quot;, alertname=&quot;NodeDown&quot; ]
+    target_matchers: [ severity=&quot;page&quot; ]
+    equal: ['node']             # node is down → don't also page for its pods</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What makes a good Grafana dashboard?</h2>
+          <div class="seo-a"><p>Grafana visualises data from many sources (Prometheus, Loki, Elasticsearch, CloudWatch, SQL) — it stores no metrics itself.</p><p>Principles for dashboards people actually use:</p><ul><li><strong>One dashboard, one question.</strong> "Is the checkout service healthy?" — not 60 panels of everything.</li><li><strong>Structure top-down</strong> — RED signals (rate, errors, duration) at the top; resource/infra detail below. The first screen should answer "is this OK?" in three seconds.</li><li><strong>Use template variables</strong> (<code class="inline">$environment</code>, <code class="inline">$service</code>, <code class="inline">$pod</code>) so one dashboard serves every service instead of 40 copies.</li><li><strong>Percentiles, not averages</strong> — show p50/p95/p99. An average latency of 200ms hides that 1% of users wait 8 seconds.</li><li><strong>Annotate deployments</strong> — overlaying deploy markers makes "what changed?" instantly visible. This is the single highest-value dashboard feature.</li><li><strong>Consistent units and thresholds</strong>; add SLO lines so "good" is visible without interpretation.</li><li><strong>Dashboards as code</strong> — provision JSON via Terraform/ConfigMap so they're version-controlled and reproducible, not hand-built and lost.</li></ul></div>
+          <pre><code># provision dashboards as code (Terraform)
+resource &quot;grafana_dashboard&quot; &quot;service&quot; {
+  config_json = file(&quot;${path.module}/dashboards/service-red.json&quot;)
+  folder      = grafana_folder.services.id
+}
+
+# template variable → one dashboard for every service
+# Query variable: label_values(http_requests_total, service)
+# then use $service in every panel:
+#   sum(rate(http_requests_total{service=&quot;$service&quot;}[5m]))
+
+# panel: p50/p95/p99 on one graph
+histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket{service=&quot;$service&quot;}[5m])))
+histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{service=&quot;$service&quot;}[5m])))
+histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{service=&quot;$service&quot;}[5m])))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you build centralised logging? Compare ELK/EFK with Loki.</h2>
+          <div class="seo-a"><p>In a distributed system you can't SSH to a box and <code class="inline">tail</code> — pods are ephemeral and there are hundreds. You need a pipeline: <strong>collect → ship → parse → store → query</strong>.</p><p><strong>ELK / EFK stack</strong></p><ul><li><strong>Beats/Fluentd/Fluent Bit</strong> — agent on each node collecting container stdout.</li><li><strong>Logstash</strong> (optional) — parsing, enrichment, filtering.</li><li><strong>Elasticsearch</strong> — indexes the <em>full text</em> of every log. Powerful search, but storage- and RAM-hungry and operationally heavy.</li><li><strong>Kibana</strong> — query UI.</li></ul><p><strong>Loki</strong> takes the opposite approach: it indexes <strong>only labels</strong> (service, namespace, level) and stores the log content compressed in object storage. Dramatically cheaper and simpler to run; queries filter by label first then grep the stream. Trade-off: full-text search across everything is slower than Elasticsearch.</p><p><strong>Choosing:</strong> Loki if you're already on Prometheus/Grafana, want low cost, and mostly query by service + time window (which is most DevOps use). Elasticsearch if you need rich full-text search, complex aggregations, or already run it for other purposes.</p></div>
+          <pre><code># Fluent Bit → Loki, with Kubernetes metadata as labels
+[INPUT]
+    Name              tail
+    Path              /var/log/containers/*.log
+    Parser            cri
+    Mem_Buf_Limit     5MB
+
+[FILTER]
+    Name                kubernetes
+    Match               kube.*
+    Merge_Log           On            # parse JSON app logs into fields
+    Keep_Log            Off
+
+[FILTER]
+    Name    grep
+    Match   kube.*
+    Exclude log /health|/ready       # drop probe noise before it costs money
+
+[OUTPUT]
+    Name        loki
+    Match       kube.*
+    host        loki.observability.svc
+    labels      job=fluentbit, namespace=$kubernetes['namespace_name']
+
+# LogQL: errors for one service, then extract a field
+{namespace=&quot;prod&quot;, app=&quot;checkout&quot;} |= &quot;error&quot; | json | duration_ms &gt; 1000</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are logging best practices — structure, levels, correlation IDs, and what NOT to log?</h2>
+          <div class="seo-a"><p><strong>Log structured JSON, not prose.</strong> <code class="inline">"User 8821 failed payment after 30s"</code> requires a regex to query; <code class="inline">{"user_id":"8821","event":"payment_failed","duration_ms":30012}</code> is filterable and aggregatable immediately.</p><p><strong>Levels, used consistently:</strong></p><ul><li><strong>ERROR</strong> — something failed and needs attention. If nobody would act on it, it isn't an error.</li><li><strong>WARN</strong> — unexpected but handled (retry succeeded, fallback used).</li><li><strong>INFO</strong> — significant business events (order placed, user registered). Default production level.</li><li><strong>DEBUG</strong> — detailed diagnostics, off in prod (or sampled / dynamically enableable).</li></ul><p><strong>Correlation/trace IDs are non-negotiable in microservices.</strong> Generate an ID at the edge, propagate it through every downstream call and into every log line, so one query reconstructs the full journey of a request across ten services.</p><p><strong>Never log</strong>: passwords, tokens, API keys, full card numbers, personal data (GDPR/PCI), or entire request bodies. Redact at the logging library level, not by hoping developers remember.</p><p><strong>Also</strong>: write to stdout in containers (the platform handles shipping), never log inside a tight loop, and include enough context that the line is useful without the surrounding lines.</p></div>
+          <pre><code>// ✅ structured, correlated, safe
+logger.error({
+  event: &quot;payment_failed&quot;,
+  trace_id: ctx.traceId,          // propagated from the edge
+  user_id: user.id,               // an ID, not the user's email
+  order_id: order.id,
+  gateway: &quot;stripe&quot;,
+  duration_ms: 30012,
+  error_code: &quot;gateway_timeout&quot;
+  // NEVER: card_number, cvv, password, auth header, full request body
+}, &quot;payment gateway timeout&quot;);
+
+// propagate the trace context downstream
+await fetch(url, {
+  headers: { traceparent: ctx.traceparent, &quot;x-request-id&quot;: ctx.traceId }
+});
+
+// redact centrally so it cannot be forgotten
+const redact = [&quot;req.headers.authorization&quot;, &quot;password&quot;, &quot;*.card_number&quot;, &quot;*.ssn&quot;];</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is distributed tracing? Explain spans, context propagation, and OpenTelemetry.</h2>
+          <div class="seo-a"><p><strong>Distributed tracing</strong> follows one request as it crosses service boundaries, producing a timeline that shows exactly where time was spent.</p><ul><li><strong>Trace</strong> — the whole request journey, identified by a <code class="inline">trace_id</code>.</li><li><strong>Span</strong> — one unit of work (an HTTP handler, a DB query, a cache lookup) with a start time, duration, parent span ID, and attributes. Spans nest into a tree.</li><li><strong>Context propagation</strong> — the mechanism that makes it work: the trace context travels in HTTP headers (the W3C <code class="inline">traceparent</code> header) or message metadata, so downstream services attach their spans to the same trace. <strong>If propagation breaks anywhere, the trace fragments</strong> — this is the most common tracing bug.</li></ul><p><strong>OpenTelemetry (OTel)</strong> is the vendor-neutral standard: one set of SDKs and one Collector that exports to Jaeger, Tempo, Datadog, Honeycomb — so instrumentation isn't locked to a backend. It covers traces, metrics, and logs.</p><p><strong>Sampling</strong> is necessary at volume: <em>head-based</em> (decide at the start, e.g. keep 1%) is cheap but may miss the rare errors you care about; <em>tail-based</em> (decide after the trace completes) lets you keep 100% of slow or failed traces and 1% of the boring ones — far more useful, at the cost of buffering in the Collector.</p></div>
+          <pre><code>// OpenTelemetry — auto-instrumentation plus a manual span
+const tracer = opentelemetry.trace.getTracer(&quot;checkout-api&quot;);
+
+await tracer.startActiveSpan(&quot;process_payment&quot;, async (span) =&gt; {
+  span.setAttributes({
+    &quot;payment.gateway&quot;: &quot;stripe&quot;,
+    &quot;order.id&quot;: order.id,
+    &quot;order.amount&quot;: order.total
+  });
+  try {
+    const res = await gateway.charge(order);
+    span.setStatus({ code: SpanStatusCode.OK });
+    return res;
+  } catch (err) {
+    span.recordException(err);
+    span.setStatus({ code: SpanStatusCode.ERROR, message: err.message });
+    throw err;
+  } finally {
+    span.end();
+  }
+});
+
+// W3C trace context propagated on the wire
+// traceparent: 00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
+//              ^v ^trace_id                        ^parent_span_id  ^sampled</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you monitor a Kubernetes cluster? What do you actually alert on?</h2>
+          <div class="seo-a"><p><strong>Where the data comes from:</strong></p><ul><li><strong>node_exporter</strong> — host CPU, memory, disk, network per node.</li><li><strong>cAdvisor</strong> (built into kubelet) — per-container CPU/memory/network usage.</li><li><strong>kube-state-metrics</strong> — the <em>desired vs actual state</em> of Kubernetes objects: replicas wanted vs ready, pod phase, restart counts, job status, PVC state. This is the one people forget, and it's where most real alerts come from.</li><li><strong>API server / etcd / scheduler metrics</strong> — control-plane health.</li><li>Usually deployed together as <strong>kube-prometheus-stack</strong> (Prometheus Operator + Grafana + Alertmanager + default rules).</li></ul><p><strong>What's worth paging on</strong> (symptoms, at the workload level):</p><ul><li>Pods in <code class="inline">CrashLoopBackOff</code>, or restarting repeatedly.</li><li>Deployment has fewer ready replicas than desired, sustained.</li><li>Pods stuck <code class="inline">Pending</code> — unschedulable, usually resource pressure or a missing PVC.</li><li>Containers being <strong>OOMKilled</strong> (exit 137) — the limit is wrong or there's a leak.</li><li><strong>CPU throttling</strong> — the silent killer: the app is slow but shows no errors, because it's hitting its CPU limit.</li><li>Node <code class="inline">NotReady</code>, disk/memory pressure; PVC nearly full; certificates expiring.</li></ul></div>
+          <pre><code># pods crash-looping
+increase(kube_pod_container_status_restarts_total[15m]) &gt; 3
+
+# deployment not fully available for 10 minutes
+kube_deployment_status_replicas_available
+  &lt; kube_deployment_spec_replicas
+
+# pods stuck Pending
+sum by (namespace) (kube_pod_status_phase{phase=&quot;Pending&quot;}) &gt; 0
+
+# OOMKilled containers
+kube_pod_container_status_last_terminated_reason{reason=&quot;OOMKilled&quot;} == 1
+
+# CPU throttling — the silent latency killer
+rate(container_cpu_cfs_throttled_seconds_total[5m])
+  / rate(container_cpu_cfs_periods_total[5m]) &gt; 0.25
+
+# memory usage close to the limit
+sum by (pod) (container_memory_working_set_bytes)
+  / sum by (pod) (kube_pod_container_resource_limits{resource=&quot;memory&quot;}) &gt; 0.9
+
+# node problems / PVC filling up
+kube_node_status_condition{condition=&quot;Ready&quot;, status=&quot;true&quot;} == 0
+kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes &lt; 0.1</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is high cardinality and why does it break your metrics system?</h2>
+          <div class="seo-a"><p><strong>Cardinality</strong> = the number of unique time series, which is the <em>product</em> of all label value combinations. Prometheus stores one series per unique label set, largely in memory — so cardinality is the dominant cost and stability factor.</p><p>The killer: adding a label with unbounded values.</p><pre><code>http_requests_total{method, status, endpoint}
+  = 5 × 8 × 20 = 800 series          ✅ fine
+
+add user_id (1,000,000 users):
+  = 800 × 1,000,000 = 800,000,000    💥 OOM</code></pre><p><strong>Never use as metric labels</strong>: user IDs, email addresses, session IDs, request IDs, trace IDs, full URLs with path parameters, timestamps, or raw error messages.</p><p><strong>Use instead</strong>: templated routes (<code class="inline">/orders/{id}</code>, not <code class="inline">/orders/8821</code>), bounded status classes, service/namespace/region. If you need per-user detail, that belongs in <strong>logs or traces</strong> — which are designed for high-cardinality data — not metrics.</p><p>Symptoms of a cardinality problem: Prometheus memory climbing steadily, slow queries, OOM restarts, and a huge <code class="inline">/metrics</code> payload from one service.</p></div>
+          <pre><code># find your worst offenders
+topk(10, count by (__name__)({__name__=~&quot;.+&quot;}))     # series per metric
+count({__name__=~&quot;.+&quot;})                              # total series
+topk(10, count by (job)({__name__=~&quot;.+&quot;}))           # series per job
+
+# ❌ unbounded label
+http_requests_total{path=&quot;/orders/8821&quot;, user_id=&quot;u_8821&quot;}
+
+# ✅ templated + bounded
+http_requests_total{route=&quot;/orders/{id}&quot;, status_class=&quot;2xx&quot;}
+
+# drop a runaway label at scrape time
+metric_relabel_configs:
+  - source_labels: [__name__]
+    regex: 'expensive_metric_.*'
+    action: drop
+  - regex: 'user_id|session_id|request_id'
+    action: labeldrop</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>You get paged at 2am: &quot;checkout latency p99 above SLO&quot;. Walk me through your response.</h2>
+          <div class="seo-a"><p><strong>Mitigate first, root-cause second.</strong> The goal at 2am is restoring service, not understanding it.</p><ol><li><strong>Acknowledge</strong> the page so others know it's being handled; open an incident channel.</li><li><strong>Assess impact</strong> — how many users, which regions, is it degrading or total? This sets severity and whether to escalate.</li><li><strong>Ask "what changed?" first.</strong> Most incidents follow a change: a deploy, a config/feature-flag toggle, an infrastructure change, or a traffic shift. Check the deploy timeline against the graph — annotations make this instant.</li><li><strong>Localise with the pillars</strong> — dashboard shows <em>which</em> service degraded; a trace shows <em>which</em> operation is slow; logs from that service explain <em>why</em>.</li><li><strong>Check dependencies</strong> — database CPU/connections/locks, cache hit rate, downstream third-party status, saturation on queues and connection pools.</li><li><strong>Mitigate</strong> — roll back the deploy, flip the feature flag off, scale out, shed load, or fail over. Rollback is usually fastest and safest.</li><li><strong>Verify recovery</strong> against the same SLI that alerted, then communicate.</li><li><strong>Blameless postmortem</strong> — timeline, contributing factors, and action items that include "what would have detected this sooner".</li></ol></div>
+          <pre><code># 1. what changed?
+kubectl rollout history deploy/checkout -n prod
+git log --oneline --since=&quot;3 hours ago&quot;
+
+# 2. how bad, and where?
+histogram_quantile(0.99, sum by (le, route) (rate(http_request_duration_seconds_bucket{service=&quot;checkout&quot;}[5m])))
+sum by (region) (rate(http_requests_total{service=&quot;checkout&quot;, status=~&quot;5..&quot;}[5m]))
+
+# 3. saturation on dependencies
+sum(pg_stat_activity_count) / sum(pg_settings_max_connections)
+rate(container_cpu_cfs_throttled_seconds_total{pod=~&quot;checkout.*&quot;}[5m])
+
+# 4. mitigate
+kubectl rollout undo deploy/checkout -n prod
+kubectl scale deploy/checkout --replicas=12 -n prod</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Health checks vs monitoring — and what's the difference between liveness, readiness, and synthetic monitoring?</h2>
+          <div class="seo-a"><p><strong>Health checks</strong> are how the <em>platform</em> decides what to do with an instance right now. <strong>Monitoring</strong> is how <em>humans</em> understand trends and get alerted. Different consumers, different design.</p><ul><li><strong>Liveness probe</strong> — "is this process wedged?" Failing it <strong>restarts the container</strong>. Keep it dumb and dependency-free: if you check the database here, a brief DB blip restarts every pod in your fleet and turns a small problem into an outage.</li><li><strong>Readiness probe</strong> — "can this instance serve traffic right now?" Failing it removes the pod from the Service endpoints <em>without</em> restarting it. This is where dependency checks belong — it lets a pod temporarily step out while a dependency recovers.</li><li><strong>Startup probe</strong> — for slow-booting apps; disables the other probes until the app has started, so a slow JVM boot isn't mistaken for a hang.</li></ul><p><strong>Synthetic / blackbox monitoring</strong> runs scripted requests against your service from outside — a probe hitting the login flow every minute from three regions. It catches what internal metrics can't: DNS failures, expired TLS certificates, CDN/load-balancer misconfiguration, and regional network issues. It's the closest signal to "can a real user actually use this?"</p></div>
+          <pre><code>livenessProbe:
+  httpGet: { path: /healthz, port: 8080 }   # process-only check, NO dependencies
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet: { path: /readyz, port: 8080 }    # checks DB/cache — safe to fail here
+  periodSeconds: 5
+  failureThreshold: 2
+
+startupProbe:
+  httpGet: { path: /healthz, port: 8080 }
+  failureThreshold: 30
+  periodSeconds: 10                          # allows 5 minutes to boot
+
+---
+# blackbox_exporter — synthetic check from outside
+modules:
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_status_codes: [200]
+      fail_if_body_not_matches_regexp: [&quot;\&quot;status\&quot;:\&quot;ok\&quot;&quot;]
+# alert: probe_success == 0  |  probe_ssl_earliest_cert_expiry - time() &lt; 14*86400</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Your observability bill has tripled. How do you cut it without losing visibility?</h2>
+          <div class="seo-a"><p>Observability cost is driven by <strong>volume × retention × cardinality</strong>. Attack each, starting with the biggest line (almost always logs).</p><ul><li><strong>Drop noise at the collector</strong> — health-check and readiness-probe logs, verbose framework startup output, successful access logs for static assets. Filtering at the agent is free; filtering after ingestion is not.</li><li><strong>Tier retention</strong> — 7–14 days hot and searchable, then compressed object storage (S3/Glacier) for the compliance tail. Most log queries look at the last 48 hours.</li><li><strong>Sample</strong> — keep 100% of errors and slow requests, sample successful DEBUG/INFO. Same for traces (tail-based sampling).</li><li><strong>Fix cardinality</strong> — one metric with an unbounded label can dominate a Prometheus bill; audit with <code class="inline">topk(count by (__name__))</code> and <code class="inline">labeldrop</code> the offenders.</li><li><strong>Downsample old metrics</strong> — full resolution for 15 days, 5-minute rollups for a year (Thanos/Mimir do this natively).</li><li><strong>Delete unused dashboards and alerts</strong> — and the metrics only they consumed.</li><li><strong>Right-size log levels in prod</strong> — DEBUG left on in one busy service is a classic cause of a sudden bill jump.</li></ul></div>
+          <pre><code># 1. find the biggest metric offenders
+topk(20, count by (__name__)({__name__=~&quot;.+&quot;}))
+
+# 2. drop them at scrape time
+metric_relabel_configs:
+  - source_labels: [__name__]
+    regex: 'go_gc_.*|promhttp_.*'
+    action: drop
+
+# 3. drop log noise at the agent (before it costs anything)
+[FILTER]
+    Name    grep
+    Match   kube.*
+    Exclude log (GET /health|GET /ready|GET /metrics)
+
+# 4. tier retention (Loki)
+limits_config:
+  retention_period: 336h        # 14 days hot
+table_manager:
+  retention_deletes_enabled: true
+
+# 5. downsample long-term metrics (Thanos compactor)
+# raw 15d → 5m downsample 90d → 1h downsample 1y</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Push vs pull metrics collection — what are the trade-offs?</h2>
+          <div class="seo-a"><p><strong>Pull</strong> (Prometheus): the server scrapes <code class="inline">/metrics</code> from a target list it maintains.</p><ul><li>✅ The server knows what <em>should</em> exist, so a missing target is <strong>detectable</strong> (<code class="inline">up == 0</code>) rather than silently absent.</li><li>✅ You can <code class="inline">curl</code> a target's <code class="inline">/metrics</code> to debug it — no pipeline involved.</li><li>✅ No client can overwhelm ingestion; the server controls the rate.</li><li>❌ Needs network reachability to every target and service discovery to track them.</li><li>❌ Poor fit for short-lived jobs that finish between scrapes.</li></ul><p><strong>Push</strong> (StatsD, Datadog agent, OTLP): the application sends metrics to a collector.</p><ul><li>✅ Works through NAT/firewalls and across network boundaries; good for serverless, batch jobs, and edge/IoT.</li><li>✅ Naturally handles ephemeral workloads.</li><li>❌ A silent client is <em>indistinguishable</em> from a healthy client with nothing to report — you lose "is it alive?" for free.</li><li>❌ A misbehaving client can flood the collector.</li></ul><p><strong>Pushgateway</strong> exists only for short-lived batch jobs. Do not use it as a general push endpoint: it becomes a single point of failure, it doesn't expire stale metrics automatically, and it breaks target-health semantics.</p></div>
+          <pre><code># pull: a dead target is an alert
+- alert: TargetDown
+  expr: up == 0
+  for: 5m
+
+# push: only for jobs that exit before a scrape can happen
+echo &quot;backup_last_success_timestamp $(date +%s)&quot; \
+  | curl --data-binary @- http://pushgateway:9091/metrics/job/nightly-backup
+
+# then alert on staleness, which is what you actually care about
+- alert: BackupStale
+  expr: time() - backup_last_success_timestamp &gt; 26*3600
+  for: 10m</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>API p99 latency jumped from 200ms to 3s, but error rate and CPU look normal. How do you find the cause?</h2>
+          <div class="seo-a"><p>Normal errors and normal CPU narrows this a lot — the system is <em>waiting</em>, not failing or computing. Work through it systematically:</p><ol><li><strong>Is it all traffic or a slice?</strong> Break the p99 down by endpoint, region, customer, and pod. If p50 is unchanged but p99 exploded, a <em>subset</em> of requests is slow — the most common shape.</li><li><strong>What changed at that timestamp?</strong> Deploy, feature flag, config, traffic volume, or a dependency's own deploy.</li><li><strong>Where does the time go?</strong> This is exactly what tracing is for — compare a slow trace to a fast one and find the span that grew.</li><li><strong>Saturation on something invisible to CPU:</strong><ul><li><strong>Connection pool exhaustion</strong> — requests queue waiting for a DB connection. Classic cause of "slow but no errors".</li><li><strong>CPU throttling</strong> — the container is at its cgroup limit; host CPU looks fine.</li><li><strong>Thread pool / event loop</strong> blocked, or GC pauses (check GC time metrics).</li><li><strong>Lock contention</strong> or a long-running transaction in the database.</li></ul></li><li><strong>Dependencies</strong> — slow downstream service, cache hit rate collapsed (so everything falls through to the DB), a third-party API degraded, DNS resolution slow.</li><li><strong>Data-shaped causes</strong> — a table grew past an index's usefulness, a missing index on a new query, an N+1 that only hurts at scale, or one large customer's dataset.</li></ol></div>
+          <pre><code># is it everything, or one slice?
+histogram_quantile(0.99, sum by (le, route) (rate(http_request_duration_seconds_bucket[5m])))
+histogram_quantile(0.50, sum by (le, route) (rate(http_request_duration_seconds_bucket[5m])))
+
+# connection pool exhaustion — 'slow but no errors'
+hikaricp_connections_pending
+sum(pg_stat_activity_count) / sum(pg_settings_max_connections)
+
+# CPU throttling despite low usage
+rate(container_cpu_cfs_throttled_seconds_total[5m])
+  / rate(container_cpu_cfs_periods_total[5m])
+
+# GC pauses
+rate(jvm_gc_pause_seconds_sum[5m])
+
+# cache hit rate collapse → DB overload
+rate(cache_hits_total[5m]) / (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m]))
+
+# slow queries at the source
+# SELECT query, calls, mean_exec_time FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>You're adding observability to a service that has none. What do you instrument first?</h2>
+          <div class="seo-a"><p>Start with the signals that answer "is it working?" and expand only when a real question demands it.</p><ol><li><strong>RED metrics on every endpoint</strong> — request rate, error rate, and a latency <em>histogram</em>. This alone covers most incidents. Get it free via framework middleware or OpenTelemetry auto-instrumentation.</li><li><strong>Structured JSON logs with a trace ID</strong> on every line, written to stdout.</li><li><strong>Health endpoints</strong> — <code class="inline">/healthz</code> (process only) and <code class="inline">/readyz</code> (dependencies).</li><li><strong>Outbound dependency metrics</strong> — latency and error rate for every DB query, cache call, and downstream HTTP request. "Which dependency is slow?" is the most-asked question in an incident.</li><li><strong>Saturation gauges</strong> — connection pool in use vs max, queue depth, worker pool utilisation. These are your leading indicators.</li><li><strong>A few business metrics</strong> — orders placed, payments failed, signups. These detect problems that are invisible technically: everything returns 200 but orders dropped 40%.</li><li><strong>Then tracing</strong> — auto-instrument first, add manual spans only around meaningful custom operations.</li></ol><p>Finally, define an <strong>SLO</strong> from those metrics and alert on <em>that</em>, rather than on arbitrary thresholds.</p></div>
+          <pre><code>// RED via OpenTelemetry auto-instrumentation — most of it for free
+const sdk = new NodeSDK({
+  traceExporter: new OTLPTraceExporter({ url: &quot;http://otel-collector:4318/v1/traces&quot; }),
+  metricReader: new PrometheusExporter({ port: 9464 }),   // exposes /metrics
+  instrumentations: [getNodeAutoInstrumentations()]        // http, express, pg, redis
+});
+sdk.start();
+
+// business metric — the one auto-instrumentation can't give you
+const ordersPlaced = meter.createCounter(&quot;orders_placed_total&quot;);
+const orderValue  = meter.createHistogram(&quot;order_value_rupees&quot;);
+
+ordersPlaced.add(1, { payment_method: order.method, region: order.region });
+orderValue.record(order.total, { region: order.region });
+
+// saturation gauge — the leading indicator
+meter.createObservableGauge(&quot;db_pool_in_use&quot;, (obs) =&gt;
+  obs.observe(pool.totalCount - pool.idleCount)
+);</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="observability";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>Spring Boot Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="105 Spring Boot interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="113 Spring Boot interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/springboot" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="Spring Boot Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="105 Spring Boot interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="113 Spring Boot interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/springboot" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>Spring Boot Interview Questions and Answers</h1>
-      <p>105 hand-picked Spring Boot interview questions with
+      <p>113 hand-picked Spring Boot interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -2052,6 +2052,143 @@ java -jar target/app.jar --server.port=9090</code></pre>
           <h2>What is SDLC and what is Agile?</h2>
           <div class="seo-a"><p><strong>SDLC (Software Development Life Cycle)</strong> is the overall process of building software, in stages: <em>requirements → design → development → testing → deployment → maintenance</em>. It's just a name for "how software goes from idea to running product."</p><p><strong>Agile</strong> is a <em>way</em> of doing the SDLC. Instead of building everything at once (the old "Waterfall" approach), you work in short cycles called <strong>sprints</strong> (usually 2 weeks), deliver a small working piece each time, get feedback, and adapt.</p><p><strong>Scrum</strong> is the most common Agile framework — with daily stand-ups, sprint planning, and a review/retrospective at the end. The point of Agile: ship small, get feedback fast, and change direction easily.</p></div>
           
+        </article>
+        <article class="seo-q">
+          <h2>How do you send email from a Spring Boot service?</h2>
+          <div class="seo-a"><p>Add <code class="inline">spring-boot-starter-mail</code> and Boot auto-configures a <code class="inline">JavaMailSender</code> from your SMTP properties — you inject it and send. Two message types:</p><ul><li><strong><code class="inline">SimpleMailMessage</code></strong> — plain text. Set from/to/subject/text, call <code class="inline">send()</code>.</li><li><strong><code class="inline">MimeMessage</code></strong> via <code class="inline">MimeMessageHelper</code> — for HTML bodies, attachments, or inline images.</li></ul><p>The point that matters in an interview: <strong>sending is blocking network I/O to an SMTP server</strong>, which is slow and unreliable. Never send inside a request thread or a transaction — do it asynchronously (or off a queue/Kafka consumer) <em>after</em> the business work has committed, so a slow mail server can't stall your API and a rollback can't leave you having emailed about something that never happened.</p></div>
+          <pre><code># application.yml
+spring:
+  mail:
+    host: smtp.example.com
+    port: 587
+    username: ${MAIL_USER}
+    password: ${MAIL_PASS}          # a secret — env/vault, never in yaml
+    properties.mail.smtp.starttls.enable: true
+
+@Service
+@RequiredArgsConstructor
+public class MailService {
+  private final JavaMailSender mailSender;
+
+  @Async                                     // don't block the caller
+  public void sendConfirmation(String to, String body) {
+    var msg = new SimpleMailMessage();
+    msg.setTo(to);
+    msg.setSubject(&quot;Confirmation&quot;);
+    msg.setText(body);
+    mailSender.send(msg);                     // blocking SMTP call
+  }
+
+  public void sendReceipt(String to, String html, byte[] pdf) throws MessagingException {
+    MimeMessage mime = mailSender.createMimeMessage();
+    var helper = new MimeMessageHelper(mime, true, &quot;UTF-8&quot;);  // true = multipart
+    helper.setTo(to);
+    helper.setSubject(&quot;Receipt&quot;);
+    helper.setText(html, true);               // true = HTML body
+    helper.addAttachment(&quot;invoice.pdf&quot;, new ByteArrayResource(pdf));
+    mailSender.send(mime);
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does @LoadBalanced do on a RestTemplate, and how is a service-name URL resolved?</h2>
+          <div class="seo-a"><p><code class="inline">@LoadBalanced</code> tells Spring Cloud to attach a client-side load-balancing interceptor to that <code class="inline">RestTemplate</code> (or <code class="inline">WebClient.Builder</code>). It lets you call other services by <strong>logical service name</strong> instead of a hardcoded <code class="inline">host:port</code>.</p><p>When you call <code class="inline">http://ORDER-SERVICE/orders/1</code>, the interceptor looks up every instance registered under <code class="inline">ORDER-SERVICE</code> (from Eureka/Consul or a static list), picks one — round-robin by default via <strong>Spring Cloud LoadBalancer</strong> — and rewrites the URL to that instance's real host and port before the request goes out.</p><p>Without <code class="inline">@LoadBalanced</code>, <code class="inline">ORDER-SERVICE</code> is treated as a literal hostname and the call fails at DNS resolution. The whole benefit is that you never hardcode <code class="inline">localhost:8081</code>: instances scale up and down and the client always routes to a live one.</p></div>
+          <pre><code>@Bean
+@LoadBalanced                                  // adds the LB interceptor
+RestTemplate restTemplate() {
+  return new RestTemplate();
+}
+
+@Service
+@RequiredArgsConstructor
+class OrderClient {
+  private final RestTemplate restTemplate;
+
+  Order getOrder(String id) {
+    // call by SERVICE NAME — resolved to a real host:port at call time
+    return restTemplate.getForObject(
+        &quot;http://ORDER-SERVICE/orders/{id}&quot;, Order.class, id);
+  }
+}
+
+// WebClient equivalent:
+@Bean
+@LoadBalanced
+WebClient.Builder webClientBuilder() { return WebClient.builder(); }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the JPA Criteria API, and when do you use it over JPQL?</h2>
+          <div class="seo-a"><p>The <strong>Criteria API</strong> builds queries <strong>programmatically</strong> in Java using <code class="inline">CriteriaBuilder</code>, <code class="inline">CriteriaQuery</code>, and <code class="inline">Root</code> — no string JPQL. Because it's typed Java (especially with the generated <code class="inline">_</code> metamodel), the compiler catches bad field names and it's <strong>injection-safe</strong> (values always go through <code class="inline">ParameterExpression</code>).</p><p><strong>When to use it:</strong> <em>dynamic</em> queries where the WHERE/JOIN clauses depend on which filters the user actually supplied — building that by concatenating JPQL strings is ugly and unsafe. For static queries, JPQL/<code class="inline">@Query</code> is far more readable.</p><p>In Spring Data the idiomatic wrapper is <strong>Specifications</strong> (<code class="inline">JpaSpecificationExecutor</code>): each <code class="inline">Specification&lt;T&gt;</code> is a reusable <code class="inline">Predicate</code> factory you compose with <code class="inline">.and()</code>/<code class="inline">.or()</code>. Downside: Criteria is verbose — reach for it only when queries are genuinely dynamic.</p></div>
+          <pre><code>// Dynamic search with the Criteria API
+CriteriaBuilder cb = em.getCriteriaBuilder();
+CriteriaQuery&lt;User&gt; q = cb.createQuery(User.class);
+Root&lt;User&gt; u = q.from(User.class);
+List&lt;Predicate&gt; where = new ArrayList&lt;&gt;();
+if (name != null) where.add(cb.equal(u.get(&quot;name&quot;), name));
+if (minAge != null) where.add(cb.ge(u.get(&quot;age&quot;), minAge));
+q.where(cb.and(where.toArray(Predicate[]::new)));
+List&lt;User&gt; users = em.createQuery(q).getResultList();
+
+// Same idea, Spring Data Specifications
+Specification&lt;User&gt; spec = (root, cq, cb2) -&gt; cb2.equal(root.get(&quot;name&quot;), name);
+userRepo.findAll(spec);   // repo extends JpaSpecificationExecutor&lt;User&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Is a GET request with a body allowed?</h2>
+          <div class="seo-a"><p><strong>Technically yes, practically no.</strong> The HTTP spec (RFC 9110) doesn't forbid a body on GET, but it says a body has <strong>no defined semantics</strong> — servers, proxies, caches, and CDNs are free to ignore or strip it, and many do. Browsers' <code class="inline">fetch</code>/<code class="inline">XMLHttpRequest</code> won't even send one on GET.</p><p>So a GET body is unreliable: it may not reach your controller, and it breaks caching (GET is supposed to be cacheable and idempotent, keyed by the URL). <strong>Put parameters in the query string</strong> instead. If the payload is genuinely too large/complex for a URL (e.g. a big search filter), use <code class="inline">POST</code> (some APIs expose <code class="inline">POST /search</code> for exactly this).</p><p>In Spring, <code class="inline">@RequestBody</code> on a GET handler is a code smell — prefer <code class="inline">@RequestParam</code>/<code class="inline">@PathVariable</code>.</p></div>
+          <pre><code>// Idiomatic GET — params in the URL
+@GetMapping(&quot;/users&quot;)
+List&lt;User&gt; search(@RequestParam String name,
+                  @RequestParam(defaultValue = &quot;0&quot;) int page) { ... }
+
+// Complex filter too big for a URL? Use POST, not a GET body.
+@PostMapping(&quot;/users/search&quot;)
+List&lt;User&gt; search(@RequestBody UserFilter filter) { ... }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Users reach protected endpoints without a valid JWT. What's the most likely cause?</h2>
+          <div class="seo-a"><p>The endpoints aren't actually behind the authentication filter — i.e. <strong>the security config doesn't require auth on those routes</strong> (missing <code class="inline">authenticated()</code> matcher, a stray <code class="inline">permitAll()</code>, or the JWT filter isn't in the chain for that path). The token check never runs, so requests pass through.</p><p>Contrast the near-miss distractors: a <em>long token expiry</em> is a weakness but doesn't let a request through with <strong>no</strong> token; an unvalidated signature or a non-secure cookie are real bugs but wouldn't explain access with a missing/invalid token as directly as <strong>endpoints that were never secured</strong> in the first place. Fix: require authentication on protected matchers and ensure the JWT filter runs before the endpoint.</p></div>
+          <pre><code>http
+  .authorizeHttpRequests(reg -&gt; reg
+      .requestMatchers(&quot;/api/public/**&quot;).permitAll()
+      .anyRequest().authenticated())          // &lt;-- protect everything else
+  .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is distributed tracing, and why is it important in microservices? (Zipkin / Jaeger)</h2>
+          <div class="seo-a"><p>A single user request can hop through many services; <strong>distributed tracing</strong> follows it end-to-end by propagating a <strong>trace id</strong> across every service call, with a <strong>span</strong> timing each hop. The backend stitches the spans into one timeline so you can see the full path, where time was spent, and where it failed.</p><p><strong>Why it matters:</strong> in microservices you can't debug by reading one service's logs — tracing gives cross-service latency breakdown and root-cause analysis for a request.</p><p><strong>Tools:</strong> <strong>Zipkin</strong> and <strong>Jaeger</strong> are tracing backends that collect, store, and <strong>visualise</strong> traces. <strong>OpenTelemetry</strong> is the vendor-neutral instrumentation standard that exports to either. In Spring, <strong>Micrometer Tracing</strong> (formerly Spring Cloud Sleuth) auto-propagates the ids and exports to Zipkin/Jaeger.</p></div>
+          <pre><code>Request --[trace=abc]--&gt; Gateway --&gt; Order-svc --&gt; Payment-svc --&gt; DB
+  each hop = a span (start/end); backend stitches spans into one trace
+  Spring: Micrometer Tracing -&gt; export to Zipkin / Jaeger</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the role of DispatcherServlet in Spring MVC?</h2>
+          <div class="seo-a"><p><strong>DispatcherServlet</strong> is Spring MVC's <strong>front controller</strong> — a single servlet that receives <em>every</em> HTTP request and orchestrates the request-handling pipeline:</p><ol><li><strong>HandlerMapping</strong> — find the controller method for the URL.</li><li><strong>HandlerAdapter</strong> — invoke it (binding params, running interceptors).</li><li><strong>Produce the response</strong> — <code class="inline">HttpMessageConverter</code> for REST (JSON) or a <code class="inline">ViewResolver</code> for MVC views.</li><li><strong>HandlerExceptionResolver</strong> — route exceptions (e.g. to <code class="inline">@ControllerAdvice</code>).</li></ol><p>Spring Boot auto-registers and configures it. In short, it's the single entry point that ties routing, invocation, serialization, and error handling together.</p></div>
+          <pre><code>Request -&gt; DispatcherServlet
+  -&gt; HandlerMapping (which controller?)
+  -&gt; HandlerAdapter (invoke @RequestMapping method)
+  -&gt; HttpMessageConverter / ViewResolver (build response)
+  -&gt; HandlerExceptionResolver (on error)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain the major Spring Boot annotations every developer should know.</h2>
+          <div class="seo-a"><p>The annotations a Spring Boot developer should know, by area:</p><h4>Bootstrap &amp; configuration</h4><table><tbody><tr><td><code class="inline">@SpringBootApplication</code></td><td>Main class marker — meta-annotation combining the next three.</td></tr><tr><td><code class="inline">@Configuration</code></td><td>Class that defines beans via <code class="inline">@Bean</code> methods.</td></tr><tr><td><code class="inline">@EnableAutoConfiguration</code></td><td>Auto-configures beans based on what's on the classpath.</td></tr><tr><td><code class="inline">@ComponentScan</code></td><td>Scans packages for stereotype-annotated beans.</td></tr><tr><td><code class="inline">@Bean</code></td><td>Method whose return value is a Spring-managed bean.</td></tr><tr><td><code class="inline">@Value</code></td><td>Injects a single property value (<code class="inline">${...}</code>).</td></tr><tr><td><code class="inline">@ConfigurationProperties</code></td><td>Binds a group of properties to a typed bean.</td></tr><tr><td><code class="inline">@Profile</code></td><td>Registers a bean only for an active profile.</td></tr></tbody></table><h4>Dependency injection &amp; stereotypes</h4><table><tbody><tr><td><code class="inline">@Component</code></td><td>Generic Spring-managed bean.</td></tr><tr><td><code class="inline">@Service</code></td><td>Business/service-layer bean.</td></tr><tr><td><code class="inline">@Repository</code></td><td>Persistence bean; adds DB exception translation.</td></tr><tr><td><code class="inline">@Controller</code></td><td>Web MVC controller (returns views).</td></tr><tr><td><code class="inline">@RestController</code></td><td><code class="inline">@Controller</code> + <code class="inline">@ResponseBody</code> — returns data/JSON.</td></tr><tr><td><code class="inline">@Autowired</code></td><td>Injects a dependency by type.</td></tr><tr><td><code class="inline">@Qualifier</code></td><td>Picks a specific bean when several match.</td></tr><tr><td><code class="inline">@Primary</code></td><td>Default bean when several candidates exist.</td></tr></tbody></table><h4>Web / REST (Spring MVC)</h4><table><tbody><tr><td><code class="inline">@RequestMapping</code></td><td>Maps requests (path/method) to a handler.</td></tr><tr><td><code class="inline">@GetMapping / @PostMapping / @PutMapping / @DeleteMapping / @PatchMapping</code></td><td>HTTP-method shortcuts for <code class="inline">@RequestMapping</code>.</td></tr><tr><td><code class="inline">@PathVariable</code></td><td>Binds a URI template variable (<code class="inline">/users/{id}</code>).</td></tr><tr><td><code class="inline">@RequestParam</code></td><td>Binds a query/form parameter.</td></tr><tr><td><code class="inline">@RequestBody</code></td><td>Deserializes the request body into an object.</td></tr><tr><td><code class="inline">@ResponseBody</code></td><td>Serializes the return value into the response body.</td></tr><tr><td><code class="inline">@ResponseStatus</code></td><td>Sets the HTTP status code for the response.</td></tr><tr><td><code class="inline">@ControllerAdvice / @RestControllerAdvice</code></td><td>Global exception handling across controllers.</td></tr><tr><td><code class="inline">@ExceptionHandler</code></td><td>Handles a specific exception type.</td></tr><tr><td><code class="inline">@CrossOrigin</code></td><td>Enables CORS for a controller/handler.</td></tr></tbody></table><h4>Validation</h4><table><tbody><tr><td><code class="inline">@Valid / @Validated</code></td><td>Triggers Bean Validation on a request body/argument.</td></tr><tr><td><code class="inline">@NotNull / @NotBlank / @Size / @Email</code></td><td>Field constraints (jakarta.validation).</td></tr></tbody></table><h4>Persistence (Spring Data JPA)</h4><table><tbody><tr><td><code class="inline">@Entity</code></td><td>Maps a class to a database table.</td></tr><tr><td><code class="inline">@Table</code></td><td>Customizes the table name/mapping.</td></tr><tr><td><code class="inline">@Id</code></td><td>Marks the primary-key field.</td></tr><tr><td><code class="inline">@GeneratedValue</code></td><td>Auto-generates the id (IDENTITY/SEQUENCE/…).</td></tr><tr><td><code class="inline">@Column</code></td><td>Customizes column name/constraints.</td></tr><tr><td><code class="inline">@ManyToOne / @OneToMany / @OneToOne / @ManyToMany</code></td><td>Entity relationship mappings.</td></tr><tr><td><code class="inline">@JoinColumn</code></td><td>Specifies the foreign-key column.</td></tr><tr><td><code class="inline">@Query</code></td><td>Defines a custom JPQL or native query.</td></tr></tbody></table><h4>Transactions, caching, scheduling, async</h4><table><tbody><tr><td><code class="inline">@Transactional</code></td><td>Runs the method inside a DB transaction (via a proxy).</td></tr><tr><td><code class="inline">@Cacheable / @CacheEvict</code></td><td>Cache a method's result / evict cached entries.</td></tr><tr><td><code class="inline">@Scheduled</code></td><td>Runs a method on a cron/fixed schedule.</td></tr><tr><td><code class="inline">@Async</code></td><td>Runs a method asynchronously on a thread pool.</td></tr><tr><td><code class="inline">@EnableCaching / @EnableScheduling / @EnableAsync</code></td><td>Turn those features on.</td></tr></tbody></table><h4>Testing</h4><table><tbody><tr><td><code class="inline">@SpringBootTest</code></td><td>Loads the full context for integration tests.</td></tr><tr><td><code class="inline">@WebMvcTest / @DataJpaTest</code></td><td>Slice tests for the web / JPA layer.</td></tr><tr><td><code class="inline">@MockBean</code></td><td>Replaces a bean in the context with a Mockito mock.</td></tr></tbody></table></div>
+          <pre><code>@SpringBootApplication          // = @Configuration + @EnableAutoConfiguration + @ComponentScan
+public class App { public static void main(String[] a){ SpringApplication.run(App.class,a);} }
+
+@RestController
+@RequestMapping(&quot;/users&quot;)
+class UserController {
+  private final UserService service;
+  UserController(UserService s){ this.service = s; }   // constructor injection
+  @GetMapping(&quot;/{id}&quot;)
+  User get(@PathVariable Long id){ return service.find(id); }
+  @PostMapping
+  User create(@Valid @RequestBody User u){ return service.save(u); }
+}
+
+@Entity
+class User { @Id @GeneratedValue Long id; @Column(nullable=false) String name; }</code></pre>
         </article>
     </section>
 

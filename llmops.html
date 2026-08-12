@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>LLMOps &amp; Evals Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 LLMOps &amp; Evals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/llmops" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="LLMOps &amp; Evals Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 LLMOps &amp; Evals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/llmops" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="LLMOps &amp; Evals Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is LLMOps, and how does it differ from MLOps?","acceptedAnswer":{"@type":"Answer","text":"LLMOps is the practice of running LLM-powered features in production: evaluation, prompt and model versioning, deployment, monitoring, cost control and safety. What's different from classic MLOps: You usually don't own the model. The artifact you version is the prompt, tools and retrieval config — and the model can change under you. No accuracy metric. Outputs are free text, so you need LLM-judges, rubrics and human review instead of a validation score. Cost is per request, not per training run — and it scales with usage forever. Non-determinism is permanent — the same input can produce different output, so testing is statistical. New failure modes — hallucination, prompt injection, data leakage — that have no analogue in tabular ML. What carries over: versioning, CI, staged rollout, monitoring, and a feedback loop from production into your dataset."}},{"@type":"Question","name":"How do you build an eval set for an LLM feature?","acceptedAnswer":{"@type":"Answer","text":"Start small and real. 30–50 examples drawn from actual usage beats 500 synthetic ones, because synthetic cases cluster around what you already imagined. What to include: Typical cases — the bulk of traffic. Known failures — every bug report becomes a permanent test case. This is how the set earns its keep. Edge cases — empty input, ambiguity, adversarial phrasing, out-of-scope requests, multilingual input. Negative cases — questions it should refuse or say it doesn't know. What each row needs: the input, the expected output or a rubric describing what a good answer contains, and enough metadata (category, difficulty, source) to slice results. Then version it in git alongside the prompt, and grow it from production — every incident adds a row, so the set converges on your real distribution."}},{"@type":"Question","name":"How do you use LLM-as-judge well, and where does it mislead?","acceptedAnswer":{"@type":"Answer","text":"Use a model to grade outputs where no exact answer exists — helpfulness, faithfulness, tone, instruction-following. What makes a judge trustworthy: A specific rubric with a small scale. Binary or 1–3 with explicit criteria beats \"rate 1–10\", which produces noise around 7. Reasoning before the score — require a justification field first; scores generated after reasoning are markedly better calibrated. Reference-based where possible — grading against a known good answer is far more reliable than grading in the abstract. Validate the judge against humans. Label 50 examples yourself and measure agreement. An unvalidated judge is a number, not a signal. Known biases: position bias in pairwise comparisons (randomise order), length bias (longer answers score higher), self-preference (models favour their own style), and blindness to subtle factual errors in confident-sounding text."}},{"@type":"Question","name":"Offline evals vs online metrics — why do you need both?","acceptedAnswer":{"@type":"Answer","text":"Offline — run your eval set before shipping. Fast, cheap, repeatable, and it catches regressions. But it only measures what you thought to include, on a distribution you curated. Online — what real users do. Explicit signals (thumbs up/down, a rating, an edit to the output) and implicit ones, which are usually stronger: did they copy the answer, retry the query, rephrase, escalate to support, abandon the session, or complete the task? The two disagree constantly, and that gap is informative: offline scores rising while online engagement falls usually means you optimised the judge's rubric rather than the user's need. Close the loop: mine low-rated and retried sessions, turn them into eval cases, fix, re-run offline, ship, watch online. That cycle is the whole discipline."}},{"@type":"Question","name":"How do you run LLM evals in CI without flaky builds?","acceptedAnswer":{"@type":"Answer","text":"Layer the checks by determinism, and only gate on what's deterministic. Every commit (fast, deterministic): prompt templates render, schemas validate, tool definitions parse, guardrail rules fire on known-bad inputs, and unit tests run against a mocked model . No API calls, seconds to run. On changes to prompt/model/retrieval: run the eval set against the real model. Because outputs vary, gate on an aggregate threshold (\"pass rate ≥ 85% and no regression on the critical subset\"), never on individual outputs. Nightly / pre-release: the full suite including expensive judges, cost and latency tracking, and safety probes. Report the diff, not just the number — which cases newly failed matters far more than a score moving by two points. And keep a small critical subset where any regression blocks the release."}},{"@type":"Question","name":"How do you version and manage prompts?","acceptedAnswer":{"@type":"Answer","text":"Prompts are code — the highest-leverage code in the system — so treat them that way: In the repo, reviewed in PRs. A prompt change can alter product behaviour more than a refactor; it deserves a diff and a reviewer. Templated with typed variables , not string-concatenated at the call site, so you can render and test them. Versioned identifiers logged with every request — prompt_id + version + model_version in the trace. Without this you cannot attribute a quality change to a cause. Evaluated before merge — the eval set runs on the prompt diff. The hosted prompt-registry trade-off: letting non-engineers edit prompts in a UI is genuinely useful, but it decouples prompt changes from code review and deploys. If you do it, keep versioning, require an eval run before promotion, and make rollback one click."}},{"@type":"Question","name":"What do you monitor for an LLM feature in production?","acceptedAnswer":{"@type":"Answer","text":"Operational: request rate, error rate by type (429 / 5xx / timeout / validation failure), TTFT and total latency percentiles, retries, and provider availability. Economic: input and output tokens per request, cost per request and per user, cache hit rate, and spend by feature — with alerts on anomalies, not just a monthly invoice. Quality: user feedback rate, retry/regeneration rate, guardrail block rate, refusal rate, structured-output parse-failure rate, and a sampled judge score over live traffic. Content: input and output length distributions, and topic/intent drift — a shift here usually explains a quality change before anything else does. Underlying all of it: a trace per request containing the rendered prompt, retrieved context, model and prompt versions, and the response — with PII redacted on the way in."}},{"@type":"Question","name":"How do you safely roll out a prompt or model change?","acceptedAnswer":{"@type":"Answer","text":"Same ladder as any risky deploy, adapted for non-determinism: Offline eval — the gate before anything reaches users. Shadow mode — run the new version on real traffic, log the output, serve the old one. Zero user risk, real distribution. The best-value step and the one most often skipped. Canary — 1–5% of traffic, watching quality and cost metrics, not just errors. A/B test — if you need a business-metric answer (task completion, escalation rate), run a real experiment with enough traffic for significance. Full rollout with a feature flag and a fast rollback path. Two LLM-specific cautions: quality regressions are silent — nothing errors, so you must watch quality metrics, not just health checks; and cost can regress too — a more verbose model at the same quality is still a bad deploy."}},{"@type":"Question","name":"How do you migrate to a new model version without breaking things?","acceptedAnswer":{"@type":"Answer","text":"Pin explicit versions in production. Migration should be a decision you make, not something that happens to you because you pointed at a floating alias. The process: Run your eval set on the new version and diff results case by case, not just the aggregate score. Check the things that quietly change : output format and verbosity, refusal boundaries, tool-calling behaviour, JSON strictness, and token count (a chattier model costs more at identical quality). Expect prompt drift — prompts are tuned to a model's quirks. Some instructions become unnecessary, some stop working. Shadow, then canary before full traffic. Keep the old version routable until you're confident; deprecation dates are your real deadline. Watch for output-shape breakage most of all — downstream parsers, not the answer quality, are what usually break first."}},{"@type":"Question","name":"How do you keep LLM costs under control at scale?","acceptedAnswer":{"@type":"Answer","text":"Measure first, at the right granularity: cost per request, per user, per feature. A single expensive feature or a small set of heavy users usually dominates, and you can't see that from a monthly invoice. Levers, roughly by payoff: Prompt caching — biggest single win for repeated system prompts and stable context. Model routing — classify difficulty and send easy requests to a cheap model. Often 60–80% of traffic is easy. Shorten the input — fewer retrieved chunks, trimmed history, no redundant instructions. Input tokens are usually most of the bill. Cap output — max_tokens plus \"be concise\"; output tokens are typically priced several times higher than input. Cache answers for repeated questions; batch APIs for anything non-interactive (often ~50% cheaper). Per-tenant quotas and alerts so abuse or a retry storm can't become a five-figure surprise."}},{"@type":"Question","name":"How do you set SLOs for a streaming LLM endpoint?","acceptedAnswer":{"@type":"Answer","text":"A single \"request duration\" SLO is meaningless when responses stream and length varies wildly. Split it: TTFT p95 — the number users actually feel. This is your primary SLO (e.g. p95 &lt; 1.5 s). Inter-token latency p95 — whether the stream stalls mid-answer. Time to completion, normalised per output token — so a long answer doesn't count as a violation. Stream failure rate — connections dropped after the first token. Uniquely nasty because the user has already seen a partial answer, and it's invisible to a plain error-rate metric. Error budget realities: your provider's availability caps yours, so an SLO tighter than theirs needs multi-provider failover. And plan degraded modes — a cached response, a smaller model, or an honest \"try again shortly\" beats a spinner."}},{"@type":"Question","name":"What are the caching layers in an LLM system?","acceptedAnswer":{"@type":"Answer","text":"Four distinct caches, often confused with each other: Exact response cache — hash of (prompt + params) → response. Free, safe, and effective on repetitive traffic. Always do this first. Semantic cache — embed the query, serve a stored answer above a similarity threshold. Higher hit rate, real risk of near-miss errors (\"enable\" vs \"disable\") — must be keyed by tenant/user when answers are personalised. Provider prompt cache — the provider reuses prefill state for a stable prefix. Cuts cost and TTFT; requires ordering the prompt stable-first. Embedding cache — text → vector. Embeddings are deterministic per model version, so re-embedding the same content is pure waste; key it by content hash and model version. Every layer needs an invalidation story: TTLs, invalidation on document reindex, and a bypass flag for debugging."}},{"@type":"Question","name":"Should you abstract over multiple LLM providers?","acceptedAnswer":{"@type":"Answer","text":"Reasons to: outage failover, capacity and rate-limit headroom, price negotiation, per-task routing to whichever model is best, and reducing dependency on a single vendor's roadmap. Reasons not to overdo it: a lowest-common-denominator abstraction throws away exactly the features that matter — prompt caching semantics, structured outputs, tool-calling formats, thinking budgets, citations. Prompts are also tuned per model, so \"just switch providers\" is rarely a config change; it's a re-evaluation. A pragmatic middle: a thin internal interface ( generate , generateStructured , embed ) with per-provider adapters that are allowed to use native features, plus your own routing, retry and logging around it. Keep prompts versioned per model , and maintain evals for the fallback path so failover doesn't silently degrade quality. Gateways (LiteLLM, OpenRouter, Bedrock) give you much of this without writing the layer yourself — at the cost of another hop and another dependency."}},{"@type":"Question","name":"How do you turn user feedback into product improvement?","acceptedAnswer":{"@type":"Answer","text":"Collect it, but design for the fact that almost nobody clicks thumbs-down — typically well under 1% of sessions. Higher-yield signals: regeneration/retry, the user rephrasing the same question, copying the answer (positive), editing a generated draft heavily (negative), abandoning the session, escalating to a human. The loop: Capture the full trace with the feedback so the case is reproducible. Cluster failures by theme — embed the failing inputs and group them. Ten instances of one root cause are far more actionable than a list of 200 complaints. Triage by cause: retrieval miss, prompt gap, model limitation, or a genuine product gap. Add to the eval set , fix, verify offline, ship, watch the metric. When feedback volume grows, it also becomes fine-tuning or distillation data — but only after validation; training on unvalidated production output amplifies your own errors."}},{"@type":"Question","name":"How do you architect a guardrail pipeline?","acceptedAnswer":{"@type":"Answer","text":"Guardrails belong outside the model, on both sides, and they should be cheap relative to the call they protect. Input stage: deterministic rules first (length limits, blocklists, rate limits), then a small classifier for abuse, injection patterns and off-topic requests. Rejecting here saves a frontier-model call. Output stage: schema validation, secret/PII scanning, policy classification, and domain scope checks — plus, for RAG, a groundedness check that every claim traces to retrieved context. Design decisions that matter more than the classifiers: Fail open or closed , per guardrail — a PII leak blocks; a tone check warns. Latency budget — run independent checks in parallel; a serial chain of four classifiers destroys TTFT. Streaming — you can't unsee tokens already sent. Either buffer, or validate in chunks with the ability to retract. Observability — log every block with reason and input so false positives are measurable. An over-blocking guardrail is an outage nobody paged for."}},{"@type":"Question","name":"How do you red-team an LLM application before launch?","acceptedAnswer":{"@type":"Answer","text":"Attack your own system deliberately, across the categories that actually apply to it: Prompt injection — direct and, more importantly, indirect via any content the system ingests (documents, tickets, web pages, tool output). System prompt extraction — assume it will leak; don't put secrets in it. Scope escape — getting a support bot to write code, give legal advice, or discuss competitors. Data leakage — cross-tenant retrieval, PII in outputs, another user's context in a shared cache. Tool abuse — coaxing an unauthorised action, or a destructive one without approval. Resource abuse — prompts engineered to maximise output length or trigger long agent loops (a denial-of-wallet attack). Make it repeatable: keep the successful attacks as a regression suite that runs on every prompt and model change — a fix for one jailbreak rarely generalises, and model updates reopen old holes. Combine automated adversarial generation with human creativity; the interesting attacks are still found by people."}},{"@type":"Question","name":"What data governance questions must you answer before shipping an LLM feature?","acceptedAnswer":{"@type":"Answer","text":"What data leaves your boundary , to which processor, in which region? Map it before legal asks. Retention — how long does the provider keep prompts? Enterprise tiers typically offer zero data retention; consumer tiers do not. Training — is your data used to train? Get it in the contract, not the marketing page. Residency — EU/India/US endpoints, and whether failover to another region is contractually allowed. Your own storage — traces and eval sets contain full prompts. That is often the largest copy of sensitive data in the system, and it needs classification, retention limits and access controls. Deletion rights — if a user requests erasure, can you remove their data from your vector index, traces, caches and eval sets? Design for this or it becomes an emergency. Disclosure — does the user know they're talking to AI? Increasingly a legal requirement, not a courtesy."}},{"@type":"Question","name":"When and how do you fine-tune in production?","acceptedAnswer":{"@type":"Answer","text":"When it's justified: a stable, high-volume task where prompting has plateaued; a consistent output format or style you can't reliably prompt for; a domain vocabulary the base model handles poorly; or a cost/latency target that needs a small model to match a big one's quality on one task. When it isn't: the model lacks facts (use RAG), the task changes often (retraining treadmill), or you have fewer than a few hundred solid examples. The pipeline: Collect from production traffic — validated inputs and outputs, deduplicated, PII-scrubbed. Curate — a few hundred to a few thousand high-quality examples beats a hundred thousand noisy ones. Data quality dominates everything here. Hold out a test set before training, from a later time period if possible. Train (usually LoRA/PEFT — cheap, quick, swappable adapters). Evaluate against the prompted baseline — the honest comparison, and it sometimes loses. Deploy via shadow → canary, keeping the base model as fallback, and plan for retraining as distribution drifts."}},{"@type":"Question","name":"What does self-hosting an LLM actually involve?","acceptedAnswer":{"@type":"Answer","text":"Sizing: weights need roughly 2 bytes per parameter at FP16, plus KV cache scaling with concurrency × context length, plus activation overhead. A 70B model at FP16 needs ~140 GB — multiple GPUs and tensor parallelism — while the same model at INT4 fits on far less at some quality cost. Serving: vLLM or TGI for continuous batching and PagedAttention; a single naive process serving one request at a time wastes almost all the hardware. Operations you now own: GPU capacity planning (they're expensive and often supply-constrained), autoscaling with slow cold starts because loading weights takes minutes, model version upgrades, quantization decisions, and your own evals for every change. The economics: a GPU instance is a fixed hourly cost regardless of traffic, so self-hosting wins only above a high steady utilisation. Below that, per-token API pricing is cheaper and someone else is on call."}},{"@type":"Question","name":"Users report 'the AI got worse this week'. How do you investigate?","acceptedAnswer":{"@type":"Answer","text":"Turn the vague report into a diff. Work through what could have changed: Did we change anything? Prompt version, model version, retrieval config, chunking, a tool, a schema. Check the deploy log first — it's usually here. Did the provider change anything? A floating alias silently repointed, a model deprecated, a safety-filter update. This is why versions get pinned and logged. Did the inputs change? A new user segment, a new document set, longer queries, a different language. Compare input distributions week over week. Did retrieval change? An index rebuild, a failed sync, deleted documents, an ACL change. Check recall on the eval set. Did it actually change? Run the eval set now and against last week's config. Sometimes the answer is a new cohort of users with different expectations. Then reproduce with real traces from complaining users — not a fresh prompt you wrote yourself, which won't contain the context that caused the failure."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="LLMOps &amp; Evals interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>LLMOps &amp; Evals Interview Questions and Answers</h1>
+      <p>20 hand-picked LLMOps &amp; Evals interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>What is LLMOps, and how does it differ from MLOps?</h2>
+          <div class="seo-a"><p>LLMOps is the practice of running LLM-powered features in production: evaluation, prompt and model versioning, deployment, monitoring, cost control and safety.</p><p><strong>What's different from classic MLOps:</strong></p><ul><li><strong>You usually don't own the model.</strong> The artifact you version is the <em>prompt, tools and retrieval config</em> — and the model can change under you.</li><li><strong>No accuracy metric.</strong> Outputs are free text, so you need LLM-judges, rubrics and human review instead of a validation score.</li><li><strong>Cost is per request, not per training run</strong> — and it scales with usage forever.</li><li><strong>Non-determinism is permanent</strong> — the same input can produce different output, so testing is statistical.</li><li><strong>New failure modes</strong> — hallucination, prompt injection, data leakage — that have no analogue in tabular ML.</li></ul><p>What carries over: versioning, CI, staged rollout, monitoring, and a feedback loop from production into your dataset.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you build an eval set for an LLM feature?</h2>
+          <div class="seo-a"><p>Start small and real. 30–50 examples drawn from actual usage beats 500 synthetic ones, because synthetic cases cluster around what you already imagined.</p><p><strong>What to include:</strong></p><ul><li><strong>Typical cases</strong> — the bulk of traffic.</li><li><strong>Known failures</strong> — every bug report becomes a permanent test case. This is how the set earns its keep.</li><li><strong>Edge cases</strong> — empty input, ambiguity, adversarial phrasing, out-of-scope requests, multilingual input.</li><li><strong>Negative cases</strong> — questions it <em>should</em> refuse or say it doesn't know.</li></ul><p><strong>What each row needs:</strong> the input, the expected output <em>or</em> a rubric describing what a good answer contains, and enough metadata (category, difficulty, source) to slice results.</p><p>Then version it in git alongside the prompt, and grow it from production — every incident adds a row, so the set converges on your real distribution.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you use LLM-as-judge well, and where does it mislead?</h2>
+          <div class="seo-a"><p>Use a model to grade outputs where no exact answer exists — helpfulness, faithfulness, tone, instruction-following.</p><p><strong>What makes a judge trustworthy:</strong></p><ul><li><strong>A specific rubric with a small scale.</strong> Binary or 1–3 with explicit criteria beats "rate 1–10", which produces noise around 7.</li><li><strong>Reasoning before the score</strong> — require a justification field first; scores generated after reasoning are markedly better calibrated.</li><li><strong>Reference-based where possible</strong> — grading against a known good answer is far more reliable than grading in the abstract.</li><li><strong>Validate the judge against humans.</strong> Label 50 examples yourself and measure agreement. An unvalidated judge is a number, not a signal.</li></ul><p><strong>Known biases:</strong> position bias in pairwise comparisons (randomise order), length bias (longer answers score higher), self-preference (models favour their own style), and blindness to subtle factual errors in confident-sounding text.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Offline evals vs online metrics — why do you need both?</h2>
+          <div class="seo-a"><p><strong>Offline</strong> — run your eval set before shipping. Fast, cheap, repeatable, and it catches regressions. But it only measures what you thought to include, on a distribution you curated.</p><p><strong>Online</strong> — what real users do. Explicit signals (thumbs up/down, a rating, an edit to the output) and implicit ones, which are usually stronger: did they copy the answer, retry the query, rephrase, escalate to support, abandon the session, or complete the task?</p><p>The two disagree constantly, and that gap is informative: offline scores rising while online engagement falls usually means you optimised the judge's rubric rather than the user's need.</p><p><strong>Close the loop:</strong> mine low-rated and retried sessions, turn them into eval cases, fix, re-run offline, ship, watch online. That cycle is the whole discipline.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you run LLM evals in CI without flaky builds?</h2>
+          <div class="seo-a"><p>Layer the checks by determinism, and only gate on what's deterministic.</p><ul><li><strong>Every commit (fast, deterministic):</strong> prompt templates render, schemas validate, tool definitions parse, guardrail rules fire on known-bad inputs, and unit tests run against a <strong>mocked model</strong>. No API calls, seconds to run.</li><li><strong>On changes to prompt/model/retrieval:</strong> run the eval set against the real model. Because outputs vary, gate on an <strong>aggregate threshold</strong> ("pass rate ≥ 85% and no regression on the critical subset"), never on individual outputs.</li><li><strong>Nightly / pre-release:</strong> the full suite including expensive judges, cost and latency tracking, and safety probes.</li></ul><p>Report the diff, not just the number — which cases newly failed matters far more than a score moving by two points. And keep a small <strong>critical subset</strong> where any regression blocks the release.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you version and manage prompts?</h2>
+          <div class="seo-a"><p>Prompts are code — the highest-leverage code in the system — so treat them that way:</p><ul><li><strong>In the repo, reviewed in PRs.</strong> A prompt change can alter product behaviour more than a refactor; it deserves a diff and a reviewer.</li><li><strong>Templated with typed variables</strong>, not string-concatenated at the call site, so you can render and test them.</li><li><strong>Versioned identifiers logged with every request</strong> — <code>prompt_id + version + model_version</code> in the trace. Without this you cannot attribute a quality change to a cause.</li><li><strong>Evaluated before merge</strong> — the eval set runs on the prompt diff.</li></ul><p><strong>The hosted prompt-registry trade-off:</strong> letting non-engineers edit prompts in a UI is genuinely useful, but it decouples prompt changes from code review and deploys. If you do it, keep versioning, require an eval run before promotion, and make rollback one click.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What do you monitor for an LLM feature in production?</h2>
+          <div class="seo-a"><p><strong>Operational:</strong> request rate, error rate by type (429 / 5xx / timeout / validation failure), TTFT and total latency percentiles, retries, and provider availability.</p><p><strong>Economic:</strong> input and output tokens per request, cost per request and per user, cache hit rate, and spend by feature — with alerts on anomalies, not just a monthly invoice.</p><p><strong>Quality:</strong> user feedback rate, retry/regeneration rate, guardrail block rate, refusal rate, structured-output parse-failure rate, and a sampled judge score over live traffic.</p><p><strong>Content:</strong> input and output length distributions, and topic/intent drift — a shift here usually explains a quality change before anything else does.</p><p>Underlying all of it: a <strong>trace per request</strong> containing the rendered prompt, retrieved context, model and prompt versions, and the response — with PII redacted on the way in.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you safely roll out a prompt or model change?</h2>
+          <div class="seo-a"><p>Same ladder as any risky deploy, adapted for non-determinism:</p><ol><li><strong>Offline eval</strong> — the gate before anything reaches users.</li><li><strong>Shadow mode</strong> — run the new version on real traffic, log the output, serve the old one. Zero user risk, real distribution. The best-value step and the one most often skipped.</li><li><strong>Canary</strong> — 1–5% of traffic, watching quality and cost metrics, not just errors.</li><li><strong>A/B test</strong> — if you need a business-metric answer (task completion, escalation rate), run a real experiment with enough traffic for significance.</li><li><strong>Full rollout</strong> with a feature flag and a fast rollback path.</li></ol><p>Two LLM-specific cautions: <strong>quality regressions are silent</strong> — nothing errors, so you must watch quality metrics, not just health checks; and <strong>cost can regress too</strong> — a more verbose model at the same quality is still a bad deploy.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you migrate to a new model version without breaking things?</h2>
+          <div class="seo-a"><p><strong>Pin explicit versions in production.</strong> Migration should be a decision you make, not something that happens to you because you pointed at a floating alias.</p><p>The process:</p><ol><li><strong>Run your eval set</strong> on the new version and diff results case by case, not just the aggregate score.</li><li><strong>Check the things that quietly change</strong>: output format and verbosity, refusal boundaries, tool-calling behaviour, JSON strictness, and token count (a chattier model costs more at identical quality).</li><li><strong>Expect prompt drift</strong> — prompts are tuned to a model's quirks. Some instructions become unnecessary, some stop working.</li><li><strong>Shadow, then canary</strong> before full traffic.</li><li><strong>Keep the old version routable</strong> until you're confident; deprecation dates are your real deadline.</li></ol><p>Watch for output-shape breakage most of all — downstream parsers, not the answer quality, are what usually break first.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you keep LLM costs under control at scale?</h2>
+          <div class="seo-a"><p><strong>Measure first, at the right granularity:</strong> cost per request, per user, per feature. A single expensive feature or a small set of heavy users usually dominates, and you can't see that from a monthly invoice.</p><p><strong>Levers, roughly by payoff:</strong></p><ul><li><strong>Prompt caching</strong> — biggest single win for repeated system prompts and stable context.</li><li><strong>Model routing</strong> — classify difficulty and send easy requests to a cheap model. Often 60–80% of traffic is easy.</li><li><strong>Shorten the input</strong> — fewer retrieved chunks, trimmed history, no redundant instructions. Input tokens are usually most of the bill.</li><li><strong>Cap output</strong> — <code>max_tokens</code> plus "be concise"; output tokens are typically priced several times higher than input.</li><li><strong>Cache answers</strong> for repeated questions; <strong>batch APIs</strong> for anything non-interactive (often ~50% cheaper).</li><li><strong>Per-tenant quotas</strong> and alerts so abuse or a retry storm can't become a five-figure surprise.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you set SLOs for a streaming LLM endpoint?</h2>
+          <div class="seo-a"><p>A single "request duration" SLO is meaningless when responses stream and length varies wildly. Split it:</p><ul><li><strong>TTFT p95</strong> — the number users actually feel. This is your primary SLO (e.g. p95 &lt; 1.5 s).</li><li><strong>Inter-token latency p95</strong> — whether the stream stalls mid-answer.</li><li><strong>Time to completion, normalised per output token</strong> — so a long answer doesn't count as a violation.</li><li><strong>Stream failure rate</strong> — connections dropped after the first token. Uniquely nasty because the user has already seen a partial answer, and it's invisible to a plain error-rate metric.</li></ul><p><strong>Error budget realities:</strong> your provider's availability caps yours, so an SLO tighter than theirs needs multi-provider failover. And plan degraded modes — a cached response, a smaller model, or an honest "try again shortly" beats a spinner.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the caching layers in an LLM system?</h2>
+          <div class="seo-a"><p>Four distinct caches, often confused with each other:</p><ol><li><strong>Exact response cache</strong> — hash of (prompt + params) → response. Free, safe, and effective on repetitive traffic. Always do this first.</li><li><strong>Semantic cache</strong> — embed the query, serve a stored answer above a similarity threshold. Higher hit rate, real risk of near-miss errors ("enable" vs "disable") — must be keyed by tenant/user when answers are personalised.</li><li><strong>Provider prompt cache</strong> — the provider reuses prefill state for a stable prefix. Cuts cost and TTFT; requires ordering the prompt stable-first.</li><li><strong>Embedding cache</strong> — text → vector. Embeddings are deterministic per model version, so re-embedding the same content is pure waste; key it by content hash <em>and</em> model version.</li></ol><p>Every layer needs an invalidation story: TTLs, invalidation on document reindex, and a bypass flag for debugging.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Should you abstract over multiple LLM providers?</h2>
+          <div class="seo-a"><p><strong>Reasons to:</strong> outage failover, capacity and rate-limit headroom, price negotiation, per-task routing to whichever model is best, and reducing dependency on a single vendor's roadmap.</p><p><strong>Reasons not to overdo it:</strong> a lowest-common-denominator abstraction throws away exactly the features that matter — prompt caching semantics, structured outputs, tool-calling formats, thinking budgets, citations. Prompts are also tuned per model, so "just switch providers" is rarely a config change; it's a re-evaluation.</p><p><strong>A pragmatic middle:</strong> a thin internal interface (<code>generate</code>, <code>generateStructured</code>, <code>embed</code>) with per-provider adapters that are allowed to use native features, plus your own routing, retry and logging around it. Keep prompts versioned <em>per model</em>, and maintain evals for the fallback path so failover doesn't silently degrade quality.</p><p>Gateways (LiteLLM, OpenRouter, Bedrock) give you much of this without writing the layer yourself — at the cost of another hop and another dependency.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you turn user feedback into product improvement?</h2>
+          <div class="seo-a"><p>Collect it, but design for the fact that <strong>almost nobody clicks thumbs-down</strong> — typically well under 1% of sessions.</p><p><strong>Higher-yield signals:</strong> regeneration/retry, the user rephrasing the same question, copying the answer (positive), editing a generated draft heavily (negative), abandoning the session, escalating to a human.</p><p><strong>The loop:</strong></p><ol><li><strong>Capture</strong> the full trace with the feedback so the case is reproducible.</li><li><strong>Cluster</strong> failures by theme — embed the failing inputs and group them. Ten instances of one root cause are far more actionable than a list of 200 complaints.</li><li><strong>Triage</strong> by cause: retrieval miss, prompt gap, model limitation, or a genuine product gap.</li><li><strong>Add to the eval set</strong>, fix, verify offline, ship, watch the metric.</li></ol><p>When feedback volume grows, it also becomes fine-tuning or distillation data — but only after validation; training on unvalidated production output amplifies your own errors.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you architect a guardrail pipeline?</h2>
+          <div class="seo-a"><p>Guardrails belong <strong>outside</strong> the model, on both sides, and they should be cheap relative to the call they protect.</p><p><strong>Input stage:</strong> deterministic rules first (length limits, blocklists, rate limits), then a small classifier for abuse, injection patterns and off-topic requests. Rejecting here saves a frontier-model call.</p><p><strong>Output stage:</strong> schema validation, secret/PII scanning, policy classification, and domain scope checks — plus, for RAG, a groundedness check that every claim traces to retrieved context.</p><p><strong>Design decisions that matter more than the classifiers:</strong></p><ul><li><strong>Fail open or closed</strong>, per guardrail — a PII leak blocks; a tone check warns.</li><li><strong>Latency budget</strong> — run independent checks in parallel; a serial chain of four classifiers destroys TTFT.</li><li><strong>Streaming</strong> — you can't unsee tokens already sent. Either buffer, or validate in chunks with the ability to retract.</li><li><strong>Observability</strong> — log every block with reason and input so false positives are measurable. An over-blocking guardrail is an outage nobody paged for.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you red-team an LLM application before launch?</h2>
+          <div class="seo-a"><p>Attack your own system deliberately, across the categories that actually apply to it:</p><ul><li><strong>Prompt injection</strong> — direct and, more importantly, indirect via any content the system ingests (documents, tickets, web pages, tool output).</li><li><strong>System prompt extraction</strong> — assume it will leak; don't put secrets in it.</li><li><strong>Scope escape</strong> — getting a support bot to write code, give legal advice, or discuss competitors.</li><li><strong>Data leakage</strong> — cross-tenant retrieval, PII in outputs, another user's context in a shared cache.</li><li><strong>Tool abuse</strong> — coaxing an unauthorised action, or a destructive one without approval.</li><li><strong>Resource abuse</strong> — prompts engineered to maximise output length or trigger long agent loops (a denial-of-wallet attack).</li></ul><p><strong>Make it repeatable:</strong> keep the successful attacks as a regression suite that runs on every prompt and model change — a fix for one jailbreak rarely generalises, and model updates reopen old holes. Combine automated adversarial generation with human creativity; the interesting attacks are still found by people.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What data governance questions must you answer before shipping an LLM feature?</h2>
+          <div class="seo-a"><ol><li><strong>What data leaves your boundary</strong>, to which processor, in which region? Map it before legal asks.</li><li><strong>Retention</strong> — how long does the provider keep prompts? Enterprise tiers typically offer zero data retention; consumer tiers do not.</li><li><strong>Training</strong> — is your data used to train? Get it in the contract, not the marketing page.</li><li><strong>Residency</strong> — EU/India/US endpoints, and whether failover to another region is contractually allowed.</li><li><strong>Your own storage</strong> — traces and eval sets contain full prompts. That is often the largest copy of sensitive data in the system, and it needs classification, retention limits and access controls.</li><li><strong>Deletion rights</strong> — if a user requests erasure, can you remove their data from your vector index, traces, caches and eval sets? Design for this or it becomes an emergency.</li><li><strong>Disclosure</strong> — does the user know they're talking to AI? Increasingly a legal requirement, not a courtesy.</li></ol></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>When and how do you fine-tune in production?</h2>
+          <div class="seo-a"><p><strong>When it's justified:</strong> a stable, high-volume task where prompting has plateaued; a consistent output format or style you can't reliably prompt for; a domain vocabulary the base model handles poorly; or a cost/latency target that needs a small model to match a big one's quality on <em>one</em> task.</p><p><strong>When it isn't:</strong> the model lacks facts (use RAG), the task changes often (retraining treadmill), or you have fewer than a few hundred solid examples.</p><p><strong>The pipeline:</strong></p><ol><li><strong>Collect</strong> from production traffic — validated inputs and outputs, deduplicated, PII-scrubbed.</li><li><strong>Curate</strong> — a few hundred to a few thousand high-quality examples beats a hundred thousand noisy ones. Data quality dominates everything here.</li><li><strong>Hold out</strong> a test set <em>before</em> training, from a later time period if possible.</li><li><strong>Train</strong> (usually LoRA/PEFT — cheap, quick, swappable adapters).</li><li><strong>Evaluate against the prompted baseline</strong> — the honest comparison, and it sometimes loses.</li><li><strong>Deploy</strong> via shadow → canary, keeping the base model as fallback, and <strong>plan for retraining</strong> as distribution drifts.</li></ol></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What does self-hosting an LLM actually involve?</h2>
+          <div class="seo-a"><p><strong>Sizing:</strong> weights need roughly 2 bytes per parameter at FP16, plus KV cache scaling with concurrency × context length, plus activation overhead. A 70B model at FP16 needs ~140 GB — multiple GPUs and tensor parallelism — while the same model at INT4 fits on far less at some quality cost.</p><p><strong>Serving:</strong> vLLM or TGI for continuous batching and PagedAttention; a single naive process serving one request at a time wastes almost all the hardware.</p><p><strong>Operations you now own:</strong> GPU capacity planning (they're expensive and often supply-constrained), autoscaling with slow cold starts because loading weights takes minutes, model version upgrades, quantization decisions, and your own evals for every change.</p><p><strong>The economics:</strong> a GPU instance is a fixed hourly cost regardless of traffic, so self-hosting wins only above a high steady utilisation. Below that, per-token API pricing is cheaper <em>and</em> someone else is on call.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Users report 'the AI got worse this week'. How do you investigate?</h2>
+          <div class="seo-a"><p>Turn the vague report into a diff. Work through what could have changed:</p><ol><li><strong>Did we change anything?</strong> Prompt version, model version, retrieval config, chunking, a tool, a schema. Check the deploy log first — it's usually here.</li><li><strong>Did the provider change anything?</strong> A floating alias silently repointed, a model deprecated, a safety-filter update. This is why versions get pinned and logged.</li><li><strong>Did the inputs change?</strong> A new user segment, a new document set, longer queries, a different language. Compare input distributions week over week.</li><li><strong>Did retrieval change?</strong> An index rebuild, a failed sync, deleted documents, an ACL change. Check recall on the eval set.</li><li><strong>Did it actually change?</strong> Run the eval set now and against last week's config. Sometimes the answer is a new cohort of users with different expectations.</li></ol><p>Then reproduce with real traces from complaining users — not a fresh prompt you wrote yourself, which won't contain the context that caused the failure.</p></div>
+          
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="llmops";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

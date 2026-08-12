@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>Python Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="35 Python interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="59 Python interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/python" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="Python Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="35 Python interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="59 Python interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/python" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>Python Interview Questions and Answers</h1>
-      <p>35 hand-picked Python interview questions with
+      <p>59 hand-picked Python interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -701,6 +701,793 @@ for i, name in enumerate(names):
 
 for a, b in zip([1, 2], [&quot;x&quot;, &quot;y&quot;]):
     print(a, b)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Iterable vs iterator — what's the difference?</h2>
+          <div class="seo-a"><p>They're different roles, and the distinction explains a lot of Python behaviour:</p><ul><li>An <strong>iterable</strong> implements <code class="inline">__iter__()</code> and can produce a fresh iterator on demand. Lists, tuples, dicts, sets, and strings are iterables — you can loop over them repeatedly.</li><li>An <strong>iterator</strong> implements <code class="inline">__next__()</code> (and <code class="inline">__iter__()</code> returning itself). It holds the <em>position</em> and is <strong>consumed exactly once</strong> — when exhausted it raises <code class="inline">StopIteration</code> and never restarts.</li></ul><p>A <code class="inline">for</code> loop is sugar for: call <code class="inline">iter()</code> on the object, then call <code class="inline">next()</code> repeatedly until <code class="inline">StopIteration</code>.</p><p>This is why a generator, <code class="inline">map()</code>, <code class="inline">filter()</code>, and <code class="inline">zip()</code> can only be consumed once — they're iterators, not iterables. Looping over the same generator a second time silently gives you nothing, which is a genuinely common bug.</p></div>
+          <pre><code>nums = [1, 2, 3]          # iterable — reusable
+it = iter(nums)           # iterator — one-shot
+next(it)                  # 1
+next(it)                  # 2
+
+# generators/map/filter/zip are ITERATORS
+g = (x * 2 for x in nums)
+list(g)                   # [2, 4, 6]
+list(g)                   # []  ← already exhausted, no error!
+
+# custom iterable: __iter__ returns a NEW iterator each time
+class Countdown:
+    def __init__(self, n): self.n = n
+    def __iter__(self):
+        cur = self.n
+        while cur &gt; 0:
+            yield cur
+            cur -= 1
+
+c = Countdown(3)
+list(c)   # [3, 2, 1]
+list(c)   # [3, 2, 1]  ← reusable, because __iter__ makes a fresh generator</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a closure? Explain the late-binding gotcha.</h2>
+          <div class="seo-a"><p>A <strong>closure</strong> is a nested function that captures variables from its enclosing scope and keeps them alive after the outer function has returned. It's the mechanism behind decorators, callbacks, and factory functions.</p><p><strong>The gotcha</strong>: Python closures capture variables <strong>by reference, not by value</strong> — they're <em>late-bound</em>, meaning the value is looked up when the inner function is <em>called</em>, not when it's defined.</p><p>So a loop creating functions gives you N functions that all see the loop variable's <em>final</em> value:</p><pre><code>fns = [lambda: i for i in range(3)]
+[f() for f in fns]   # [2, 2, 2]  — not [0, 1, 2]</code></pre><p><strong>The fix</strong> is a default argument, which <em>is</em> evaluated at definition time and binds the current value: <code class="inline">lambda i=i: i</code>. (Or <code class="inline">functools.partial</code>.)</p><p>Related: use <code class="inline">nonlocal</code> if the inner function needs to <em>rebind</em> an enclosing variable rather than just read it.</p></div>
+          <pre><code># ❌ late binding — all three see i == 2
+fns = []
+for i in range(3):
+    fns.append(lambda: i)
+print([f() for f in fns])       # [2, 2, 2]
+
+# ✅ default arg is evaluated at DEFINITION time
+fns = [lambda i=i: i for i in range(3)]
+print([f() for f in fns])       # [0, 1, 2]
+
+# ✅ or functools.partial
+from functools import partial
+fns = [partial(lambda x: x, i) for i in range(3)]
+
+# closure as a factory
+def multiplier(factor):
+    def apply(x):
+        return x * factor       # `factor` stays alive after multiplier returns
+    return apply
+
+double = multiplier(2)
+double(21)                      # 42
+print(double.__closure__[0].cell_contents)   # 2 — the captured cell</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does asyncio actually work? What are the common mistakes?</h2>
+          <div class="seo-a"><p><code class="inline">async def</code> defines a <strong>coroutine</strong>. Calling it does <em>not</em> run it — it returns a coroutine object that must be awaited or scheduled. The <strong>event loop</strong> runs one coroutine at a time on a single thread; at each <code class="inline">await</code> the coroutine yields control back to the loop, which runs something else while that I/O is pending.</p><p>This is <strong>cooperative concurrency, not parallelism</strong> — nothing runs simultaneously. It wins for I/O-bound work (thousands of concurrent HTTP calls or DB queries on one thread) and does nothing for CPU-bound work.</p><p><strong>The mistakes that matter:</strong></p><ol><li><strong>Calling a blocking function inside async code</strong> — <code class="inline">time.sleep()</code>, <code class="inline">requests.get()</code>, a sync DB driver. It blocks the entire event loop, so <em>every</em> concurrent task stalls. This is the number one asyncio bug. Use async libraries, or push the blocking call to a thread with <code class="inline">asyncio.to_thread()</code>.</li><li><strong>Awaiting sequentially instead of concurrently</strong> — <code class="inline">await a(); await b()</code> runs them one after another. Use <code class="inline">asyncio.gather()</code> to overlap them.</li><li><strong>Forgetting to await</strong> — you get a coroutine object and a "never awaited" warning; the code silently didn't run.</li><li><strong>Fire-and-forget tasks</strong> — <code class="inline">asyncio.create_task()</code> results must be kept referenced and awaited, or exceptions vanish silently.</li></ol></div>
+          <pre><code>import asyncio, time
+
+# ❌ sequential: 3 seconds
+async def bad():
+    a = await fetch(&quot;/a&quot;)     # 1s
+    b = await fetch(&quot;/b&quot;)     # 1s
+    c = await fetch(&quot;/c&quot;)     # 1s
+
+# ✅ concurrent: ~1 second
+async def good():
+    a, b, c = await asyncio.gather(fetch(&quot;/a&quot;), fetch(&quot;/b&quot;), fetch(&quot;/c&quot;))
+
+# ❌ blocks the ENTIRE loop — every other task stalls too
+async def blocking():
+    time.sleep(2)                       # never do this
+    requests.get(url)                   # nor this (sync library)
+
+# ✅ non-blocking, or offload to a thread
+async def fixed():
+    await asyncio.sleep(2)
+    data = await asyncio.to_thread(requests.get, url)   # sync lib → thread
+
+# bounded concurrency — don't open 10,000 sockets at once
+sem = asyncio.Semaphore(20)
+async def limited(url):
+    async with sem:
+        return await fetch(url)
+
+# timeouts and structured concurrency (3.11+)
+async with asyncio.timeout(5):
+    async with asyncio.TaskGroup() as tg:      # child failure cancels siblings
+        tg.create_task(worker(1))
+        tg.create_task(worker(2))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What's in the collections module and when do you use each?</h2>
+          <div class="seo-a"><ul><li><strong><code class="inline">defaultdict</code></strong> — a dict that creates a default value on first access, killing the <code class="inline">if key not in d</code> boilerplate. <code class="inline">defaultdict(list)</code> for grouping, <code class="inline">defaultdict(int)</code> for counting.</li><li><strong><code class="inline">Counter</code></strong> — counts hashable items and gives you <code class="inline">most_common(n)</code> for free. Replaces a manual frequency loop entirely.</li><li><strong><code class="inline">deque</code></strong> — double-ended queue with <strong>O(1) appends and pops at both ends</strong>. Critical: <code class="inline">list.pop(0)</code> is <strong>O(n)</strong> because it shifts every element, so a list is the wrong queue. Also supports <code class="inline">maxlen</code> for a fixed-size sliding window.</li><li><strong><code class="inline">namedtuple</code></strong> — a lightweight immutable record with named fields; tuple-cheap but readable (<code class="inline">p.x</code> instead of <code class="inline">p[0]</code>). For anything richer, use a <code class="inline">dataclass</code>.</li><li><strong><code class="inline">OrderedDict</code></strong> — mostly historical since dicts preserve insertion order from 3.7, but still useful for <code class="inline">move_to_end()</code> and order-sensitive equality (handy for an LRU cache).</li><li><strong><code class="inline">ChainMap</code></strong> — layered lookup across multiple dicts without merging (defaults ← config file ← env vars).</li></ul></div>
+          <pre><code>from collections import defaultdict, Counter, deque, namedtuple
+
+# group without boilerplate
+by_dept = defaultdict(list)
+for emp in employees:
+    by_dept[emp.dept].append(emp.name)      # no key check needed
+
+# frequency in one line
+Counter(&quot;mississippi&quot;).most_common(2)       # [('i', 4), ('s', 4)]
+Counter(words) - Counter(stopwords)         # counters support arithmetic
+
+# O(1) queue — list.pop(0) is O(n)
+q = deque([1, 2, 3])
+q.appendleft(0); q.popleft()
+
+recent = deque(maxlen=100)                  # fixed-size sliding window
+recent.append(x)                            # oldest drops automatically
+
+# lightweight record
+Point = namedtuple(&quot;Point&quot;, &quot;x y&quot;)
+p = Point(3, 4); p.x                        # readable, still a tuple</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Which itertools functions do you actually use?</h2>
+          <div class="seo-a"><p><code class="inline">itertools</code> provides memory-efficient, <strong>lazy</strong> iterator building blocks — they return iterators, so nothing is materialised until you consume it.</p><ul><li><strong><code class="inline">chain(a, b)</code></strong> — iterate multiple sequences as one, without concatenating them in memory. <code class="inline">chain.from_iterable(lists)</code> flattens one level.</li><li><strong><code class="inline">islice(it, start, stop)</code></strong> — slice any iterator (you can't use <code class="inline">[:10]</code> on a generator).</li><li><strong><code class="inline">groupby(it, key)</code></strong> — group <em>consecutive</em> items. <strong>The trap: you must sort by the same key first</strong>, or you get fragmented groups. Unlike SQL <code class="inline">GROUP BY</code>, it doesn't sort for you.</li><li><strong><code class="inline">product</code>, <code class="inline">permutations</code>, <code class="inline">combinations</code></strong> — combinatorics without nested loops; <code class="inline">product</code> is ideal for parameter grids.</li><li><strong><code class="inline">cycle</code>, <code class="inline">repeat</code>, <code class="inline">count</code></strong> — infinite iterators (round-robin assignment, retry delays).</li><li><strong><code class="inline">accumulate</code></strong> — running totals.</li><li><strong><code class="inline">tee</code></strong> — split one iterator into several (but it buffers, so it's not free).</li></ul></div>
+          <pre><code>from itertools import chain, islice, groupby, product, accumulate
+
+# iterate two lists without building a third
+for x in chain(list_a, list_b): ...
+flat = list(chain.from_iterable([[1, 2], [3, 4]]))     # [1, 2, 3, 4]
+
+# slice a generator (can't use [:5])
+first_five = list(islice(infinite_gen(), 5))
+
+# ⚠️ groupby needs the data SORTED by the same key
+employees.sort(key=lambda e: e.dept)                    # required!
+for dept, group in groupby(employees, key=lambda e: e.dept):
+    print(dept, [e.name for e in group])
+
+# parameter grid without nested loops
+for lr, batch in product([0.01, 0.1], [16, 32]):
+    train(lr, batch)
+
+list(accumulate([1, 2, 3, 4]))                          # [1, 3, 6, 10]
+
+# batching (3.12+); before that, use an islice loop
+from itertools import batched
+for chunk in batched(range(10), 3):                     # (0,1,2), (3,4,5)...
+    bulk_insert(chunk)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you sort in Python — key functions, stability, and multi-field sorts?</h2>
+          <div class="seo-a"><ul><li><code class="inline">sorted(iterable)</code> returns a <strong>new list</strong> and works on any iterable; <code class="inline">list.sort()</code> sorts <strong>in place</strong> and returns <code class="inline">None</code> (assigning its result is a common bug).</li><li><strong><code class="inline">key=</code></strong> takes a function applied to each element to derive the sort value. It's called <em>once per element</em>, unlike a comparator, which is why Python dropped <code class="inline">cmp</code>.</li><li><strong>Python's sort is stable</strong> — equal elements keep their original relative order. This is the key to multi-field sorting: sort by the <em>least</em> significant field first, then the most significant, and the earlier order survives within ties.</li><li>For a single multi-field sort, return a <strong>tuple</strong> from <code class="inline">key</code> — tuples compare element by element.</li><li><strong>Mixed ascending/descending</strong> on different fields: negate numeric fields (<code class="inline">-x.score</code>), or do two stable passes.</li></ul><p><code class="inline">operator.itemgetter</code>/<code class="inline">attrgetter</code> are faster than equivalent lambdas since they're implemented in C.</p></div>
+          <pre><code>from operator import itemgetter, attrgetter
+
+sorted(words, key=len)                       # by length
+sorted(words, key=str.lower)                 # case-insensitive
+sorted(people, key=attrgetter(&quot;age&quot;), reverse=True)
+sorted(rows, key=itemgetter(2, 0))           # by col 2, then col 0
+
+# multi-field, mixed direction — tuple key with a negated number
+sorted(players, key=lambda p: (-p.score, p.name))
+
+# same result via two STABLE passes (least significant first)
+players.sort(key=lambda p: p.name)           # 1st: name ascending
+players.sort(key=lambda p: p.score, reverse=True)   # 2nd: score desc, ties keep name order
+
+# ❌ classic bug — sort() returns None
+result = my_list.sort()                      # result is None!
+result = sorted(my_list)                     # ✅
+
+# sort a dict by value
+dict(sorted(counts.items(), key=itemgetter(1), reverse=True))
+
+# top-k without a full sort — O(n log k)
+import heapq
+heapq.nlargest(10, items, key=attrgetter(&quot;score&quot;))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>String formatting and efficient string building in Python.</h2>
+          <div class="seo-a"><p><strong>f-strings</strong> (3.6+) are the default choice — evaluated at runtime, readable, and the fastest of the formatting options. They support full format specs and, since 3.8, the debugging <code class="inline">=</code> suffix.</p><pre><code>f"{name} scored {score:.2f} ({pct:.1%})"
+f"{value=}"          # prints: value=42   ← great for debugging
+f"{amount:>10,.2f}"  # width 10, right-aligned, thousands separator</code></pre><p><strong>Building strings in a loop</strong> is the performance point that matters. Strings are <strong>immutable</strong>, so <code class="inline">s += x</code> creates a whole new string each iteration — that's O(n²) over a loop. Use <code class="inline">"".join(parts)</code>, which allocates once: O(n).</p><p><strong>Never use f-strings for SQL or shell commands</strong> — that's how SQL injection and command injection happen. Use parameterised queries and <code class="inline">subprocess</code> argument lists.</p><p>Also worth knowing: <code class="inline">str</code> is Unicode text and <code class="inline">bytes</code> is binary — <code class="inline">encode()</code> goes text → bytes, <code class="inline">decode()</code> comes back. Always be explicit about encoding (UTF-8) when reading files.</p></div>
+          <pre><code># ❌ O(n²) — a new string object every iteration
+out = &quot;&quot;
+for row in rows:
+    out += format(row)
+
+# ✅ O(n) — one allocation
+out = &quot;&quot;.join(format(row) for row in rows)
+
+# format specs
+f&quot;{3.14159:.2f}&quot;        # '3.14'
+f&quot;{1234567:,}&quot;          # '1,234,567'
+f&quot;{0.876:.1%}&quot;          # '87.6%'
+f&quot;{'hi':^10}&quot;           # '    hi    '
+f&quot;{dt:%Y-%m-%d}&quot;        # date formatting
+
+# ❌ SQL injection
+cur.execute(f&quot;SELECT * FROM users WHERE email = '{email}'&quot;)
+# ✅ parameterised — the driver escapes it
+cur.execute(&quot;SELECT * FROM users WHERE email = %s&quot;, (email,))
+
+# useful methods
+&quot; a,b &quot;.strip().split(&quot;,&quot;)       # ['a', 'b']
+&quot;a-b-c&quot;.rsplit(&quot;-&quot;, 1)          # ['a-b', 'c']
+&quot;file.tar.gz&quot;.removesuffix(&quot;.gz&quot;)   # 3.9+</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>If you define __eq__, why must you also define __hash__?</h2>
+          <div class="seo-a"><p>Python enforces a contract: <strong>objects that compare equal must have the same hash.</strong> Dicts and sets rely on it — they find the bucket by hash first, then confirm with <code class="inline">==</code>. If two equal objects hash differently, they land in different buckets and your set happily contains both "equal" objects.</p><p>Because breaking this silently corrupts dicts and sets, <strong>Python protects you</strong>: defining <code class="inline">__eq__</code> automatically sets <code class="inline">__hash__ = None</code>, making instances <strong>unhashable</strong>. You'll get <code class="inline">TypeError: unhashable type</code> the moment you put one in a set — a loud failure instead of a silent bug.</p><p><strong>The rules:</strong></p><ul><li>Define both together, over the <em>same</em> fields.</li><li>Hash only on <strong>immutable</strong> fields. Mutating a field used in the hash while the object sits in a dict makes it unfindable — it's in the wrong bucket forever.</li><li>Unequal objects <em>may</em> share a hash (a collision — legal, just slower).</li><li><code class="inline">@dataclass(frozen=True)</code> generates both correctly for you, which is why frozen dataclasses are the easy right answer.</li></ul></div>
+          <pre><code>class User:
+    def __init__(self, user_id, name):
+        self.id, self.name = user_id, name
+    def __eq__(self, other):
+        return isinstance(other, User) and self.id == other.id
+    # WITHOUT __hash__, Python sets __hash__ = None → unhashable
+    def __hash__(self):
+        return hash(self.id)          # same field as __eq__
+
+{User(1, &quot;Ada&quot;), User(1, &quot;Ada2&quot;)}     # → one element (equal ids)
+
+# ⚠️ mutating a hashed field loses the object
+class Bad:
+    def __init__(self, k): self.k = k
+    def __eq__(self, o): return self.k == o.k
+    def __hash__(self): return hash(self.k)
+
+b = Bad(1); s = {b}
+b.k = 2                                # hash changed while inside the set
+b in s                                 # False — wrong bucket, unreachable
+
+# ✅ the easy correct answer
+from dataclasses import dataclass
+@dataclass(frozen=True)                 # generates __eq__ AND __hash__
+class Point:
+    x: int
+    y: int</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>ABC vs Protocol — how do you define interfaces in Python?</h2>
+          <div class="seo-a"><p><strong>ABC (Abstract Base Class)</strong> — <em>nominal</em> typing. A class must explicitly inherit from the ABC, and <code class="inline">@abstractmethod</code> makes instantiation fail if any abstract method is unimplemented. The relationship is declared and checked at runtime.</p><p><strong>Protocol</strong> (3.8+, <code class="inline">typing.Protocol</code>) — <em>structural</em> typing, i.e. static duck typing. A class satisfies a Protocol if it simply <em>has the right methods</em> — no inheritance, no import of the interface, no coupling at all. Checked by mypy at type-check time (add <code class="inline">@runtime_checkable</code> for a limited <code class="inline">isinstance</code> check).</p><p><strong>When to use which:</strong></p><ul><li><strong>ABC</strong> — you own the hierarchy, want shared base implementation, and want a hard runtime guarantee that subclasses implement the contract.</li><li><strong>Protocol</strong> — you want to type third-party or unrelated classes you don't control, or you want the loose coupling of duck typing <em>with</em> type-checker safety. This is the more Pythonic option for defining what a function <em>needs</em> from its argument.</li></ul></div>
+          <pre><code>from abc import ABC, abstractmethod
+from typing import Protocol, runtime_checkable
+
+# ABC — must inherit; instantiation fails without the implementation
+class Repository(ABC):
+    @abstractmethod
+    def get(self, id: str) -&gt; dict: ...
+
+    def get_or_raise(self, id):        # shared concrete helper
+        if (r := self.get(id)) is None:
+            raise KeyError(id)
+        return r
+
+class SqlRepo(Repository):
+    def get(self, id): return {...}
+
+# Repository()  → TypeError: Can't instantiate abstract class
+
+# Protocol — structural: no inheritance required
+class SupportsClose(Protocol):
+    def close(self) -&gt; None: ...
+
+def shutdown(resource: SupportsClose) -&gt; None:
+    resource.close()
+
+class MyConnection:              # doesn't import or inherit anything
+    def close(self): ...
+
+shutdown(MyConnection())         # ✅ mypy accepts — it has close()</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Exception best practices — custom exceptions, raise from, and try/except/else/finally.</h2>
+          <div class="seo-a"><p><strong>Catch narrowly.</strong> A bare <code class="inline">except:</code> also catches <code class="inline">KeyboardInterrupt</code> and <code class="inline">SystemExit</code>, so you can't Ctrl+C your program. Even <code class="inline">except Exception</code> should be reserved for a top-level handler that logs and re-raises. Catch the specific exceptions you can actually handle.</p><p><strong>The full block has four parts</strong>, and <code class="inline">else</code> is the underused one:</p><ul><li><code class="inline">try</code> — keep it as small as possible, only the risky call.</li><li><code class="inline">except</code> — handle specific failures.</li><li><code class="inline">else</code> — runs only if <em>no</em> exception occurred. Keeps success-path code out of <code class="inline">try</code>, so you don't accidentally catch exceptions from it.</li><li><code class="inline">finally</code> — always runs, for cleanup (though a context manager is usually better).</li></ul><p><strong><code class="inline">raise ... from e</code></strong> preserves the original exception as <code class="inline">__cause__</code>, so the traceback shows the full chain. Re-raising without it hides the root cause — one of the most frustrating things to debug. Use <code class="inline">raise ... from None</code> to deliberately suppress a noisy internal cause.</p><p><strong>Custom exceptions</strong>: define a base exception per application/library and derive from it, so callers can catch everything from your module with one <code class="inline">except</code>.</p></div>
+          <pre><code># app-wide exception hierarchy
+class AppError(Exception): &quot;&quot;&quot;Base for everything this app raises.&quot;&quot;&quot;
+class NotFoundError(AppError): ...
+class ValidationError(AppError):
+    def __init__(self, field, msg):
+        self.field = field
+        super().__init__(f&quot;{field}: {msg}&quot;)     # carry structured context
+
+# ❌ hides the root cause
+try:
+    parse(raw)
+except ValueError:
+    raise ValidationError(&quot;payload&quot;, &quot;bad format&quot;)
+
+# ✅ preserves the chain — traceback shows BOTH
+try:
+    parse(raw)
+except ValueError as e:
+    raise ValidationError(&quot;payload&quot;, &quot;bad format&quot;) from e
+
+# full block — note `else`
+try:
+    conn = db.connect()          # only the risky call
+except ConnectionError as e:
+    log.warning(&quot;db unavailable&quot;, exc_info=True)
+    raise
+else:
+    result = conn.query(sql)     # runs only on success, NOT guarded by except
+finally:
+    conn.close()                 # always
+
+# ❌ never
+except:                  # catches KeyboardInterrupt/SystemExit too
+    pass                 # and silently swallows everything</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What modern Python features (3.8–3.12) should you know?</h2>
+          <div class="seo-a"><ul><li><strong>Walrus operator <code class="inline">:=</code></strong> (3.8) — assign inside an expression. Removes the duplicate call or the pre-loop assignment in <code class="inline">while</code> loops and comprehension filters.</li><li><strong>Positional-only <code class="inline">/</code> and keyword-only <code class="inline">*</code></strong> (3.8) — control how arguments may be passed, which lets you rename parameters later without breaking callers.</li><li><strong>Dict merge <code class="inline">|</code></strong> (3.9) — <code class="inline">defaults | overrides</code> instead of <code class="inline">{**a, **b}</code>.</li><li><strong>Builtin generics</strong> (3.9) — <code class="inline">list[int]</code>, <code class="inline">dict[str, int]</code> instead of importing <code class="inline">List</code>, <code class="inline">Dict</code>.</li><li><strong><code class="inline">match</code> statement</strong> (3.10) — structural pattern matching. It's <em>not</em> a switch: it destructures dicts, lists, and objects, and binds variables while matching. Genuinely useful for parsing event payloads and ASTs.</li><li><strong><code class="inline">X | None</code></strong> (3.10) — replaces <code class="inline">Optional[X]</code>.</li><li><strong><code class="inline">ExceptionGroup</code> and <code class="inline">except*</code></strong> (3.11) — handle multiple concurrent failures, used with <code class="inline">asyncio.TaskGroup</code>.</li><li><strong>Big performance wins</strong> — 3.11 is roughly 25% faster than 3.10; 3.12+ improves further. Upgrading is often the cheapest optimisation available.</li></ul></div>
+          <pre><code># walrus — avoid computing twice / pre-assigning
+if (n := len(items)) &gt; 100:
+    print(f&quot;too many: {n}&quot;)
+
+while (chunk := f.read(8192)):
+    process(chunk)
+
+[y for x in data if (y := transform(x)) is not None]
+
+# keyword-only args after *
+def connect(host, *, timeout=30, retries=3): ...
+connect(&quot;db&quot;, timeout=5)          # must be keyword
+
+# dict merge
+config = defaults | user_settings | env_overrides
+
+# structural pattern matching — destructures, not just compares
+match event:
+    case {&quot;type&quot;: &quot;click&quot;, &quot;pos&quot;: (x, y)}:
+        handle_click(x, y)
+    case {&quot;type&quot;: &quot;key&quot;, &quot;code&quot;: code} if code &gt; 100:
+        handle_key(code)
+    case Point(x=0, y=0):
+        print(&quot;origin&quot;)
+    case [first, *rest]:
+        print(first, rest)
+    case _:
+        raise ValueError(event)
+
+# modern typing
+def find(ids: list[int]) -&gt; dict[str, int] | None: ...</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you manage dependencies — requirements.txt, pyproject.toml, poetry, uv?</h2>
+          <div class="seo-a"><p><strong><code class="inline">requirements.txt</code></strong> — a flat list for <code class="inline">pip install -r</code>. The critical distinction is between your <em>direct</em> dependencies and a <em>fully pinned lock</em> of the whole transitive tree. <code class="inline">pip freeze</code> gives you the latter, but mixing the two in one file means you can no longer tell what you actually depend on.</p><p><strong><code class="inline">pyproject.toml</code></strong> (PEP 621) — the modern standard: project metadata, dependencies, and tool configuration (ruff, mypy, pytest) in one file. This replaces <code class="inline">setup.py</code>, and it's what you should use for anything new.</p><p><strong>Poetry / PDM / uv</strong> add what pip alone lacks: a real <strong>dependency resolver</strong> and a <strong>lock file</strong> that pins exact versions <em>with hashes</em>, so every machine and CI run installs byte-identical dependencies. <strong>uv</strong> (Rust-based) is the current fast option and is broadly pip-compatible.</p><p><strong>Version specifiers</strong>: pin exactly (<code class="inline">==</code>) for applications — reproducibility matters more than freshness. Use ranges (<code class="inline">&gt;=1.2,&lt;2.0</code>) for <em>libraries</em>, so you don't force conflicts on your consumers.</p><p>Always work inside a <strong>virtual environment</strong>, and separate dev dependencies (pytest, ruff, mypy) from runtime ones so they don't ship to production.</p></div>
+          <pre><code># pyproject.toml — the modern standard
+[project]
+name = &quot;my-service&quot;
+requires-python = &quot;&gt;=3.11&quot;
+dependencies = [
+  &quot;fastapi&gt;=0.110,&lt;1.0&quot;,
+  &quot;sqlalchemy&gt;=2.0,&lt;3.0&quot;,
+]
+
+[project.optional-dependencies]
+dev = [&quot;pytest&gt;=8.0&quot;, &quot;ruff&quot;, &quot;mypy&quot;]      # never ships to prod
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+addopts = &quot;-q --strict-markers&quot;
+
+# ---- commands ----
+python -m venv .venv &amp;&amp; source .venv/bin/activate
+pip install -e &quot;.[dev]&quot;          # editable install + dev extras
+
+# separate direct deps from the resolved lock
+pip-compile pyproject.toml -o requirements.lock   # pinned + hashes
+pip install -r requirements.lock
+
+# uv — same idea, much faster
+uv venv &amp;&amp; uv pip install -e &quot;.[dev]&quot;
+uv lock &amp;&amp; uv sync</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you use the logging module properly? Why not print?</h2>
+          <div class="seo-a"><p><code class="inline">print()</code> has no severity, no timestamp, no source, no routing, and can't be turned off per module. Logging gives you all of that with a config change and no code edits.</p><p><strong>The structure:</strong> <em>Loggers</em> (what you call) → <em>Handlers</em> (where output goes: stdout, file, HTTP) → <em>Formatters</em> (how it looks) → <em>Filters</em>. Loggers form a hierarchy by dotted name, so <code class="inline">app.db</code> inherits from <code class="inline">app</code> — which is exactly why you should use <code class="inline">logging.getLogger(__name__)</code> in every module. You can then turn up the verbosity of one subsystem without touching the rest.</p><p><strong>Key practices:</strong></p><ul><li><strong>Configure only in the entry point</strong> (<code class="inline">main</code>), never inside a library. A library that calls <code class="inline">basicConfig</code> hijacks the whole application's logging.</li><li><strong>Use lazy <code class="inline">%s</code> formatting</strong>, not f-strings — with f-strings the message is built even when the level is disabled.</li><li><strong><code class="inline">logger.exception()</code></strong> inside an <code class="inline">except</code> block logs the full traceback automatically.</li><li><strong>Log to stdout in containers</strong> and let the platform ship it — don't manage log files yourself.</li><li><strong>Structured JSON logs</strong> with a correlation/trace ID make logs queryable rather than greppable.</li><li><strong>Never log secrets or PII.</strong></li></ul></div>
+          <pre><code>import logging
+
+logger = logging.getLogger(__name__)     # module-scoped, hierarchical
+
+# ✅ lazy — not formatted if the level is disabled
+logger.debug(&quot;processing user %s with %d items&quot;, user_id, len(items))
+# ❌ always evaluated, even when DEBUG is off
+logger.debug(f&quot;processing user {user_id} with {expensive_call()}&quot;)
+
+try:
+    charge(order)
+except PaymentError:
+    logger.exception(&quot;payment failed for order %s&quot;, order.id)   # + traceback
+
+# extra fields for structured logging
+logger.info(&quot;order created&quot;, extra={&quot;order_id&quot;: o.id, &quot;trace_id&quot;: ctx.trace_id})
+
+# configure ONCE, in the entry point only
+logging.config.dictConfig({
+    &quot;version&quot;: 1,
+    &quot;formatters&quot;: {&quot;json&quot;: {&quot;()&quot;: &quot;pythonjsonlogger.jsonlogger.JsonFormatter&quot;,
+                            &quot;format&quot;: &quot;%(asctime)s %(levelname)s %(name)s %(message)s&quot;}},
+    &quot;handlers&quot;: {&quot;console&quot;: {&quot;class&quot;: &quot;logging.StreamHandler&quot;,
+                             &quot;formatter&quot;: &quot;json&quot;, &quot;stream&quot;: &quot;ext://sys.stdout&quot;}},
+    &quot;root&quot;: {&quot;level&quot;: &quot;INFO&quot;, &quot;handlers&quot;: [&quot;console&quot;]},
+    &quot;loggers&quot;: {&quot;app.db&quot;: {&quot;level&quot;: &quot;DEBUG&quot;}},   # verbose for one subsystem only
+})</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Python is slow — how do you actually make it faster?</h2>
+          <div class="seo-a"><p><strong>Measure before optimising.</strong> Intuition about Python bottlenecks is usually wrong; use <code class="inline">cProfile</code> for function-level cost and <code class="inline">line_profiler</code> for line-level, then attack only the top item.</p><p><strong>Why it's slow</strong>: it's interpreted and dynamically typed, so every operation involves type lookups and object boxing, and the GIL prevents CPU-bound threading.</p><p><strong>The optimisation ladder, in order of payoff:</strong></p><ol><li><strong>Fix the algorithm.</strong> An O(n²) loop is the real problem — a hash lookup instead of a list scan (<code class="inline">in list</code> is O(n), <code class="inline">in set</code> is O(1)) beats any micro-optimisation.</li><li><strong>Remove the N+1</strong> — in most backend code the bottleneck is I/O, not Python. Batch queries and calls before touching the code.</li><li><strong>Cache</strong> — <code class="inline">functools.lru_cache</code> for pure functions; Redis for shared results.</li><li><strong>Use the C-implemented stdlib</strong> — built-ins (<code class="inline">sum</code>, <code class="inline">any</code>, <code class="inline">sorted</code>), comprehensions, <code class="inline">itertools</code>, and <code class="inline">str.join</code> all run in C and beat hand-written loops.</li><li><strong>Vectorise with NumPy/Pandas</strong> — a NumPy operation over an array is orders of magnitude faster than a Python loop, because the loop happens in C.</li><li><strong>Go parallel correctly</strong> — <code class="inline">multiprocessing</code> for CPU-bound, asyncio/threads for I/O-bound.</li><li><strong>Drop to native</strong> — Cython, PyO3/Rust, or a C extension for a genuinely hot inner loop.</li><li><strong>Upgrade Python</strong> — 3.11+ is substantially faster for free.</li></ol></div>
+          <pre><code># profile first — never guess
+python -m cProfile -s cumtime app.py | head -30
+
+import cProfile, pstats
+with cProfile.Profile() as p:
+    run_workload()
+pstats.Stats(p).sort_stats(&quot;cumtime&quot;).print_stats(20)
+
+# ---- the wins, in order ----
+
+# 1. algorithmic: O(n²) → O(n)
+if item in big_list:        # O(n) each time
+if item in big_set:         # O(1)   ← same code shape, different complexity
+
+# 3. cache pure functions
+from functools import lru_cache
+@lru_cache(maxsize=1024)
+def parse_rule(text): ...
+
+# 4. C-level builtins beat manual loops
+total = sum(x.amount for x in rows)        # faster than an accumulating loop
+
+# 5. vectorise — the loop runs in C
+import numpy as np
+result = np.sqrt(arr ** 2 + 1)             # vs a per-element Python loop
+
+# 6. CPU-bound → processes (GIL)
+from concurrent.futures import ProcessPoolExecutor
+with ProcessPoolExecutor() as ex:
+    results = list(ex.map(cpu_heavy, chunks))
+
+# memory profiling
+python -m memory_profiler script.py</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Is Python pass-by-value or pass-by-reference?</h2>
+          <div class="seo-a"><p>Neither — Python is <strong>pass-by-object-reference</strong> (sometimes called "call by sharing"). The function receives a reference to the <em>same object</em>, but the parameter name itself is a new local binding.</p><p>The consequences follow directly:</p><ul><li><strong>Rebinding the parameter</strong> (<code class="inline">x = something_new</code>) only changes the local name. The caller sees nothing — it looks like pass-by-value.</li><li><strong>Mutating the object</strong> (<code class="inline">lst.append(...)</code>, <code class="inline">d[k] = v</code>) changes the object the caller also holds. It looks like pass-by-reference.</li></ul><p>So the behaviour you observe depends entirely on whether the object is <strong>mutable</strong> and whether you <em>mutate</em> or <em>rebind</em> — not on how it was passed.</p><p><strong>Practical consequence</strong>: a function that mutates its arguments is a hidden side effect and a common source of bugs. Prefer returning a new object; if you must mutate, make it obvious in the name (<code class="inline">sort_in_place</code>) and document it. This is also why mutable default arguments are dangerous — the default object is created once and shared across all calls.</p></div>
+          <pre><code>def rebind(lst):
+    lst = [99]            # new local binding — caller unaffected
+
+def mutate(lst):
+    lst.append(99)        # mutates the SHARED object — caller sees it
+
+items = [1, 2]
+rebind(items);  print(items)    # [1, 2]        ← unchanged
+mutate(items);  print(items)    # [1, 2, 99]    ← changed
+
+# immutables can only ever be rebound, so they always look pass-by-value
+def bump(n): n += 1
+x = 5; bump(x); print(x)        # 5
+
+# ✅ prefer returning a new object over mutating an argument
+def with_defaults(config: dict) -&gt; dict:
+    return {&quot;retries&quot;: 3} | config      # caller's dict untouched
+
+# defensive copy when you must not affect the caller
+def process(items):
+    items = list(items)                 # local copy
+    items.sort()
+    return items</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>__new__ vs __init__ — what's the difference?</h2>
+          <div class="seo-a"><p>Object creation is two steps:</p><ul><li><strong><code class="inline">__new__(cls, ...)</code></strong> — the <em>constructor</em>. A static method that <strong>creates and returns</strong> the instance. It runs first and decides <em>what object exists</em>.</li><li><strong><code class="inline">__init__(self, ...)</code></strong> — the <em>initialiser</em>. Runs on the already-created instance to set attributes. It must return <code class="inline">None</code>.</li></ul><p>You almost never write <code class="inline">__new__</code>. The legitimate reasons:</p><ol><li><strong>Subclassing an immutable type</strong> (<code class="inline">int</code>, <code class="inline">str</code>, <code class="inline">tuple</code>) — the value must be set at creation time, because by the time <code class="inline">__init__</code> runs the object is already immutable.</li><li><strong>Singletons / instance caching</strong> — return an existing instance instead of creating a new one.</li><li><strong>Metaclass and factory machinery.</strong></li></ol><p><strong>The trap</strong>: if <code class="inline">__new__</code> returns an instance of a <em>different</em> class, <code class="inline">__init__</code> is never called. And with a singleton, <code class="inline">__init__</code> runs on <em>every</em> instantiation even though <code class="inline">__new__</code> returned the cached object — so re-initialising state there silently resets your singleton.</p></div>
+          <pre><code>class Point(tuple):                 # subclassing an immutable
+    def __new__(cls, x, y):
+        return super().__new__(cls, (x, y))   # value fixed at creation
+    def __init__(self, x, y):
+        self.label = f&quot;({x},{y})&quot;             # extra mutable state
+
+# singleton — note the __init__ trap
+class Config:
+    _instance = None
+    def __new__(cls, *a, **kw):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+    def __init__(self, path=None):
+        # ⚠️ runs on EVERY Config(...) call, even when cached
+        if not hasattr(self, &quot;_loaded&quot;):
+            self.data = load(path)
+            self._loaded = True
+
+# ✅ simpler, more Pythonic singletons
+from functools import lru_cache
+@lru_cache(maxsize=1)
+def get_config() -&gt; Config: return Config(...)
+# or just: a module-level instance — modules ARE singletons</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does @property work? What is a descriptor?</h2>
+          <div class="seo-a"><p>A <strong>descriptor</strong> is any object defining <code class="inline">__get__</code>, <code class="inline">__set__</code>, or <code class="inline">__delete__</code>. When such an object is a <em>class attribute</em>, Python routes attribute access through those methods instead of returning the object. This one protocol powers <code class="inline">@property</code>, <code class="inline">@classmethod</code>, <code class="inline">@staticmethod</code>, <code class="inline">__slots__</code>, and ORM model fields.</p><p><strong><code class="inline">@property</code> is just a descriptor</strong>: it turns method calls into attribute syntax, letting you add validation or computation to <code class="inline">obj.x</code> <em>without changing any calling code</em>. That's its real value — you can start with a plain attribute and add logic later without breaking the API, which is why Python doesn't need getters and setters everywhere.</p><p><strong>Data vs non-data descriptors</strong> determines precedence: one defining <code class="inline">__set__</code> or <code class="inline">__delete__</code> is a <em>data</em> descriptor and takes priority over the instance <code class="inline">__dict__</code>; a non-data descriptor (only <code class="inline">__get__</code>) is overridden by an instance attribute. That's why you can shadow a method by assigning to the instance, but not a property.</p><p>Write a custom descriptor when the <em>same</em> attribute logic (validation, unit conversion, type coercion, lazy loading) repeats across many fields or classes — otherwise a property is enough.</p></div>
+          <pre><code>class Account:
+    def __init__(self, balance):
+        self._balance = balance
+
+    @property
+    def balance(self):                      # read as an attribute
+        return self._balance
+
+    @balance.setter
+    def balance(self, value):               # validation, no caller changes
+        if value &lt; 0:
+            raise ValueError(&quot;balance cannot be negative&quot;)
+        self._balance = value
+
+    @property
+    def is_overdrawn(self):                 # computed, no storage
+        return self._balance &lt; 0
+
+a = Account(100)
+a.balance = 50        # calls the setter
+a.balance = -5        # ValueError
+
+# reusable descriptor — same logic across many fields
+class Positive:
+    def __set_name__(self, owner, name):    # 3.6+: learns its own name
+        self.name = f&quot;_{name}&quot;
+    def __get__(self, obj, objtype=None):
+        return getattr(obj, self.name) if obj else self
+    def __set__(self, obj, value):          # __set__ → DATA descriptor
+        if value &lt;= 0:
+            raise ValueError(f&quot;{self.name} must be positive&quot;)
+        setattr(obj, self.name, value)
+
+class Order:
+    quantity = Positive()
+    price    = Positive()                   # validation reused, no duplication</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you use the re module — and when should you not use regex?</h2>
+          <div class="seo-a"><p>Core functions: <code class="inline">search</code> (first match anywhere), <code class="inline">match</code> (anchored at the start only — a frequent surprise), <code class="inline">fullmatch</code>, <code class="inline">findall</code>/<code class="inline">finditer</code>, <code class="inline">sub</code>, and <code class="inline">split</code>.</p><p><strong>Practices that matter:</strong></p><ul><li><strong>Always use raw strings</strong> (<code class="inline">r"\d+"</code>) so backslashes reach the regex engine intact.</li><li><strong><code class="inline">re.compile()</code></strong> once at module level if the pattern is reused — it's cached anyway, but compiling makes intent clear and is faster in hot loops.</li><li><strong>Named groups</strong> <code class="inline">(?P&lt;name&gt;...)</code> make patterns self-documenting and access readable.</li><li><strong><code class="inline">re.VERBOSE</code></strong> lets you write a complex pattern across multiple lines with comments — the difference between a maintainable regex and write-only code.</li><li><strong>Quantifiers are greedy by default</strong>; add <code class="inline">?</code> for lazy (<code class="inline">.*?</code>). Greedy matching across an entire line is the most common regex bug.</li></ul><p><strong>When not to use regex:</strong> parsing HTML/XML (use a real parser — nested structures aren't regular), JSON, or CSV. And beware <strong>catastrophic backtracking</strong>: nested quantifiers like <code class="inline">(a+)+$</code> on non-matching input can take exponential time — a genuine denial-of-service vector (ReDoS) when the pattern touches user input.</p></div>
+          <pre><code>import re
+
+# raw strings, compiled once, named groups
+LOG = re.compile(r&quot;&quot;&quot;
+    (?P&lt;ts&gt;\d{4}-\d{2}-\d{2}[ T][\d:]{8})   # timestamp
+    \s+(?P&lt;level&gt;DEBUG|INFO|WARN|ERROR)     # level
+    \s+(?P&lt;msg&gt;.*)                          # message
+&quot;&quot;&quot;, re.VERBOSE)
+
+m = LOG.search(line)
+if m:
+    print(m[&quot;level&quot;], m[&quot;msg&quot;])
+    print(m.groupdict())
+
+# match vs search — a common surprise
+re.match(r&quot;world&quot;, &quot;hello world&quot;)     # None! anchored at the start
+re.search(r&quot;world&quot;, &quot;hello world&quot;)    # matches
+
+# greedy vs lazy
+re.findall(r&quot;&lt;(.+)&gt;&quot;,  &quot;&lt;a&gt;&lt;b&gt;&quot;)      # ['a&gt;&lt;b']   greedy
+re.findall(r&quot;&lt;(.+?)&gt;&quot;, &quot;&lt;a&gt;&lt;b&gt;&quot;)      # ['a', 'b'] lazy
+
+# substitution with a function
+re.sub(r&quot;\b(\d{12})(\d{4})\b&quot;, lambda m: &quot;*&quot; * 12 + m[2], text)   # mask cards
+
+# ⚠️ ReDoS — exponential backtracking on user input
+# re.match(r&quot;(a+)+</main>quot;, &quot;aaaaaaaaaaaaaaaaaaaaaaaaX&quot;)   # hangs
+
+# often you don't need regex at all
+&quot;file.txt&quot;.endswith(&quot;.txt&quot;)           # clearer and faster than a pattern</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle dates, times, and time zones correctly?</h2>
+          <div class="seo-a"><p><strong>The core distinction: naive vs aware.</strong> A <em>naive</em> datetime has no timezone — it's an ambiguous wall-clock reading. An <em>aware</em> datetime carries <code class="inline">tzinfo</code> and refers to an unambiguous instant. <strong>Mixing them raises TypeError on comparison</strong>, which is Python protecting you from a whole class of bugs.</p><p><strong>The rules that prevent production incidents:</strong></p><ol><li><strong>Store and compute in UTC</strong>; convert to local time only at the display boundary.</li><li><strong>Use <code class="inline">datetime.now(timezone.utc)</code></strong>, never <code class="inline">datetime.utcnow()</code> — <code class="inline">utcnow()</code> returns a <em>naive</em> datetime holding UTC values, which is the worst combination: it looks fine and compares wrongly. It's deprecated in 3.12.</li><li><strong>Use <code class="inline">zoneinfo</code></strong> (3.9+, stdlib) for real IANA time zones — not fixed UTC offsets, which don't handle daylight saving.</li><li><strong>Never do date arithmetic with fixed offsets across a DST boundary.</strong> "Same time tomorrow" is not always "+24 hours" — convert to the target zone and add there.</li><li><strong>Store dates as <code class="inline">DATE</code> and timestamps as <code class="inline">TIMESTAMPTZ</code></strong> in the database; never as strings.</li></ol></div>
+          <pre><code>from datetime import datetime, timezone, timedelta, date
+from zoneinfo import ZoneInfo          # stdlib, 3.9+
+
+# ❌ naive — looks like UTC but has no tzinfo
+datetime.utcnow()                      # deprecated in 3.12
+
+# ✅ aware, unambiguous
+now = datetime.now(timezone.utc)
+
+# convert only at the display boundary
+now.astimezone(ZoneInfo(&quot;Asia/Kolkata&quot;)).strftime(&quot;%d %b %Y, %I:%M %p&quot;)
+
+# ⚠️ DST: &quot;tomorrow at 9am&quot; ≠ &quot;+24 hours&quot;
+ist = ZoneInfo(&quot;America/New_York&quot;)
+local = datetime(2026, 3, 7, 9, 0, tzinfo=ist)
+wrong = local + timedelta(days=1)              # naive arithmetic across DST
+right = datetime.combine(local.date() + timedelta(days=1),
+                         local.timetz())        # 9am local again
+
+# comparing naive and aware raises
+datetime.now() &lt; datetime.now(timezone.utc)    # TypeError
+
+# parsing / serialising
+datetime.fromisoformat(&quot;2026-08-05T09:14:22+05:30&quot;)
+now.isoformat()                                 # '2026-08-05T09:14:22.481+00:00'
+int(now.timestamp())                            # epoch seconds
+
+# use date (not datetime) when there is no time component
+birthday = date(1998, 4, 12)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you work with files and paths — and why pathlib over os.path?</h2>
+          <div class="seo-a"><p><strong><code class="inline">pathlib.Path</code></strong> is the modern approach: paths are objects with methods rather than strings you manipulate. The <code class="inline">/</code> operator joins segments correctly on every OS, so you never hand-concatenate separators or worry about Windows vs POSIX.</p><p><strong>Always use <code class="inline">with</code></strong> when opening files — it closes the handle even if an exception is raised. Leaked file handles eventually exhaust the process limit.</p><p><strong>Always specify the encoding.</strong> <code class="inline">open(path)</code> uses the platform default, which differs between machines — so a file that reads fine on your Mac raises <code class="inline">UnicodeDecodeError</code> on a differently-configured server. Pass <code class="inline">encoding="utf-8"</code> explicitly, every time.</p><p><strong>Read large files lazily</strong> — iterating the file object yields one line at a time and uses constant memory, whereas <code class="inline">.read()</code> or <code class="inline">.readlines()</code> loads the whole thing.</p><p><strong>Writing safely</strong>: write to a temporary file and <code class="inline">os.replace()</code> it into position. <code class="inline">replace</code> is atomic on the same filesystem, so a crash mid-write can't leave a half-written file where a valid one used to be.</p></div>
+          <pre><code>from pathlib import Path
+import os, tempfile, json
+
+base = Path(__file__).resolve().parent
+cfg  = base / &quot;config&quot; / &quot;app.json&quot;      # / joins correctly on any OS
+
+cfg.exists(); cfg.stem; cfg.suffix; cfg.parent
+cfg.parent.mkdir(parents=True, exist_ok=True)
+
+# small files — one-liners
+text = cfg.read_text(encoding=&quot;utf-8&quot;)
+cfg.write_text(json.dumps(data), encoding=&quot;utf-8&quot;)
+
+# ✅ ALWAYS specify encoding — platform default differs per machine
+with open(path, encoding=&quot;utf-8&quot;) as f:
+    for line in f:                       # lazy: constant memory
+        process(line)
+
+# ❌ loads the entire file
+content = open(path).read()
+
+# glob
+for p in base.rglob(&quot;*.py&quot;):
+    print(p.relative_to(base))
+
+# atomic write — a crash can't corrupt the existing file
+def write_atomic(path: Path, data: str):
+    fd, tmp = tempfile.mkstemp(dir=path.parent)
+    with os.fdopen(fd, &quot;w&quot;, encoding=&quot;utf-8&quot;) as f:
+        f.write(data)
+        f.flush(); os.fsync(f.fileno())
+    os.replace(tmp, path)                # atomic on the same filesystem</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you serialise data to JSON? What are the common problems?</h2>
+          <div class="seo-a"><p><code class="inline">json.dumps</code>/<code class="inline">loads</code> handle strings and <code class="inline">json.dump</code>/<code class="inline">load</code> handle file objects. The friction comes from Python types JSON doesn't have:</p><ul><li><strong><code class="inline">datetime</code>, <code class="inline">Decimal</code>, <code class="inline">UUID</code>, <code class="inline">set</code>, dataclasses</strong> all raise <code class="inline">TypeError: not JSON serializable</code>. Fix with the <code class="inline">default=</code> hook or a custom <code class="inline">JSONEncoder</code>.</li><li><strong>Dict keys are always strings in JSON</strong> — <code class="inline">{1: "a"}</code> round-trips back as <code class="inline">{"1": "a"}</code>. Silent type change.</li><li><strong>Floats lose precision</strong> — never serialise money as a float. Use a string or integer minor units.</li><li><strong>Tuples become lists</strong>, so round-tripping changes the type.</li></ul><p><strong>For APIs, prefer Pydantic</strong> over hand-rolled encoders: it validates, coerces, and serialises with type awareness, and generates the schema. <code class="inline">dataclasses.asdict()</code> plus a default hook works for simple internal cases.</p><p><strong>Security</strong>: JSON is safe to parse from untrusted sources; <strong><code class="inline">pickle</code> is not</strong> — unpickling attacker-controlled data executes arbitrary code. Never use pickle for anything crossing a trust boundary, and never for long-term storage (it's version-fragile).</p></div>
+          <pre><code>import json, dataclasses
+from datetime import datetime, date
+from decimal import Decimal
+from uuid import UUID
+
+# ❌ TypeError: Object of type datetime is not JSON serializable
+json.dumps({&quot;at&quot;: datetime.now()})
+
+# ✅ default= hook
+def encode(o):
+    if isinstance(o, (datetime, date)): return o.isoformat()
+    if isinstance(o, Decimal):          return str(o)      # str, not float!
+    if isinstance(o, UUID):             return str(o)
+    if isinstance(o, set):              return sorted(o)
+    if dataclasses.is_dataclass(o):     return dataclasses.asdict(o)
+    raise TypeError(f&quot;{type(o).__name__} is not serializable&quot;)
+
+json.dumps(payload, default=encode)
+
+# gotchas
+json.loads(json.dumps({1: &quot;a&quot;}))        # {'1': 'a'}  ← key became a string
+json.loads(json.dumps((1, 2)))          # [1, 2]      ← tuple became a list
+json.dumps({&quot;amt&quot;: 0.1 + 0.2})          # 0.30000000000000004
+
+# ⚠️ NEVER unpickle untrusted data — arbitrary code execution
+# pickle.loads(request.body)            # remote code execution
+
+# for APIs, let Pydantic handle it
+from pydantic import BaseModel
+class Order(BaseModel):
+    id: UUID
+    created_at: datetime
+    amount: Decimal
+Order(**raw).model_dump_json()          # validated + serialised</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>pytest in depth — fixtures, parametrize, and mocking.</h2>
+          <div class="seo-a"><p><strong>Fixtures</strong> replace setUp/tearDown with dependency injection: declare a fixture, then any test that names it as a parameter receives it. Code after <code class="inline">yield</code> is the teardown and runs even if the test fails.</p><ul><li><strong>Scopes</strong> — <code class="inline">function</code> (default), <code class="inline">class</code>, <code class="inline">module</code>, <code class="inline">session</code>. Use a wider scope for expensive setup (a test container, a DB engine), but be careful: shared mutable state between tests causes order-dependent failures.</li><li><strong><code class="inline">conftest.py</code></strong> — fixtures defined there are available to every test in that directory tree, with no import.</li></ul><p><strong><code class="inline">@pytest.mark.parametrize</code></strong> runs one test body across many inputs, and each case is reported separately — so you see exactly <em>which</em> input failed rather than a single test that stops at the first bad case. It's the cheapest way to cover edge cases.</p><p><strong>Mocking</strong>: patch <em>where the object is used</em>, not where it's defined — <code class="inline">patch("myapp.service.requests")</code>, not <code class="inline">patch("requests")</code>. This is the number one mocking mistake. Use <code class="inline">autospec=True</code> so the mock rejects calls that don't match the real signature, otherwise a mock happily accepts a call you later rename and the test keeps passing.</p><p><code class="inline">monkeypatch</code> is pytest's built-in for env vars and attributes, with automatic undo.</p></div>
+          <pre><code>import pytest
+from unittest.mock import patch, MagicMock
+
+# conftest.py — available everywhere, no import
+@pytest.fixture(scope=&quot;session&quot;)
+def db_engine():
+    engine = create_engine(TEST_URL)
+    yield engine                       # teardown runs even if a test fails
+    engine.dispose()
+
+@pytest.fixture
+def session(db_engine):                # fixtures compose
+    conn = db_engine.connect(); txn = conn.begin()
+    yield Session(bind=conn)
+    txn.rollback(); conn.close()       # each test isolated
+
+# each case reported separately — you see WHICH input failed
+@pytest.mark.parametrize(&quot;raw,expected&quot;, [
+    (&quot;10&quot;,    10),
+    (&quot;  7 &quot;,   7),
+    (&quot;-3&quot;,    -3),
+    pytest.param(&quot;abc&quot;, None, marks=pytest.mark.xfail(raises=ValueError)),
+])
+def test_parse(raw, expected):
+    assert parse_int(raw) == expected
+
+# ✅ patch where it's USED, with autospec
+@patch(&quot;myapp.service.payment_client&quot;, autospec=True)
+def test_charge(mock_client):
+    mock_client.charge.return_value = {&quot;status&quot;: &quot;ok&quot;}
+    assert charge_order(order) is True
+    mock_client.charge.assert_called_once_with(order.id, order.amount)
+
+def test_env(monkeypatch):
+    monkeypatch.setenv(&quot;API_KEY&quot;, &quot;test-key&quot;)   # auto-undone after the test
+
+with pytest.raises(ValidationError, match=&quot;email&quot;):
+    validate(payload)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the N+1 query problem and how do you fix it in Django/SQLAlchemy?</h2>
+          <div class="seo-a"><p><strong>The problem</strong>: you fetch N records with one query, then access a related object on each one. Because ORMs load relationships <em>lazily</em>, each access fires another query — 1 + N total. It's invisible in code (it looks like plain attribute access) and only shows up as latency once the data grows.</p><p>100 orders each showing a customer name = 101 queries. At 5ms each that's half a second of pure database round trips for something that should be one query.</p><p><strong>The fix is eager loading</strong>, and there are two flavours with different trade-offs:</p><ul><li><strong>JOIN-based</strong> (<code class="inline">select_related</code> in Django, <code class="inline">joinedload</code> in SQLAlchemy) — one query with a JOIN. Best for <strong>to-one</strong> relationships (ForeignKey, ManyToOne).</li><li><strong>Second-query based</strong> (<code class="inline">prefetch_related</code> / <code class="inline">selectinload</code>) — a separate <code class="inline">IN (...)</code> query, joined in Python. Best for <strong>to-many</strong> relationships, because a JOIN across a to-many multiplies rows (fetching 100 orders × 50 items each returns 5,000 rows of duplicated order data).</li></ul><p><strong>How to catch it</strong>: assert on query counts in tests, log SQL in development, and use django-debug-toolbar or SQLAlchemy's <code class="inline">echo</code>. An APM trace showing 101 identical queries is the classic signature.</p></div>
+          <pre><code># ❌ N+1 — 1 query for orders, then 1 per order for the customer
+orders = Order.objects.all()                 # 1 query
+for o in orders:
+    print(o.customer.name)                   # +1 query EACH → 101 total
+
+# ✅ Django: JOIN for to-one, separate IN query for to-many
+Order.objects.select_related(&quot;customer&quot;)             # FK / to-one → JOIN
+Order.objects.prefetch_related(&quot;items&quot;)              # to-many → IN query
+Order.objects.select_related(&quot;customer&quot;).prefetch_related(&quot;items__product&quot;)
+
+# only fetch the columns you need
+Order.objects.only(&quot;id&quot;, &quot;total&quot;).select_related(&quot;customer&quot;)
+
+# aggregate in the DB, not in Python
+from django.db.models import Count, Sum
+Customer.objects.annotate(order_count=Count(&quot;orders&quot;),
+                          revenue=Sum(&quot;orders__total&quot;))
+
+# ✅ SQLAlchemy 2.0
+from sqlalchemy.orm import joinedload, selectinload
+stmt = (select(Order)
+        .options(joinedload(Order.customer),      # to-one → JOIN
+                 selectinload(Order.items))       # to-many → IN query
+        .where(Order.status == &quot;PAID&quot;))
+
+# catch regressions in tests
+with self.assertNumQueries(2):
+    list(Order.objects.select_related(&quot;customer&quot;))</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the main security pitfalls in Python code?</h2>
+          <div class="seo-a"><ul><li><strong><code class="inline">pickle</code> on untrusted data is remote code execution.</strong> Unpickling runs arbitrary code by design. Never unpickle anything from a user, a queue, a cache, or a session cookie — use JSON.</li><li><strong>SQL injection</strong> — never build queries with f-strings or <code class="inline">%</code>. Use parameterised queries; the driver escapes values. ORMs protect you <em>unless</em> you drop into <code class="inline">raw()</code>/<code class="inline">text()</code> with interpolation.</li><li><strong><code class="inline">eval</code>/<code class="inline">exec</code> on user input</strong> — arbitrary code execution. For data, use <code class="inline">ast.literal_eval</code> or <code class="inline">json.loads</code>.</li><li><strong>Command injection</strong> — <code class="inline">subprocess</code> with <code class="inline">shell=True</code> and interpolated input lets a user chain commands. Pass an argument <em>list</em> and leave <code class="inline">shell=False</code>.</li><li><strong><code class="inline">random</code> is not cryptographically secure</strong> — it's a deterministic Mersenne Twister. Use <code class="inline">secrets</code> for tokens, password resets, and session IDs.</li><li><strong>Password storage</strong> — never plain SHA-256 (too fast to brute-force). Use bcrypt/argon2 via <code class="inline">passlib</code>, and compare secrets with <code class="inline">hmac.compare_digest</code> to avoid timing attacks.</li><li><strong>Path traversal</strong> — a user-supplied filename containing <code class="inline">../</code> escapes your directory. Resolve the path and verify it's still inside the intended root.</li><li><strong>YAML</strong> — <code class="inline">yaml.load</code> can instantiate arbitrary objects; always use <code class="inline">yaml.safe_load</code>.</li><li><strong>Dependencies</strong> — pin versions, scan with <code class="inline">pip-audit</code>, and watch for typosquatted package names.</li></ul></div>
+          <pre><code># ❌ remote code execution
+pickle.loads(request.body)
+yaml.load(user_file)                     # use yaml.safe_load
+eval(user_input)                         # use ast.literal_eval
+
+# ❌ SQL injection → ✅ parameterised
+cur.execute(f&quot;SELECT * FROM users WHERE id = {uid}&quot;)
+cur.execute(&quot;SELECT * FROM users WHERE id = %s&quot;, (uid,))
+
+# ❌ command injection → ✅ argument list
+subprocess.run(f&quot;ping {host}&quot;, shell=True)
+subprocess.run([&quot;ping&quot;, &quot;-c&quot;, &quot;1&quot;, host], shell=False, timeout=5)
+
+# ❌ predictable → ✅ cryptographically secure
+import random, secrets
+token = str(random.randint(0, 10**9))    # Mersenne Twister — predictable
+token = secrets.token_urlsafe(32)        # ✅
+
+# passwords: slow hash + constant-time compare
+from passlib.hash import argon2
+import hmac
+hashed = argon2.hash(password)
+argon2.verify(password, hashed)
+hmac.compare_digest(provided_key, expected_key)   # timing-safe
+
+# path traversal
+root = Path(&quot;/srv/uploads&quot;).resolve()
+target = (root / user_filename).resolve()
+if not target.is_relative_to(root):      # 3.9+
+    raise ValueError(&quot;invalid path&quot;)
+
+# scan dependencies
+# pip-audit    |    bandit -r ./app</code></pre>
         </article>
     </section>
 

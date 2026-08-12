@@ -3,319 +3,415 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.interviewdeck.in/</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/angular</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/react</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/nextjs</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/ngcoding</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/javascript</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/typescript</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/html</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/css</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/coding</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/rxjs</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/ngrx</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/microfrontends</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/web-performance</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/web-security</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/accessibility</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/frontend-tooling</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/general</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/java</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/leetcode</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/springboot</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/python</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/pycoding</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/nodejs</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/c</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/cpp</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/quarkus</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/kafka</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/rabbitmq</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/redis</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/graphql</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/sql</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/postgresql</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/git</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/docker-kubernetes</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/aws</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/cicd</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/linux</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/terraform</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/observability</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/behavioral</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/flutter</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/dart</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/fluttercoding</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/swift</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/testing-fundamentals</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/manual-qa</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/api-testing</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/ui-automation</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/sql-testing</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/cicd-testing</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/angular-testing</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/llm</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/ai-assisted-dev</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/rag</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/ai-agents</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/llmops</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/ml-fundamentals</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/system-design</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.interviewdeck.in/system-design-problems</loc>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/frontend</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/backend</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/devops</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/hr</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/mobile</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/testing</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/ai</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/architecture</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.interviewdeck.in/privacy</loc>
-    <lastmod>2026-07-29T06:31:23.465Z</lastmod>
+    <lastmod>2026-08-12T03:35:15.409Z</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>ML Fundamentals Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="24 ML Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="41 ML Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/ml-fundamentals" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="ML Fundamentals Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="24 ML Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="41 ML Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/ml-fundamentals" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>ML Fundamentals Interview Questions and Answers</h1>
-      <p>24 hand-picked ML Fundamentals interview questions with
+      <p>41 hand-picked ML Fundamentals interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -501,6 +501,100 @@ layer = nn.Sequential(
         <article class="seo-q">
           <h2>What is MLOps and why does it matter?</h2>
           <div class="seo-a"><p>MLOps applies DevOps principles to ML: <strong>reproducible training, automated deployment, monitoring, and retraining</strong>.</p><p>Key practices:</p><ul><li><strong>Version everything</strong> — data, code, model weights, configs (MLflow, DVC).</li><li><strong>CI/CD for models</strong> — automated testing, validation gates before deployment.</li><li><strong>Model serving</strong> — REST/gRPC endpoints, batch inference, edge deployment.</li><li><strong>Monitoring</strong> — track prediction drift, data drift, latency, error rates.</li><li><strong>Retraining pipelines</strong> — trigger when performance degrades or new data arrives.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Linear regression vs logistic regression.</h2>
+          <div class="seo-a"><p><strong>Linear regression</strong> predicts a continuous number. It fits <code>y = wx + b</code> by minimising mean squared error; output is unbounded.</p><p><strong>Logistic regression</strong> predicts a probability for a class. It passes the same linear combination through a <strong>sigmoid</strong> to squash it into (0, 1), and trains with log loss (cross-entropy) rather than MSE.</p><p>Despite the name, logistic regression is a <strong>classifier</strong>. It's linear in the sense that the decision boundary is a straight line/hyperplane — which is exactly its limitation on non-linearly-separable data.</p><p>Both remain strong baselines: fast, interpretable coefficients, and hard to beat on small tabular datasets with mostly linear signal.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does a decision tree work, and what are its weaknesses?</h2>
+          <div class="seo-a"><p>The tree greedily picks, at each node, the feature and threshold that best <strong>separates</strong> the data — measured by Gini impurity or entropy (information gain) for classification, variance reduction for regression — and recurses until a stopping rule fires.</p><p><strong>Strengths:</strong> no scaling needed, handles mixed numeric/categorical data, captures non-linear interactions, and the path to a prediction is human-readable.</p><p><strong>Weaknesses:</strong> a single deep tree <strong>overfits badly</strong> and is <strong>unstable</strong> — small data changes give a very different tree. It also produces axis-aligned, staircase boundaries, and biases splits toward high-cardinality features.</p><p>Controlled by <code>max_depth</code>, <code>min_samples_leaf</code>, <code>min_samples_split</code> and pruning — but the real fix for the variance is ensembling.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Random Forest vs Gradient Boosting — how do they differ?</h2>
+          <div class="seo-a"><p>Both are tree ensembles; they attack opposite ends of the bias-variance decomposition.</p><ul><li><strong>Random Forest (bagging)</strong> — many <em>deep</em> trees trained <strong>in parallel</strong> on bootstrap samples, each split considering a random feature subset. Averaging cancels variance. Robust, hard to overfit by adding trees, very few knobs.</li><li><strong>Gradient Boosting (XGBoost / LightGBM / CatBoost)</strong> — many <em>shallow</em> trees trained <strong>sequentially</strong>, each fitting the residual errors of the ensemble so far. Reduces bias. Usually the top performer on tabular data, but it <em>can</em> overfit with too many rounds and needs tuning (learning rate, depth, subsampling, early stopping).</li></ul><p>Rule of thumb: Random Forest for a fast, safe baseline; gradient boosting when you want the best tabular score and can afford to tune.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Normalization vs standardization — and which models need them?</h2>
+          <div class="seo-a"><ul><li><strong>Min-max normalization</strong> → rescales to [0, 1]. Preserves the shape of the distribution but is sensitive to outliers.</li><li><strong>Standardization (z-score)</strong> → mean 0, standard deviation 1. The usual default; handles outliers better and is what most algorithms assume.</li><li><strong>Robust scaling</strong> → uses median and IQR; best when outliers are heavy.</li></ul><p><strong>Needed by:</strong> anything distance- or gradient-based — KNN, SVM, K-means, PCA, logistic/linear regression with regularisation, and neural networks.</p><p><strong>Not needed by:</strong> tree-based models (trees split on thresholds, so monotonic rescaling changes nothing).</p><p>Critical detail: <strong>fit the scaler on the training set only</strong>, then apply it to validation and test. Fitting on the full dataset leaks test statistics into training.</p></div>
+          <pre><code>from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+
+# scaler is fit inside each CV fold -&gt; no leakage
+pipe = Pipeline([
+    (&quot;scale&quot;, StandardScaler()),
+    (&quot;clf&quot;, LogisticRegression()),
+])
+pipe.fit(X_train, y_train)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you encode categorical features?</h2>
+          <div class="seo-a"><ul><li><strong>One-hot</strong> — a binary column per category. Safe default for low cardinality (&lt; ~15). Explodes dimensionality otherwise.</li><li><strong>Ordinal/label</strong> — map to integers. Correct <em>only</em> when the categories genuinely have an order (small &lt; medium &lt; large); otherwise it invents a false ordering that linear models will believe. Trees tolerate it.</li><li><strong>Target/mean encoding</strong> — replace the category with the mean target for that category. Powerful for high cardinality, but leaks the target unless computed <strong>out-of-fold</strong> with smoothing for rare categories.</li><li><strong>Frequency/count encoding</strong> — cheap, often surprisingly effective.</li><li><strong>Embeddings</strong> — learned dense vectors, standard for very high cardinality in neural nets.</li></ul><p>Also handle the <strong>unseen category at inference</strong> — every scheme needs a defined fallback, or production breaks on the first new value.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle missing data?</h2>
+          <div class="seo-a"><p>First ask <strong>why</strong> it's missing — the mechanism decides the fix:</p><ul><li><strong>MCAR</strong> (missing completely at random) — dropping rows is unbiased, just wasteful.</li><li><strong>MAR</strong> — missingness depends on other observed features; model-based imputation works.</li><li><strong>MNAR</strong> — missingness depends on the unobserved value itself (income missing because it's high). Imputation biases the model; the fact of missingness is signal.</li></ul><p><strong>Techniques:</strong> drop (only if few rows or a mostly-empty column), mean/median/mode (simple, shrinks variance), forward-fill for time series, KNN or iterative imputation (MICE), or let the model handle it natively — LightGBM and XGBoost learn a default direction for missing values.</p><p>Almost always worth adding an explicit <code>was_missing</code> indicator column: it preserves the signal that imputation destroys.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is the curse of dimensionality?</h2>
+          <div class="seo-a"><p>As the number of features grows, the volume of the space grows exponentially, so your fixed number of samples becomes vanishingly sparse in it. Consequences:</p><ul><li><strong>Distance stops discriminating</strong> — in high dimensions the nearest and farthest neighbours have nearly the same distance, which breaks KNN, K-means and anything similarity-based.</li><li><strong>Data requirements explode</strong> — covering the space needs exponentially more samples.</li><li><strong>Overfitting gets easy</strong> — with enough features you can separate any training set by coincidence.</li></ul><p><strong>Countermeasures:</strong> feature selection, dimensionality reduction (PCA, UMAP), regularisation (L1 drives features to zero), domain-driven feature engineering, and using models that cope better with many features (regularised linear models, tree ensembles).</p><p>Note embeddings are the constructive flip side: they map sparse high-dimensional data into a dense low-dimensional space where distance is meaningful again.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is PCA and when do you use it?</h2>
+          <div class="seo-a"><p>Principal Component Analysis finds the orthogonal directions of <strong>maximum variance</strong> in the data and re-expresses it in those axes. Keeping the top k components gives a lower-dimensional representation that preserves as much variance as possible.</p><p><strong>Use it for:</strong> compressing correlated features, removing multicollinearity before a linear model, speeding up training, and 2-D visualisation of high-dimensional data.</p><p><strong>Costs:</strong> components are linear combinations of all original features, so you lose interpretability; it is <strong>unsupervised</strong>, so a low-variance direction that happens to be the one predictive of your label can be discarded; and it only captures linear structure.</p><p>Requirements: <strong>standardize first</strong> (PCA follows variance, so unscaled large-unit features dominate), and fit on the training set only.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does K-means work and what are its limitations?</h2>
+          <div class="seo-a"><p>Pick k centroids, then repeat until stable: assign each point to the nearest centroid, then move each centroid to the mean of its assigned points. It minimises within-cluster variance (inertia).</p><p><strong>Limitations:</strong></p><ul><li><strong>You must choose k</strong> — use the elbow curve or silhouette score, both of which are heuristics.</li><li><strong>Assumes spherical, similar-sized clusters</strong> — fails on elongated, nested or density-varying shapes.</li><li><strong>Sensitive to initialisation</strong> — mitigated by k-means++ and multiple restarts.</li><li><strong>Sensitive to scale and outliers</strong> — standardize first; a single far point drags a centroid.</li></ul><p>Alternatives: <strong>DBSCAN</strong> (density-based — finds arbitrary shapes, chooses its own cluster count, labels outliers as noise), <strong>hierarchical</strong> clustering (dendrogram, no k up front), <strong>GMM</strong> (soft assignments, elliptical clusters).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does K-Nearest Neighbours work?</h2>
+          <div class="seo-a"><p>No training phase at all — it stores the dataset. To predict, it finds the k closest training points and takes a majority vote (classification) or mean (regression). This makes it a <strong>lazy, non-parametric, instance-based</strong> learner.</p><p><strong>k controls the bias-variance trade:</strong> k=1 gives a jagged, high-variance boundary that memorises noise; large k over-smooths toward the majority class. Odd k avoids ties in binary classification.</p><p><strong>Costs:</strong> prediction is O(n·d) per query, memory holds the whole dataset, features must be scaled, and it degrades badly in high dimensions.</p><p>It stays relevant conceptually because <strong>vector search is KNN</strong> — a RAG retriever is approximate KNN over embeddings, with an ANN index replacing the brute-force scan.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is an SVM and what is the kernel trick?</h2>
+          <div class="seo-a"><p>A Support Vector Machine finds the hyperplane that separates classes with the <strong>maximum margin</strong> — the widest possible gap. Only the points on the margin (the <strong>support vectors</strong>) determine the boundary; everything else could be deleted without changing it.</p><p><code>C</code> controls the soft-margin trade-off: high C means few misclassifications but a narrow margin (overfit risk); low C accepts errors for a wider, more general margin.</p><p><strong>The kernel trick:</strong> for non-linearly-separable data, an SVM can operate as if the data were mapped into a much higher-dimensional space — but the algorithm only ever needs <em>inner products</em>, and a kernel function (RBF, polynomial) computes those directly without ever constructing the high-dimensional coordinates. You get a non-linear boundary at linear-ish cost.</p><p>Strong on small-to-medium, high-dimensional data (classic text classification). Scales poorly past ~100k rows and gives no calibrated probabilities by default.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How does Naive Bayes work, and why does it work despite its assumption?</h2>
+          <div class="seo-a"><p>It applies Bayes' theorem — <code>P(class | features) ∝ P(class) · P(features | class)</code> — with the "naive" assumption that features are <strong>conditionally independent</strong> given the class, so the joint likelihood factorises into a simple product.</p><p>That assumption is essentially always false (in text, words are highly correlated). It still works because classification only needs the <em>correct class to score highest</em>, not the probabilities to be accurate. The estimated probabilities are usually badly calibrated — over-confident near 0 and 1 — while the ranking survives.</p><p><strong>Strengths:</strong> trains in one pass, needs little data, handles very high dimensions, excellent baseline for text (spam filtering, topic classification).</p><p><strong>Practicalities:</strong> use <strong>Laplace smoothing</strong> so an unseen word doesn't zero out an entire product, and work in log-space to avoid floating-point underflow.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>SGD, Momentum, Adam — how do optimizers differ?</h2>
+          <div class="seo-a"><ul><li><strong>SGD</strong> — step against the gradient of a mini-batch. Simple, and with a good schedule it often generalises best, but it's slow and oscillates in ravines.</li><li><strong>Momentum</strong> — accumulate a velocity term so consistent gradient directions build speed and oscillations cancel. Like a ball rolling downhill.</li><li><strong>RMSProp</strong> — divide by a running average of squared gradients, giving each parameter its own effective learning rate. Helps when gradient scales differ wildly.</li><li><strong>Adam</strong> — momentum + RMSProp together, with bias correction. The default: fast convergence and forgiving of the initial learning rate.</li><li><strong>AdamW</strong> — Adam with weight decay decoupled from the gradient update, which is what standard Adam got subtly wrong. The default for transformers.</li></ul><p>Learning-rate <strong>schedule</strong> usually matters more than optimizer choice: warmup then cosine decay is the common recipe.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are vanishing and exploding gradients, and how are they fixed?</h2>
+          <div class="seo-a"><p>Backpropagation multiplies gradients layer by layer. If the per-layer factors are consistently &lt; 1 the product shrinks toward zero — early layers stop learning (<strong>vanishing</strong>). If they're consistently &gt; 1 it blows up to NaN (<strong>exploding</strong>). Depth makes both worse; sigmoid/tanh saturate and make vanishing much worse.</p><p><strong>Fixes that made deep networks trainable:</strong></p><ul><li><strong>ReLU-family activations</strong> — gradient of 1 for positive inputs, no saturation.</li><li><strong>Residual (skip) connections</strong> — gradients get a direct path back; the key reason 100+ layer networks train at all.</li><li><strong>Normalization layers</strong> — BatchNorm/LayerNorm keep activation scales stable.</li><li><strong>Careful initialisation</strong> — He for ReLU, Xavier/Glorot for tanh, to keep variance constant across layers.</li><li><strong>Gradient clipping</strong> — the standard direct fix for explosion, especially in RNNs and transformer training.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is dropout and how does it regularise a network?</h2>
+          <div class="seo-a"><p>During <strong>training</strong>, randomly zero each neuron's output with probability p (typically 0.2–0.5). During <strong>inference</strong>, dropout is switched off and activations are scaled so expected values match (frameworks do this via inverted dropout at train time).</p><p><strong>Why it works:</strong> no neuron can rely on any specific other neuron being present, so the network can't build fragile co-adapted paths and is forced to learn redundant, distributed representations. It also approximates training an ensemble of exponentially many sub-networks that share weights.</p><p><strong>Practical notes:</strong> apply it to dense layers rather than convolutional ones (which have their own variants); it interacts awkwardly with BatchNorm, so modern architectures often prefer one or the other; and transformers use it lightly, mostly on attention and residual paths.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is model drift and how do you detect it?</h2>
+          <div class="seo-a"><p>A deployed model degrades because the world moved, not because the code changed.</p><ul><li><strong>Data drift (covariate shift)</strong> — the input distribution changes: a new user segment, a new device type, an upstream schema change.</li><li><strong>Concept drift</strong> — the relationship between inputs and target changes: fraud tactics evolve, so the same features now mean something different.</li><li><strong>Label drift</strong> — the target distribution itself shifts.</li></ul><p><strong>Detection:</strong> monitor input feature distributions (PSI, KL divergence, Kolmogorov–Smirnov) and prediction distributions — these are available immediately. Actual accuracy needs ground truth, which often arrives days or months later, so drift metrics are your early warning.</p><p><strong>Response:</strong> alert thresholds, scheduled or triggered retraining, and always keep a champion/challenger comparison so you can prove the retrained model is actually better before promoting it.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you explain a model's predictions? (SHAP, LIME, feature importance)</h2>
+          <div class="seo-a"><ul><li><strong>Built-in feature importance</strong> (tree gain/split counts) — global, free, but biased toward high-cardinality features and says nothing about direction.</li><li><strong>Permutation importance</strong> — shuffle a feature and measure the score drop. Model-agnostic and more honest, but misleading when features are correlated.</li><li><strong>SHAP</strong> — game-theoretic Shapley values attributing each prediction to each feature, with a consistent additive guarantee. Works globally and per-prediction; the practical standard, though slow on large data (TreeSHAP is the fast path).</li><li><strong>LIME</strong> — fits a simple local surrogate around one prediction. Fast and intuitive, but less stable across runs.</li><li><strong>Partial dependence / ICE plots</strong> — show how the prediction moves as one feature varies.</li></ul><p>Two cautions: explanations are <strong>correlational, not causal</strong>, and required by regulation in some domains (credit, hiring) — where an inherently interpretable model may be the safer choice than a post-hoc explanation of a black box.</p></div>
           
         </article>
     </section>

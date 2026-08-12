@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>Git Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="28 Git interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="30 Git interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/git" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="Git Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="28 Git interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="30 Git interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/git" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>Git Interview Questions and Answers</h1>
-      <p>28 hand-picked Git interview questions with
+      <p>30 hand-picked Git interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -509,6 +509,23 @@ git worktree remove ../hotfix</code></pre>
           <div class="seo-a"><p>Git is a content-addressable store of four object types, each keyed by a hash of its content:</p><ul><li><strong>blob</strong> — file contents.</li><li><strong>tree</strong> — a directory listing (names → blobs/trees).</li><li><strong>commit</strong> — a snapshot: root tree + parent commit(s) + author/message.</li><li><strong>tag</strong> — an annotated pointer to a commit.</li></ul><p><strong>Refs</strong> (branches) are just movable pointers to commit hashes.</p></div>
           <pre><code>git cat-file -t HEAD    # commit
 git cat-file -p HEAD    # inspect the object graph</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you bring the latest changes from main into your feature branch?</h2>
+          <div class="seo-a"><p>Be on the feature branch, get the newest <code class="inline">main</code> from the remote, then merge <code class="inline">main</code> into your branch:</p><pre><code>git checkout feature
+git pull origin main   # fetch + merge origin/main into feature</code></pre><p>Common wrong sequences: merging <code class="inline">feature</code> into itself (<code class="inline">git merge feature</code>) does nothing, and pulling <code class="inline">origin feature</code> brings the wrong branch. Note <code class="inline">git pull origin main</code> = <code class="inline">git fetch</code> + <code class="inline">git merge origin/main</code>. Prefer <code class="inline">git pull --rebase origin main</code> if your team keeps a linear history. Resolve any conflicts, then commit.</p></div>
+          <pre><code>git checkout feature
+git pull origin main          # merge latest main in
+# linear history instead:
+git pull --rebase origin main</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you create a LOCAL Git repository from Visual Studio?</h2>
+          <div class="seo-a"><p>Use <strong>Git → Create Git Repository</strong> from the Visual Studio menu, then choose <strong>Local only</strong>, verify the local path, and click <strong>Create</strong>. That initialises a repo on disk (equivalent to <code class="inline">git init</code>) without pushing anywhere.</p><p>The distractor options all involve "Push to Git service" or picking GitHub/Azure DevOps — those create/connect a <em>remote</em>, which is a different action. For a purely local repo you pick <strong>Local only</strong>; you can add and push to a remote later.</p></div>
+          <pre><code># CLI equivalent of what VS does for 'Local only':
+git init
+git add .
+git commit -m &quot;Initial commit&quot;</code></pre>
         </article>
     </section>
 

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>RAG &amp; Vector DBs Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="22 RAG &amp; Vector DBs interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/rag" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="RAG &amp; Vector DBs Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="22 RAG &amp; Vector DBs interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/rag" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="RAG &amp; Vector DBs Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why RAG instead of fine-tuning the model on your documents?","acceptedAnswer":{"@type":"Answer","text":"They solve different problems. Fine-tuning teaches behaviour — format, tone, a domain's style of reasoning. RAG supplies knowledge at query time. For \"answer questions about our documents\", RAG wins on almost every axis: Freshness — re-index a changed document in seconds; fine-tuning means another training run. Attribution — you can cite the source chunk. A fine-tuned model just asserts. Access control — filter retrieval by the user's permissions. Weights cannot be permission-filtered; once a document is in the training set, everyone who can use the model can extract it. Cost and iteration speed — no GPUs, and you can change chunking or the embedding model in an afternoon. The combination is common in mature systems: fine-tune (or just prompt) for the output style, retrieve for the facts."}},{"@type":"Question","name":"Walk through a production RAG pipeline end to end.","acceptedAnswer":{"@type":"Answer","text":"Indexing (offline): Load — pull documents from the source (S3, Confluence, DB, PDFs). Parse — extract clean text, preserving structure (headings, tables). Chunk — split into retrievable units with overlap and metadata. Embed — vectorise each chunk. Store — upsert into a vector index alongside metadata for filtering. Query (online): Pre-process — rewrite or expand the query; resolve pronouns against chat history. Retrieve — hybrid (vector + keyword) search with metadata/ACL filters. Rerank — a cross-encoder reorders the candidates; keep top-k. Assemble — build the prompt with the chunks, source ids and instructions. Generate — call the model, stream the answer. Post-process — verify citations, apply guardrails, log the trace for evaluation."}},{"@type":"Question","name":"How do you choose a chunking strategy?","acceptedAnswer":{"@type":"Answer","text":"Chunk size is a trade: too small and a chunk loses the context that makes it answerable; too large and the embedding averages several topics, diluting the signal so it matches nothing precisely. Fixed size with overlap — e.g. 500–800 tokens with 10–15% overlap. Simple, robust, the right default. Structure-aware — split on headings, markdown sections, or function/class boundaries for code. Nearly always better than fixed size when the document has structure. Semantic chunking — split where consecutive sentence embeddings diverge. Elegant, expensive to index, modest gains. Parent–child (small-to-big) — embed small precise chunks for retrieval, but pass the larger parent section to the model. Usually the best quality/effort ratio. Always attach metadata — source, title, section heading, date, tenant, permissions — and prepend the document title and heading to the chunk text so an isolated paragraph still carries its context."}},{"@type":"Question","name":"How do you pick an embedding model?","acceptedAnswer":{"@type":"Answer","text":"Decide on five axes: Domain fit — general-purpose models struggle with code, legal citations, medical abbreviations and non-English text. Test on your queries, not MTEB rankings. Dimensionality — bigger vectors capture more but cost more storage and slower search. Matryoshka-style models let you truncate dimensions with graceful degradation. Max input length — must exceed your chunk size, or chunks get silently truncated. Asymmetric support — many models expect different prefixes for queries vs documents ( query: / passage: ). Getting this wrong quietly halves your recall. Deployment — API convenience versus self-hosted cost, latency and data residency. Non-negotiable rule: one index, one model, one version. Vectors from different models are not comparable, so any change means a full re-index — plan for it with versioned collections."}},{"@type":"Question","name":"pgvector vs a dedicated vector database — how do you choose?","acceptedAnswer":{"@type":"Answer","text":"pgvector (Postgres): your vectors live next to your relational data, so joins, transactional consistency, ACL filters and backups all come free with infrastructure your team already runs. Comfortable to roughly the single-digit-millions of vectors with an HNSW index. Usually the correct first choice. Dedicated (Pinecone, Qdrant, Weaviate, Milvus): worth it at large scale or when you need purpose-built features — sharding across hundreds of millions of vectors, built-in hybrid search and reranking, namespace-per-tenant isolation, quantization and tiered storage. Libraries (FAISS, hnswlib): not databases — no persistence layer, no filtering, no multi-tenancy. Excellent for embedded, read-only or research use. The deciding questions are rarely about vector search itself: how do you filter by permissions, how do you keep the index in sync with the source of truth, and who operates it at 3am."}},{"@type":"Question","name":"How do ANN indexes work, and what do you trade for speed?","acceptedAnswer":{"@type":"Answer","text":"Exact nearest-neighbour search is a linear scan over every vector — accurate but O(n). Approximate nearest neighbour indexes trade a little recall for orders-of-magnitude speed. HNSW — a multi-layer navigable small-world graph; search greedily descends from a sparse top layer to dense lower ones. Excellent recall and latency, high memory use, slower builds. The most common default. Knobs: M (graph degree), ef_construction (build quality), ef_search (recall vs latency at query time). IVF — cluster vectors, search only the nprobe nearest clusters. Lower memory, faster to build, needs training on a representative sample. Product Quantization (PQ) — compress vectors into codes; huge memory savings, some accuracy loss. Often combined as IVF-PQ. The important consequence: recall is a tunable, not a guarantee . If your evaluation looks worse than expected, check ef_search / nprobe before blaming the embeddings."}},{"@type":"Question","name":"What is hybrid search and why does pure vector search fail without it?","acceptedAnswer":{"@type":"Answer","text":"Vector search matches meaning ; keyword search (BM25) matches exact tokens . Each fails where the other succeeds. Embeddings are bad at: product SKUs, error codes, function names, version numbers, acronyms, and rare proper nouns — precisely the terms users search for. \"ERR_2043\" embeds to something near every other error code. Hybrid runs both and fuses the results, typically with Reciprocal Rank Fusion : score each document as Σ 1/(k + rank) across the result lists. RRF works on ranks , so it needs no score normalisation between two incomparable scoring systems — which is why it's the standard choice. Hybrid + reranking is the single biggest quality jump most RAG systems can make, and it's mostly configuration rather than research."}},{"@type":"Question","name":"What is a reranker and why add one?","acceptedAnswer":{"@type":"Answer","text":"Retrieval and reranking use different model architectures on purpose: Bi-encoder (your embedding model) encodes query and document separately , so documents can be embedded offline and searched in milliseconds. Fast, but the two are never compared token-to-token. Cross-encoder (the reranker) feeds query and document through the model together, so full attention runs across both. Far more accurate, far too slow to run over a corpus. So you stage them: retrieve top-50 cheaply with the bi-encoder, rerank those 50 with the cross-encoder, keep the top 5 for the prompt. This usually gives a bigger accuracy gain than switching to a better embedding model, and it lets you retrieve wide (high recall) without stuffing the context window (high precision)."}},{"@type":"Question","name":"Why rewrite the user's query before retrieval?","acceptedAnswer":{"@type":"Answer","text":"Because the raw query is often un-retrievable: Conversational references — \"what about the second one?\" has no content to embed. Rewrite against chat history into a standalone question. This is mandatory for multi-turn RAG. Vocabulary mismatch — the user says \"can't log in\", the docs say \"authentication failure\". Multi-part questions — \"compare X and Y pricing\" needs two retrievals, not one averaged vector. Techniques: multi-query (generate 3–5 paraphrases, retrieve for each, fuse with RRF), HyDE (have the model write a hypothetical answer and embed that , since a fake answer sits closer in vector space to a real one than a question does), decomposition (split into sub-questions), and step-back prompting (ask a broader question first for context). Each adds an LLM call and latency, so apply them where they pay: multi-turn chat almost always needs rewriting; a single-shot search box often doesn't."}},{"@type":"Question","name":"How do you evaluate a RAG system?","acceptedAnswer":{"@type":"Answer","text":"Evaluate the two halves separately , or you can't tell what to fix. Retrieval — needs a small labelled set of (question → relevant chunk ids): Recall@k — is the right chunk in the top k? The single most important number. MRR / NDCG@k — is it ranked near the top? Precision@k — how much of what you passed was noise? Generation — usually LLM-as-judge against the retrieved context: Faithfulness / groundedness — is every claim supported by the context? This is your hallucination metric. Answer relevance — does it address the question asked? Context utilisation — did it use the retrieved material or ignore it? Frameworks like RAGAS or TruLens package these. Build the labelled retrieval set first — 50 real questions is enough to start and beats any amount of prompt tinkering."}},{"@type":"Question","name":"How do you make a RAG answer cite its sources reliably?","acceptedAnswer":{"@type":"Answer","text":"Give each chunk an explicit id in the prompt and require the model to reference it inline: Wrap each chunk with a stable marker — [1] title — text… — and instruct the model to cite the id after every claim. Verify after generation. Parse the citations out, confirm each id was actually retrieved, and drop or flag any that weren't — models do invent citation numbers. Render them as links back to the source document and, where possible, highlight the quoted span. Citations users can't check are decoration. Handle the empty case — instruct the model to answer \"I don't have information on that\" when the context doesn't cover the question, and make sure the prompt makes refusal an acceptable outcome. Structured output helps: ask for {answer, citations: [chunk_ids]} so verification is mechanical rather than regex over prose."}},{"@type":"Question","name":"What is small-to-big (parent–child) retrieval?","acceptedAnswer":{"@type":"Answer","text":"It resolves the chunking dilemma by using different units for matching and for reading . Index small, precise chunks (a sentence or short paragraph) — their embeddings are focused, so similarity search is sharp. Retrieve on those small chunks, then return the parent — the surrounding section or full document — to the model, so it has enough context to answer properly. Variants of the same idea: Sentence-window retrieval — match a sentence, expand to ±k surrounding sentences. Summary indexing — embed an LLM-written summary of each document, return the full document on a hit. Good for long, heterogeneous documents. Multi-vector — index several representations per document (summary, hypothetical questions it answers, raw text) all pointing to the same parent. Cost: extra storage and a parent lookup per hit. Usually the best quality-per-unit-effort change after adding a reranker."}},{"@type":"Question","name":"How do you keep a RAG index in sync with changing source data?","acceptedAnswer":{"@type":"Answer","text":"Treat the index as a derived store that must be reconcilable with the source of truth. Incremental updates — hash each chunk; on re-ingest, upsert only changed hashes and skip the rest. Full re-embedding of an unchanged corpus is the most common wasted spend in RAG. Deletes are the hard part — a document removed at the source must be removed from the index, or the model will confidently cite a deleted policy. Use deterministic chunk ids derived from doc_id + chunk_index so you can delete by prefix. Soft-delete + filter when hard deletes are slow in your index. Reconciliation job — periodically diff source ids against index ids to catch missed webhooks. Versioned collections — for embedding-model or chunking changes, build a new collection alongside, evaluate, then flip an alias. Never re-index in place."}},{"@type":"Question","name":"How do you enforce per-user permissions in RAG?","acceptedAnswer":{"@type":"Answer","text":"Permissions must be applied at retrieval time, in the query, not by asking the model to be discreet afterwards. Pre-filtering — the vector search itself is constrained to documents the user may see (metadata filter on tenant/group/ACL). Correct, but a very restrictive filter can degrade ANN recall since the index must search further to find k allowed matches. Post-filtering — retrieve then drop unauthorised hits. Simpler, but you may end up with fewer than k results, and you've already touched forbidden data. Namespace/collection per tenant — the strongest isolation for B2B; also helps with noisy-neighbour and deletion-on-offboarding. Costs overhead when tenants are many and small. Two rules that matter: derive the filter from the server-side session , never from anything the client (or the model) supplies; and re-check permissions when the answer is assembled, since ACLs can change between indexing and query."}},{"@type":"Question","name":"A RAG system gives a wrong answer. How do you debug it?","acceptedAnswer":{"@type":"Answer","text":"Work down the pipeline; each stage has a distinct symptom and fix. Is the fact even indexed? Search the raw source. Parsing failures (a table flattened into gibberish, a PDF column order scrambled, an OCR miss) are the most under-diagnosed cause. Was the right chunk retrieved? Log and inspect the top-k. If it's absent → retrieval problem: chunking, embedding model, query phrasing, or a filter excluding it. Try hybrid search and check ef_search . Was it retrieved but ranked low? → add or tune a reranker. Was it in the context but ignored? → prompt/context problem: too many chunks, the key one buried in the middle, or conflicting sources. Reduce k, reorder, or instruct precedence. Was it in context and contradicted? → generation problem: stronger grounding instructions, lower temperature, or a better model."}},{"@type":"Question","name":"With million-token context windows, is RAG obsolete?","acceptedAnswer":{"@type":"Answer","text":"No — long context changes the tuning, not the need. Why RAG persists: Corpus size — enterprise knowledge bases are gigabytes. No window holds them. Cost and latency — you pay per token on every call; stuffing 500k tokens to answer one question is absurd economics next to retrieving 4k. Access control — retrieval is where permissions are enforced. Attribution — retrieval gives you the source ids for citation. Quality — accuracy still degrades with distractors and with position in very long contexts. What long context genuinely changes: you can be far more generous with top-k, use bigger chunks or whole documents, skip aggressive compression, and cache a large stable corpus as a prompt prefix for a fixed set of documents. The honest framing: retrieval is now about relevance and governance rather than about fitting."}},{"@type":"Question","name":"How do you handle PDFs, tables and scanned documents in a RAG pipeline?","acceptedAnswer":{"@type":"Answer","text":"Parsing is where most real-world RAG quality is won or lost, and it barely gets discussed. Text PDFs — naive extractors emit multi-column pages in reading-order chaos, repeat headers/footers into every chunk, and lose heading hierarchy. Use a layout-aware parser and strip boilerplate. Tables — a table flattened to prose is unusable. Extract to markdown or HTML and keep the whole table in one chunk with its caption; a row separated from its header means nothing. Scans/images — OCR first (Tesseract or a cloud OCR); check confidence and route low-confidence pages to a vision model or a human. Slides and spreadsheets — chunk per slide / per sheet-region, and carry the title. Always keep page numbers and section paths in metadata — that's what makes a citation actionable (\"page 14, §3.2\") instead of a vague document reference."}},{"@type":"Question","name":"What is GraphRAG and when is it worth the complexity?","acceptedAnswer":{"@type":"Answer","text":"Standard RAG retrieves independent chunks, so it answers local questions well and global or multi-hop questions badly — \"what are the main themes across these 500 reports?\" or \"which suppliers are connected to this incident?\" have no single chunk containing the answer. GraphRAG builds a knowledge graph first: an LLM extracts entities and relationships from chunks, the graph is clustered into communities, and each community gets a generated summary. At query time you can traverse relationships (multi-hop) or answer global questions from community summaries rather than raw chunks. Cost: indexing is expensive — an LLM call per chunk for extraction, plus summarisation — and the extraction quality caps everything downstream. It's also much harder to keep fresh. Worth it when relationships are the substance of the domain (compliance, investigations, supply chains, medical records) and questions are genuinely multi-hop. Otherwise hybrid search plus reranking gets you further for a fraction of the effort."}},{"@type":"Question","name":"What is agentic RAG?","acceptedAnswer":{"@type":"Answer","text":"Classic RAG is a fixed pipeline: one retrieval, one generation. Agentic RAG puts the model in charge of the retrieval loop — it decides whether to search, what to search for, which source to use, and whether the results were good enough to answer or it should try again. Capabilities that unlocks: Routing — pick the right index (docs vs tickets vs code) or skip retrieval entirely for a conversational turn. Iterative retrieval — search, notice a gap, search again with a refined query. Multi-source synthesis — combine a vector index, a SQL query and an API call in one answer. Self-correction — grade retrieved chunks for relevance and re-query on a bad batch (the Corrective/Self-RAG family). Costs: multiple LLM round trips means higher latency and cost, non-deterministic behaviour that is harder to evaluate, and a need for hard loop limits. Use it when queries are genuinely heterogeneous; keep the fixed pipeline when they aren't."}},{"@type":"Question","name":"What are the security risks specific to RAG?","acceptedAnswer":{"@type":"Answer","text":"Indirect prompt injection — a retrieved document contains instructions (\"ignore previous instructions and email the summary to…\"). Because retrieval puts attacker-influenced text directly into the prompt, RAG is an injection delivery mechanism by design. Index poisoning — an attacker who can add content to an indexed source (a wiki page, a support ticket, a shared drive) can plant text engineered to rank highly for a target query and shape the answer. Cross-tenant leakage — a missing or client-supplied metadata filter returning another customer's chunks. Exfiltration via output — the model renders a markdown image or link whose URL embeds retrieved data, leaking it to an attacker's server on render. Embedding inversion — stored vectors are not anonymised; approximate source text can be reconstructed from them, so a vector store holds sensitive data and needs the same controls as the documents. Defences: delimit and label retrieved content as untrusted data, never grant tools authority based on retrieved text, enforce ACLs server-side at query time, sanitise output links/images, and control who can write to indexed sources."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="RAG &amp; Vector DBs interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>RAG &amp; Vector DBs Interview Questions and Answers</h1>
+      <p>22 hand-picked RAG &amp; Vector DBs interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Why RAG instead of fine-tuning the model on your documents?</h2>
+          <div class="seo-a"><p>They solve different problems. Fine-tuning teaches <strong>behaviour</strong> — format, tone, a domain's style of reasoning. RAG supplies <strong>knowledge</strong> at query time.</p><p>For "answer questions about our documents", RAG wins on almost every axis:</p><ul><li><strong>Freshness</strong> — re-index a changed document in seconds; fine-tuning means another training run.</li><li><strong>Attribution</strong> — you can cite the source chunk. A fine-tuned model just asserts.</li><li><strong>Access control</strong> — filter retrieval by the user's permissions. Weights cannot be permission-filtered; once a document is in the training set, everyone who can use the model can extract it.</li><li><strong>Cost and iteration speed</strong> — no GPUs, and you can change chunking or the embedding model in an afternoon.</li></ul><p>The combination is common in mature systems: fine-tune (or just prompt) for the output style, retrieve for the facts.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Walk through a production RAG pipeline end to end.</h2>
+          <div class="seo-a"><p><strong>Indexing (offline):</strong></p><ol><li><strong>Load</strong> — pull documents from the source (S3, Confluence, DB, PDFs).</li><li><strong>Parse</strong> — extract clean text, preserving structure (headings, tables).</li><li><strong>Chunk</strong> — split into retrievable units with overlap and metadata.</li><li><strong>Embed</strong> — vectorise each chunk.</li><li><strong>Store</strong> — upsert into a vector index alongside metadata for filtering.</li></ol><p><strong>Query (online):</strong></p><ol><li><strong>Pre-process</strong> — rewrite or expand the query; resolve pronouns against chat history.</li><li><strong>Retrieve</strong> — hybrid (vector + keyword) search with metadata/ACL filters.</li><li><strong>Rerank</strong> — a cross-encoder reorders the candidates; keep top-k.</li><li><strong>Assemble</strong> — build the prompt with the chunks, source ids and instructions.</li><li><strong>Generate</strong> — call the model, stream the answer.</li><li><strong>Post-process</strong> — verify citations, apply guardrails, log the trace for evaluation.</li></ol></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you choose a chunking strategy?</h2>
+          <div class="seo-a"><p>Chunk size is a trade: too small and a chunk loses the context that makes it answerable; too large and the embedding averages several topics, diluting the signal so it matches nothing precisely.</p><ul><li><strong>Fixed size with overlap</strong> — e.g. 500–800 tokens with 10–15% overlap. Simple, robust, the right default.</li><li><strong>Structure-aware</strong> — split on headings, markdown sections, or function/class boundaries for code. Nearly always better than fixed size when the document <em>has</em> structure.</li><li><strong>Semantic chunking</strong> — split where consecutive sentence embeddings diverge. Elegant, expensive to index, modest gains.</li><li><strong>Parent–child (small-to-big)</strong> — embed small precise chunks for retrieval, but pass the larger parent section to the model. Usually the best quality/effort ratio.</li></ul><p>Always attach metadata — source, title, section heading, date, tenant, permissions — and prepend the document title and heading to the chunk text so an isolated paragraph still carries its context.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you pick an embedding model?</h2>
+          <div class="seo-a"><p>Decide on five axes:</p><ol><li><strong>Domain fit</strong> — general-purpose models struggle with code, legal citations, medical abbreviations and non-English text. Test on <em>your</em> queries, not MTEB rankings.</li><li><strong>Dimensionality</strong> — bigger vectors capture more but cost more storage and slower search. Matryoshka-style models let you truncate dimensions with graceful degradation.</li><li><strong>Max input length</strong> — must exceed your chunk size, or chunks get silently truncated.</li><li><strong>Asymmetric support</strong> — many models expect different prefixes for queries vs documents (<code>query:</code> / <code>passage:</code>). Getting this wrong quietly halves your recall.</li><li><strong>Deployment</strong> — API convenience versus self-hosted cost, latency and data residency.</li></ol><p><strong>Non-negotiable rule:</strong> one index, one model, one version. Vectors from different models are not comparable, so any change means a full re-index — plan for it with versioned collections.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>pgvector vs a dedicated vector database — how do you choose?</h2>
+          <div class="seo-a"><p><strong>pgvector (Postgres):</strong> your vectors live next to your relational data, so joins, transactional consistency, ACL filters and backups all come free with infrastructure your team already runs. Comfortable to roughly the single-digit-millions of vectors with an HNSW index. Usually the correct first choice.</p><p><strong>Dedicated (Pinecone, Qdrant, Weaviate, Milvus):</strong> worth it at large scale or when you need purpose-built features — sharding across hundreds of millions of vectors, built-in hybrid search and reranking, namespace-per-tenant isolation, quantization and tiered storage.</p><p><strong>Libraries (FAISS, hnswlib):</strong> not databases — no persistence layer, no filtering, no multi-tenancy. Excellent for embedded, read-only or research use.</p><p>The deciding questions are rarely about vector search itself: how do you filter by permissions, how do you keep the index in sync with the source of truth, and who operates it at 3am.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do ANN indexes work, and what do you trade for speed?</h2>
+          <div class="seo-a"><p>Exact nearest-neighbour search is a linear scan over every vector — accurate but O(n). <strong>Approximate</strong> nearest neighbour indexes trade a little recall for orders-of-magnitude speed.</p><ul><li><strong>HNSW</strong> — a multi-layer navigable small-world graph; search greedily descends from a sparse top layer to dense lower ones. Excellent recall and latency, high memory use, slower builds. The most common default. Knobs: <code>M</code> (graph degree), <code>ef_construction</code> (build quality), <code>ef_search</code> (recall vs latency at query time).</li><li><strong>IVF</strong> — cluster vectors, search only the <code>nprobe</code> nearest clusters. Lower memory, faster to build, needs training on a representative sample.</li><li><strong>Product Quantization (PQ)</strong> — compress vectors into codes; huge memory savings, some accuracy loss. Often combined as IVF-PQ.</li></ul><p>The important consequence: <strong>recall is a tunable, not a guarantee</strong>. If your evaluation looks worse than expected, check <code>ef_search</code>/<code>nprobe</code> before blaming the embeddings.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is hybrid search and why does pure vector search fail without it?</h2>
+          <div class="seo-a"><p>Vector search matches <strong>meaning</strong>; keyword search (BM25) matches <strong>exact tokens</strong>. Each fails where the other succeeds.</p><p>Embeddings are bad at: product SKUs, error codes, function names, version numbers, acronyms, and rare proper nouns — precisely the terms users search for. "ERR_2043" embeds to something near every other error code.</p><p><strong>Hybrid</strong> runs both and fuses the results, typically with <strong>Reciprocal Rank Fusion</strong>: score each document as Σ 1/(k + rank) across the result lists. RRF works on <em>ranks</em>, so it needs no score normalisation between two incomparable scoring systems — which is why it's the standard choice.</p><p>Hybrid + reranking is the single biggest quality jump most RAG systems can make, and it's mostly configuration rather than research.</p></div>
+          <pre><code>def rrf(rankings, k=60):
+    &quot;&quot;&quot;rankings: list of ranked doc-id lists from each retriever.&quot;&quot;&quot;
+    scores = {}
+    for ranked in rankings:
+        for rank, doc_id in enumerate(ranked, start=1):
+            scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank)
+    return sorted(scores, key=scores.get, reverse=True)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a reranker and why add one?</h2>
+          <div class="seo-a"><p>Retrieval and reranking use different model architectures on purpose:</p><ul><li><strong>Bi-encoder</strong> (your embedding model) encodes query and document <em>separately</em>, so documents can be embedded offline and searched in milliseconds. Fast, but the two are never compared token-to-token.</li><li><strong>Cross-encoder</strong> (the reranker) feeds query <em>and</em> document through the model together, so full attention runs across both. Far more accurate, far too slow to run over a corpus.</li></ul><p>So you stage them: retrieve top-50 cheaply with the bi-encoder, rerank those 50 with the cross-encoder, keep the top 5 for the prompt.</p><p>This usually gives a bigger accuracy gain than switching to a better embedding model, and it lets you retrieve wide (high recall) without stuffing the context window (high precision).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why rewrite the user's query before retrieval?</h2>
+          <div class="seo-a"><p>Because the raw query is often un-retrievable:</p><ul><li><strong>Conversational references</strong> — "what about the second one?" has no content to embed. Rewrite against chat history into a standalone question. This is mandatory for multi-turn RAG.</li><li><strong>Vocabulary mismatch</strong> — the user says "can't log in", the docs say "authentication failure".</li><li><strong>Multi-part questions</strong> — "compare X and Y pricing" needs two retrievals, not one averaged vector.</li></ul><p>Techniques: <strong>multi-query</strong> (generate 3–5 paraphrases, retrieve for each, fuse with RRF), <strong>HyDE</strong> (have the model write a hypothetical answer and embed <em>that</em>, since a fake answer sits closer in vector space to a real one than a question does), <strong>decomposition</strong> (split into sub-questions), and <strong>step-back prompting</strong> (ask a broader question first for context).</p><p>Each adds an LLM call and latency, so apply them where they pay: multi-turn chat almost always needs rewriting; a single-shot search box often doesn't.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you evaluate a RAG system?</h2>
+          <div class="seo-a"><p>Evaluate the two halves <strong>separately</strong>, or you can't tell what to fix.</p><p><strong>Retrieval</strong> — needs a small labelled set of (question → relevant chunk ids):</p><ul><li><strong>Recall@k</strong> — is the right chunk in the top k? The single most important number.</li><li><strong>MRR / NDCG@k</strong> — is it ranked near the top?</li><li><strong>Precision@k</strong> — how much of what you passed was noise?</li></ul><p><strong>Generation</strong> — usually LLM-as-judge against the retrieved context:</p><ul><li><strong>Faithfulness / groundedness</strong> — is every claim supported by the context? This is your hallucination metric.</li><li><strong>Answer relevance</strong> — does it address the question asked?</li><li><strong>Context utilisation</strong> — did it use the retrieved material or ignore it?</li></ul><p>Frameworks like RAGAS or TruLens package these. Build the labelled retrieval set first — 50 real questions is enough to start and beats any amount of prompt tinkering.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you make a RAG answer cite its sources reliably?</h2>
+          <div class="seo-a"><p>Give each chunk an explicit id in the prompt and require the model to reference it inline:</p><ul><li>Wrap each chunk with a stable marker — <code>[1] title — text…</code> — and instruct the model to cite the id after every claim.</li><li><strong>Verify after generation.</strong> Parse the citations out, confirm each id was actually retrieved, and drop or flag any that weren't — models do invent citation numbers.</li><li><strong>Render them as links</strong> back to the source document and, where possible, highlight the quoted span. Citations users can't check are decoration.</li><li><strong>Handle the empty case</strong> — instruct the model to answer "I don't have information on that" when the context doesn't cover the question, and make sure the prompt makes refusal an acceptable outcome.</li></ul><p>Structured output helps: ask for <code>{answer, citations: [chunk_ids]}</code> so verification is mechanical rather than regex over prose.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is small-to-big (parent–child) retrieval?</h2>
+          <div class="seo-a"><p>It resolves the chunking dilemma by using different units for <strong>matching</strong> and for <strong>reading</strong>.</p><ul><li><strong>Index</strong> small, precise chunks (a sentence or short paragraph) — their embeddings are focused, so similarity search is sharp.</li><li><strong>Retrieve</strong> on those small chunks, then <strong>return the parent</strong> — the surrounding section or full document — to the model, so it has enough context to answer properly.</li></ul><p>Variants of the same idea:</p><ul><li><strong>Sentence-window retrieval</strong> — match a sentence, expand to ±k surrounding sentences.</li><li><strong>Summary indexing</strong> — embed an LLM-written summary of each document, return the full document on a hit. Good for long, heterogeneous documents.</li><li><strong>Multi-vector</strong> — index several representations per document (summary, hypothetical questions it answers, raw text) all pointing to the same parent.</li></ul><p>Cost: extra storage and a parent lookup per hit. Usually the best quality-per-unit-effort change after adding a reranker.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you keep a RAG index in sync with changing source data?</h2>
+          <div class="seo-a"><p>Treat the index as a derived store that must be reconcilable with the source of truth.</p><ul><li><strong>Incremental updates</strong> — hash each chunk; on re-ingest, upsert only changed hashes and skip the rest. Full re-embedding of an unchanged corpus is the most common wasted spend in RAG.</li><li><strong>Deletes are the hard part</strong> — a document removed at the source must be removed from the index, or the model will confidently cite a deleted policy. Use deterministic chunk ids derived from <code>doc_id + chunk_index</code> so you can delete by prefix.</li><li><strong>Soft-delete + filter</strong> when hard deletes are slow in your index.</li><li><strong>Reconciliation job</strong> — periodically diff source ids against index ids to catch missed webhooks.</li><li><strong>Versioned collections</strong> — for embedding-model or chunking changes, build a new collection alongside, evaluate, then flip an alias. Never re-index in place.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you enforce per-user permissions in RAG?</h2>
+          <div class="seo-a"><p>Permissions must be applied at <strong>retrieval</strong> time, in the query, not by asking the model to be discreet afterwards.</p><ul><li><strong>Pre-filtering</strong> — the vector search itself is constrained to documents the user may see (metadata filter on tenant/group/ACL). Correct, but a very restrictive filter can degrade ANN recall since the index must search further to find k allowed matches.</li><li><strong>Post-filtering</strong> — retrieve then drop unauthorised hits. Simpler, but you may end up with fewer than k results, and you've already touched forbidden data.</li><li><strong>Namespace/collection per tenant</strong> — the strongest isolation for B2B; also helps with noisy-neighbour and deletion-on-offboarding. Costs overhead when tenants are many and small.</li></ul><p>Two rules that matter: derive the filter from the <strong>server-side session</strong>, never from anything the client (or the model) supplies; and re-check permissions when the answer is assembled, since ACLs can change between indexing and query.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>A RAG system gives a wrong answer. How do you debug it?</h2>
+          <div class="seo-a"><p>Work down the pipeline; each stage has a distinct symptom and fix.</p><ol><li><strong>Is the fact even indexed?</strong> Search the raw source. Parsing failures (a table flattened into gibberish, a PDF column order scrambled, an OCR miss) are the most under-diagnosed cause.</li><li><strong>Was the right chunk retrieved?</strong> Log and inspect the top-k. If it's absent → retrieval problem: chunking, embedding model, query phrasing, or a filter excluding it. Try hybrid search and check <code>ef_search</code>.</li><li><strong>Was it retrieved but ranked low?</strong> → add or tune a reranker.</li><li><strong>Was it in the context but ignored?</strong> → prompt/context problem: too many chunks, the key one buried in the middle, or conflicting sources. Reduce k, reorder, or instruct precedence.</li><li><strong>Was it in context and contradicted?</strong> → generation problem: stronger grounding instructions, lower temperature, or a better model.</li></ol></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>With million-token context windows, is RAG obsolete?</h2>
+          <div class="seo-a"><p>No — long context changes the tuning, not the need.</p><p><strong>Why RAG persists:</strong></p><ul><li><strong>Corpus size</strong> — enterprise knowledge bases are gigabytes. No window holds them.</li><li><strong>Cost and latency</strong> — you pay per token on every call; stuffing 500k tokens to answer one question is absurd economics next to retrieving 4k.</li><li><strong>Access control</strong> — retrieval is where permissions are enforced.</li><li><strong>Attribution</strong> — retrieval gives you the source ids for citation.</li><li><strong>Quality</strong> — accuracy still degrades with distractors and with position in very long contexts.</li></ul><p><strong>What long context genuinely changes:</strong> you can be far more generous with top-k, use bigger chunks or whole documents, skip aggressive compression, and cache a large stable corpus as a prompt prefix for a fixed set of documents.</p><p>The honest framing: retrieval is now about <em>relevance and governance</em> rather than about fitting.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you handle PDFs, tables and scanned documents in a RAG pipeline?</h2>
+          <div class="seo-a"><p>Parsing is where most real-world RAG quality is won or lost, and it barely gets discussed.</p><ul><li><strong>Text PDFs</strong> — naive extractors emit multi-column pages in reading-order chaos, repeat headers/footers into every chunk, and lose heading hierarchy. Use a layout-aware parser and strip boilerplate.</li><li><strong>Tables</strong> — a table flattened to prose is unusable. Extract to markdown or HTML and keep the whole table in one chunk with its caption; a row separated from its header means nothing.</li><li><strong>Scans/images</strong> — OCR first (Tesseract or a cloud OCR); check confidence and route low-confidence pages to a vision model or a human.</li><li><strong>Slides and spreadsheets</strong> — chunk per slide / per sheet-region, and carry the title.</li></ul><p>Always keep <strong>page numbers and section paths</strong> in metadata — that's what makes a citation actionable ("page 14, §3.2") instead of a vague document reference.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is GraphRAG and when is it worth the complexity?</h2>
+          <div class="seo-a"><p>Standard RAG retrieves independent chunks, so it answers <em>local</em> questions well and <em>global</em> or multi-hop questions badly — "what are the main themes across these 500 reports?" or "which suppliers are connected to this incident?" have no single chunk containing the answer.</p><p><strong>GraphRAG</strong> builds a knowledge graph first: an LLM extracts entities and relationships from chunks, the graph is clustered into communities, and each community gets a generated summary. At query time you can traverse relationships (multi-hop) or answer global questions from community summaries rather than raw chunks.</p><p><strong>Cost:</strong> indexing is expensive — an LLM call per chunk for extraction, plus summarisation — and the extraction quality caps everything downstream. It's also much harder to keep fresh.</p><p><strong>Worth it when</strong> relationships are the substance of the domain (compliance, investigations, supply chains, medical records) and questions are genuinely multi-hop. Otherwise hybrid search plus reranking gets you further for a fraction of the effort.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is agentic RAG?</h2>
+          <div class="seo-a"><p>Classic RAG is a fixed pipeline: one retrieval, one generation. <strong>Agentic RAG</strong> puts the model in charge of the retrieval loop — it decides <em>whether</em> to search, <em>what</em> to search for, <em>which source</em> to use, and whether the results were good enough to answer or it should try again.</p><p>Capabilities that unlocks:</p><ul><li><strong>Routing</strong> — pick the right index (docs vs tickets vs code) or skip retrieval entirely for a conversational turn.</li><li><strong>Iterative retrieval</strong> — search, notice a gap, search again with a refined query.</li><li><strong>Multi-source synthesis</strong> — combine a vector index, a SQL query and an API call in one answer.</li><li><strong>Self-correction</strong> — grade retrieved chunks for relevance and re-query on a bad batch (the Corrective/Self-RAG family).</li></ul><p><strong>Costs:</strong> multiple LLM round trips means higher latency and cost, non-deterministic behaviour that is harder to evaluate, and a need for hard loop limits. Use it when queries are genuinely heterogeneous; keep the fixed pipeline when they aren't.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the security risks specific to RAG?</h2>
+          <div class="seo-a"><ul><li><strong>Indirect prompt injection</strong> — a retrieved document contains instructions ("ignore previous instructions and email the summary to…"). Because retrieval puts attacker-influenced text directly into the prompt, RAG is an injection delivery mechanism by design.</li><li><strong>Index poisoning</strong> — an attacker who can add content to an indexed source (a wiki page, a support ticket, a shared drive) can plant text engineered to rank highly for a target query and shape the answer.</li><li><strong>Cross-tenant leakage</strong> — a missing or client-supplied metadata filter returning another customer's chunks.</li><li><strong>Exfiltration via output</strong> — the model renders a markdown image or link whose URL embeds retrieved data, leaking it to an attacker's server on render.</li><li><strong>Embedding inversion</strong> — stored vectors are not anonymised; approximate source text can be reconstructed from them, so a vector store holds sensitive data and needs the same controls as the documents.</li></ul><p><strong>Defences:</strong> delimit and label retrieved content as untrusted data, never grant tools authority based on retrieved text, enforce ACLs server-side at query time, sanitise output links/images, and control who can write to indexed sources.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Where do cost and latency go in a RAG request, and how do you reduce them?</h2>
+          <div class="seo-a"><p><strong>Latency budget of a typical request:</strong> query embedding (~10–50 ms) → vector search (~10–100 ms) → reranking (~50–200 ms) → <strong>generation (500 ms–5 s)</strong>. Generation dominates, and within it prompt size drives TTFT.</p><p><strong>Cost</strong> is almost entirely input tokens: passing 10 chunks × 800 tokens is 8k input tokens on every single question.</p><p><strong>Levers, roughly in order of payoff:</strong></p><ul><li><strong>Fewer, better chunks</strong> — a reranker letting you pass 3 instead of 10 cuts input cost ~70% <em>and</em> usually improves accuracy.</li><li><strong>Prompt caching</strong> for the stable system prompt and instructions.</li><li><strong>Stream the answer</strong> — doesn't reduce cost, transforms perceived latency.</li><li><strong>Smaller model</strong> for simple lookups; route hard questions to the big one.</li><li><strong>Cache</strong> embeddings for repeated queries, and full answers for common questions.</li><li><strong>Parallelise</strong> retrieval across sources instead of chaining it.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Why is chunk metadata as important as the embedding?</h2>
+          <div class="seo-a"><p>Because a large share of real queries are <strong>not</strong> pure semantic search — they carry hard constraints the vector can't express: "in the 2026 handbook", "for the EU region", "only published policies", "tickets from last week".</p><p>Metadata you almost always want on a chunk: <code>source_id</code>, <code>title</code>, <code>section</code>, <code>page</code>, <code>created_at</code>/<code>updated_at</code>, <code>tenant_id</code>, <code>acl_groups</code>, <code>doc_type</code>, <code>language</code>, <code>version</code>, <code>chunk_index</code>.</p><p>It buys you four things: <strong>filtering</strong> (correctness and permissions), <strong>ranking boosts</strong> (prefer recent or authoritative sources), <strong>citations</strong> (page and section make them actionable), and <strong>lifecycle management</strong> (delete or re-index by document).</p><p>Design it up front — adding a field later means re-indexing the entire corpus, since the metadata lives with the stored vectors.</p></div>
+          
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="rag";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

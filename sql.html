@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>SQL Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="46 SQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="48 SQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/sql" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="SQL Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="46 SQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="48 SQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/sql" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>SQL Interview Questions and Answers</h1>
-      <p>46 hand-picked SQL interview questions with
+      <p>48 hand-picked SQL interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -721,6 +721,25 @@ SELECT DATE_TRUNC('day', created_at) AS day, SUM(total) AS revenue
 FROM orders GROUP BY 1;
 
 REFRESH MATERIALIZED VIEW CONCURRENTLY daily_revenue;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you optimize a slow-running SQL query?</h2>
+          <div class="seo-a"><p>Work methodically, driven by the plan — don't guess:</p><ol><li><strong>EXPLAIN / EXPLAIN ANALYZE</strong> first — look for full table scans, bad join order, and unused indexes.</li><li><strong>Index</strong> the columns in <code class="inline">WHERE</code>, <code class="inline">JOIN</code>, and <code class="inline">ORDER BY</code> (composite indexes matching the query shape); avoid wrapping indexed columns in functions, which defeats the index.</li><li><strong>Select only needed columns</strong> — not <code class="inline">SELECT *</code>.</li><li><strong>Kill N+1</strong> — join or batch instead of a query per row.</li><li><strong>Reduce rows early</strong> — filter, and paginate (keyset/<code class="inline">LIMIT</code>) instead of returning everything.</li><li>Rewrite correlated subqueries as joins; avoid needless <code class="inline">DISTINCT</code>/<code class="inline">OR</code>; keep <strong>statistics</strong> fresh.</li><li>For very large tables, consider <strong>partitioning</strong>, denormalisation, or caching.</li></ol><p>Re-check the plan to confirm the win.</p></div>
+          <pre><code>EXPLAIN ANALYZE
+SELECT id, name FROM orders
+WHERE customer_id = 42 AND status = 'OPEN'
+ORDER BY created_at DESC
+LIMIT 20;
+-- index: (customer_id, status, created_at)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between indexing and partitioning in a database?</h2>
+          <div class="seo-a"><p>They solve different problems and are complementary:</p><ul><li><strong>Indexing</strong> — a secondary structure (usually a B-tree) that gives the engine a <strong>fast access path</strong> to rows so it doesn't scan the whole table. It doesn't change how the table is stored; it adds lookup speed at the cost of extra storage and slightly slower writes.</li><li><strong>Partitioning</strong> — <strong>physically splits one large table</strong> into smaller pieces by a key (range / list / hash). Queries then touch only relevant partitions (<em>partition pruning</em>), and maintenance (archiving, vacuum, dropping old data) works per-partition.</li></ul><p>Index = faster lookups <em>within</em> a table; partitioning = divide a huge table for scalability and manageability. You often index within partitions.</p></div>
+          <pre><code>-- Index: fast lookup path
+CREATE INDEX idx_orders_customer ON orders(customer_id);
+
+-- Partition: split the table by range
+CREATE TABLE orders (...) PARTITION BY RANGE (created_at);</code></pre>
         </article>
     </section>
 

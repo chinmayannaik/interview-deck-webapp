@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+
+  <title>CI/CD Interview Questions &amp; Answers — InterviewDeck</title>
+  <meta name="description" content="20 CI/CD interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
+  <meta name="author" content="InterviewDeck" />
+  <link rel="canonical" href="https://www.interviewdeck.in/cicd" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="InterviewDeck" />
+  <meta property="og:title" content="CI/CD Interview Questions &amp; Answers — InterviewDeck" />
+  <meta property="og:description" content="20 CI/CD interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:url" content="https://www.interviewdeck.in/cicd" />
+  <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CI/CD Interview Questions &amp; Answers — InterviewDeck" />
+  <meta name="twitter:description" content="Master coding and interview questions - searchable, with practice mode." />
+  <meta name="twitter:image" content="https://www.interviewdeck.in/assets/og-card.png" />
+
+  <!-- Tells Google which name belongs to this site. Both spellings are declared
+       because the brand is written solid but read as two words. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://www.interviewdeck.in/#website",
+        "url": "https://www.interviewdeck.in/",
+        "name": "InterviewDeck",
+        "alternateName": ["Interview Deck", "Interview Deck - Interview Questions Bank"],
+        "description": "A free, searchable bank of coding and interview questions and answers.",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://www.interviewdeck.in/#org" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://www.interviewdeck.in/#org",
+        "name": "InterviewDeck",
+        "alternateName": "Interview Deck",
+        "url": "https://www.interviewdeck.in/",
+        "logo": "https://www.interviewdeck.in/assets/favicon/icon-512.png"
+      }
+    ]
+  }
+  </script>
+
+  <!-- icons + manifest -->
+  <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
+  <link rel="icon" href="assets/favicon/icon-48.png"  type="image/png" sizes="48x48" />
+  <link rel="icon" href="assets/favicon/icon-192.png" type="image/png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="assets/favicon/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#C21836" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#151213" media="(prefers-color-scheme: dark)" />
+
+  <!-- Webfonts. Cross-origin, so the service worker leaves them to the network;
+       offline the stacks in --sans/--mono fall back to system fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- stylesheets (order matters: tokens → reset → components → theme) -->
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/splash.css" />
+  <link rel="stylesheet" href="css/dark-theme.css" />
+  <link rel="stylesheet" href="css/tutor.css" />
+  <link rel="stylesheet" href="css/notebook.css" />
+  <link rel="stylesheet" href="css/quicknote.css" />
+  <link rel="stylesheet" href="css/dialog.css" />
+  <link rel="stylesheet" href="css/speak.css" />
+  <link rel="stylesheet" href="css/coding.css" />
+
+  <!-- the splash's own artwork is the only thing it waits on -->
+  <link rel="preload" as="image" href="assets/splash-illustration.webp" type="image/webp" />
+
+  <!-- set theme before first paint to avoid a flash -->
+  <script>
+    (function () {
+      let theme = "light";
+      try {
+        const raw = localStorage.getItem("iqb:theme");
+        if (raw) theme = JSON.parse(raw);
+      } catch (e) {}
+      document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+    })();
+  </script>
+
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Continuous Integration vs Continuous Delivery vs Continuous Deployment.","acceptedAnswer":{"@type":"Answer","text":"Three stacked practices — each builds on the previous one: Continuous Integration (CI) — every developer merges to the mainline frequently (at least daily), and every push triggers an automated build + test. Goal: catch integration bugs within minutes, not at the end of a sprint. Continuous Delivery (CD) — every commit that passes CI produces a deployable artifact and is automatically pushed through environments up to a production-ready state. The final release to production is a manual button press (business decision). Continuous Deployment (CD) — same as above but there is no manual gate : if all checks pass, it goes to production automatically. So the only difference between the two CDs is whether a human approves the last step."}},{"@type":"Question","name":"Walk me through the stages of a typical production CI/CD pipeline.","acceptedAnswer":{"@type":"Answer","text":"A mature pipeline is ordered fastest-and-cheapest-fails-first , so bad commits die in seconds, not 40 minutes: Checkout / trigger — webhook on push, PR, tag, or schedule. Static checks — lint, format, secret scanning. Seconds. Build / compile — produce the artifact once. Unit tests + coverage. Quality gate — SonarQube on new code, coverage threshold. Package — build the container image / jar, tag it with the commit SHA. Security scan — image scan (Trivy/Grype), dependency scan (SCA). Publish — push the artifact to a registry (ECR, Nexus, Artifactory). Deploy to DEV → smoke tests. Deploy to STAGE → integration / E2E / performance tests. Approval gate (for Continuous Delivery). Deploy to PROD — rolling/canary → post-deploy health checks → auto-rollback on failure."}},{"@type":"Question","name":"What does \"build once, deploy many\" mean, and why does it matter?","acceptedAnswer":{"@type":"Answer","text":"You build the artifact (jar, container image, bundle) exactly once , publish it with an immutable identifier, and then promote that same binary through dev → stage → prod. Only configuration changes per environment, injected at deploy time via env vars / ConfigMaps / secret stores. The anti-pattern is rebuilding from source at each environment. That means: Prod runs a binary that was never tested — a transitive dependency could have changed between builds. Builds are non-reproducible, so \"it passed in stage\" proves nothing. You waste build minutes three times over. Practical rules: tag the image with the immutable commit SHA (not just latest ), never mutate a published tag, and keep config strictly outside the artifact (12-factor)."}},{"@type":"Question","name":"Explain Jenkins architecture — controller, agents, and executors.","acceptedAnswer":{"@type":"Answer","text":"Jenkins uses a controller (master) / agent (node) model: Controller — serves the UI, stores job config and build history, schedules work, and manages plugins. It should not run builds itself in production. Agent — a separate machine/container that actually executes the build steps. Connected via SSH, JNLP/inbound, or dynamically provisioned (Kubernetes plugin, EC2 plugin, Docker). Executor — a build slot on an agent. An agent with 4 executors runs 4 builds concurrently. Labels — tags on agents ( linux , docker , windows ) that a pipeline requests via agent { label 'docker' } . Modern setups use ephemeral agents : the Kubernetes plugin spins up a fresh pod per build and destroys it after — clean workspace every time, no state leakage, scales to zero."}},{"@type":"Question","name":"Declarative vs Scripted Jenkins pipeline — and what is a shared library?","acceptedAnswer":{"@type":"Answer","text":"Declarative — the modern, opinionated syntax wrapped in a pipeline { } block with fixed sections ( agent , stages , post , environment ). Validated up front, easier to read, works with the Blue Ocean editor. Use this by default. Scripted — raw Groovy starting with node { } . Full programmatic power (loops, complex conditionals) but no guardrails and harder to maintain. Escape hatch: you can drop into scripted inside declarative using a script { } block. Shared library — a separate Git repo of reusable Groovy code ( vars/ for custom steps, src/ for classes) loaded with @Library('my-lib') . This is how you stop copy-pasting the same 200-line Jenkinsfile into 40 repos — each repo's Jenkinsfile becomes a few lines calling a standard template."}},{"@type":"Question","name":"Explain GitHub Actions: workflows, jobs, steps, and runners.","acceptedAnswer":{"@type":"Answer","text":"Hierarchy, largest to smallest: Workflow — a YAML file in .github/workflows/ triggered by an event ( push , pull_request , schedule , workflow_dispatch , release ). Job — a set of steps running on one runner. Jobs run in parallel by default ; use needs: to sequence them. Step — either a shell command ( run: ) or a reusable action ( uses: ). Runner — the machine. GitHub-hosted (fresh VM per job, billed per minute) or self-hosted (your infra — needed for private network access, special hardware, or cost at scale). Key mechanics: each job gets a fresh workspace , so passing data between jobs needs actions/upload-artifact or job outputs . Secrets come from repo/org/environment secrets, and for cloud auth you should use OIDC federation instead of long-lived access keys."}},{"@type":"Question","name":"How does GitLab CI work? Explain .gitlab-ci.yml, stages, and runners.","acceptedAnswer":{"@type":"Answer","text":"GitLab CI is configured by a single .gitlab-ci.yml at the repo root: stages — an ordered list; all jobs in a stage run in parallel, and the next stage starts only when the previous one fully succeeds. job — a named block with stage , script , and optional rules , artifacts , cache , needs . runner — the agent that picks up jobs, registered with tags. Executors: docker (most common), shell , kubernetes . rules / only-except — control when a job runs (branch, tag, MR, changed files, manual). needs — creates a DAG so a job can start before its whole stage is done, cutting pipeline time. GitLab also gives you environments (with deployment history + one-click rollback), protected variables for secrets, and built-in container registry."}},{"@type":"Question","name":"How do you manage secrets in a CI/CD pipeline?","acceptedAnswer":{"@type":"Answer","text":"The rule: secrets never live in Git, never live in the image, and never get echoed to logs. In order of maturity: Native CI secret store — Jenkins Credentials, GitHub/GitLab secrets, masked and injected as env vars at runtime. Scope them per environment, not globally. Dedicated secret manager — HashiCorp Vault, AWS Secrets Manager, Azure Key Vault. The pipeline authenticates and fetches at deploy time, so rotation is central and audited. OIDC / workload identity — the best option for cloud access: the pipeline exchanges a short-lived signed token for a cloud role. No stored long-lived credentials at all. Supporting controls: secret scanning ( gitleaks , GitHub push protection) to block commits, masking in log output, short TTLs and rotation, and separate credentials per environment so a dev leak can't touch prod."}},{"@type":"Question","name":"What is an artifact repository, and how do you version artifacts?","acceptedAnswer":{"@type":"Answer","text":"An artifact repository (Nexus, JFrog Artifactory, ECR/GCR/ACR, GitHub Packages) is the system of record for build outputs — jars, npm packages, container images, Helm charts. Why not just rebuild from source? Because the repository gives you immutability (a published version can never change), traceability (which build, which commit), caching of upstream dependencies (proxy remote registries so builds don't break when npm is down), and a security choke point for scanning and license policy. Versioning in practice: SemVer MAJOR.MINOR.PATCH for anything consumed by others — MAJOR = breaking, MINOR = backwards-compatible feature, PATCH = fix. Immutable build identity for deployables — 1.4.2-a3f9c1 or just the commit SHA. SNAPSHOT / pre-release versions for in-progress builds, kept out of prod and expired aggressively. Never overwrite a released version, and never deploy latest to production."}},{"@type":"Question","name":"Compare rolling, blue-green, canary, and feature-flag deployments.","acceptedAnswer":{"@type":"Answer","text":"Strategy How it works Cost / risk Recreate Stop old, start new Downtime. Only for batch/internal apps. Rolling Replace instances a few at a time No extra infra, no downtime — but both versions run at once, and rollback is a slow reverse-roll. Blue-green Two full environments; flip the load balancer to the new one Instant rollback (flip back), but 2× infrastructure and DB migrations must be compatible with both. Canary Route 1% → 10% → 50% → 100% of traffic to the new version, watching metrics at each step Smallest blast radius; needs good metrics + traffic-splitting (Ingress, service mesh, Argo Rollouts). Feature flags Ship the code dark, enable per user/segment at runtime Decouples deploy from release ; instant kill switch. Cost: flag debt if never cleaned up."}},{"@type":"Question","name":"A deployment breaks production. Walk me through your rollback.","acceptedAnswer":{"@type":"Answer","text":"Priority order: stop the bleeding first, diagnose second. Detect — post-deploy health checks / alerts fire (error rate, latency, 5xx). Ideally automated, not a customer ticket. Decide fast — if user impact is ongoing, roll back. Do not debug a live outage in place. Roll back — redeploy the previous known-good immutable artifact: kubectl rollout undo , flip blue-green back, or set canary weight to 0. This is why \"build once\" matters: the old artifact still exists and is trusted. Verify — confirm metrics recover; announce in the incident channel. Contain the data problem — if a DB migration was involved, rollback may not be possible; that's why migrations are expand/contract and forward-only. Fix forward + blameless postmortem — reproduce in stage, add the missing test/alert so the same class of failure is caught next time."}},{"@type":"Question","name":"What is GitOps? How do ArgoCD/Flux differ from a push-based pipeline?","acceptedAnswer":{"@type":"Answer","text":"GitOps makes Git the single source of truth for declared infrastructure and application state. An in-cluster agent continuously reconciles the live cluster toward what the repo says. Four principles: declarative config, versioned in Git, changes applied automatically, and continuously reconciled (drift is corrected, not just applied once). Push vs pull: Push (classic CI/CD) — Jenkins/GH Actions holds cluster credentials and runs kubectl apply from outside. Your CI system needs prod admin access, and manual kubectl edit drift goes unnoticed. Pull (GitOps — ArgoCD/Flux) — the agent runs inside the cluster and pulls from Git. No external system holds cluster credentials, every change is a reviewed Git commit (full audit trail), rollback is git revert , and drift is auto-corrected. Typical split: CI builds and pushes the image, then bumps the tag in a separate config repo ; ArgoCD notices the commit and syncs the cluster."}},{"@type":"Question","name":"Your pipeline takes 45 minutes. How do you make it faster?","acceptedAnswer":{"@type":"Answer","text":"Measure first — instrument stage durations and attack the top two. Then, roughly in order of payoff: Parallelise — run lint, unit tests, and security scans as concurrent jobs instead of a chain. Split slow test suites across N runners (shards). Cache dependencies — ~/.m2 , node_modules , Gradle caches, keyed on the lockfile hash so the cache invalidates correctly. Docker layer caching — order the Dockerfile so dependency install comes before COPY . . ; use BuildKit cache mounts / --cache-from a registry image. Fail fast — cheapest checks first, so a lint error doesn't cost 45 minutes. Run only what changed — path filters / monorepo affected-project detection (Nx, Bazel, rules: changes: ). Move slow suites off the critical path — heavy E2E/performance on a nightly or post-merge pipeline, with a fast smoke subset on PRs. Right-size runners — bigger machines, or self-hosted with warm caches and pre-pulled images. Fix flaky tests — retries are hidden minutes."}},{"@type":"Question","name":"What automated gates do you put in a pipeline before code reaches production?","acceptedAnswer":{"@type":"Answer","text":"Layered gates, each cheap enough to run on every commit: Lint + format — style and obvious bugs, seconds. Unit tests + coverage threshold — gate on new/changed code coverage, not the whole legacy repo. SAST / code quality — SonarQube quality gate on new code (\"clean as you code\"): no new critical bugs or security hotspots. SCA — dependency scanning — Snyk, Dependabot, npm audit , OWASP Dependency-Check. Fail on known-exploitable CVEs. Secret scanning — gitleaks / push protection. Container image scanning — Trivy/Grype on the built image; fail on HIGH/CRITICAL with a fixable version. IaC scanning — Checkov/tfsec on Terraform (public S3 bucket, open security group). Integration + E2E smoke in a deployed environment. Manual approval for production (change management)."}},{"@type":"Question","name":"How are pipelines triggered? Webhook vs polling vs schedule.","acceptedAnswer":{"@type":"Answer","text":"Webhook (push) — the SCM calls the CI server the instant a push/PR/tag lands. Immediate, no wasted cycles. This is the default choice. SCM polling — CI asks the repo \"anything new?\" every N minutes. Wasteful and delayed; only used when the CI server can't be reached from the internet (though a firewall-friendly agent or pollSCM with long intervals is the usual compromise). Scheduled / cron — nightly regression, weekly dependency updates, periodic security scans, cache warming. Manual / parameterised — workflow_dispatch , \"Build with Parameters\" — used for deploys, rollbacks, and one-off ops jobs. Upstream / chained — one pipeline triggers another (build → deploy pipeline, or a shared-library change rebuilding consumers). Tag / release — pushing v1.4.2 triggers the release pipeline. Clean separation of CI from release."}},{"@type":"Question","name":"Which branching model suits CI/CD — trunk-based or GitFlow?","acceptedAnswer":{"@type":"Answer","text":"Trunk-based development is what actually enables continuous integration: everyone commits to main (directly or via short-lived branches merged within a day or two), behind feature flags if incomplete. Every merge triggers the full pipeline and is potentially releasable. GitFlow (long-lived develop , release/* , hotfix/* branches) was designed for versioned software with scheduled releases. In a continuous-delivery world it causes long-lived divergence, painful merges, and delayed integration feedback — the exact problems CI exists to prevent. Practical stance for a 3–4 YOE DevOps engineer: Default to trunk-based + short-lived branches + PR checks + feature flags. Use release branches only if you genuinely support multiple versions in the field (on-prem, mobile). Protect main : required status checks, required review, no force-push, linear history."}},{"@type":"Question","name":"Self-hosted runners/agents vs cloud-hosted — how do you choose and scale them?","acceptedAnswer":{"@type":"Answer","text":"Cloud-hosted (GitHub-hosted, GitLab SaaS runners): zero maintenance, clean VM per job, pay per minute. Choose when your builds are ordinary and internet-reachable. Self-hosted : choose when you need Private network access — deploying into a VPC, hitting an internal artifact repo or database. Cost at scale — heavy build minutes are far cheaper on your own spot instances. Special hardware — big memory, GPUs, macOS, ARM. Warm caches — pre-pulled base images and populated dependency caches cut minutes off every build. Scaling pattern : ephemeral autoscaled runners — Kubernetes (Actions Runner Controller, GitLab Kubernetes executor) or EC2 spot with an autoscaler. Each job gets a fresh pod/VM that is destroyed after, so there's no state leakage, and the pool scales to zero when idle. Security caution : never run untrusted fork PRs on a persistent self-hosted runner — a malicious PR can steal cached credentials and persist on the box."}},{"@type":"Question","name":"How do you build container images inside a CI pipeline safely?","acceptedAnswer":{"@type":"Answer","text":"The problem: building a Docker image needs a Docker daemon, but the build itself is running inside a container. Docker socket mount ( -v /var/run/docker.sock ) — simplest, but the build gets root on the host . Acceptable only on trusted, isolated runners. Docker-in-Docker (dind) — a privileged sidecar daemon. Works, but privileged: true is a big security hole and layer caching is lost between jobs unless configured. Daemonless builders — Kaniko , Buildah , or BuildKit in rootless mode build images without a privileged daemon. This is the recommended approach on Kubernetes runners. Regardless of builder: use multi-stage builds, tag with the commit SHA, scan the image before publishing, sign it (cosign) if you have supply-chain requirements, and push to a private registry using short-lived credentials (OIDC/IRSA)."}},{"@type":"Question","name":"How do you design CI/CD for a monorepo with 20 services?","acceptedAnswer":{"@type":"Answer","text":"The core requirement: a change to one service must not build and deploy the other 19. Change detection — path filters ( paths: / rules: changes: ) for simple cases; a build tool that computes the affected graph (Nx, Turborepo, Bazel, Gradle) when services share libraries — because a change to a shared library must rebuild its dependents. Per-service pipelines — dynamic/child pipelines generated from the affected list, so each service gets its own build → test → image → deploy path and its own version. Shared, versioned templates — reusable workflows / GitLab include: / Jenkins shared library so 20 services don't own 20 divergent pipeline definitions. Independent versioning &amp; deploy — one service failing must not block the others; tag artifacts per service. Remote build cache — the single biggest speed win in a monorepo; unchanged targets are restored, not rebuilt. Merge queue — at high commit volume, serialise merges so main is always green."}},{"@type":"Question","name":"A pipeline that passed yesterday fails today with no code change. How do you debug it?","acceptedAnswer":{"@type":"Answer","text":"Classic \"works yesterday, broken today\" — something outside your commit moved. Work through what can change without a commit: Read the actual error , not the summary — expand the failing step, get the first error, not the last. Unpinned dependency — a transitive package, base image tag ( node:20 moved), or a third-party action tag published a new version. Most common cause by far. Runner/agent change — the hosted runner image was updated (new OS, new default tool version), or a self-hosted agent has a full disk / stale cache. External dependency — registry outage, expired certificate, revoked/rotated credential, rate limit (Docker Hub anonymous pulls). Flaky test or race — check whether it fails consistently on re-run. Shared config drift — someone changed a shared library, template, or environment variable, or a secret expired. Then: reproduce locally with the same image ( docker run the build container), add set -x /debug logging, or SSH into the runner if your CI supports a debug session. Fix the root cause by pinning — lockfiles, digest-pinned base images, SHA-pinned actions."}}]}
+  </script>
+</head>
+
+<body>
+  <!-- ===== splash =====
+       Inline (not built by JS) so it paints on the first frame while the
+       question data is still being fetched from the remote content repo.
+       js/splash.js advances the bar from real fetch completions and removes
+       this element once app.js has rendered. -->
+  <div class="splash" id="splash" role="status" aria-live="polite" aria-busy="true">
+    <div class="splash-brand">
+      <div class="splash-logo" aria-hidden="true"></div>
+      <h1 class="splash-title">interview<span>Deck</span></h1>
+      <p class="splash-tagline">Your one-stop platform to prepare, practice and ace your interviews.</p>
+    </div>
+
+    <div class="splash-progress">
+      <div class="splash-track" id="splash-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress">
+        <div class="splash-bar" id="splash-bar"></div>
+      </div>
+      <p class="splash-status" id="splash-status">Loading your questions…</p>
+      <div class="splash-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+
+    <div class="splash-art">
+      <img src="assets/splash-illustration.webp" alt="" width="1041" height="375" fetchpriority="high" decoding="async" />
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- ===== header ===== -->
+    <div class="header-shell" id="header-shell">
+      <header class="site-header">
+        <a class="brand" href="/" aria-label="Interview Deck home">
+          <!-- The mark carries the brand on mobile, where .brand-name is hidden
+               to buy room for the control row. Painted as a CSS mask (see
+               .brand-mark) so it takes the theme's accent rather than the
+               artwork's fixed crimson. -->
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-name">interview<span>Deck</span></span>
+        </a>
+
+        <div class="header-spacer"></div>
+
+        <label class="header-search" aria-label="Search questions">
+          <span class="s-icon" aria-hidden="true" style="display: flex; align-items: center; justify-content: center;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+          <input class="js-search" type="search" placeholder="Search question" autocomplete="off" />
+          <span class="s-kbd" aria-hidden="true">/</span>
+        </label>
+        <!-- mobile only: cancels and collapses the expanded search -->
+        <button class="icon-btn search-close" id="search-close" type="button" aria-label="Close search">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+
+        <!-- Global study-mode switch (sits by the search on the right). Prep =
+             full answers/deep dives/code. Revise = crisp per-question recaps with
+             a per-card Prep/Revise toggle. Persisted in localStorage (storage.js);
+             text-only segmented control so the active mode is always visible. -->
+        <div class="mode-switch" id="mode-switch" role="group" aria-label="Study mode">
+          <button class="mode-opt is-active" id="mode-prep" type="button" aria-pressed="true" title="Learn mode — full answers, deep dives, code">Learn</button>
+          <button class="mode-opt" id="mode-revise" type="button" aria-pressed="false" title="Revise mode — crisp recaps for a fast pre-interview refresh">Revise</button>
+        </div>
+
+        <!-- Focus pack: load a role-based subset of the bank (e.g. "Java +
+             Angular"). Shown only when the content ships packs — app.js unhides
+             it and opens the picker popover. -->
+        <button class="icon-btn focus-btn" id="focus-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Focus pack" title="Focus pack — load role-specific questions" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </button>
+        <!-- Playground. Used to ride the category tab strip (often scrolled off);
+             fixed header spot with the other tools. Hidden under 640px —
+             phones open it from the section dropdown. -->
+        <button class="pg-header-btn" id="playground-btn" type="button" aria-label="Playground" title="JavaScript Playground">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </button>
+        <!-- mobile only. Sits in the sticky header (not the content head) so the
+             filters stay reachable no matter how far the list is scrolled. The
+             sheet it opens lives further down the DOM; it is position:fixed, so
+             where the trigger sits does not matter. -->
+        <button class="icon-btn filter-btn" id="filter-btn" type="button" aria-expanded="false" aria-controls="tools-panel" aria-label="Filters and tools">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          <span class="filter-count" id="filter-count" hidden>0</span>
+        </button>
+        <!-- Quick Note. Lives in the sticky header so a note can be started at
+             any scroll depth, and above the tutor panel so it stays reachable
+             while a chat answer is on screen. Hidden under 640px (see
+             css/quicknote.css) — the phone header already carries four targets. -->
+        <!-- My Notes. Used to be the LAST tab of the scrollable category strip,
+             where it lived permanently pushed off-screen — a personal space
+             earns a fixed header spot instead. Hidden under 640px like Quick
+             Note; phones reach it through the section dropdown. -->
+        <button class="icon-btn mynotes-btn" id="mynotes-btn" type="button" aria-label="My Notes" title="My Notes — everything you've written">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        </button>
+        <button class="icon-btn qn-open-btn" id="quicknote-btn" type="button" aria-label="Quick note" aria-haspopup="dialog" title="Quick note (N)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+        </button>
+        <button class="icon-btn" id="hl-toggle" type="button" aria-label="Highlighter" aria-haspopup="true" aria-expanded="false" title="Highlighter — pick a color, then select text to highlight">
+          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+        </button>
+        <!-- mobile only: expands .header-search across the header row -->
+        <button class="icon-btn search-toggle" id="search-toggle" type="button" aria-label="Search questions" aria-expanded="false">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <!-- desktop only: on mobile the theme switch lives in the tools sheet
+             (#theme-toggle-m) so the header can hold four comfortable targets -->
+        <button class="icon-btn" id="theme-toggle" type="button" aria-label="Toggle dark mode"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
+        <!-- Profile / Sign In — far right, after tools (account menus open from here) -->
+        <button class="auth-btn" id="auth-btn" type="button" aria-label="Sign in with Google to sync across devices">
+          <span class="auth-btn-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            Sign In
+          </span>
+          <span class="auth-btn-user" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20v-1a6 6 0 0 1 12 0v1"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <!-- category tabs (sticky within the header shell). The strip scrolls
+           horizontally with its scrollbar hidden, which used to leave the
+           overflowed tabs (My Notes!) undiscoverable — the arrows only render
+           while there is actually something cut off on that side. -->
+      <div class="tabs-wrap">
+        <button class="tabs-arrow left" id="tabs-arrow-left" type="button" aria-label="Scroll tabs left" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <nav class="tabs" id="tabs" role="tablist" aria-label="Question categories"></nav>
+        <button class="tabs-arrow right" id="tabs-arrow-right" type="button" aria-label="Scroll tabs right" hidden>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- mobile controls: compact dropdowns replacing the tab/topic/level chip rows (shown < 900px) -->
+    <div class="mobile-controls" id="mobile-controls" role="group" aria-label="Filters">
+      <div class="m-field"><select class="m-select" id="m-category" aria-label="Section"></select></div>
+      <div class="m-field"><select class="m-select" id="m-topic" aria-label="Topic"></select></div>
+      <div class="m-field"><select class="m-select" id="m-difficulty" aria-label="Level"></select></div>
+    </div>
+
+    <!-- ===== hero ===== -->
+
+    <!-- ===== main ===== -->
+    <main class="main">
+      <aside class="sidebar" aria-label="Category navigation">
+        <!-- desktop only: collapses the sidebar to a 56px icon rail. The AI
+             Helper auto-collapses it on open (js/tutor.js), but this button
+             lets the reader re-expand it — or collapse it any time. -->
+        <button class="side-collapse" id="sidebar-collapse" type="button" aria-expanded="true" aria-label="Collapse sidebar" title="Collapse sidebar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
+        </button>
+        <nav id="sidebar-nav"></nav>
+      </aside>
+
+      <section class="content" aria-live="polite">
+        <div class="content-head">
+          <h2 class="content-title" id="content-title">All Questions</h2>
+
+          <!-- The tools are NOT duplicated for mobile: .tools-panel is
+               display:contents on desktop (so .content-tools is still a plain
+               inline row) and becomes a bottom sheet under 900px. One set of
+               buttons = one set of handlers in app.js. The sheet's trigger
+               (#filter-btn) lives up in the sticky header.  -->
+          <div class="tools-panel" id="tools-panel">
+            <div class="tools-sheet-head">
+              <span class="tools-sheet-title">Filters &amp; tools</span>
+              <button class="tools-close" id="tools-close" type="button" aria-label="Close filters">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+          <div class="content-tools">
+            <button class="tool" id="bookmark-filter" type="button" title="Show bookmarked only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Saved
+            </button>
+             <button class="tool" id="video-filter" type="button" title="Show questions with videos">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="#FF0000" style="flex-shrink: 0;" aria-hidden="true"><path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.518 3.545 12 3.545 12 3.545s-7.518 0-9.388.508a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.87.508 9.388.508 9.388.508s7.518 0 9.388-.508a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837z"/><polygon points="9.545 8.568 9.545 15.432 15.545 12" fill="white"/></svg>
+              With Videos
+            </button>
+            <button class="tool" id="completed-filter" type="button" title="Show completed only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              Completed
+            </button>
+            <button class="tool" id="uncompleted-filter" type="button" title="Show uncompleted only">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+              Uncompleted
+            </button>
+            <button class="tool" id="note-filter" type="button" title="Show questions with notes">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"/></svg>
+              With Notes
+            </button>
+            <button class="tool" id="expand-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="7 13 12 18 17 13"/><polyline points="7 6 12 11 17 6"/></svg>
+              Expand all
+            </button>
+            <button class="tool" id="collapse-all" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="17 11 12 6 7 11"/><polyline points="17 18 12 13 7 18"/></svg>
+              Collapse all
+            </button>
+            <!-- mobile only: the header has no room for the moon on a phone, so
+                 the theme switch rides along with the tools. app.js keeps its
+                 icon and label in sync with #theme-toggle. -->
+            <!-- mobile only, same reasoning as the theme switch: the phone
+                 header has no room for the Quick Note icon, but the panel
+                 itself works fine there as a bottom sheet. -->
+            <button class="tool tool-mobile-only" id="quicknote-btn-m" type="button">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
+              Quick Note
+            </button>
+            <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
+            <input id="import-file" type="file" accept="application/json" hidden />
+          </div>
+
+            <div class="tools-sheet-foot">
+              <button class="tools-clear" id="tools-clear" type="button">Clear</button>
+              <button class="tools-done" id="tools-done" type="button">Apply</button>
+            </div>
+          </div>
+        </div>
+        <div class="tools-backdrop" id="tools-backdrop" hidden></div>
+
+        <!-- mobile/tablet topic selector (sidebar is hidden on small screens) -->
+        <div class="subnav" id="subnav" role="tablist" aria-label="Topics"></div>
+
+        <div class="filter-row" id="difficulty-filter"></div>
+
+        <div class="q-list" id="q-list"></div>
+      </section>
+    </main>
+
+    <section id="seo-prerender" aria-label="CI/CD interview questions">
+      <style>
+        #seo-prerender{max-width:820px;margin:0 auto;padding:2rem 1.25rem 4rem;
+          font:400 1rem/1.6 var(--sans,system-ui,sans-serif);color:var(--ink,#1a1a1a)}
+        #seo-prerender h1{font-size:1.9rem;line-height:1.2;margin:0 0 .75rem}
+        #seo-prerender .seo-q{margin:1.75rem 0;padding-top:1.25rem;
+          border-top:1px solid var(--line,#e5e2e0)}
+        #seo-prerender .seo-q h2{font-size:1.15rem;margin:0 0 .5rem}
+        #seo-prerender .seo-topics{list-style:none;padding:0;display:grid;gap:.6rem;margin:1.5rem 0}
+        #seo-prerender .seo-topics a{font-weight:600}
+        #seo-prerender pre{overflow-x:auto;background:var(--code-bg,#f4f2f0);
+          padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
+      </style>
+      <h1>CI/CD Interview Questions and Answers</h1>
+      <p>20 hand-picked CI/CD interview questions with
+         detailed answers. Open the interactive version above to search, filter
+         by difficulty, run code, bookmark questions and track your progress.</p>
+      
+        <article class="seo-q">
+          <h2>Continuous Integration vs Continuous Delivery vs Continuous Deployment.</h2>
+          <div class="seo-a"><p>Three stacked practices — each builds on the previous one:</p><ul><li><strong>Continuous Integration (CI)</strong> — every developer merges to the mainline frequently (at least daily), and every push triggers an automated build + test. Goal: catch integration bugs within minutes, not at the end of a sprint.</li><li><strong>Continuous Delivery (CD)</strong> — every commit that passes CI produces a <em>deployable artifact</em> and is automatically pushed through environments up to a production-ready state. The final release to production is a <strong>manual button press</strong> (business decision).</li><li><strong>Continuous Deployment (CD)</strong> — same as above but there is <strong>no manual gate</strong>: if all checks pass, it goes to production automatically.</li></ul><p>So the only difference between the two CDs is whether a human approves the last step.</p></div>
+          <pre><code>Commit → Build → Unit tests → Package → Deploy DEV → Integration tests
+     → Deploy STAGE → E2E/perf → [manual approval] → PROD   ← Continuous DELIVERY
+     → Deploy STAGE → E2E/perf →                     → PROD   ← Continuous DEPLOYMENT</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Walk me through the stages of a typical production CI/CD pipeline.</h2>
+          <div class="seo-a"><p>A mature pipeline is ordered <strong>fastest-and-cheapest-fails-first</strong>, so bad commits die in seconds, not 40 minutes:</p><ol><li><strong>Checkout / trigger</strong> — webhook on push, PR, tag, or schedule.</li><li><strong>Static checks</strong> — lint, format, secret scanning. Seconds.</li><li><strong>Build / compile</strong> — produce the artifact once.</li><li><strong>Unit tests</strong> + coverage.</li><li><strong>Quality gate</strong> — SonarQube on new code, coverage threshold.</li><li><strong>Package</strong> — build the container image / jar, tag it with the commit SHA.</li><li><strong>Security scan</strong> — image scan (Trivy/Grype), dependency scan (SCA).</li><li><strong>Publish</strong> — push the artifact to a registry (ECR, Nexus, Artifactory).</li><li><strong>Deploy to DEV</strong> → smoke tests.</li><li><strong>Deploy to STAGE</strong> → integration / E2E / performance tests.</li><li><strong>Approval gate</strong> (for Continuous Delivery).</li><li><strong>Deploy to PROD</strong> — rolling/canary → post-deploy health checks → auto-rollback on failure.</li></ol></div>
+          <pre><code>stages:
+  - lint
+  - build
+  - test
+  - scan
+  - publish
+  - deploy-dev
+  - deploy-stage
+  - deploy-prod</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does &quot;build once, deploy many&quot; mean, and why does it matter?</h2>
+          <div class="seo-a"><p>You build the artifact (jar, container image, bundle) <strong>exactly once</strong>, publish it with an immutable identifier, and then promote that <em>same binary</em> through dev → stage → prod. Only <strong>configuration</strong> changes per environment, injected at deploy time via env vars / ConfigMaps / secret stores.</p><p>The anti-pattern is rebuilding from source at each environment. That means:</p><ul><li>Prod runs a binary that was <strong>never tested</strong> — a transitive dependency could have changed between builds.</li><li>Builds are non-reproducible, so "it passed in stage" proves nothing.</li><li>You waste build minutes three times over.</li></ul><p>Practical rules: tag the image with the immutable commit SHA (not just <code class="inline">latest</code>), never mutate a published tag, and keep config strictly outside the artifact (12-factor).</p></div>
+          <pre><code># build once
+docker build -t myapp:$GIT_SHA .
+docker push registry/myapp:$GIT_SHA
+
+# promote the SAME digest — no rebuild
+kubectl set image deploy/myapp app=registry/myapp:$GIT_SHA -n dev
+kubectl set image deploy/myapp app=registry/myapp:$GIT_SHA -n stage
+kubectl set image deploy/myapp app=registry/myapp:$GIT_SHA -n prod</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain Jenkins architecture — controller, agents, and executors.</h2>
+          <div class="seo-a"><p>Jenkins uses a <strong>controller (master) / agent (node)</strong> model:</p><ul><li><strong>Controller</strong> — serves the UI, stores job config and build history, schedules work, and manages plugins. It should <em>not</em> run builds itself in production.</li><li><strong>Agent</strong> — a separate machine/container that actually executes the build steps. Connected via SSH, JNLP/inbound, or dynamically provisioned (Kubernetes plugin, EC2 plugin, Docker).</li><li><strong>Executor</strong> — a build slot on an agent. An agent with 4 executors runs 4 builds concurrently.</li><li><strong>Labels</strong> — tags on agents (<code class="inline">linux</code>, <code class="inline">docker</code>, <code class="inline">windows</code>) that a pipeline requests via <code class="inline">agent { label 'docker' }</code>.</li></ul><p>Modern setups use <strong>ephemeral agents</strong>: the Kubernetes plugin spins up a fresh pod per build and destroys it after — clean workspace every time, no state leakage, scales to zero.</p></div>
+          <pre><code>pipeline {
+  agent {
+    kubernetes {
+      yaml '''
+        spec:
+          containers:
+          - name: maven
+            image: maven:3.9-eclipse-temurin-21
+            command: [&quot;cat&quot;]
+            tty: true
+      '''
+    }
+  }
+  stages {
+    stage('Build') {
+      steps { container('maven') { sh 'mvn -B clean package' } }
+    }
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Declarative vs Scripted Jenkins pipeline — and what is a shared library?</h2>
+          <div class="seo-a"><p><strong>Declarative</strong> — the modern, opinionated syntax wrapped in a <code class="inline">pipeline { }</code> block with fixed sections (<code class="inline">agent</code>, <code class="inline">stages</code>, <code class="inline">post</code>, <code class="inline">environment</code>). Validated up front, easier to read, works with the Blue Ocean editor. Use this by default.</p><p><strong>Scripted</strong> — raw Groovy starting with <code class="inline">node { }</code>. Full programmatic power (loops, complex conditionals) but no guardrails and harder to maintain. Escape hatch: you can drop into scripted inside declarative using a <code class="inline">script { }</code> block.</p><p><strong>Shared library</strong> — a separate Git repo of reusable Groovy code (<code class="inline">vars/</code> for custom steps, <code class="inline">src/</code> for classes) loaded with <code class="inline">@Library('my-lib')</code>. This is how you stop copy-pasting the same 200-line Jenkinsfile into 40 repos — each repo's Jenkinsfile becomes a few lines calling a standard template.</p></div>
+          <pre><code>@Library('platform-pipelines@v2') _
+
+pipeline {
+  agent { label 'docker' }
+  options { timeout(time: 30, unit: 'MINUTES'); disableConcurrentBuilds() }
+  environment { IMAGE = &quot;registry/myapp:${env.GIT_COMMIT.take(7)}&quot; }
+  stages {
+    stage('Build')  { steps { sh 'mvn -B clean package' } }
+    stage('Test')   { steps { sh 'mvn test' }
+      post { always { junit 'target/surefire-reports/*.xml' } } }
+    stage('Image')  { steps { sh &quot;docker build -t $IMAGE .&quot; } }
+    stage('Deploy') { when { branch 'main' } steps { deployToK8s(image: env.IMAGE) } }
+  }
+  post {
+    failure { slackSend channel: '#alerts', message: &quot;FAILED ${env.JOB_NAME} #${env.BUILD_NUMBER}&quot; }
+    always  { cleanWs() }
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Explain GitHub Actions: workflows, jobs, steps, and runners.</h2>
+          <div class="seo-a"><p>Hierarchy, largest to smallest:</p><ul><li><strong>Workflow</strong> — a YAML file in <code class="inline">.github/workflows/</code> triggered by an event (<code class="inline">push</code>, <code class="inline">pull_request</code>, <code class="inline">schedule</code>, <code class="inline">workflow_dispatch</code>, <code class="inline">release</code>).</li><li><strong>Job</strong> — a set of steps running on one runner. Jobs run <strong>in parallel by default</strong>; use <code class="inline">needs:</code> to sequence them.</li><li><strong>Step</strong> — either a shell command (<code class="inline">run:</code>) or a reusable <strong>action</strong> (<code class="inline">uses:</code>).</li><li><strong>Runner</strong> — the machine. GitHub-hosted (fresh VM per job, billed per minute) or <strong>self-hosted</strong> (your infra — needed for private network access, special hardware, or cost at scale).</li></ul><p>Key mechanics: each job gets a <strong>fresh workspace</strong>, so passing data between jobs needs <code class="inline">actions/upload-artifact</code> or job <code class="inline">outputs</code>. Secrets come from repo/org/environment secrets, and for cloud auth you should use <strong>OIDC federation</strong> instead of long-lived access keys.</p></div>
+          <pre><code>name: CI
+on:
+  push: { branches: [main] }
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: { node: [18, 20, 22] }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '${{ matrix.node }}', cache: 'npm' }
+      - run: npm ci
+      - run: npm test
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions: { id-token: write, contents: read }   # OIDC
+    environment: production                             # approval gate
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/gha-deploy
+          aws-region: ap-south-1
+      - run: ./deploy.sh</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does GitLab CI work? Explain .gitlab-ci.yml, stages, and runners.</h2>
+          <div class="seo-a"><p>GitLab CI is configured by a single <code class="inline">.gitlab-ci.yml</code> at the repo root:</p><ul><li><strong>stages</strong> — an ordered list; all jobs in a stage run in parallel, and the next stage starts only when the previous one fully succeeds.</li><li><strong>job</strong> — a named block with <code class="inline">stage</code>, <code class="inline">script</code>, and optional <code class="inline">rules</code>, <code class="inline">artifacts</code>, <code class="inline">cache</code>, <code class="inline">needs</code>.</li><li><strong>runner</strong> — the agent that picks up jobs, registered with tags. Executors: <code class="inline">docker</code> (most common), <code class="inline">shell</code>, <code class="inline">kubernetes</code>.</li><li><strong>rules / only-except</strong> — control when a job runs (branch, tag, MR, changed files, manual).</li><li><strong>needs</strong> — creates a DAG so a job can start before its whole stage is done, cutting pipeline time.</li></ul><p>GitLab also gives you <strong>environments</strong> (with deployment history + one-click rollback), <strong>protected variables</strong> for secrets, and built-in container registry.</p></div>
+          <pre><code>stages: [build, test, deploy]
+
+variables:
+  IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
+build:
+  stage: build
+  script:
+    - docker build -t $IMAGE .
+    - docker push $IMAGE
+  artifacts:
+    paths: [dist/]
+    expire_in: 1 week
+
+unit-test:
+  stage: test
+  cache:
+    key: { files: [package-lock.json] }
+    paths: [node_modules/]
+  script: [npm ci, npm test]
+
+deploy-prod:
+  stage: deploy
+  environment: { name: production, url: https://app.example.com }
+  rules:
+    - if: $CI_COMMIT_BRANCH == &quot;main&quot;
+      when: manual        # approval gate
+  script: ./deploy.sh $IMAGE</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you manage secrets in a CI/CD pipeline?</h2>
+          <div class="seo-a"><p>The rule: <strong>secrets never live in Git, never live in the image, and never get echoed to logs.</strong> In order of maturity:</p><ol><li><strong>Native CI secret store</strong> — Jenkins Credentials, GitHub/GitLab secrets, masked and injected as env vars at runtime. Scope them per environment, not globally.</li><li><strong>Dedicated secret manager</strong> — HashiCorp Vault, AWS Secrets Manager, Azure Key Vault. The pipeline authenticates and fetches at deploy time, so rotation is central and audited.</li><li><strong>OIDC / workload identity</strong> — the best option for cloud access: the pipeline exchanges a short-lived signed token for a cloud role. <em>No stored long-lived credentials at all.</em></li></ol><p>Supporting controls: secret scanning (<code class="inline">gitleaks</code>, GitHub push protection) to block commits, masking in log output, short TTLs and rotation, and separate credentials per environment so a dev leak can't touch prod.</p></div>
+          <pre><code># Jenkins — bind a credential only for the block that needs it
+withCredentials([string(credentialsId: 'prod-db-pass', variable: 'DB_PASS')]) {
+  sh 'psql -h $DB_HOST -U app'   # note: single quotes, so Groovy never interpolates
+}
+
+# Vault fetch at deploy time
+export VAULT_TOKEN=$(vault write -field=token auth/jwt/login role=ci jwt=$CI_JOB_JWT)
+DB_PASS=$(vault kv get -field=password secret/prod/db)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is an artifact repository, and how do you version artifacts?</h2>
+          <div class="seo-a"><p>An <strong>artifact repository</strong> (Nexus, JFrog Artifactory, ECR/GCR/ACR, GitHub Packages) is the system of record for build outputs — jars, npm packages, container images, Helm charts.</p><p>Why not just rebuild from source? Because the repository gives you <strong>immutability</strong> (a published version can never change), <strong>traceability</strong> (which build, which commit), <strong>caching</strong> of upstream dependencies (proxy remote registries so builds don't break when npm is down), and a <strong>security choke point</strong> for scanning and license policy.</p><p><strong>Versioning</strong> in practice:</p><ul><li><strong>SemVer</strong> <code class="inline">MAJOR.MINOR.PATCH</code> for anything consumed by others — MAJOR = breaking, MINOR = backwards-compatible feature, PATCH = fix.</li><li><strong>Immutable build identity</strong> for deployables — <code class="inline">1.4.2-a3f9c1</code> or just the commit SHA.</li><li><strong>SNAPSHOT / pre-release</strong> versions for in-progress builds, kept out of prod and expired aggressively.</li><li>Never overwrite a released version, and never deploy <code class="inline">latest</code> to production.</li></ul></div>
+          <pre><code># tag with both a human version and the immutable SHA
+docker build -t myapp:1.4.2 -t myapp:1.4.2-$GIT_SHA .
+
+# deploy by DIGEST for absolute immutability (tags can be re-pointed)
+kubectl set image deploy/myapp \
+  app=registry/myapp@sha256:9f2a...c41b</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Compare rolling, blue-green, canary, and feature-flag deployments.</h2>
+          <div class="seo-a"><table><thead><tr><th>Strategy</th><th>How it works</th><th>Cost / risk</th></tr></thead><tbody><tr><td><strong>Recreate</strong></td><td>Stop old, start new</td><td>Downtime. Only for batch/internal apps.</td></tr><tr><td><strong>Rolling</strong></td><td>Replace instances a few at a time</td><td>No extra infra, no downtime — but both versions run at once, and rollback is a slow reverse-roll.</td></tr><tr><td><strong>Blue-green</strong></td><td>Two full environments; flip the load balancer to the new one</td><td><strong>Instant rollback</strong> (flip back), but 2× infrastructure and DB migrations must be compatible with both.</td></tr><tr><td><strong>Canary</strong></td><td>Route 1% → 10% → 50% → 100% of traffic to the new version, watching metrics at each step</td><td>Smallest blast radius; needs good metrics + traffic-splitting (Ingress, service mesh, Argo Rollouts).</td></tr><tr><td><strong>Feature flags</strong></td><td>Ship the code dark, enable per user/segment at runtime</td><td>Decouples <em>deploy</em> from <em>release</em>; instant kill switch. Cost: flag debt if never cleaned up.</td></tr></tbody></table></div>
+          <pre><code># Argo Rollouts canary with automated analysis
+strategy:
+  canary:
+    steps:
+      - setWeight: 10
+      - pause: { duration: 5m }
+      - analysis:                     # abort if error-rate SLO breaks
+          templates: [{ templateName: error-rate }]
+      - setWeight: 50
+      - pause: { duration: 10m }
+      - setWeight: 100</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>A deployment breaks production. Walk me through your rollback.</h2>
+          <div class="seo-a"><p>Priority order: <strong>stop the bleeding first, diagnose second.</strong></p><ol><li><strong>Detect</strong> — post-deploy health checks / alerts fire (error rate, latency, 5xx). Ideally automated, not a customer ticket.</li><li><strong>Decide fast</strong> — if user impact is ongoing, roll back. Do not debug a live outage in place.</li><li><strong>Roll back</strong> — redeploy the previous known-good immutable artifact: <code class="inline">kubectl rollout undo</code>, flip blue-green back, or set canary weight to 0. This is why "build once" matters: the old artifact still exists and is trusted.</li><li><strong>Verify</strong> — confirm metrics recover; announce in the incident channel.</li><li><strong>Contain the data problem</strong> — if a DB migration was involved, rollback may not be possible; that's why migrations are expand/contract and forward-only.</li><li><strong>Fix forward + blameless postmortem</strong> — reproduce in stage, add the missing test/alert so the same class of failure is caught next time.</li></ol></div>
+          <pre><code>kubectl rollout status deploy/myapp -n prod          # is it actually healthy?
+kubectl rollout history deploy/myapp -n prod
+kubectl rollout undo deploy/myapp -n prod            # back to previous ReplicaSet
+kubectl rollout undo deploy/myapp --to-revision=7 -n prod
+
+# Helm equivalent
+helm rollback myapp 12 -n prod</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is GitOps? How do ArgoCD/Flux differ from a push-based pipeline?</h2>
+          <div class="seo-a"><p><strong>GitOps</strong> makes Git the single source of truth for <em>declared</em> infrastructure and application state. An in-cluster agent continuously <strong>reconciles</strong> the live cluster toward what the repo says.</p><p>Four principles: declarative config, versioned in Git, changes applied automatically, and <strong>continuously reconciled</strong> (drift is corrected, not just applied once).</p><p><strong>Push vs pull:</strong></p><ul><li><strong>Push (classic CI/CD)</strong> — Jenkins/GH Actions holds cluster credentials and runs <code class="inline">kubectl apply</code> from outside. Your CI system needs prod admin access, and manual <code class="inline">kubectl edit</code> drift goes unnoticed.</li><li><strong>Pull (GitOps — ArgoCD/Flux)</strong> — the agent runs <em>inside</em> the cluster and pulls from Git. No external system holds cluster credentials, every change is a reviewed Git commit (full audit trail), rollback is <code class="inline">git revert</code>, and drift is auto-corrected.</li></ul><p>Typical split: CI builds and pushes the image, then bumps the tag in a separate <strong>config repo</strong>; ArgoCD notices the commit and syncs the cluster.</p></div>
+          <pre><code>apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata: { name: myapp, namespace: argocd }
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/org/k8s-config.git
+    targetRevision: main
+    path: apps/myapp/overlays/prod
+  destination: { server: https://kubernetes.default.svc, namespace: prod }
+  syncPolicy:
+    automated: { prune: true, selfHeal: true }   # selfHeal = auto-correct drift
+    syncOptions: [CreateNamespace=true]</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Your pipeline takes 45 minutes. How do you make it faster?</h2>
+          <div class="seo-a"><p>Measure first — instrument stage durations and attack the top two. Then, roughly in order of payoff:</p><ul><li><strong>Parallelise</strong> — run lint, unit tests, and security scans as concurrent jobs instead of a chain. Split slow test suites across N runners (shards).</li><li><strong>Cache dependencies</strong> — <code class="inline">~/.m2</code>, <code class="inline">node_modules</code>, Gradle caches, keyed on the lockfile hash so the cache invalidates correctly.</li><li><strong>Docker layer caching</strong> — order the Dockerfile so dependency install comes before <code class="inline">COPY . .</code>; use BuildKit cache mounts / <code class="inline">--cache-from</code> a registry image.</li><li><strong>Fail fast</strong> — cheapest checks first, so a lint error doesn't cost 45 minutes.</li><li><strong>Run only what changed</strong> — path filters / monorepo affected-project detection (Nx, Bazel, <code class="inline">rules: changes:</code>).</li><li><strong>Move slow suites off the critical path</strong> — heavy E2E/performance on a nightly or post-merge pipeline, with a fast smoke subset on PRs.</li><li><strong>Right-size runners</strong> — bigger machines, or self-hosted with warm caches and pre-pulled images.</li><li><strong>Fix flaky tests</strong> — retries are hidden minutes.</li></ul></div>
+          <pre><code>test:
+  strategy:
+    matrix:
+      shard: [1, 2, 3, 4]           # split the suite 4 ways
+  steps:
+    - uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: mvn-${{ hashFiles('**/pom.xml') }}   # key on the lockfile
+        restore-keys: mvn-
+    - run: npm test -- --shard=${{ matrix.shard }}/4</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What automated gates do you put in a pipeline before code reaches production?</h2>
+          <div class="seo-a"><p>Layered gates, each cheap enough to run on every commit:</p><ul><li><strong>Lint + format</strong> — style and obvious bugs, seconds.</li><li><strong>Unit tests + coverage threshold</strong> — gate on <em>new/changed code</em> coverage, not the whole legacy repo.</li><li><strong>SAST / code quality</strong> — SonarQube quality gate on new code ("clean as you code"): no new critical bugs or security hotspots.</li><li><strong>SCA — dependency scanning</strong> — Snyk, Dependabot, <code class="inline">npm audit</code>, OWASP Dependency-Check. Fail on known-exploitable CVEs.</li><li><strong>Secret scanning</strong> — gitleaks / push protection.</li><li><strong>Container image scanning</strong> — Trivy/Grype on the built image; fail on HIGH/CRITICAL with a fixable version.</li><li><strong>IaC scanning</strong> — Checkov/tfsec on Terraform (public S3 bucket, open security group).</li><li><strong>Integration + E2E smoke</strong> in a deployed environment.</li><li><strong>Manual approval</strong> for production (change management).</li></ul></div>
+          <pre><code>- name: Scan image
+  uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: myapp:${{ github.sha }}
+    severity: HIGH,CRITICAL
+    ignore-unfixed: true      # don't block on CVEs with no patch yet
+    exit-code: '1'
+
+- name: SonarQube quality gate
+  uses: sonarsource/sonarqube-quality-gate-action@master
+  timeout-minutes: 5</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How are pipelines triggered? Webhook vs polling vs schedule.</h2>
+          <div class="seo-a"><ul><li><strong>Webhook (push)</strong> — the SCM calls the CI server the instant a push/PR/tag lands. Immediate, no wasted cycles. This is the default choice.</li><li><strong>SCM polling</strong> — CI asks the repo "anything new?" every N minutes. Wasteful and delayed; only used when the CI server can't be reached from the internet (though a firewall-friendly agent or <code class="inline">pollSCM</code> with long intervals is the usual compromise).</li><li><strong>Scheduled / cron</strong> — nightly regression, weekly dependency updates, periodic security scans, cache warming.</li><li><strong>Manual / parameterised</strong> — <code class="inline">workflow_dispatch</code>, "Build with Parameters" — used for deploys, rollbacks, and one-off ops jobs.</li><li><strong>Upstream / chained</strong> — one pipeline triggers another (build → deploy pipeline, or a shared-library change rebuilding consumers).</li><li><strong>Tag / release</strong> — pushing <code class="inline">v1.4.2</code> triggers the release pipeline. Clean separation of CI from release.</li></ul></div>
+          <pre><code>on:
+  push:
+    branches: [main]
+    paths: ['services/payments/**']   # monorepo path filter
+  pull_request:
+  schedule:
+    - cron: '0 2 * * *'              # nightly 02:00 UTC
+  workflow_dispatch:                  # manual, with inputs
+    inputs:
+      environment: { type: choice, options: [dev, stage, prod] }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Which branching model suits CI/CD — trunk-based or GitFlow?</h2>
+          <div class="seo-a"><p><strong>Trunk-based development</strong> is what actually enables continuous integration: everyone commits to <code class="inline">main</code> (directly or via short-lived branches merged within a day or two), behind feature flags if incomplete. Every merge triggers the full pipeline and is potentially releasable.</p><p><strong>GitFlow</strong> (long-lived <code class="inline">develop</code>, <code class="inline">release/*</code>, <code class="inline">hotfix/*</code> branches) was designed for versioned software with scheduled releases. In a continuous-delivery world it causes long-lived divergence, painful merges, and delayed integration feedback — the exact problems CI exists to prevent.</p><p>Practical stance for a 3–4 YOE DevOps engineer:</p><ul><li>Default to trunk-based + short-lived branches + PR checks + feature flags.</li><li>Use release branches only if you genuinely support multiple versions in the field (on-prem, mobile).</li><li>Protect <code class="inline">main</code>: required status checks, required review, no force-push, linear history.</li></ul></div>
+          <pre><code># Branch protection intent (GitHub)
+main:
+  required_status_checks: [build, unit-tests, sonar, image-scan]
+  required_approving_review_count: 1
+  enforce_admins: true
+  allow_force_pushes: false
+  required_linear_history: true</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Self-hosted runners/agents vs cloud-hosted — how do you choose and scale them?</h2>
+          <div class="seo-a"><p><strong>Cloud-hosted</strong> (GitHub-hosted, GitLab SaaS runners): zero maintenance, clean VM per job, pay per minute. Choose when your builds are ordinary and internet-reachable.</p><p><strong>Self-hosted</strong>: choose when you need</p><ul><li><strong>Private network access</strong> — deploying into a VPC, hitting an internal artifact repo or database.</li><li><strong>Cost at scale</strong> — heavy build minutes are far cheaper on your own spot instances.</li><li><strong>Special hardware</strong> — big memory, GPUs, macOS, ARM.</li><li><strong>Warm caches</strong> — pre-pulled base images and populated dependency caches cut minutes off every build.</li></ul><p><strong>Scaling pattern</strong>: ephemeral autoscaled runners — Kubernetes (Actions Runner Controller, GitLab Kubernetes executor) or EC2 spot with an autoscaler. Each job gets a fresh pod/VM that is destroyed after, so there's no state leakage, and the pool scales to zero when idle.</p><p><strong>Security caution</strong>: never run untrusted fork PRs on a persistent self-hosted runner — a malicious PR can steal cached credentials and persist on the box.</p></div>
+          <pre><code># GitLab Kubernetes executor — one throwaway pod per job
+[[runners]]
+  executor = &quot;kubernetes&quot;
+  [runners.kubernetes]
+    namespace = &quot;gitlab-runner&quot;
+    image = &quot;alpine:3.20&quot;
+    cpu_request = &quot;500m&quot;
+    memory_request = &quot;1Gi&quot;
+    poll_timeout = 600</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you build container images inside a CI pipeline safely?</h2>
+          <div class="seo-a"><p>The problem: building a Docker image needs a Docker daemon, but the build itself is running <em>inside</em> a container.</p><ul><li><strong>Docker socket mount</strong> (<code class="inline">-v /var/run/docker.sock</code>) — simplest, but the build gets <strong>root on the host</strong>. Acceptable only on trusted, isolated runners.</li><li><strong>Docker-in-Docker (dind)</strong> — a privileged sidecar daemon. Works, but <code class="inline">privileged: true</code> is a big security hole and layer caching is lost between jobs unless configured.</li><li><strong>Daemonless builders</strong> — <strong>Kaniko</strong>, <strong>Buildah</strong>, or BuildKit in rootless mode build images without a privileged daemon. This is the recommended approach on Kubernetes runners.</li></ul><p>Regardless of builder: use multi-stage builds, tag with the commit SHA, scan the image before publishing, sign it (cosign) if you have supply-chain requirements, and push to a private registry using short-lived credentials (OIDC/IRSA).</p></div>
+          <pre><code># Kaniko — build + push with no Docker daemon, no privileged container
+/kaniko/executor \
+  --context ./ \
+  --dockerfile ./Dockerfile \
+  --destination registry/myapp:$CI_COMMIT_SHORT_SHA \
+  --cache=true --cache-repo=registry/myapp/cache
+
+# then scan before it's ever deployed
+trivy image --severity HIGH,CRITICAL --exit-code 1 registry/myapp:$CI_COMMIT_SHORT_SHA</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you design CI/CD for a monorepo with 20 services?</h2>
+          <div class="seo-a"><p>The core requirement: a change to one service must not build and deploy the other 19.</p><ul><li><strong>Change detection</strong> — path filters (<code class="inline">paths:</code> / <code class="inline">rules: changes:</code>) for simple cases; a build tool that computes the affected graph (Nx, Turborepo, Bazel, Gradle) when services share libraries — because a change to a shared library <em>must</em> rebuild its dependents.</li><li><strong>Per-service pipelines</strong> — dynamic/child pipelines generated from the affected list, so each service gets its own build → test → image → deploy path and its own version.</li><li><strong>Shared, versioned templates</strong> — reusable workflows / GitLab <code class="inline">include:</code> / Jenkins shared library so 20 services don't own 20 divergent pipeline definitions.</li><li><strong>Independent versioning &amp; deploy</strong> — one service failing must not block the others; tag artifacts per service.</li><li><strong>Remote build cache</strong> — the single biggest speed win in a monorepo; unchanged targets are restored, not rebuilt.</li><li><strong>Merge queue</strong> — at high commit volume, serialise merges so main is always green.</li></ul></div>
+          <pre><code># GitLab: generate child pipelines only for affected services
+generate:
+  stage: prepare
+  script: ./scripts/affected-services.sh &gt; child-pipelines.yml
+  artifacts: { paths: [child-pipelines.yml] }
+
+trigger-children:
+  stage: build
+  trigger:
+    include: [{ artifact: child-pipelines.yml, job: generate }]
+    strategy: depend</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>A pipeline that passed yesterday fails today with no code change. How do you debug it?</h2>
+          <div class="seo-a"><p>Classic "works yesterday, broken today" — something outside your commit moved. Work through what can change without a commit:</p><ol><li><strong>Read the actual error</strong>, not the summary — expand the failing step, get the first error, not the last.</li><li><strong>Unpinned dependency</strong> — a transitive package, base image tag (<code class="inline">node:20</code> moved), or a third-party action tag published a new version. Most common cause by far.</li><li><strong>Runner/agent change</strong> — the hosted runner image was updated (new OS, new default tool version), or a self-hosted agent has a full disk / stale cache.</li><li><strong>External dependency</strong> — registry outage, expired certificate, revoked/rotated credential, rate limit (Docker Hub anonymous pulls).</li><li><strong>Flaky test or race</strong> — check whether it fails consistently on re-run.</li><li><strong>Shared config drift</strong> — someone changed a shared library, template, or environment variable, or a secret expired.</li></ol><p>Then: reproduce locally with the same image (<code class="inline">docker run</code> the build container), add <code class="inline">set -x</code>/debug logging, or SSH into the runner if your CI supports a debug session. Fix the root cause by <strong>pinning</strong> — lockfiles, digest-pinned base images, SHA-pinned actions.</p></div>
+          <pre><code># reproduce the CI environment locally
+docker run --rm -it -v &quot;$PWD&quot;:/src -w /src node:20.11.1-alpine sh
+
+# pin so it can't happen again
+FROM node:20.11.1-alpine@sha256:2b3c...9f1a
+uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608  # v4, SHA-pinned</code></pre>
+        </article>
+    </section>
+
+    <!-- ===== footer ===== -->
+    <footer class="site-footer">
+      <div class="fi">
+        <span>&copy; 2026 InterviewDeck</span>
+        <span class="footer-spacer"></span>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+<button id="scroll-to-top"
+        class="scroll-to-top"
+        type="button"
+        aria-label="Scroll to top"
+        title="Scroll to top">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2.25"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M12 19V5"/>
+    <path d="m5 12 7-7 7 7"/>
+  </svg>
+</button>
+
+<!-- Reading / Focus Mode -->
+<button id="reading-mode-toggle"
+        class="reading-mode-toggle"
+        type="button"
+        aria-label="Reading mode"
+        title="Reading mode">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       width="20"
+       height="20"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       aria-hidden="true">
+    <path d="M3 9V5a2 2 0 0 1 2-2h4"/>
+    <path d="M15 3h4a2 2 0 0 1 2 2v4"/>
+    <path d="M21 15v4a2 2 0 0 1-2 2h-4"/>
+    <path d="M9 21H5a2 2 0 0 1-2-2v-4"/>
+  </svg>
+</button>
+
+  <!-- ===== app =====
+       Questions live in a dedicated content repo (the single source of truth,
+       shared with the Flutter app), served via jsDelivr. data-loader.js fetches
+       the manifest + category JSON, populates IQB.data.<id>, then loads app.js. -->
+  <script>
+    window.IQB = { DATA_BASE:
+      "https://raw.githubusercontent.com/chinmayannaik/interview-deck-questions/main/" };
+    /* Dev only: preview unpushed content from the local sibling repo.
+       In the console: localStorage.setItem("iqb:devDataBase", "questions-data/")
+       then reload — scripts/devserver-api.mjs maps that path onto
+       ../interview-deck-questions. Remove the key to go back to CDN content.
+       Guarded to localhost so a copied snippet can never hijack production. */
+    try {
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        var devBase = localStorage.getItem("iqb:devDataBase");
+        if (devBase) window.IQB.DATA_BASE = devBase;
+      }
+    } catch (e) { /* storage unavailable — production path stands */ }
+  </script>
+  <script>window.__ENTRY_CAT="cicd";</script>
+  <script src="js/utils.js"></script>
+  <!-- the app's own confirm()/prompt(). Early: notes, tags, reports and the
+       rich-text toolbar all reach for it. -->
+  <script src="js/dialog.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/select.js"></script>
+  <script src="js/storage.js"></script>
+  <!-- before data-loader.js: it drives the splash bar as its fetches land -->
+  <script src="js/splash.js"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/sync.js"></script>
+  <!-- shared syntax highlighter: the AI Tutor and My Notes both render code
+       blocks with it, so it must load before either -->
+  <script src="js/highlight.js"></script>
+  <!-- AI Tutor: depends on IQB.cloud / IQB.sync from sync.js -->
+  <script src="js/tutor.js"></script>
+  <!-- My Notes. notebook.js (store + sync + migration) must precede both the
+       view and notes.js, which is now just a card-shaped window onto it. -->
+  <script src="js/notebook.js"></script>
+  <script src="js/richtext.js"></script>
+  <!-- before notebook-ui.js and quicknote.js: both build their tag control
+       from it (My Notes with rename/delete, Quick Note without) -->
+  <script src="js/tagpicker.js"></script>
+  <script src="js/notebook-ui.js"></script>
+  <script src="js/notes.js"></script>
+  <!-- after notebook.js + richtext.js: the floating capture window writes
+       straight into the notebook and reuses the same editor -->
+  <script src="js/quicknote.js"></script>
+  <!-- before highlights.js: the highlighter palette renders the pen's row -->
+  <script src="js/inkpen.js"></script>
+  <script src="js/highlights.js"></script>
+  <!-- the code a reader wrote for a coding question. Same IQB.cloud layer as
+       notes/highlights, so it must follow sync.js and precede coding.js -->
+  <script src="js/solutions.js"></script>
+  <!-- after sync.js (uses IQB.shared/IQB.cloud) and before app.js, which asks
+       IQB.reports for each card's "Report Issue" button -->
+  <script src="js/reports.js"></script>
+  <!-- before app.js (injected by data-loader.js): buildCard() asks IQB.speak
+       for each card's read-aloud button, and app.js hands back its openCard -->
+  <script src="js/speak.js"></script>
+  <!-- the shared JS editor + Web Worker sandbox. Must precede BOTH consumers:
+       the Playground tab and the Solve IDE. -->
+  <script src="js/codeedit.js"></script>
+  <!-- before app.js (which data-loader.js injects): buildTabs() renders the
+       Playground tab only if this has registered IQB.playground -->
+  <script src="js/playground.js"></script>
+  <!-- before app.js: buildCard() asks IQB.coding whether a question is
+       solvable, and builds the problem-only card from it -->
+  <script src="js/coding.js"></script>
+  <script src="js/tour.js"></script>
+</body>
+</html>

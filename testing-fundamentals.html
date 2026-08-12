@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>Fundamentals Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="24 Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="30 Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/testing-fundamentals" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="Fundamentals Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="24 Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="30 Fundamentals interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/testing-fundamentals" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>Fundamentals Interview Questions and Answers</h1>
-      <p>24 hand-picked Fundamentals interview questions with
+      <p>30 hand-picked Fundamentals interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -471,6 +471,54 @@ Req-Order-05 → TC-40, API-12 (missing UI e2e? → gap)</code></pre>
         <article class="seo-q">
           <h2>What do SonarQube and ESLint give you? How do quality gates work?</h2>
           <div class="seo-a"><p><strong>Static analysis</strong> inspects code without running it:</p><ul><li><strong>ESLint</strong> (JS/TS, + Angular rules) — bugs and style at lint speed: unused vars, unsafe any, missing lifecycle interfaces; auto-fixable, runs in the editor and CI.</li><li><strong>SonarQube</strong> — deeper multi-language analysis: bug patterns (possible NPEs, resource leaks), <strong>security hotspots</strong> (injection, weak crypto), code smells, duplication, complexity — tracked over time per branch/PR.</li></ul><p>A <strong>quality gate</strong> fails the pipeline on thresholds — the sane pattern is gating on <strong>new code only</strong> ("clean as you code"): no new critical issues, coverage on changed lines ≥ X% — so legacy debt doesn't block today's PR but nothing new rots.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are the seven principles of testing (ISTQB)?</h2>
+          <div class="seo-a"><ol><li><strong>Testing shows presence of defects</strong>, not their absence — passing tests never prove bug-free.</li><li><strong>Exhaustive testing is impossible</strong> — you can't test every input/path; use risk and prioritisation.</li><li><strong>Early testing</strong> (shift-left) — the earlier a defect is found, the cheaper.</li><li><strong>Defect clustering</strong> — a few modules hold most bugs (Pareto); focus there.</li><li><strong>Pesticide paradox</strong> — the same tests stop finding new bugs; review and refresh them.</li><li><strong>Testing is context-dependent</strong> — a banking app and a game are tested differently.</li><li><strong>Absence-of-errors fallacy</strong> — a bug-free product that solves the wrong problem is still useless.</li></ol></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Explain the test automation pyramid. What is the ice-cream-cone anti-pattern?</h2>
+          <div class="seo-a"><p>The <strong>test pyramid</strong> describes the ideal shape of an automated suite:</p><ul><li><strong>Base — many unit tests</strong>: fast, cheap, isolated, pinpoint failures.</li><li><strong>Middle — fewer integration/API tests</strong>: verify wiring between modules/services.</li><li><strong>Top — few end-to-end/UI tests</strong>: slow, brittle, expensive — reserve for critical journeys.</li></ul><p>The <strong>ice-cream cone</strong> is the inverted anti-pattern: lots of manual + UI E2E tests and almost no unit tests. The suite becomes slow, flaky, and hard to debug — every failure means launching the whole app.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Mock vs Stub vs Spy vs Fake vs Dummy — what's the difference?</h2>
+          <div class="seo-a"><p>All are <strong>test doubles</strong> — stand-ins for real dependencies. They differ by what they replace and what you assert:</p><ul><li><strong>Dummy</strong> — passed to satisfy a signature but never used (e.g. a null logger).</li><li><strong>Stub</strong> — returns canned data so the test can proceed (repo returns a fixed user). You assert on <em>state/output</em>.</li><li><strong>Spy</strong> — a real or stub object that also <em>records</em> how it was called, so you can verify afterwards.</li><li><strong>Mock</strong> — pre-programmed with <em>expectations</em>; it fails the test if the interaction doesn't happen. You assert on <em>behaviour/interaction</em>.</li><li><strong>Fake</strong> — a working lightweight implementation (in-memory DB, fake payment gateway) — real logic, not production-grade.</li></ul></div>
+          <pre><code>// Stub — canned return, assert on result
+when(userRepo.findById(1)).thenReturn(new User(&quot;Ana&quot;));
+assertEquals(&quot;Ana&quot;, service.getName(1));
+
+// Mock — assert the interaction happened
+verify(emailSender, times(1)).send(eq(&quot;ana@x.com&quot;), any());
+
+// Fake — real in-memory implementation
+UserRepository repo = new InMemoryUserRepository();</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is BDD? How does Given-When-Then work and how is it different from TDD?</h2>
+          <div class="seo-a"><p><strong>Behaviour-Driven Development</strong> extends TDD by writing tests as <em>business-readable scenarios</em> first, so developers, testers, and product owners share one language. Scenarios use <strong>Gherkin</strong>:</p><ul><li><strong>Given</strong> — the starting context/precondition.</li><li><strong>When</strong> — the action/event.</li><li><strong>Then</strong> — the expected outcome.</li></ul><p>Tools like Cucumber/SpecFlow map each step to code (step definitions). The difference: TDD tests <em>units</em> in developer language; BDD tests <em>behaviour</em> in business language and doubles as living documentation.</p></div>
+          <pre><code>Feature: Coupon at checkout
+
+  Scenario: Valid percentage coupon reduces total
+    Given a cart with items totalling 100
+    When the customer applies coupon &quot;SAVE10&quot;
+    Then the order total should be 90</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a flaky test? What causes flakiness and how do you handle it?</h2>
+          <div class="seo-a"><p>A <strong>flaky test</strong> passes and fails on the same code with no changes — non-deterministic. Flakiness is dangerous because it erodes trust: once a suite "sometimes fails", people start ignoring real failures.</p><p>Common causes:</p><ul><li><strong>Timing/async</strong> — fixed <code class="inline">sleep</code>s or races instead of waiting for a condition.</li><li><strong>Test order / shared state</strong> — one test leaks data another depends on.</li><li><strong>Time & randomness</strong> — real clock, time zones, <code class="inline">Math.random</code>, unstable ordering.</li><li><strong>Environment</strong> — network, third-party APIs, flaky test data.</li></ul></div>
+          <pre><code>// ❌ Flaky: guessing how long the async op takes
+await sleep(2000);
+expect(el.text()).toBe(&quot;Loaded&quot;);
+
+// ✅ Deterministic: wait for the actual condition
+await waitFor(() =&gt; expect(el.text()).toBe(&quot;Loaded&quot;));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Load vs Stress vs Soak vs Spike testing — what's the difference?</h2>
+          <div class="seo-a"><p>These are <strong>non-functional performance</strong> tests, each answering a different question:</p><ul><li><strong>Load testing</strong> — behaviour at <em>expected</em> peak load (e.g. 1,000 concurrent users). Verifies response time / throughput meet SLAs.</li><li><strong>Stress testing</strong> — push <em>beyond</em> capacity until it breaks, to find the breaking point and check it fails gracefully (and recovers).</li><li><strong>Soak / endurance testing</strong> — sustained normal load for hours/days to expose slow leaks — memory leaks, connection-pool exhaustion, disk fill.</li><li><strong>Spike testing</strong> — a sudden sharp jump in load (flash sale, viral event) and back down; checks auto-scaling and recovery.</li></ul></div>
           
         </article>
     </section>

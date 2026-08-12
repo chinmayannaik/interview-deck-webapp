@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>GraphQL Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="28 GraphQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="31 GraphQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/graphql" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="GraphQL Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="28 GraphQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="31 GraphQL interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/graphql" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>GraphQL Interview Questions and Answers</h1>
-      <p>28 hand-picked GraphQL interview questions with
+      <p>31 hand-picked GraphQL interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -672,6 +672,48 @@ class User {
           <pre><code>// APQ: client first tries just the hash
 { &quot;extensions&quot;: { &quot;persistedQuery&quot;: {
   &quot;version&quot;: 1, &quot;sha256Hash&quot;: &quot;a1b2c3...&quot; } } }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you structure a complex/nested input type for a mutation (e.g. place an order with many products)?</h2>
+          <div class="seo-a"><p>GraphQL mutations take arguments via dedicated <code class="inline">input</code> types (not <code class="inline">type</code> — outputs and inputs are separate kinds). For a variable-length collection of nested objects, nest an <code class="inline">input</code> inside a list: <code class="inline">[ProductInput!]!</code>.</p><ul><li>Inner <code class="inline">!</code> — no null items in the list.</li><li>Outer <code class="inline">!</code> — the list itself is required.</li><li>Use scalar types that match intent: <code class="inline">ID!</code> for the product id, <code class="inline">Int!</code> for quantity (not <code class="inline">Float</code>).</li></ul><p>Never model a mutation argument with an output <code class="inline">type</code> — that's a schema error; inputs must be <code class="inline">input</code> types.</p></div>
+          <pre><code>input PlaceOrderInput {
+  products: [ProductInput!]!
+}
+input ProductInput {
+  productId: ID!
+  quantity: Int!
+}
+
+type Mutation {
+  placeOrder(order: PlaceOrderInput!): Order!
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you implement field-level authorization in a GraphQL schema (e.g. hide accountBalance from non-admins)?</h2>
+          <div class="seo-a"><p>Declare a schema <strong>directive</strong> and apply it to the sensitive field. A directive on <code class="inline">FIELD_DEFINITION</code> lets the server run an auth check before resolving that specific field:</p><pre><code>directive @auth(requires: Role) on FIELD_DEFINITION
+
+type User {
+  id: ID!
+  name: String!
+  accountBalance: Float! @auth(requires: ADMIN)
+}</code></pre><p>The directive's implementation (a <code class="inline">SchemaDirectiveVisitor</code> / field middleware) wraps the field resolver and throws/returns null if the caller's role is insufficient. This is finer-grained than guarding the whole query — <code class="inline">name</code> stays public while <code class="inline">accountBalance</code> is gated.</p></div>
+          <pre><code>type User {
+  id: ID!
+  name: String!
+  accountBalance: Float! @auth(requires: ADMIN)
+}
+directive @auth(requires: Role) on FIELD_DEFINITION</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How (and where) do you validate mutation inputs in GraphQL?</h2>
+          <div class="seo-a"><p>Layered, from cheapest to richest:</p><ul><li><strong>Type system</strong> — <code class="inline">input</code> types + non-null (<code class="inline">!</code>) reject missing/wrong-typed fields before any resolver runs.</li><li><strong>Custom scalars</strong> — e.g. <code class="inline">Email</code>, <code class="inline">PositiveInt</code>: their <code class="inline">parseValue</code>/<code class="inline">parseLiteral</code> validate format at parse time, declaratively and reusably.</li><li><strong>Resolver / middleware checks</strong> — for dynamic, field-context or cross-field rules ("discount only if role=PREMIUM"). Validate at the start of the resolver, or in field middleware, and throw a typed error.</li></ul><p>Client-side validation isn't sufficient — always enforce on the server.</p></div>
+          <pre><code>scalar Email
+input SignupInput { email: Email!, age: PositiveInt! }
+
+// dynamic/context rules -&gt; in the resolver
+signup: (_, { input }) =&gt; {
+  if (input.age &lt; 18) throw new GraphQLError('Must be 18+');
+}</code></pre>
         </article>
     </section>
 

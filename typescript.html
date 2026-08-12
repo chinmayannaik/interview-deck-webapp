@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>TypeScript Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="27 TypeScript interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="31 TypeScript interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/typescript" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="TypeScript Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="27 TypeScript interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="31 TypeScript interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/typescript" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>TypeScript Interview Questions and Answers</h1>
-      <p>27 hand-picked TypeScript interview questions with
+      <p>31 hand-picked TypeScript interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -619,6 +619,41 @@ if (isUser(data)) { data.name }            // custom guard actually verified it<
 const a = new A();
 (a as any).tsSecret;      // 1 — the 'privacy' was a type error only
 // (a as any).#jsSecret   // SyntaxError — # isn't even valid syntax outside</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you make a generic fetch function resolve to the right type (e.g. fetchData&lt;User&gt;(url))?</h2>
+          <div class="seo-a"><p>Make the function <strong>generic</strong> and let the caller supply the type argument, so the return type flows through: <code class="inline">function fetchData&lt;T&gt;(url: string): Promise&lt;T&gt;</code>. Calling <code class="inline">fetchData&lt;User&gt;(url)</code> makes the promise resolve to <code class="inline">User</code>.</p><p>This is strictly better than the wrong alternatives: <code class="inline">any</code> throws away all safety, a <code class="inline">type assertion</code> inside the function lies to the compiler, and a global type forces one shape on every call. A type parameter keeps each call site correctly typed with zero casts.</p></div>
+          <pre><code>function fetchData&lt;T&gt;(url: string): Promise&lt;T&gt; {
+  return fetch(url).then(r =&gt; r.json() as Promise&lt;T&gt;);
+}
+
+const user = await fetchData&lt;User&gt;('/api/user'); // user: User</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How do you build a mapped type that makes all fields of a type optional (keeping their types)?</h2>
+          <div class="seo-a"><p>Iterate the keys with a mapped type and add the <code class="inline">?</code> modifier, indexing back into the source for each value type:</p><pre><code>type AllOptional&lt;T&gt; = { [K in keyof T]?: T[K] };</code></pre><p>That's exactly what the built-in <code class="inline">Partial&lt;T&gt;</code> does — prefer <code class="inline">Partial&lt;ApiResponse&gt;</code> in real code. Writing <code class="inline">{ id?: number; name?: string; }</code> by hand duplicates the shape and drifts when the source type changes; the mapped form stays in sync automatically.</p><p>Related modifiers: <code class="inline">-?</code> removes optionality (see <code class="inline">Required&lt;T&gt;</code>), <code class="inline">readonly</code>/<code class="inline">-readonly</code> toggle immutability.</p></div>
+          <pre><code>type ApiResponse = { id: number; name: string; email?: string };
+type Draft = { [K in keyof ApiResponse]?: ApiResponse[K] }; // = Partial&lt;ApiResponse&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>With strictNullChecks on, what does this return for null: input: string | null guarded by if (input) return input.trim(); return 'No input';?</h2>
+          <div class="seo-a"><p>It returns <strong>'No input'</strong> — no error. <code class="inline">null</code> is falsy, so the <code class="inline">if (input)</code> guard is skipped and control falls through to the <code class="inline">return 'No input'</code>.</p><p>The point of <code class="inline">strictNullChecks</code> is that this is <em>safe</em>: inside the <code class="inline">if</code>, TypeScript <strong>narrows</strong> <code class="inline">string | null</code> to <code class="inline">string</code>, so <code class="inline">input.trim()</code> compiles. Without the guard, <code class="inline">input.trim()</code> would be a compile error ("Object is possibly 'null'"). The truthiness check both prevents the runtime crash and satisfies the compiler.</p></div>
+          <pre><code>function processInput(input: string | null) {
+  if (input) return input.trim(); // input narrowed to string here
+  return 'No input';              // null falls through to here
+}
+processInput(null); // 'No input'</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Spot the bug: a class method assigns currentClasses = { saveable: this.canSave, ... }.</h2>
+          <div class="seo-a"><p>Two <code class="inline">this.</code> mistakes to watch for:</p><ul><li><strong>Missing <code class="inline">this.</code> on the target</strong> — <code class="inline">currentClasses = {}</code> refers to a (non-existent) local/global, not the field. It must be <code class="inline">this.currentClasses = {}</code>.</li><li><strong>Missing <code class="inline">this.</code> on a member read</strong> — <code class="inline">saveable: canSave</code> looks up a free variable <code class="inline">canSave</code>, not the class member; it must be <code class="inline">this.canSave</code>.</li></ul><p>In a class method, instance members — fields and other methods — are <strong>only</strong> reachable through <code class="inline">this</code>; there's no implicit scope like some languages. The correct version qualifies every member on both sides.</p></div>
+          <pre><code>setCurrentClasses() {
+  this.currentClasses = {          // this. on the target
+    saveable: this.canSave,        // this. on each member read
+    modified: !this.isUnchanged,
+    special: this.isSpecial,
+  };
+}</code></pre>
         </article>
     </section>
 

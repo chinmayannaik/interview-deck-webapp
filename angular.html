@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>Angular Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="96 Angular interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="103 Angular interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/angular" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="Angular Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="96 Angular interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="103 Angular interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/angular" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>Angular Interview Questions and Answers</h1>
-      <p>96 hand-picked Angular interview questions with
+      <p>103 hand-picked Angular interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -1309,6 +1309,87 @@ constructor(@Self() private ngControl: NgControl) {}
 constructor(@Optional() @SkipSelf() parent?: CoreModule) {
   if (parent) throw new Error('CoreModule imported twice');
 }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the approaches to internationalization (i18n) in Angular?</h2>
+          <div class="seo-a"><p>Two main routes:</p><ul><li><strong>Built-in <code class="inline">@angular/localize</code></strong> — mark text with the <code class="inline">i18n</code> attribute in templates (and <code class="inline">$localize</code> in code), extract with <code class="inline">ng extract-i18n</code> into an XLIFF/XMB file, hand it to translators, then build <strong>one bundle per locale</strong> (compile-time). Zero runtime lookup cost, but switching language means loading a different build/URL.</li><li><strong>Runtime libraries</strong> — <code class="inline">@ngx-translate/core</code> or <code class="inline">Transloco</code> load JSON translation files and swap language <strong>live</strong> via a pipe/directive (<code class="inline">{{ 'KEY' | translate }}</code>), no rebuild needed.</li></ul><p>Both handle <strong>pluralization</strong> (ICU <code class="inline">{count, plural, ...}</code>) and interpolation. Locale-aware <code class="inline">DatePipe</code>/<code class="inline">CurrencyPipe</code>/<code class="inline">DecimalPipe</code> come from <code class="inline">LOCALE_ID</code> plus registered locale data.</p></div>
+          <pre><code>&lt;!-- native @angular/localize --&gt;
+&lt;h1 i18n=&quot;@@homeTitle&quot;&gt;Welcome&lt;/h1&gt;
+&lt;span i18n&gt;{count, plural, =0 {no items} =1 {one item} other {{{count}} items}}&lt;/span&gt;
+
+// runtime (ngx-translate / Transloco)
+{{ 'HOME.TITLE' | translate }}
+this.translate.use('fr');</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a template reference variable in Angular?</h2>
+          <div class="seo-a"><p>A <strong>template reference variable</strong> is a <code class="inline">#name</code> you declare in the template to get a handle to something, then reference it elsewhere <strong>in the same template</strong>:</p><ul><li>On a plain element — the <strong>DOM element</strong> (e.g. <code class="inline">#box</code> → the <code class="inline">&lt;input&gt;</code>).</li><li>On a component/directive — its <strong>instance</strong> (or the exported directive, e.g. <code class="inline">#f="ngForm"</code>).</li></ul><p>Scope is the template only; to use it in the class, query it with <code class="inline">@ViewChild</code>.</p></div>
+          <pre><code>&lt;!-- element ref --&gt;
+&lt;input #box (keyup)=&quot;0&quot;&gt;
+&lt;button (click)=&quot;box.focus()&quot;&gt;Focus&lt;/button&gt;
+&lt;p&gt;{{ box.value }}&lt;/p&gt;
+
+&lt;!-- exported directive ref --&gt;
+&lt;form #f=&quot;ngForm&quot; (ngSubmit)=&quot;save(f.value)&quot;&gt;...&lt;/form&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is Angular Material?</h2>
+          <div class="seo-a"><p><strong>Angular Material</strong> is Google's official UI component library implementing <strong>Material Design</strong> for Angular — ready-made, accessible, themeable components (buttons, form fields, dialogs, tables, datepickers, snackbars, etc.).</p><p>You add it with <code class="inline">ng add @angular/material</code>, import the standalone components/modules you need, and theme it with SCSS. It's built on the <strong>Angular CDK (Component Dev Kit)</strong>, which provides the lower-level, unstyled primitives (overlay, accessibility, drag-and-drop, virtual scrolling) you can also use to build your own components.</p></div>
+          <pre><code>ng add @angular/material
+
+// use a component
+import { MatButtonModule } from '@angular/material/button';
+// &lt;button mat-raised-button color=&quot;primary&quot;&gt;Save&lt;/button&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is a Resolver in Angular, and how do you use one?</h2>
+          <div class="seo-a"><p>A <strong>Resolver</strong> pre-fetches data <strong>before</strong> a route activates, so the component renders with its data already present — no empty flash or in-component spinner on entry.</p><p>Write a functional resolver (<code class="inline">ResolveFn</code>) that returns the data (value / <code class="inline">Observable</code> / <code class="inline">Promise</code>), attach it to the route via <code class="inline">resolve: { key: fn }</code>, and read it in the component from <code class="inline">ActivatedRoute.data</code> (or the snapshot).</p><p><strong>Trade-off:</strong> navigation <em>waits</em> for the resolver, so keep it fast and handle errors — a slow resolver makes the whole route feel slow.</p></div>
+          <pre><code>// user.resolver.ts
+export const userResolver: ResolveFn&lt;User&gt; =
+  (route) =&gt; inject(UserService).getUser(route.paramMap.get('id')!);
+
+// routes
+{ path: 'users/:id', component: UserComponent, resolve: { user: userResolver } }
+
+// component
+constructor(private route: ActivatedRoute) {
+  this.user = this.route.snapshot.data['user'];
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is FormControl in Angular Reactive Forms?</h2>
+          <div class="seo-a"><p><code class="inline">FormControl</code> represents a <strong>single input's value and validation state</strong> — the atomic building block of reactive forms (<code class="inline">FormGroup</code> and <code class="inline">FormArray</code> compose FormControls).</p><p>You create it with an initial value and validators, bind it with <code class="inline">[formControl]</code>, and use its API: <code class="inline">.value</code>, <code class="inline">.valid</code>, <code class="inline">.errors</code>, <code class="inline">.valueChanges</code> (an Observable), and <code class="inline">setValue()</code>/<code class="inline">patchValue()</code>.</p></div>
+          <pre><code>email = new FormControl('', [Validators.required, Validators.email]);
+
+// template
+// &lt;input [formControl]=&quot;email&quot;&gt;
+// &lt;span *ngIf=&quot;email.errors?.['required']&quot;&gt;Required&lt;/span&gt;
+
+this.email.valueChanges.subscribe(v =&gt; console.log(v));</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is FormGroup in Angular Reactive Forms?</h2>
+          <div class="seo-a"><p><code class="inline">FormGroup</code> groups related controls into <strong>one object</strong>: its value is a key→value map, and the group is <strong>valid only when all its children are valid</strong>.</p><p>Build it with <code class="inline">FormBuilder</code> (<code class="inline">fb.group({...})</code>), bind <code class="inline">[formGroup]</code> on the <code class="inline">&lt;form&gt;</code> and <code class="inline">formControlName</code> on each input, then read <code class="inline">form.value</code> on submit. FormGroups can be nested for structured data.</p></div>
+          <pre><code>form = this.fb.group({
+  name:  ['', Validators.required],
+  email: ['', [Validators.required, Validators.email]],
+});
+
+// template
+// &lt;form [formGroup]=&quot;form&quot; (ngSubmit)=&quot;save(form.value)&quot;&gt;
+//   &lt;input formControlName=&quot;name&quot;&gt;
+//   &lt;input formControlName=&quot;email&quot;&gt;
+// &lt;/form&gt;</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>ViewChild vs ContentChild — what's the difference?</h2>
+          <div class="seo-a"><p>Both grab a child, but from <strong>different places</strong>:</p><ul><li><strong>@ViewChild</strong> — queries the component's <strong>own template</strong> (its view).</li><li><strong>@ContentChild</strong> — queries <strong>projected content</strong> — the markup a parent passes <em>between the component's tags</em>, rendered through <code class="inline">&lt;ng-content&gt;</code>.</li></ul><p><strong>Timing:</strong> a <code class="inline">@ViewChild</code> is ready in <code class="inline">ngAfterViewInit</code>; a <code class="inline">@ContentChild</code> in <code class="inline">ngAfterContentInit</code>. Use <code class="inline">@ViewChildren</code>/<code class="inline">@ContentChildren</code> (a <code class="inline">QueryList</code>) for multiple.</p></div>
+          <pre><code>@Component({ template: `&lt;h1 #title&gt;&lt;/h1&gt; &lt;ng-content&gt;&lt;/ng-content&gt;` })
+class Card {
+  @ViewChild('title') title!: ElementRef;      // from OWN template
+  @ContentChild(IconComponent) icon!: IconComponent; // PROJECTED by parent
+}
+// parent: &lt;app-card&gt;&lt;app-icon/&gt;&lt;/app-card&gt;  &lt;-- app-icon is ContentChild</code></pre>
         </article>
     </section>
 

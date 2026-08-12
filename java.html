@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>Java Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="175 Java interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="181 Java interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/java" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="Java Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="175 Java interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="181 Java interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/java" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>Java Interview Questions and Answers</h1>
-      <p>175 hand-picked Java interview questions with
+      <p>181 hand-picked Java interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -1684,6 +1684,75 @@ System.out.println('a' + 1);        // 98 — char + int is arithmetic!</code></
 }
 // First use of Config -&gt; ExceptionInInitializerError
 // Every use after that -&gt; NoClassDefFoundError</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does PriorityQueue work internally (the heap)?</h2>
+          <div class="seo-a"><p><code class="inline">PriorityQueue</code> is a <strong>binary min-heap</strong> backed by an array. The smallest element (by natural ordering, or by a <code class="inline">Comparator</code> you pass in) is always at index 0 — that's what <code class="inline">peek()</code> returns.</p><ul><li><strong>Costs:</strong> <code class="inline">offer()</code>/<code class="inline">poll()</code> are <strong>O(log n)</strong> (sift-up / sift-down to restore the heap); <code class="inline">peek()</code> is O(1). Arbitrary <code class="inline">remove(Object)</code>/<code class="inline">contains()</code> are O(n).</li><li><strong>Not fully sorted:</strong> only the head is ordered — iterating (or <code class="inline">toString()</code>) gives heap array order, <strong>not</strong> sorted order. To drain in order you must keep calling <code class="inline">poll()</code>.</li><li><strong>Not thread-safe</strong> (use <code class="inline">PriorityBlockingQueue</code>); <strong>no nulls</strong>; array grows automatically like <code class="inline">ArrayList</code>.</li></ul><p>For a max-heap, pass a reversed comparator: <code class="inline">new PriorityQueue&lt;&gt;(Comparator.reverseOrder())</code>.</p></div>
+          <pre><code>PriorityQueue&lt;Integer&gt; pq = new PriorityQueue&lt;&gt;();      // min-heap
+pq.offer(5); pq.offer(1); pq.offer(3);
+pq.peek();     // 1  (smallest, O(1))
+pq.poll();     // 1  (removes head, O(log n))
+
+// Max-heap / custom order
+PriorityQueue&lt;Employee&gt; bySalaryDesc =
+    new PriorityQueue&lt;&gt;(Comparator.comparingInt(Employee::salary).reversed());
+
+// Top-K pattern: keep a size-K min-heap of the largest seen
+PriorityQueue&lt;Integer&gt; topK = new PriorityQueue&lt;&gt;();
+for (int n : nums) { topK.offer(n); if (topK.size() &gt; k) topK.poll(); }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Can you have a try without a catch?</h2>
+          <div class="seo-a"><p><strong>Yes.</strong> A <code class="inline">try</code> needs <strong>either</strong> a <code class="inline">catch</code> <strong>or</strong> a <code class="inline">finally</code> (or both) — it just can't stand alone.</p><ul><li><strong>try–finally</strong> — run cleanup no matter what, but let the exception propagate to the caller (you're not handling it here, only guaranteeing cleanup).</li><li><strong>try-with-resources</strong> — also valid with no <code class="inline">catch</code>; the resource's <code class="inline">close()</code> runs automatically, and any exception still propagates.</li></ul><p>What's <em>not</em> allowed: a bare <code class="inline">try</code> block by itself.</p></div>
+          <pre><code>// try-finally: no catch, cleanup still runs, exception propagates
+try {
+    doWork();
+} finally {
+    releaseLock();
+}
+
+// try-with-resources: no catch needed
+try (var in = new FileInputStream(&quot;f.txt&quot;)) {
+    in.read();
+}   // close() called automatically
+
+// try { ... }            // COMPILE ERROR — needs catch or finally</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What are the default initial capacities — ArrayList, HashMap, StringBuilder?</h2>
+          <div class="seo-a"><ul><li><strong>ArrayList</strong> — backing array is created <strong>lazily</strong>: empty until the first <code class="inline">add()</code>, which allocates capacity <strong>10</strong>. Grows ~1.5× when full.</li><li><strong>HashMap</strong> — <strong>16</strong> buckets, load factor <strong>0.75</strong> (resizes/doubles at 12 entries). Also lazy — the table is allocated on first <code class="inline">put()</code>.</li><li><strong>StringBuilder / StringBuffer</strong> — <strong>16</strong> characters. <code class="inline">new StringBuilder(str)</code> uses <code class="inline">str.length() + 16</code>. Grows to <code class="inline">2×old + 2</code> when full.</li></ul><p>All three grow automatically, so these numbers only matter when you pre-size for performance (pass an initial capacity to avoid repeated resizes on large loads).</p></div>
+          <pre><code>new ArrayList&lt;&gt;();          // capacity 10 on first add()
+new HashMap&lt;&gt;();            // 16 buckets, resize at 16*0.75 = 12
+new StringBuilder();       // 16 chars
+new StringBuilder(&quot;hi&quot;);  // 2 + 16 = 18
+
+// Pre-size to skip resizing when you know the load:
+new ArrayList&lt;&gt;(10_000);
+new HashMap&lt;&gt;(1 &lt;&lt; 16);</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What does this print? Classes B and C declare public void B() / public void C(), and main does C c = new C();</h2>
+          <div class="seo-a"><p><strong>No output.</strong> The trap: <code class="inline">public void B()</code> and <code class="inline">public void C()</code> have a <strong>return type</strong> (<code class="inline">void</code>), so they are ordinary <strong>methods</strong> that merely share the class's name — they are <em>not</em> constructors. A constructor has <strong>no return type</strong>.</p><p><code class="inline">new C()</code> invokes the compiler-generated default constructors of <code class="inline">C</code> → <code class="inline">B</code> → <code class="inline">A</code>, none of which print anything. The <code class="inline">B()</code>/<code class="inline">C()</code>/<code class="inline">First()</code> methods are never called, so nothing is printed.</p></div>
+          <pre><code>class B extends A {
+  public void B() { System.out.println(&quot;first class&quot;); } // METHOD, not ctor (has void)
+}
+class C extends B {
+  public void C() { System.out.println(&quot;second class&quot;); } // METHOD, not ctor
+}
+new C(); // runs default ctors C-&gt;B-&gt;A; the void B()/C() are never invoked -&gt; no output</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the Java Memory Model (JMM)?</h2>
+          <div class="seo-a"><p>The <strong>JMM</strong> defines how threads interact through memory — specifically which writes made by one thread become <strong>visible</strong> to reads in another, and in what <strong>order</strong>. It's needed because CPUs and the compiler cache values in registers/per-core caches and <strong>reorder</strong> instructions for speed; without rules, a write in one thread might never be seen by another.</p><p>The core rule is <strong>happens-before</strong>: if action A happens-before B, A's effects are guaranteed visible to B. You establish happens-before edges with:</p><ul><li><strong>volatile</strong> — reads/writes are visible immediately and can't be reordered across the access.</li><li><strong>synchronized</strong> — unlock happens-before the next lock (mutual exclusion + visibility).</li><li><strong>final</strong> fields — safe publication once the constructor completes.</li></ul></div>
+          <pre><code>// Without volatile, thread B may loop forever (never sees the write)
+volatile boolean running = true;
+// thread A: running = false;   -&gt; visible to B immediately (happens-before)</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the difference between Set and List in Java?</h2>
+          <div class="seo-a"><table><thead><tr><th></th><th>List</th><th>Set</th></tr></thead><tbody><tr><td>Order</td><td>Ordered / positional (insertion order)</td><td>No positional order*</td></tr><tr><td>Duplicates</td><td>Allowed</td><td>Not allowed (unique)</td></tr><tr><td>Index access</td><td>Yes (<code class="inline">get(i)</code>)</td><td>No</td></tr><tr><td>Impls</td><td>ArrayList, LinkedList</td><td>HashSet, LinkedHashSet, TreeSet</td></tr></tbody></table><p>A <strong>Set</strong> rejects duplicates using <code class="inline">equals()</code>/<code class="inline">hashCode()</code> (or the comparator for <code class="inline">TreeSet</code>). *Ordering varies by impl: <code class="inline">HashSet</code> unordered, <code class="inline">LinkedHashSet</code> insertion order, <code class="inline">TreeSet</code> sorted.</p><p>Use a <strong>List</strong> when order/position/duplicates matter; a <strong>Set</strong> when you need uniqueness or fast membership tests.</p></div>
+          <pre><code>List&lt;String&gt; l = new ArrayList&lt;&gt;(); l.add(&quot;a&quot;); l.add(&quot;a&quot;); // size 2
+Set&lt;String&gt;  s = new HashSet&lt;&gt;();   s.add(&quot;a&quot;); s.add(&quot;a&quot;); // size 1</code></pre>
         </article>
     </section>
 

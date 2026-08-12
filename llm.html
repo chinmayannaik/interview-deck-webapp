@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <title>LLMs &amp; GenAI Interview Questions &amp; Answers — InterviewDeck</title>
-  <meta name="description" content="26 LLMs &amp; GenAI interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta name="description" content="52 LLMs &amp; GenAI interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta name="keywords" content="interviewdeck, interview deck, interview questions, coding interview, angular interview, react interview, javascript interview, typescript, rxjs, ngrx, frontend interview, java, spring boot, sql, git, flutter interview, android interview, devops interview, testing interview, system design interview, behavioral interview, ai interview" />
   <meta name="author" content="InterviewDeck" />
   <link rel="canonical" href="https://www.interviewdeck.in/llm" />
@@ -15,7 +15,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="InterviewDeck" />
   <meta property="og:title" content="LLMs &amp; GenAI Interview Questions &amp; Answers — InterviewDeck" />
-  <meta property="og:description" content="26 LLMs &amp; GenAI interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
+  <meta property="og:description" content="52 LLMs &amp; GenAI interview questions with clear, detailed answers — practice mode, code examples, bookmarks and progress tracking. Free and searchable on InterviewDeck." />
   <meta property="og:url" content="https://www.interviewdeck.in/llm" />
   <meta property="og:image" content="https://www.interviewdeck.in/assets/og-card.png" />
 
@@ -344,7 +344,7 @@
           padding:.75rem 1rem;border-radius:8px;font-size:.9rem}
       </style>
       <h1>LLMs &amp; GenAI Interview Questions and Answers</h1>
-      <p>26 hand-picked LLMs &amp; GenAI interview questions with
+      <p>52 hand-picked LLMs &amp; GenAI interview questions with
          detailed answers. Open the interactive version above to search, filter
          by difficulty, run code, bookmark questions and track your progress.</p>
       
@@ -543,6 +543,169 @@ for (;;) {
     answer += JSON.parse(data).delta;    // incremental render
   }
 }</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does self-attention actually work (Q, K, V)?</h2>
+          <div class="seo-a"><p>Every token is projected into three vectors: <strong>Query</strong> (what am I looking for), <strong>Key</strong> (what do I offer), <strong>Value</strong> (what I actually carry).</p><ol><li>Score each pair: <code>Q · Kᵀ</code> — how relevant is token j to token i.</li><li>Scale by <code>√d_k</code> (keeps softmax out of saturation), apply the causal mask, then softmax → attention weights.</li><li>Output = weighted sum of the <strong>Value</strong> vectors.</li></ol><p><strong>Multi-head</strong> attention runs this several times in parallel with different projections, so different heads can specialise (syntax, coreference, position) and the results are concatenated.</p></div>
+          <pre><code>Attention(Q, K, V) = softmax( (Q Kᵀ) / √d_k + mask ) · V
+
+# shapes for one head
+# Q, K, V : [batch, seq_len, d_k]
+# scores  : [batch, seq_len, seq_len]   &lt;-- O(n²) in sequence length</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What is the KV cache, and why are prefill and decode so different?</h2>
+          <div class="seo-a"><p>Generation has two phases:</p><ul><li><strong>Prefill</strong> — the whole prompt is processed in one parallel pass. Compute-bound, and it produces the first token (TTFT).</li><li><strong>Decode</strong> — tokens are produced one at a time. Memory-bandwidth-bound.</li></ul><p>Without a cache, generating token N would recompute attention keys and values for all N−1 previous tokens every step. The <strong>KV cache</strong> stores the K and V tensors of every past token so each decode step only computes K/V for the single new token — turning O(n²) repeated work into O(n).</p><p>The trade is memory: the cache grows linearly with context length × layers × heads, and it is usually what limits how many concurrent requests a GPU can hold.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is quantization and what does it cost you?</h2>
+          <div class="seo-a"><p>Storing weights (and sometimes activations/KV cache) in fewer bits than the FP16 the model was trained in — INT8, INT4, FP8.</p><p><strong>Gain:</strong> roughly linear cuts in VRAM and memory bandwidth, so bigger models fit on smaller GPUs and decode gets faster. A 7B model is ~14 GB at FP16, ~7 GB at INT8, ~4 GB at INT4.</p><p><strong>Cost:</strong> some accuracy. 8-bit is usually indistinguishable; 4-bit is noticeably weaker on reasoning, long-context and code, and degrades worst on the tasks you care most about.</p><p>Formats you will hear: <strong>GGUF</strong> (llama.cpp, CPU/Mac), <strong>AWQ</strong> and <strong>GPTQ</strong> (GPU, post-training), <strong>bitsandbytes</strong> (quick load-time quantization).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is context engineering, and why isn't a bigger context window enough?</h2>
+          <div class="seo-a"><p><strong>Context engineering</strong> is deciding what goes into the window on every call — and what does not. Prompt engineering is wording; context engineering is curation.</p><p>A million-token window does not mean you should fill it:</p><ul><li><strong>Lost in the middle</strong> — retrieval accuracy dips for content buried mid-prompt; the head and tail are attended to far more reliably.</li><li><strong>Context rot</strong> — irrelevant or contradictory material actively degrades answers, it isn't neutral padding.</li><li><strong>Cost and latency</strong> scale with every token you send, on every turn.</li></ul><p>Practical levers: retrieve top-k instead of dumping corpora, summarise or compact old turns, put instructions at the very start <em>and</em> restate the critical constraint at the end, and strip tool output down to what the model needs.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is prompt caching and how do you design a prompt to benefit from it?</h2>
+          <div class="seo-a"><p>Providers can cache the internal state (the prefill / KV state) for a <strong>prefix of your prompt</strong>. If the next request starts with the byte-identical prefix, that portion is billed at a large discount and skips recomputation — typically a big cut in cost and time-to-first-token.</p><p>The rule that follows: order your prompt <strong>most stable → most volatile</strong>.</p><ol><li>System prompt, persona, policies</li><li>Tool/function definitions</li><li>Long static documents, few-shot examples</li><li>Conversation history</li><li>The user's current message — always last</li></ol><p>Anything mutable near the top (a timestamp, a request id, a shuffled example order) invalidates everything after it.</p></div>
+          <pre><code>// Anthropic: mark the end of the cacheable prefix
+const res = await client.messages.create({
+  model: &quot;claude-sonnet-5&quot;,
+  system: [
+    { type: &quot;text&quot;, text: POLICY_AND_PERSONA },
+    { type: &quot;text&quot;, text: LONG_STATIC_DOC, cache_control: { type: &quot;ephemeral&quot; } }
+  ],
+  messages: [{ role: &quot;user&quot;, content: userTurn }]  // volatile part, last
+});</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>How does a base model become a chat model? (SFT, RLHF, DPO)</h2>
+          <div class="seo-a"><p>Three stages:</p><ol><li><strong>Pre-training</strong> — next-token prediction over a huge corpus. Produces a <em>base</em> model: knowledgeable, but it completes text rather than following instructions.</li><li><strong>Supervised fine-tuning (SFT)</strong> — train on curated (instruction, good response) pairs. Now it answers questions instead of continuing them.</li><li><strong>Preference optimisation</strong> — humans (or a model) rank pairs of responses; the model is tuned to prefer the winners. <strong>RLHF</strong> does this by training a reward model and optimising against it with PPO. <strong>DPO</strong> skips the reward model and optimises the preference objective directly — simpler, cheaper, now very common.</li></ol><p>This alignment stage is what produces tone, refusal behaviour, formatting habits and instruction-following — not raw knowledge.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is a Mixture-of-Experts (MoE) model?</h2>
+          <div class="seo-a"><p>Instead of one dense feed-forward block per layer, an MoE layer holds many <strong>expert</strong> blocks plus a small <strong>router</strong>. For each token the router picks the top-k experts (often k=2), and only those run.</p><p>So the model has a huge <strong>total</strong> parameter count but a much smaller <strong>active</strong> count per token — e.g. 100B+ total, ~10B active. You get the quality benefits of scale at roughly the inference FLOPs of a much smaller dense model.</p><p><strong>The catch:</strong> every expert must still be resident in memory, so VRAM requirements track <em>total</em> parameters, not active ones. Training is also trickier — routers can collapse onto a few favourite experts, so load-balancing losses are needed.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What are reasoning / thinking models and when should you use one?</h2>
+          <div class="seo-a"><p>Models trained to spend extra tokens on an internal chain of thought before answering — <em>test-time compute</em>. Rather than making the model bigger, you let it think longer, and many providers expose a thinking/effort budget you can dial.</p><p><strong>Use them for:</strong> multi-step math and logic, debugging, complex planning, hard code generation, agentic loops where a wrong early step compounds.</p><p><strong>Don't use them for:</strong> extraction, classification, summarisation, formatting, routing, chat — you pay 3–10× the tokens and a lot of latency for no measurable gain.</p><p>Note that explicit CoT <em>prompting</em> is largely redundant on these models — they already do it, and forcing a second layer of it can hurt.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Which latency metrics matter for an LLM feature, and how do you improve each?</h2>
+          <div class="seo-a"><p>Three numbers, and they have different fixes:</p><ul><li><strong>TTFT (time to first token)</strong> — how long until something appears. Driven by prompt length (prefill) and queueing. Fix with shorter prompts, prompt caching, a smaller/faster model, and streaming.</li><li><strong>TPS / ITL (tokens per second, inter-token latency)</strong> — how fast text flows once started. Driven by model size and memory bandwidth. Fix with a smaller model, quantization, or better serving.</li><li><strong>Total time</strong> = TTFT + (output tokens ÷ TPS). Often dominated by <strong>output length</strong> — the single biggest lever most teams ignore.</li></ul><p>Perceived latency is mostly TTFT: streaming a response that starts in 300 ms feels faster than a non-streamed one that completes in 2 s.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do inference servers get high throughput? (continuous batching, PagedAttention)</h2>
+          <div class="seo-a"><p>Decode is memory-bandwidth-bound, so a single request leaves the GPU badly under-used. Servers like <strong>vLLM</strong>, <strong>TGI</strong> and <strong>TensorRT-LLM</strong> fix that:</p><ul><li><strong>Continuous (in-flight) batching</strong> — instead of waiting for a whole batch to finish, finished sequences are evicted and new requests join the batch each step. Massively better GPU utilisation than static batching.</li><li><strong>PagedAttention</strong> — the KV cache is allocated in fixed-size pages like virtual memory instead of one contiguous max-length block. Kills the fragmentation and over-allocation that used to waste most of the cache.</li><li><strong>Prefix sharing</strong> — requests with a common prefix (same system prompt) share those KV pages.</li></ul><p>The result is throughput measured in concurrent requests, at the cost of some per-request latency variance.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you choose a model for a feature?</h2>
+          <div class="seo-a"><p>Work backwards from constraints, not from leaderboards:</p><ol><li><strong>Task shape</strong> — extraction/classification/routing → small fast model. Multi-step reasoning, hard code → frontier or reasoning model.</li><li><strong>Non-negotiables</strong> — needs vision? tool calling? 200k context? strict JSON? These eliminate most candidates immediately.</li><li><strong>Latency budget</strong> — an interactive typeahead and an overnight batch job have nothing in common.</li><li><strong>Cost at real volume</strong> — price × expected tokens × requests/month. A 10× cheaper model that is 2% worse is often the right call.</li><li><strong>Data/deployment constraints</strong> — region, retention, on-prem, contractual restrictions.</li></ol><p>Then <strong>measure</strong>: run your own eval set across 2–3 candidates. Public benchmarks rarely predict performance on your data.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Beyond CoT: self-consistency, ReAct, and prompt chaining.</h2>
+          <div class="seo-a"><ul><li><strong>Self-consistency</strong> — sample the same question k times at a non-zero temperature and take the majority answer. Reliable accuracy gain on tasks with one right answer, at k× cost.</li><li><strong>ReAct (Reason + Act)</strong> — interleave reasoning with tool calls: <em>Thought → Action → Observation → Thought…</em>. This is the backbone of most agent loops.</li><li><strong>Prompt chaining</strong> — split one hard prompt into a sequence of small, verifiable ones (extract → transform → format). Each step is testable and cheap to fix.</li><li><strong>Tree of Thoughts</strong> — explore and score several branches before committing. Powerful, rarely worth the cost in production.</li></ul><p>The chaining insight matters most in practice: a decomposed pipeline of small steps is easier to evaluate, debug and cache than one heroic mega-prompt.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you design good few-shot examples?</h2>
+          <div class="seo-a"><ul><li><strong>Cover the edge cases, not the happy path.</strong> The model already handles the obvious case; examples should teach the ambiguous ones — empty fields, negations, multiple matches, "no answer".</li><li><strong>Be format-perfect.</strong> Examples define the output contract more strongly than any instruction. One sloppy example produces sloppy output forever.</li><li><strong>Balance the labels.</strong> Five positives and one negative biases the model toward positive.</li><li><strong>3–5 is usually the sweet spot</strong>; gains flatten quickly and every example costs tokens on every call.</li><li><strong>Watch recency bias</strong> — the last example carries disproportionate weight, so don't leave your weirdest case at the end.</li></ul><p><strong>Dynamic few-shot</strong> — retrieve the k most similar labelled examples for each input — beats a fixed set when the input space is diverse.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Structured output: constrained decoding vs prompt-and-retry?</h2>
+          <div class="seo-a"><p>Two ways to get schema-valid JSON:</p><ul><li><strong>Prompt and validate</strong> — ask for JSON, parse, and retry with the validation error on failure. Works anywhere, but costs an extra round trip on every failure and never reaches 100%.</li><li><strong>Constrained decoding</strong> (structured outputs / JSON mode / grammars) — the sampler is masked at each step so only tokens that keep the output schema-valid can be emitted. Malformed JSON becomes <em>impossible</em>, not unlikely.</li></ul><p>Constrained decoding is the right default when the provider supports it. Caveats: the schema still has to be one the model can fill sensibly, deeply nested or exotic schemas can degrade content quality, and the field <em>order</em> in your schema affects results — put reasoning fields before conclusion fields so the model can "think" inside the object.</p></div>
+          <pre><code>const schema = {
+  type: &quot;object&quot;,
+  properties: {
+    reasoning: { type: &quot;string&quot; },        // BEFORE the verdict on purpose
+    sentiment: { enum: [&quot;positive&quot;, &quot;negative&quot;, &quot;neutral&quot;] },
+    confidence: { type: &quot;number&quot; }
+  },
+  required: [&quot;reasoning&quot;, &quot;sentiment&quot;, &quot;confidence&quot;],
+  additionalProperties: false
+};</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>Cosine vs dot product vs Euclidean — which similarity do you use?</h2>
+          <div class="seo-a"><ul><li><strong>Cosine</strong> — angle only, ignores magnitude. The default for text embeddings, because you care about topic, not document length.</li><li><strong>Dot product</strong> — angle <em>and</em> magnitude. On <strong>normalised</strong> vectors it is mathematically identical to cosine and cheaper to compute, which is why most vector DBs recommend it for normalised embeddings.</li><li><strong>Euclidean (L2)</strong> — straight-line distance. Also monotonically equivalent to cosine on normalised vectors; more natural for clustering than for retrieval.</li></ul><p>The practical rule: <strong>use whatever metric the embedding model was trained with</strong> — the model card says so. Mixing metrics, or mixing embeddings from two different models in one index, silently wrecks recall.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Is temperature 0 deterministic?</h2>
+          <div class="seo-a"><p>Not reliably. Temperature 0 makes <em>sampling</em> greedy, but the output can still vary:</p><ul><li>Floating-point non-associativity on GPUs — results depend on how work is batched, and batching depends on other people's traffic.</li><li>MoE routing can be batch-sensitive.</li><li>The provider silently updates the model behind an alias, changes the system prompt, or routes you to different hardware.</li></ul><p>So design for variance rather than fighting it: <strong>pin explicit model versions</strong>, use <code>seed</code> where offered (best-effort, not a guarantee), and <strong>assert on properties rather than exact strings</strong> in tests — schema valid, contains the required entity, no forbidden claim.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you keep PII out of LLM calls?</h2>
+          <div class="seo-a"><p>Layered, because no single control is sufficient:</p><ol><li><strong>Minimise</strong> — send only the fields the task needs. Most prompts carry entire records where three fields would do.</li><li><strong>Redact / tokenise</strong> before the call — replace names, emails, card numbers, IDs with placeholders (<code>[PERSON_1]</code>) and rehydrate on the way out if the user is entitled to see them.</li><li><strong>Contractual controls</strong> — enterprise tiers with zero data retention and no-training clauses; region-pinned endpoints for residency.</li><li><strong>Don't log raw prompts</strong> — this is where PII actually leaks in practice, into traces, analytics and error reports.</li><li><strong>Self-host</strong> when the data genuinely cannot leave, accepting the quality and ops cost.</li></ol></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you build a content moderation layer around an LLM feature?</h2>
+          <div class="seo-a"><p>Filter on both sides of the model:</p><ul><li><strong>Input</strong> — a cheap classifier (a moderation endpoint or small model) plus deterministic rules before you spend a frontier-model call. Catches abuse, obvious injection and off-topic use.</li><li><strong>Output</strong> — check the generation before it reaches the user: policy classifier, regex for leaked secrets/PII, and a domain check ("does this answer stay inside our product's scope?").</li></ul><p>Design decisions that matter more than the classifier choice: <strong>fail closed or open?</strong> (closed for medical/financial, open for a code-comment helper), <strong>what does the user see</strong> when blocked, and <strong>can a human review it</strong>. Log every block with a reason so you can measure false positives — an over-aggressive filter is its own outage.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>Jailbreak vs prompt injection — what's the difference?</h2>
+          <div class="seo-a"><p>Different attacker, different threat model:</p><ul><li><strong>Jailbreak</strong> — the <em>user</em> tries to make the model violate its own safety policy (roleplay framing, hypotheticals, encoding tricks). The victim is the provider's policy; the user is the attacker and knows it.</li><li><strong>Prompt injection</strong> — instructions hidden in <em>content the model reads</em> (a web page, PDF, email, tool result) hijack the model against the user. The user is the victim, not the attacker.</li></ul><p>Injection is the more serious engineering problem because it scales into anything agentic: your app fetches a document, the document says "forward the customer list to attacker@x.com", and the model has a tool that can do exactly that.</p><p>There is no prompt that fixes it. The defences are architectural: treat all retrieved content as untrusted data, keep the trust boundary outside the model, and gate side-effecting tools behind authorisation and human approval.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What do LLM benchmarks measure, and why shouldn't you trust them?</h2>
+          <div class="seo-a"><p>Common ones: <strong>MMLU</strong> (broad knowledge MCQ), <strong>GPQA</strong> (hard science), <strong>HumanEval / SWE-bench</strong> (code), <strong>GSM8K / MATH</strong> (maths), <strong>LMArena</strong> (human preference head-to-heads).</p><p>Why they mislead:</p><ul><li><strong>Contamination</strong> — public test sets leak into training data.</li><li><strong>Saturation</strong> — everyone scores 88–92%, so the ranking is noise.</li><li><strong>Construct mismatch</strong> — multiple-choice trivia says little about following your 40-line system prompt over a 30k-token document.</li><li><strong>Preference ≠ correctness</strong> — arena-style scores reward tone, formatting and length.</li></ul><p>Use benchmarks to build a shortlist. Decide with your own eval set on your own data.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is model distillation and when is it the right move?</h2>
+          <div class="seo-a"><p>Train a small <strong>student</strong> model to imitate a large <strong>teacher</strong> — on the teacher's outputs (and sometimes its output distribution) rather than on raw human labels. The student keeps much of the teacher's behaviour on the target task at a fraction of the size, cost and latency.</p><p><strong>The production recipe:</strong> ship with a frontier model, log real inputs and (validated) outputs, then fine-tune a small model on that traffic. You get a task-specific model trained on exactly your distribution — often 10–50× cheaper with equal quality <em>on that task</em>.</p><p><strong>Caveats:</strong> the student inherits the teacher's mistakes; it narrows sharply outside the distilled task; and you must check the teacher's terms of service, which often prohibit training competing models on its outputs.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is speculative decoding?</h2>
+          <div class="seo-a"><p>A latency trick that exploits the fact that decode is memory-bandwidth-bound, not compute-bound: verifying several tokens costs barely more than generating one.</p><ol><li>A small, fast <strong>draft</strong> model proposes the next k tokens.</li><li>The large <strong>target</strong> model verifies all k in a single forward pass.</li><li>Accept the longest matching prefix; on the first mismatch, take the target model's own token and re-draft.</li></ol><p>Output is <strong>mathematically identical</strong> to running the big model alone — it is pure speedup, no quality trade. Typical gains are 2–3× on predictable text (code, structured output), less on genuinely surprising text.</p><p>Variants: <strong>Medusa</strong> (extra prediction heads instead of a separate draft model), <strong>n-gram/prompt lookup</strong> (draft by copying from the prompt — excellent for edit/rewrite tasks).</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>When does running a local/self-hosted model make sense?</h2>
+          <div class="seo-a"><p><strong>Good reasons:</strong> data genuinely cannot leave your network; steady high volume where GPU amortisation beats per-token pricing; hard latency or offline requirements; heavy customisation via fine-tuning; no vendor dependency.</p><p><strong>Bad reasons:</strong> "it's free" (it isn't — GPUs, ops, evals and on-call are not free), or chasing a benchmark score.</p><p><strong>What you take on:</strong> capacity planning, batching and serving (vLLM/TGI), model upgrades, quantization choices, plus the quality gap — a good open model at 30B is not a frontier model, and you now own every regression.</p><p>Tooling: <strong>Ollama</strong> / <strong>llama.cpp</strong> for local dev and desktop, <strong>vLLM</strong> / <strong>TGI</strong> for serving at scale.</p></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>What is semantic caching, and where does it go wrong?</h2>
+          <div class="seo-a"><p>Cache responses by <strong>meaning</strong> instead of by exact string: embed the incoming query, search the cache for a vector above a similarity threshold, and return the stored answer on a hit.</p><p>It works well for high-volume repetitive traffic — support FAQs, docs search, onboarding questions — where "how do I reset my password" arrives in fifty phrasings.</p><p><strong>Where it goes wrong:</strong></p><ul><li><strong>Near-misses with opposite meaning</strong> — "how do I enable X" vs "how do I disable X" can sit above a naive threshold.</li><li><strong>Personalised or stateful answers</strong> — the cached reply mentions <em>another</em> user's order. Always key the cache by tenant/user where the answer is user-specific.</li><li><strong>Staleness</strong> — the underlying document changed but the cache didn't. TTL it, and invalidate on reindex.</li></ul></div>
+          
+        </article>
+        <article class="seo-q">
+          <h2>How do you make LLM API calls resilient in production?</h2>
+          <div class="seo-a"><p>Treat the provider as a flaky, rate-limited, occasionally slow dependency:</p><ul><li><strong>Retry with exponential backoff + jitter</strong> on 429 and 5xx; honour <code>Retry-After</code>. Never retry a 400 — that's your bug.</li><li><strong>Timeouts</strong> tuned per call type, and remember streaming needs an <em>idle</em> timeout, not just a total one.</li><li><strong>Idempotency</strong> — a retried call that re-sends an email is worse than a failed one. Key side effects by request id.</li><li><strong>Fallbacks</strong> — a secondary model or provider for outages; degrade gracefully (cached answer, non-AI path) rather than 500.</li><li><strong>Circuit breaker + queue</strong> so a provider incident doesn't cascade into your own thread pool.</li><li><strong>Budget caps</strong> per user/tenant — a retry storm is also a bill.</li></ul></div>
+          <pre><code>async function callWithRetry(fn, { retries = 3 } = {}) {
+  for (let i = 0; ; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      const retryable = err.status === 429 || err.status &gt;= 500;
+      if (!retryable || i &gt;= retries) throw err;
+      const wait = Number(err.headers?.[&quot;retry-after&quot;]) * 1000
+        || Math.min(2 ** i * 500, 8000) * (0.5 + Math.random());
+      await new Promise(r =&gt; setTimeout(r, wait));
+    }
+  }
+}</code></pre>
+        </article>
+        <article class="seo-q">
+          <h2>What should you know before sending images to an LLM?</h2>
+          <div class="seo-a"><p><strong>Images are tokens.</strong> Cost scales with resolution — a full-page screenshot can cost more than a page of text, and models downscale above a max dimension, so oversized uploads buy you nothing but latency.</p><p><strong>What vision models are good at:</strong> describing scenes, reading clear text, understanding charts and UI layout, classifying, extracting structured data from documents.</p><p><strong>Where they still fail:</strong> precise pixel coordinates, counting many small objects, dense low-quality scans (a real OCR pass first beats guessing), and fine spatial reasoning.</p><p><strong>Practical rules:</strong> crop to the region of interest instead of sending the whole page; downscale to the model's effective max; send multiple pages as separate images with labels rather than one stitched collage; and for documents, consider OCR-then-text — it's usually cheaper and more accurate.</p></div>
+          
         </article>
     </section>
 
