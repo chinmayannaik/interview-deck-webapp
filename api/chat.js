@@ -71,7 +71,7 @@ function rateLimited(uid) {
    Groq exposes an OpenAI-compatible /chat/completions endpoint: auth via
    Authorization: Bearer <key> (never a query param, unlike Gemini), and
    messages use {role: "system"|"user"|"assistant", content}. */
-const GROQ_MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+const GROQ_MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 const SYSTEM_PROMPT =
   "You are a senior software engineer acting as a personal interview coach inside " +
   "Interview Deck, mentoring candidates preparing for software-engineering interviews " +
@@ -133,7 +133,11 @@ async function callGroq(apiKey, history, message) {
     model: GROQ_MODEL,
     messages,
     temperature: 0.4,
-    max_tokens: 2048 // structured multi-section coaching replies run longer than a plain definition
+    // gpt-oss is a REASONING model: it emits reasoning tokens before the answer
+    // and both draw on this same budget, so the cap must cover thinking + reply.
+    // "medium" keeps coaching answers well-reasoned without stalling the UI.
+    reasoning_effort: "medium",
+    max_completion_tokens: 4096 // structured multi-section coaching replies run longer than a plain definition
   };
 
   const resp = await fetch(url, {
@@ -169,7 +173,8 @@ async function callGroqPing(apiKey) {
     body: JSON.stringify({
       model: GROQ_MODEL,
       messages: [{ role: "user", content: "ping" }],
-      max_tokens: 1
+      reasoning_effort: "low",
+      max_completion_tokens: 16
     })
   });
   const data = await resp.json().catch(() => ({}));
@@ -184,7 +189,7 @@ async function callGroqPing(apiKey) {
    exactly 3, as plain JSON so the client can render them without any parsing
    of prose. A separate, smaller/faster model keeps this snappy since it's a
    quick classification task, not the actual answer. */
-const SUGGEST_MODEL = process.env.GROQ_SUGGEST_MODEL || "llama-3.1-8b-instant";
+const SUGGEST_MODEL = process.env.GROQ_SUGGEST_MODEL || "openai/gpt-oss-20b";
 const SUGGEST_SYSTEM_PROMPT =
   "You generate quick-reply suggestion chips for a technical interview-prep chatbot.\n" +
   "Given ONE interview question and its official answer, generate exactly 3 follow-up prompts.\n\n" +
@@ -223,7 +228,11 @@ async function callGroqSuggest(apiKey, question, answer, code) {
         { role: "user", content: userContent }
       ],
       temperature: 0.5,
-      max_tokens: 120
+      // Low effort, and a budget covering reasoning AND the JSON. A reasoning
+      // model spends tokens thinking before it writes, so the old 120-token
+      // cap came back with empty content and tripped the "Empty response" 502.
+      reasoning_effort: "low",
+      max_completion_tokens: 512
     })
   });
 
@@ -270,7 +279,8 @@ async function callGroqCurate(apiKey, category, tags) {
         { role: "user", content: userContent }
       ],
       temperature: 0.3,
-      max_tokens: 160
+      reasoning_effort: "low", // as in callGroqSuggest: budget covers reasoning + JSON
+      max_completion_tokens: 512
     })
   });
 

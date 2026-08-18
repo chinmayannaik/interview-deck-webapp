@@ -1,13 +1,15 @@
 /* Service worker — offline-first caching for Interview Deck.
    Bump CACHE version when you change core files to force an update.
 
-   Questions are served from the shared content repo via the jsDelivr CDN
-   (cross-origin), so they're handled by a dedicated runtime rule below. */
-const CACHE = "iqb-v37";
+   Questions are served from the shared content repo over GitHub raw
+   (cross-origin), so they're handled by a dedicated runtime rule below.
+   Keep these two constants matching the DATA_BASE in index.html — if they
+   drift, the rule stops matching and question JSON is never cached offline. */
+const CACHE = "iqb-v38";
 
 /* the git-hosted single source of truth (same repo the Flutter app reads) */
-const CONTENT_HOST = "cdn.jsdelivr.net";
-const CONTENT_PATH = "/gh/chinmayannaik/interview-deck-questions@";
+const CONTENT_HOST = "raw.githubusercontent.com";
+const CONTENT_PATH = "/chinmayannaik/interview-deck-questions/main/";
 
 const CORE = [
   "./",
