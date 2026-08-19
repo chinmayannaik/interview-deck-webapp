@@ -376,10 +376,20 @@
   }
 
   const HeaderPalette = (function () {
-    let btn = null, panel = null;
+    let btn = null, mBtn = null, panel = null;
     let btnIconOriginal = null;
 
+    /* The twin carries an icon AND a text label, so it must not go through
+       syncButton() — that rewrites innerHTML and would swallow the label.
+       State only: .on is the same class the sheet's other tools use. */
+    function syncTwin() {
+      if (!mBtn) return;
+      const inkOn = !!(window.IQB.inkPen && IQB.inkPen.isOn());
+      mBtn.classList.toggle("on", pen.on || inkOn);
+      mBtn.setAttribute("aria-pressed", String(pen.on || inkOn));
+    }
     function syncButton() {
+      syncTwin();
       if (!btn) return;
       const inkOn = !!(window.IQB.inkPen && IQB.inkPen.isOn());
       btn.classList.toggle("pen-on", pen.on);
@@ -478,21 +488,49 @@
       return b;
     }
 
+    /* The palette hangs off a trigger, and under 640px the header trigger is
+       display:none (the tools sheet carries #hl-toggle-m instead). A hidden
+       element measures 0x0, which would park the palette in the top-left
+       corner — so fall back to the sheet's own button, which is exactly where
+       the reader just tapped. getClientRects() is the display:none test that
+       also survives an ancestor being hidden. */
+    function anchorEl() {
+      const order = [btn, document.getElementById("filter-btn"), mBtn];
+      for (let i = 0; i < order.length; i++) {
+        if (order[i] && order[i].getClientRects().length) return order[i];
+      }
+      return null;
+    }
     function open() {
+      const anchor = anchorEl();
+      if (!anchor) return; // nothing visible to hang it off — better than a corner-parked panel
       if (!panel) panel = buildPanel();
       renderPanel();
       panel.hidden = false;
-      const r = btn.getBoundingClientRect();
+      const r = anchor.getBoundingClientRect();
       panel.style.top = Math.round(window.scrollY + r.bottom + 8) + "px";
-      panel.style.right = Math.round(window.innerWidth - r.right) + "px";
-      btn.setAttribute("aria-expanded", "true");
+      /* Right-aligned to the trigger, then clamped into the viewport. The
+         header button sits at the row's end so it never needed this, but the
+         phone fallback (#filter-btn) sits mid-row — aligning to it on a 380px
+         screen would hang the palette's left edge off the display. */
+      const gap = 8;
+      const pw = panel.offsetWidth;
+      let right = Math.round(window.innerWidth - r.right);
+      right = Math.min(right, Math.max(gap, window.innerWidth - pw - gap));
+      panel.style.right = Math.max(gap, right) + "px";
+      if (btn) btn.setAttribute("aria-expanded", "true");
+      if (mBtn) mBtn.setAttribute("aria-expanded", "true");
     }
-    function close() { if (panel) panel.hidden = true; if (btn) btn.setAttribute("aria-expanded", "false"); }
+    function close() {
+      if (panel) panel.hidden = true;
+      if (btn) btn.setAttribute("aria-expanded", "false");
+      if (mBtn) mBtn.setAttribute("aria-expanded", "false");
+    }
     function isOpen() { return panel && !panel.hidden; }
     function shouldIgnoreClose(target) {
       if (!target || !target.closest) return false;
       const clickedInPanel = panel && panel.contains(target);
-      const clickedInButton = btn && btn.contains(target);
+      const clickedInButton = (btn && btn.contains(target)) || (mBtn && mBtn.contains(target));
       const clickedInContent = !!target.closest('.qa-qtext, .qa-revise, .answer, .qa-deep, .content, .qa-card');
       return clickedInPanel || clickedInButton || clickedInContent;
     }
@@ -505,6 +543,20 @@
       // persist original on the DOM so other modules can restore it when needed
       try { btn.dataset.hlOriginal = btnIconOriginal; } catch (e) {}
       btn.addEventListener("click", function (e) { e.stopPropagation(); isOpen() ? close() : open(); });
+
+      /* The tools-sheet twin (mobile). The sheet sits at z-index 111 and the
+         palette at 70, so the sheet has to go down first or it would cover the
+         very swatches this opens. Closing it also frees #filter-btn to be the
+         palette's anchor. */
+      mBtn = qs("#hl-toggle-m");
+      if (mBtn) mBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        if (isOpen()) { close(); return; }
+        const sheetClose = document.getElementById("tools-close");
+        if (sheetClose) sheetClose.click();
+        open();
+      });
+      syncTwin();
       document.addEventListener("mousedown", function (e) {
         if (isOpen() && !shouldIgnoreClose(e.target)) close();
       });

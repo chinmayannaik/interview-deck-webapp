@@ -309,6 +309,14 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15.5 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4.5"/><line x1="7" y1="8" x2="12" y2="8"/><line x1="7" y1="12" x2="11" y2="12"/><line x1="19" y1="3" x2="19" y2="9"/><line x1="22" y1="6" x2="16" y2="6"/></svg>
               Quick Note
             </button>
+            <!-- mobile only, same reasoning as Quick Note above: under 640px the header
+                 has no room left (the avatar was getting pushed off), so the
+                 highlighter's trigger moves into the sheet. highlights.js keeps it
+                 in step with #hl-toggle and anchors the palette to a visible button. -->
+            <button class="tool tool-mobile-only" id="hl-toggle-m" type="button" aria-haspopup="true" aria-expanded="false" aria-pressed="false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+              Highlighter
+            </button>
             <button class="tool tool-theme" id="theme-toggle-m" type="button"></button>
             <input id="import-file" type="file" accept="application/json" hidden />
           </div>

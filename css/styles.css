@@ -1424,6 +1424,13 @@ body.hl-pen .qa-card.open .qa-revise { cursor: text; }
    the dot says nothing here and only reads as the wrong one */
 #hl-toggle.ink-active.ink-active::after { content: none; }
 
+/* Below 640px the header runs out of room and the avatar gets pushed off the
+   row, so the highlighter follows Quick Note and My Notes into the tools sheet
+   (#hl-toggle-m). Same trade the sheet was built for: the trigger moves, the
+   control stays. The palette still anchors to a visible button — see
+   anchorEl() in js/highlights.js. */
+@media (max-width: 640px) { #hl-toggle { display: none; } }
+
 /* the drawing surface itself: over the content, under the sticky header (40) and
    the palette (70) so the control that turns it off stays reachable */
 .ink-layer { position: fixed; inset: 0; cursor: crosshair; touch-action: none; }
